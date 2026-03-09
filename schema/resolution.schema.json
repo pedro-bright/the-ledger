@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://the-ledger.dev/schema/resolution.schema.json",
+  "title": "Resolution Note",
+  "description": "Formal disposition of a challenge case — records what changed in the ledger.",
+  "type": "object",
+  "required": ["id", "case_id", "disposition", "findings", "actions"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+    },
+    "case_id": {
+      "type": "string",
+      "description": "ID of the challenge case being resolved."
+    },
+    "disposition": {
+      "type": "string",
+      "enum": ["upheld", "rejected", "mixed", "deferred", "sustained"],
+      "description": "Outcome of the challenge."
+    },
+    "findings": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" },
+      "description": "Factual findings supporting the disposition."
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "claim_status_changed",
+              "summary_revision_created",
+              "interpretive_memo_attached",
+              "event_state_changed",
+              "no_action"
+            ]
+          },
+          "claim_id": { "type": "string" },
+          "from": { "type": "object" },
+          "to": { "type": "object" },
+          "summary_revision_id": { "type": "string" },
+          "memo_id": { "type": "string" }
+        }
+      },
+      "description": "Actions taken as a result of the resolution."
+    },
+    "decided_by": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Editors who made the decision."
+    },
+    "issued_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the resolution was issued."
+    }
+  },
+  "additionalProperties": false
+}

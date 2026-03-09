@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://the-ledger.dev/schema/revision.schema.json",
+  "title": "Summary Revision",
+  "description": "A versioned update to a canonical summary when underlying claims change.",
+  "type": "object",
+  "required": ["id", "target_summary_id", "reason"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+    },
+    "target_summary_id": {
+      "type": "string",
+      "description": "ID of the synthesis/summary being revised."
+    },
+    "prior_version": {
+      "type": "string",
+      "description": "Summary text before revision."
+    },
+    "new_version": {
+      "type": "string",
+      "description": "Summary text after revision."
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 5,
+      "description": "Why this revision was made."
+    },
+    "changed_claim_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "IDs of claims that changed, triggering this revision."
+    },
+    "triggered_by_case_id": {
+      "type": ["string", "null"],
+      "description": "Challenge case that triggered this revision, if any."
+    },
+    "author": {
+      "type": "string",
+      "description": "Author of the revision."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the revision was created."
+    }
+  },
+  "additionalProperties": false
+}

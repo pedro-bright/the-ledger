@@ -1,0 +1,108 @@
+name: "🔄 Reinterpretation Proposal"
+description: "Propose a reinterpretation of a past event in light of new evidence."
+title: "[Reinterpretation] "
+labels: ["reinterpretation", "retrospective"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Propose a Reinterpretation
+
+        The Ledger tracks how understanding evolves. If new evidence or hindsight
+        changes how we should understand a past event, propose a reinterpretation.
+
+        This is NOT an error correction — it's about belief evolution. The original
+        event record remains immutable; reinterpretations are layered on top.
+
+  - type: input
+    id: target-event
+    attributes:
+      label: Event Being Reinterpreted
+      description: "The ID of the event whose interpretation has changed."
+      placeholder: "e.g., gpt-4-scaling-debate"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: trigger
+    attributes:
+      label: What Triggered This Reinterpretation?
+      options:
+        - new_evidence — New information has emerged
+        - investigative_reporting — Investigative journalism revealed new facts
+        - historical_distance — Time has changed the significance
+        - actor_reversal — A key actor reversed their position
+        - methodological — New analytical frameworks change the reading
+    validations:
+      required: true
+
+  - type: textarea
+    id: original-understanding
+    attributes:
+      label: Original Understanding
+      description: "What did we believe at the time? Summarize the original interpretation."
+      placeholder: "At the time, the prevailing understanding was..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-changed
+    attributes:
+      label: What Changed
+      description: "What new evidence or insight changes the interpretation?"
+      placeholder: "Since then, [new evidence/development] has shown that..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: new-interpretation
+    attributes:
+      label: Proposed New Interpretation
+      description: "How should we now understand this event?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: sources
+    attributes:
+      label: Supporting Sources
+      description: "URLs supporting the reinterpretation. One per line."
+      placeholder: |
+        https://...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: confidence-then
+    attributes:
+      label: Confidence at the Time
+      description: "How confident was the original interpretation?"
+      options:
+        - high
+        - medium
+        - low
+    validations:
+      required: true
+
+  - type: dropdown
+    id: confidence-now
+    attributes:
+      label: Confidence Now
+      description: "How confident is the new interpretation?"
+      options:
+        - high
+        - medium
+        - low
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      options:
+        - label: "I have reviewed the original event record."
+          required: true
+        - label: "This is a genuine evolution in understanding, not a correction of factual errors (use Challenge for that)."
+          required: true

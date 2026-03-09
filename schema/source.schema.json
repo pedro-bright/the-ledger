@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://the-ledger.dev/schema/source.schema.json",
+  "title": "Source",
+  "description": "A typed, attributable source with archival metadata.",
+  "type": "object",
+  "required": ["url", "title", "type"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Optional unique source identifier."
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL of the source."
+    },
+    "archive_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Wayback Machine or other archive URL. Mandatory for primary sources."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Title of the source document."
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "primary",
+        "secondary",
+        "commentary",
+        "official",
+        "primary_document",
+        "primary_recording",
+        "primary_dataset",
+        "secondary_reporting",
+        "expert_interpretation",
+        "editorial_synthesis",
+        "hearsay_unverified",
+        "retraction",
+        "correction"
+      ],
+      "description": "Source type classification."
+    },
+    "publisher": {
+      "type": "string",
+      "description": "Publishing organization or outlet."
+    },
+    "author": {
+      "type": "string",
+      "description": "Author of the source."
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Publication date."
+    },
+    "published_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Alias for date — publication date."
+    },
+    "accessed": {
+      "type": "string",
+      "format": "date",
+      "description": "Date when the source was accessed."
+    },
+    "accessed_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Alias for accessed — date accessed."
+    },
+    "independence_group": {
+      "type": "string",
+      "description": "Sources in the same group are not independently corroborating."
+    }
+  },
+  "additionalProperties": false
+}

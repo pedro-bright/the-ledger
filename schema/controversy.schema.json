@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://the-ledger.dev/schema/controversy.schema.json",
+  "title": "Controversy",
+  "description": "Structured multi-axis contestation tracking.",
+  "type": "object",
+  "required": ["id", "thread", "status", "polarity", "positions"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+    },
+    "thread": {
+      "type": "string",
+      "description": "ID of the parent thread."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "dormant", "resolved"],
+      "description": "Current controversy status."
+    },
+    "polarity": {
+      "type": "string",
+      "enum": ["binary", "multi-axis"],
+      "description": "Whether the controversy is two-sided or multi-dimensional."
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date"
+    },
+    "positions": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["claim"],
+        "properties": {
+          "claim": {
+            "type": "string",
+            "description": "The position's core assertion."
+          },
+          "proponents": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Actor IDs or descriptive labels of who holds this position."
+          },
+          "sources": {
+            "type": "array",
+            "items": { "$ref": "source.schema.json" }
+          },
+          "confidence": {
+            "type": "string",
+            "enum": ["high", "medium", "low", "disputed"]
+          }
+        }
+      },
+      "description": "At least two competing positions."
+    }
+  },
+  "additionalProperties": false
+}

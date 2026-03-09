@@ -1,0 +1,142 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://the-ledger.dev/schema/event.schema.json",
+  "title": "Ledger Event",
+  "description": "An immutable event record with kernel (required) and enriched (optional) fields.",
+  "type": "object",
+  "required": ["id", "title", "date", "category", "sources"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$",
+      "description": "Unique kebab-case identifier for the event."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 200,
+      "description": "Human-readable event title."
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date (YYYY-MM-DD) when the event occurred."
+    },
+    "category": {
+      "type": "string",
+      "enum": ["policy", "models", "research", "industry", "safety", "culture", "open-source"],
+      "description": "Primary category for the event."
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "source.schema.json" },
+      "description": "At least one source is required."
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Optional end date for multi-day events."
+    },
+    "significance": {
+      "type": "string",
+      "enum": ["landmark", "major", "notable"],
+      "description": "Significance level."
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low", "disputed"],
+      "description": "Confidence in the event's factual claims."
+    },
+    "contestation": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["uncontested", "contested", "superseded", "unresolved"]
+        },
+        "challenge_window": {
+          "type": "string",
+          "enum": ["open", "closed"]
+        },
+        "last_challenged": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "required": ["status"]
+    },
+    "actors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "role"],
+        "properties": {
+          "id": { "type": "string" },
+          "role": {
+            "type": "string",
+            "enum": [
+              "subject", "counterparty", "regulator", "commentator", "participant", "target",
+              "developer", "partner", "investor", "acquirer", "defendant", "advocate",
+              "distribution-partner", "executive", "organizer", "presenter", "related-body",
+              "related-party", "signatory", "legislator", "plaintiff"
+            ]
+          }
+        }
+      }
+    },
+    "regions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Geopolitical scope (ISO country codes)."
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "threads": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Thread IDs this event belongs to."
+    },
+    "related": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "IDs of related events."
+    },
+    "significance_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["level", "date", "reason"],
+        "properties": {
+          "level": {
+            "type": "string",
+            "enum": ["landmark", "major", "notable"]
+          },
+          "date": { "type": "string", "format": "date" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "state": {
+      "type": "string",
+      "enum": ["draft", "published", "challenged", "uncontested", "superseded"],
+      "description": "Event lifecycle state."
+    },
+    "revision": {
+      "type": "object",
+      "properties": {
+        "created": { "type": "string", "format": "date" },
+        "last_reviewed": { "type": "string", "format": "date" },
+        "draft_assistance": {
+          "type": "string",
+          "enum": ["ai-assisted", "human-only"]
+        },
+        "final_author": { "type": "string" }
+      }
+    },
+    "claim_status": { "$ref": "claim-status.schema.json" }
+  },
+  "additionalProperties": false
+}

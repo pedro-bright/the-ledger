@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://the-ledger.dev/schema/thread.schema.json",
+  "title": "Thread",
+  "description": "A narrative arc connecting events into a coherent storyline.",
+  "type": "object",
+  "required": ["id", "title", "status", "started", "core_question", "curator", "events"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 200
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "dormant"],
+      "description": "Thread status — never 'resolved', as understanding always evolves."
+    },
+    "started": {
+      "type": "string",
+      "format": "date",
+      "description": "When the thread's narrative arc begins."
+    },
+    "core_question": {
+      "type": "string",
+      "minLength": 10,
+      "description": "The central question the thread explores."
+    },
+    "curator": {
+      "type": "string",
+      "description": "ID of the thread's primary curator."
+    },
+    "curator_scope": {
+      "type": "string",
+      "description": "Scope of the curator's responsibility."
+    },
+    "contestation": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["uncontested", "contested", "superseded", "unresolved"]
+        },
+        "challenge_window": {
+          "type": "string",
+          "enum": ["open", "closed"]
+        }
+      }
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date"
+    },
+    "events": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Ordered list of event IDs in this thread."
+    },
+    "controversies": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "IDs of associated controversies."
+    }
+  },
+  "additionalProperties": false
+}

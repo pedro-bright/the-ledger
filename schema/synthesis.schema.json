@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://the-ledger.dev/schema/synthesis.schema.json",
+  "title": "Synthesis",
+  "description": "A signed canonical synthesis of a thread — the 'current best reading'.",
+  "type": "object",
+  "required": ["id", "thread", "author", "date", "type"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+    },
+    "thread": {
+      "type": "string",
+      "description": "ID of the thread this synthesis covers."
+    },
+    "author": {
+      "type": "string",
+      "description": "Author/editor who wrote this synthesis."
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the synthesis was written or last updated."
+    },
+    "review_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Scheduled date for revisitation."
+    },
+    "type": {
+      "type": "string",
+      "enum": ["canonical-synthesis", "quarterly-synthesis", "thematic-essay", "retrospective"],
+      "description": "Type of synthesis."
+    },
+    "supersedes": {
+      "type": "string",
+      "description": "ID of the previous synthesis this one replaces."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["proposed", "ratified", "deprecated", "superseded", "forked"],
+      "description": "Canon entry lifecycle status."
+    },
+    "ratified_by": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Editors who ratified this synthesis."
+    },
+    "events_covered": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Event IDs covered by this synthesis."
+    },
+    "fork_group": {
+      "type": ["string", "null"],
+      "description": "Non-null if competing syntheses exist."
+    }
+  },
+  "additionalProperties": false
+}

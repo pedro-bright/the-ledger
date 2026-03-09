@@ -1,0 +1,28 @@
+{
+  "name": "the-ledger",
+  "version": "0.1.0",
+  "description": "An epistemic ledger of AI history — tracking how understanding changes over time.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate": "tsx scripts/validate.ts",
+    "check-links": "tsx scripts/check-links.ts",
+    "build-graph": "tsx scripts/build-graph.ts",
+    "generate-feed": "tsx scripts/generate-feed.ts"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.0.0",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "gray-matter": "^4.0.3",
+    "js-yaml": "^4.1.1",
+    "node-fetch": "^3.3.2",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "license": "CC-BY-SA-4.0"
+}

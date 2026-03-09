@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://the-ledger.dev/schema/actor.schema.json",
+  "title": "Actor",
+  "description": "A registered entity (company, person, government, etc.) referenced by events.",
+  "type": "object",
+  "required": ["id", "name", "type"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$",
+      "description": "Unique kebab-case identifier."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Display name of the actor."
+    },
+    "type": {
+      "type": "string",
+      "enum": ["company", "government", "research-lab", "individual", "organization"],
+      "description": "Actor type classification."
+    },
+    "founded": {
+      "type": ["integer", "string"],
+      "description": "Year founded, or date string."
+    },
+    "website": {
+      "type": "string",
+      "format": "uri",
+      "description": "Official website URL."
+    },
+    "aliases": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Alternative names or abbreviations."
+    }
+  },
+  "additionalProperties": false
+}

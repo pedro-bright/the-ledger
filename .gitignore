@@ -3,3 +3,9 @@ node_modules/
 dist/
 .env
 .DS_Store
+
+# Generated artifacts
+graph.json
+feed.xml
+rss.xml
+broken-links-report.md

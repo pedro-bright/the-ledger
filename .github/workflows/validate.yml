@@ -1,0 +1,39 @@
+name: Validate Content
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Schema & Cross-Reference Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run validation
+        run: npm run validate
+
+      - name: Build relationship graph
+        run: npm run build-graph
+
+      - name: Upload graph artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relationship-graph
+          path: graph.json
+          retention-days: 30

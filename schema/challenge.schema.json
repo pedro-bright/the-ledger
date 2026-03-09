@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://the-ledger.dev/schema/challenge.schema.json",
+  "title": "Challenge Case",
+  "description": "Formal contestation of a specific claim, creating a procedural record.",
+  "type": "object",
+  "required": ["id", "target_claim_id", "allegations", "status"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+    },
+    "target_claim_id": {
+      "type": "string",
+      "description": "ID of the claim or event being challenged."
+    },
+    "allegations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "misquote",
+          "context_omission",
+          "overstatement",
+          "unsupported_inference",
+          "category_error",
+          "source_misattribution",
+          "timeline_error",
+          "duplication"
+        ]
+      },
+      "description": "Types of allegations in this challenge."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["open", "under_review", "sustained", "dismissed", "partially_sustained"],
+      "description": "Current status of the challenge case."
+    },
+    "opened_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the challenge was filed."
+    },
+    "opened_by": {
+      "type": "string",
+      "description": "Contributor who filed the challenge."
+    },
+    "resolution_note_id": {
+      "type": ["string", "null"],
+      "description": "Linked resolution note when resolved."
+    }
+  },
+  "additionalProperties": false
+}

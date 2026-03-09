@@ -1,0 +1,98 @@
+name: "📰 New Event Submission"
+description: "Submit a Tier 0 event — a sourced claim about what happened in AI history."
+title: "[Event] "
+labels: ["new-event", "tier-0"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Submit an Event
+
+        You don't need to master our full schema — just tell us what happened, when, and where you read about it.
+        An editor will normalize this into a full event record.
+
+  - type: input
+    id: title
+    attributes:
+      label: Event Title
+      description: "Concise title describing what happened."
+      placeholder: "e.g., Anthropic Refuses Military Deployment of Claude"
+    validations:
+      required: true
+
+  - type: input
+    id: date
+    attributes:
+      label: Date
+      description: "When did this happen? (YYYY-MM-DD)"
+      placeholder: "2026-03-01"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      description: "Primary category for this event."
+      options:
+        - policy
+        - models
+        - research
+        - industry
+        - safety
+        - culture
+        - open-source
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What Happened
+      description: "Describe the event in 2-5 sentences. Stick to facts, attribute claims."
+      placeholder: "On March 1, 2026, Anthropic formally declined a Department of Defense request..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: why-it-matters
+    attributes:
+      label: Why It Matters
+      description: "Why is this significant? What does it change? What precedents does it set?"
+      placeholder: "This marks the first time a frontier AI lab has publicly refused..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: sources
+    attributes:
+      label: Source URLs
+      description: "One URL per line. Primary sources preferred over commentary."
+      placeholder: |
+        https://example.com/original-reporting
+        https://example.com/official-statement
+    validations:
+      required: true
+
+  - type: dropdown
+    id: significance
+    attributes:
+      label: Suggested Significance
+      description: "How significant is this event? (Editors will confirm)"
+      options:
+        - notable (~5-10/week — worth documenting)
+        - major (~2-4/month — meaningfully shifts the landscape)
+        - landmark (~2-5/year — fundamentally alters AI trajectory)
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      options:
+        - label: "I have at least one primary or secondary source for this event."
+          required: true
+        - label: "This event occurred at least 72 hours ago (per our editorial policy)."
+          required: false

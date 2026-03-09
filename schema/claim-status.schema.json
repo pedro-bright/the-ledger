@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://the-ledger.dev/schema/claim-status.schema.json",
+  "title": "Claim Status",
+  "description": "Orthogonal 6-dimension epistemic status model. Each dimension is independent.",
+  "type": "object",
+  "properties": {
+    "publication": {
+      "type": "string",
+      "enum": ["draft", "published", "withdrawn"],
+      "description": "Publication lifecycle state."
+    },
+    "contestation": {
+      "type": "string",
+      "enum": ["unchallenged", "challenged", "disputed", "resolved"],
+      "description": "Whether the claim has been formally contested."
+    },
+    "evidence": {
+      "type": "string",
+      "enum": ["unsupported", "single_source", "corroborated", "strongly_corroborated"],
+      "description": "Strength of supporting evidence. 'corroborated' requires ≥2 independent primary/secondary sources."
+    },
+    "editorial": {
+      "type": "string",
+      "enum": ["unreviewed", "editorially_accepted", "editorially_rejected"],
+      "description": "Editorial review status."
+    },
+    "consensus": {
+      "type": "string",
+      "enum": ["no_position", "emerging_consensus", "consensus", "minority_view"],
+      "description": "'consensus' requires ≥3 independent sources + editorial acceptance + no unresolved material challenge."
+    },
+    "temporal": {
+      "type": "string",
+      "enum": ["current", "superseded", "retracted"],
+      "description": "'superseded' = historically recorded but no longer preferred. 'retracted' = affirmatively invalid."
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://the-ledger.dev/schema/memo.schema.json",
+  "title": "Interpretive Memo",
+  "description": "Reflective analysis about framing, uncertainty, or competing readings.",
+  "type": "object",
+  "required": ["id", "subject", "thesis", "stance", "confidence"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+    },
+    "subject": {
+      "type": "object",
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["claim", "summary", "case", "source", "topic"]
+        },
+        "id": {
+          "type": "string"
+        }
+      },
+      "description": "What this memo is about."
+    },
+    "thesis": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Core thesis of this interpretive memo."
+    },
+    "stance": {
+      "type": "string",
+      "enum": ["interpretive", "methodological", "skeptical", "comparative"],
+      "description": "The analytical stance of the memo."
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low", "disputed"]
+    },
+    "related_claims": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "related_sources": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "supersedes_memo": {
+      "type": ["string", "null"],
+      "description": "ID of the memo this one supersedes."
+    },
+    "author": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "additionalProperties": false
+}

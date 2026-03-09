@@ -1,0 +1,71 @@
+name: "⚖️ Challenge / Contestation"
+description: "File a formal challenge against an existing event or claim."
+title: "[Challenge] "
+labels: ["challenge", "contestation"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## File a Challenge
+
+        Every substantive claim in The Ledger is contestable. Use this form to formally
+        challenge an event, claim, or interpretation. Your challenge will be reviewed by
+        the editorial team and the event author.
+
+  - type: input
+    id: target-event
+    attributes:
+      label: Target Event or Claim ID
+      description: "The ID of the event or claim you're challenging."
+      placeholder: "e.g., anthropic-dod-ban-2026"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: allegations
+    attributes:
+      label: Allegation Type(s)
+      description: "What kind of issue are you raising? Select all that apply."
+      options:
+        - label: "**Misquote** — A source is quoted inaccurately"
+        - label: "**Context omission** — Material context is missing"
+        - label: "**Overstatement** — Claims go beyond what sources support"
+        - label: "**Unsupported inference** — Conclusions drawn without sufficient evidence"
+        - label: "**Category error** — Event is miscategorized or misclassified"
+        - label: "**Source misattribution** — Source is attributed incorrectly"
+        - label: "**Timeline error** — Dates or sequence of events is wrong"
+        - label: "**Duplication** — This duplicates an existing event"
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: |
+        Provide evidence supporting your challenge. Include specific quotes, source URLs,
+        and explain why the current record is inaccurate or incomplete.
+      placeholder: |
+        The event states X, but according to [source], the actual situation was Y...
+
+        Sources:
+        - https://...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-correction
+    attributes:
+      label: Proposed Correction (optional)
+      description: "If you have a specific correction in mind, describe it here."
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      options:
+        - label: "I have reviewed the event record and its sources before filing this challenge."
+          required: true
+        - label: "I am raising a substantive issue, not a formatting or style concern."
+          required: true
