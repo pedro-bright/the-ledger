@@ -4,7 +4,10 @@
   "title": "Source",
   "description": "A typed, attributable source with archival metadata.",
   "type": "object",
-  "required": ["url", "title", "type"],
+  "required": [
+    "url",
+    "title"
+  ],
   "properties": {
     "id": {
       "type": "string",
@@ -60,7 +63,7 @@
     "published_at": {
       "type": "string",
       "format": "date",
-      "description": "Alias for date — publication date."
+      "description": "Alias for date \u2014 publication date."
     },
     "accessed": {
       "type": "string",
@@ -70,7 +73,7 @@
     "accessed_at": {
       "type": "string",
       "format": "date",
-      "description": "Alias for accessed — date accessed."
+      "description": "Alias for accessed \u2014 date accessed."
     },
     "independence_group": {
       "type": "string",
