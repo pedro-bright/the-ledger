@@ -21,15 +21,15 @@ const confidenceColors: Record<string, string> = {
 };
 ---
 
-<Base title={controversy.id}>
+<Base title={controversy.title} description={controversy.positions?.[0]?.claim || `Controversy: ${controversy.title}`}>
   <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <!-- Breadcrumb -->
     <nav class="flex items-center gap-2 text-xs font-mono text-ledger-text-dim mb-6">
-      <a href="/" class="hover:text-ledger-text transition-colors">Timeline</a>
+      <a href="/" class="hover:text-ledger-text transition-colors">Home</a>
       <span>/</span>
-      <span class="text-ledger-text-muted">Controversies</span>
+      <a href="/controversies" class="hover:text-ledger-text transition-colors">Controversies</a>
       <span>/</span>
-      <span class="text-ledger-text-muted">{controversy.id}</span>
+      <span class="text-ledger-text-muted">{controversy.title}</span>
     </nav>
 
     <!-- Header -->
@@ -39,7 +39,9 @@ const confidenceColors: Record<string, string> = {
           <span class={`px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-full border ${
             controversy.status === 'active'
               ? 'text-amber-400 bg-amber-400/10 border-amber-400/20'
-              : 'text-ledger-text-dim bg-ledger-surface border-ledger-border'
+              : controversy.status === 'resolved'
+                ? 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20'
+                : 'text-ledger-text-dim bg-ledger-surface border-ledger-border'
           }`}>
             {controversy.status}
           </span>
@@ -51,7 +53,7 @@ const confidenceColors: Record<string, string> = {
         )}
       </div>
 
-      <h1 class="text-2xl sm:text-3xl font-bold text-white mb-3">{controversy.id}</h1>
+      <h1 class="text-2xl sm:text-3xl font-bold text-white mb-3">{controversy.title}</h1>
 
       {linkedThread && (
         <p class="text-sm text-ledger-text-muted">
@@ -88,8 +90,17 @@ const confidenceColors: Record<string, string> = {
                 </div>
               )}
               {position.sources && position.sources.length > 0 && (
-                <div class="flex items-center gap-2 text-xs text-ledger-text-dim">
-                  <span>{position.sources.length} source{position.sources.length !== 1 ? 's' : ''}</span>
+                <div class="space-y-1.5 mt-3">
+                  {position.sources.map((source: any) => (
+                    <a
+                      href={source.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="block text-xs text-category-policy hover:underline"
+                    >
+                      {source.title || source.url}
+                    </a>
+                  ))}
                 </div>
               )}
             </div>

@@ -1,0 +1,18 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#0A0A0F"/>
+  <rect x="0" y="0" width="1200" height="4" fill="#6366F1"/>
+  <!-- Title -->
+  <text x="80" y="260" font-family="system-ui, -apple-system, sans-serif" font-size="64" font-weight="700" fill="#E8E4DF">the ledger</text>
+  <!-- Subtitle -->
+  <text x="80" y="330" font-family="system-ui, -apple-system, sans-serif" font-size="28" fill="#9B97A0">A durable historical record of AI</text>
+  <!-- Tagline -->
+  <text x="80" y="390" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="#6B6770">Events · Debates · Turning Points</text>
+  <!-- Decorative dots -->
+  <circle cx="80" cy="500" r="4" fill="#6366F1"/>
+  <circle cx="100" cy="500" r="4" fill="#F59E0B"/>
+  <circle cx="120" cy="500" r="4" fill="#10B981"/>
+  <circle cx="140" cy="500" r="4" fill="#EF4444"/>
+  <circle cx="160" cy="500" r="4" fill="#8B5CF6"/>
+  <!-- Open source badge -->
+  <text x="80" y="560" font-family="monospace" font-size="14" fill="#6B6770">open-source · community-maintained · epistemically rigorous</text>
+</svg>

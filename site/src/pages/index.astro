@@ -1,12 +1,25 @@
 ---
 import Base from '../layouts/Base.astro';
 import Timeline from '../components/Timeline';
-import { loadEvents, getCategories, getExcerpt } from '../lib/content';
+import { loadEvents, loadThreads, loadControversies, loadActors, getCategories, getExcerpt, getCategoryColor, buildThreadEventMap } from '../lib/content';
 
 const events = loadEvents();
+const threads = loadThreads();
+const controversies = loadControversies();
+const actors = loadActors();
 const categories = getCategories();
+const threadEventMap = buildThreadEventMap(events);
 
-// Prepare events for the React timeline component
+// Stats
+const eventCount = events.length;
+const threadCount = threads.length;
+const controversyCount = controversies.length;
+const actorCount = actors.length;
+
+// Latest 8 events for compact list
+const latestEvents = events.slice(0, 8);
+
+// Prepare all events for the React timeline component (used in timeline section)
 const timelineEvents = events.map((e) => ({
   id: e.id,
   title: e.title,
@@ -18,43 +31,185 @@ const timelineEvents = events.map((e) => ({
   summary: getExcerpt(e.content),
   slug: e.slug,
 }));
+
+// Build thread card data
+const threadCards = threads.map((thread) => {
+  const threadEvents = threadEventMap.get(thread.id) || [];
+  // Collect unique actor names from events in this thread
+  const actorIds = new Set<string>();
+  for (const evt of threadEvents) {
+    if (evt.actors) {
+      for (const a of evt.actors) {
+        actorIds.add(a.id);
+      }
+    }
+  }
+  const actorNames = Array.from(actorIds).slice(0, 5);
+  return {
+    ...thread,
+    eventCount: thread.events?.length || threadEvents.length,
+    actorNames,
+    excerpt: thread.core_question || getExcerpt(thread.content, 120),
+  };
+});
+
+const significanceColors: Record<string, string> = {
+  landmark: 'text-amber-400 bg-amber-400/10 border-amber-400/30',
+  major: 'text-indigo-400 bg-indigo-400/10 border-indigo-400/30',
+  notable: 'text-ledger-text-dim bg-ledger-surface border-ledger-border',
+};
 ---
 
-<Base title="The Ledger" description="An open-source epistemic ledger of AI history — tracking how understanding changes over time.">
+<Base>
   <!-- Hero -->
   <section class="border-b border-ledger-border">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-      <div class="max-w-2xl">
-        <p class="text-xs font-mono uppercase tracking-[0.2em] text-ledger-text-dim mb-4">
-          Epistemic Ledger
-        </p>
+      <div class="max-w-3xl">
         <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4">
-          How understanding<br />changes over time.
+          Track the real history of AI.
         </h1>
-        <p class="text-lg text-ledger-text-muted leading-relaxed max-w-xl">
-          An open-source, chronological record of AI history — tracking events,
-          connecting narratives, and making "here's what we got wrong" a first-class feature.
+        <p class="text-lg sm:text-xl text-ledger-text-muted leading-relaxed max-w-2xl mb-6">
+          Events, debates, and turning points — organized for understanding, not doomscrolling.
         </p>
-        <div class="flex items-center gap-4 mt-8">
+
+        <!-- Stats row -->
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm font-mono text-ledger-text-dim mb-8">
+          <span>{eventCount} events</span>
+          <span class="text-ledger-border-light">·</span>
+          <span>{threadCount} threads</span>
+          <span class="text-ledger-border-light">·</span>
+          <span>{controversyCount} controversies</span>
+          <span class="text-ledger-border-light">·</span>
+          <span>{actorCount} actors</span>
+        </div>
+
+        <!-- CTAs -->
+        <div class="flex flex-wrap items-center gap-3">
           <a
-            href="/explore"
-            class="px-4 py-2 text-sm font-medium text-white bg-category-policy rounded-lg hover:bg-category-policy/80 transition-colors"
+            href="/threads"
+            class="px-5 py-2.5 text-sm font-medium text-white bg-category-policy rounded-lg hover:bg-category-policy/80 transition-colors"
           >
-            Explore events
+            Explore Threads
           </a>
           <a
-            href="/about"
-            class="px-4 py-2 text-sm font-medium text-ledger-text-muted hover:text-white border border-ledger-border rounded-lg hover:border-ledger-border-light transition-colors"
+            href="#timeline"
+            class="px-5 py-2.5 text-sm font-medium text-ledger-text-muted hover:text-white border border-ledger-border rounded-lg hover:border-ledger-border-light transition-colors"
           >
-            Learn more
+            Browse Timeline
           </a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Timeline -->
-  <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <!-- Featured Threads -->
+  <section class="border-b border-ledger-border">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="flex items-baseline justify-between mb-8">
+        <div>
+          <h2 class="text-xl font-semibold text-white">Featured Threads</h2>
+          <p class="text-sm text-ledger-text-muted mt-1">Narrative arcs connecting events across time</p>
+        </div>
+        <a href="/threads" class="text-sm text-category-policy hover:underline hidden sm:block">
+          View all →
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {threadCards.map((thread) => (
+          <a
+            href={`/threads/${thread.slug}`}
+            class="group block p-5 rounded-lg border border-ledger-border bg-ledger-surface/30 hover:bg-ledger-surface/60 hover:border-ledger-border-light hover:shadow-[0_0_20px_rgba(99,102,241,0.08)] transition-all duration-300"
+          >
+            <div class="flex items-center gap-2 mb-3">
+              <h3 class="text-base font-semibold text-ledger-text group-hover:text-white transition-colors line-clamp-1">
+                {thread.title}
+              </h3>
+              {thread.status === 'active' && (
+                <span class="flex-shrink-0 px-1.5 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-full text-emerald-400 bg-emerald-400/10 border border-emerald-400/20">
+                  active
+                </span>
+              )}
+            </div>
+
+            <p class="text-sm text-ledger-text-muted italic mb-4 line-clamp-2">
+              "{thread.excerpt}"
+            </p>
+
+            <div class="flex items-center gap-3 text-xs font-mono text-ledger-text-dim mb-3">
+              {thread.started && (
+                <span>{new Date(thread.started).getFullYear()}–present</span>
+              )}
+              <span>{thread.eventCount} events</span>
+            </div>
+
+            {thread.actorNames.length > 0 && (
+              <div class="flex flex-wrap gap-1.5">
+                {thread.actorNames.map((name) => (
+                  <span class="px-2 py-0.5 text-[11px] font-mono text-ledger-text-dim bg-ledger-surface rounded border border-ledger-border">
+                    {name}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            <div class="mt-4 text-xs font-medium text-category-policy group-hover:underline">
+              Read thread →
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <a href="/threads" class="block text-sm text-category-policy hover:underline mt-6 sm:hidden">
+        View all threads →
+      </a>
+    </div>
+  </section>
+
+  <!-- Latest Events -->
+  <section class="border-b border-ledger-border">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="flex items-baseline justify-between mb-6">
+        <h2 class="text-xl font-semibold text-white">Latest Events</h2>
+        <a href="#timeline" class="text-sm text-category-policy hover:underline">
+          View full timeline →
+        </a>
+      </div>
+
+      <div class="space-y-1">
+        {latestEvents.map((event) => {
+          const catColor = getCategoryColor(event.category);
+          return (
+            <a
+              href={`/events/${event.slug}`}
+              class="group flex items-center gap-3 sm:gap-4 py-2.5 px-3 -mx-3 rounded-lg hover:bg-ledger-surface/50 transition-colors"
+            >
+              <time class="flex-shrink-0 text-xs font-mono text-ledger-text-dim w-20 sm:w-24">
+                {new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}
+              </time>
+              <span class="flex-1 text-sm text-ledger-text group-hover:text-white transition-colors line-clamp-1">
+                {event.title}
+              </span>
+              <span
+                class="flex-shrink-0 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider rounded-full border hidden sm:inline-block"
+                style={`background: ${catColor}15; color: ${catColor}; border-color: ${catColor}30;`}
+              >
+                {event.category.replace('-', ' ')}
+              </span>
+              {event.significance && (
+                <span class={`flex-shrink-0 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-full border hidden sm:inline-block ${significanceColors[event.significance] || ''}`}>
+                  {event.significance}
+                </span>
+              )}
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- Full Timeline -->
+  <section id="timeline" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="flex items-baseline justify-between mb-8">
       <h2 class="text-xl font-semibold text-white">Timeline</h2>
       <span class="text-xs font-mono text-ledger-text-dim">
@@ -62,5 +217,40 @@ const timelineEvents = events.map((e) => ({
       </span>
     </div>
     <Timeline events={timelineEvents} categories={categories} client:load />
+  </section>
+
+  <!-- Contribute CTA Band -->
+  <section class="border-t border-ledger-border bg-ledger-surface/30">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="text-center max-w-2xl mx-auto">
+        <h2 class="text-xl sm:text-2xl font-bold text-white mb-3">
+          Help build the public record of AI history.
+        </h2>
+        <p class="text-ledger-text-muted mb-6">
+          The Ledger is open-source and community-maintained. Add events, suggest corrections, or improve documentation.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <a
+            href="https://github.com/pedro-bright/the-ledger"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-5 py-2.5 text-sm font-medium text-white bg-ledger-surface border border-ledger-border-light rounded-lg hover:bg-ledger-border transition-colors inline-flex items-center gap-2"
+          >
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+            </svg>
+            View on GitHub
+          </a>
+          <a
+            href="https://github.com/pedro-bright/the-ledger/blob/main/CONTRIBUTING.md"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-5 py-2.5 text-sm font-medium text-ledger-text-muted hover:text-white border border-ledger-border rounded-lg hover:border-ledger-border-light transition-colors"
+          >
+            Contributing guide
+          </a>
+        </div>
+      </div>
+    </div>
   </section>
 </Base>

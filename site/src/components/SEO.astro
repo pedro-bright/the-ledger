@@ -1,0 +1,40 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  url?: string;
+  type?: string;
+}
+
+const {
+  title = 'The Ledger — A durable historical record of AI',
+  description = 'Track events, debates, and turning points in AI history. Open-source, community-maintained, epistemically rigorous.',
+  image = '/og-default.svg',
+  url,
+  type = 'website',
+} = Astro.props;
+
+const canonicalURL = url || new URL(Astro.url.pathname, Astro.site || 'https://dist-roan-ten-72.vercel.app').toString();
+const imageURL = image.startsWith('http') ? image : new URL(image, Astro.site || 'https://dist-roan-ten-72.vercel.app').toString();
+---
+
+<!-- Primary Meta Tags -->
+<meta name="title" content={title} />
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalURL} />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content={type} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={imageURL} />
+<meta property="og:site_name" content="The Ledger" />
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content={canonicalURL} />
+<meta property="twitter:title" content={title} />
+<meta property="twitter:description" content={description} />
+<meta property="twitter:image" content={imageURL} />

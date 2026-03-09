@@ -78,6 +78,7 @@ export interface ThreadData {
 
 export interface ControversyData {
   id: string;
+  title: string;
   thread?: string;
   status?: 'active' | 'resolved' | 'dormant';
   polarity?: string;
@@ -121,6 +122,25 @@ function parseMarkdownFile(filePath: string): { data: Record<string, any>; conte
 function parseYamlFile(filePath: string): Record<string, any> {
   const raw = fs.readFileSync(filePath, 'utf-8');
   return yaml.load(raw) as Record<string, any>;
+}
+
+// ─── Title formatting ─────────────────────────────────────────
+
+const CONTROVERSY_TITLES: Record<string, string> = {
+  'agi-timeline-disagreement': 'AGI Timeline Disagreement',
+  'ai-training-copyright': 'AI Training & Copyright',
+  'militarization-vs-safety': 'Military AI: Engagement vs. Safety',
+  'open-weights-risk-benefit': 'Open Weights: Risks vs. Benefits',
+  'scaling-laws-plateau': 'Are Scaling Laws Hitting a Plateau?',
+};
+
+function formatControversyTitle(id: string): string {
+  if (CONTROVERSY_TITLES[id]) return CONTROVERSY_TITLES[id];
+  // Fallback: convert kebab-case to Title Case
+  return id
+    .split('-')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
 }
 
 // ─── Loaders ──────────────────────────────────────────────────
@@ -217,8 +237,10 @@ export function loadControversies(): ControversyData[] {
     if (!file.endsWith('.md')) continue;
     try {
       const { data, content, htmlContent } = parseMarkdownFile(path.join(contDir, file));
+      const cId = data.id || file.replace('.md', '');
       controversies.push({
-        id: data.id || file.replace('.md', ''),
+        id: cId,
+        title: data.title || formatControversyTitle(cId),
         thread: data.thread,
         status: data.status,
         polarity: data.polarity,
@@ -226,7 +248,7 @@ export function loadControversies(): ControversyData[] {
         positions: data.positions,
         content,
         htmlContent,
-        slug: data.id || file.replace('.md', ''),
+        slug: cId,
       });
     } catch (e) {
       console.warn(`Failed to parse controversy file ${file}:`, e);

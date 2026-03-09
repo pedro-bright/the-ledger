@@ -3,7 +3,7 @@ import Base from '../../layouts/Base.astro';
 import ConfidenceBadge from '../../components/ConfidenceBadge';
 import ContestationBadge from '../../components/ContestationBadge';
 import SignificanceHistory from '../../components/SignificanceHistory';
-import { loadEvents, getCategoryColor, loadThreads } from '../../lib/content';
+import { loadEvents, getCategoryColor, loadThreads, loadActors } from '../../lib/content';
 
 export function getStaticPaths() {
   const events = loadEvents();
@@ -16,7 +16,18 @@ export function getStaticPaths() {
 const { event } = Astro.props;
 const categoryColor = getCategoryColor(event.category);
 const threads = loadThreads();
+const actors = loadActors();
+const allEvents = loadEvents();
 const linkedThreads = threads.filter((t) => event.threads?.includes(t.id));
+
+// Resolve actor names
+const actorMap = new Map(actors.map((a) => [a.id, a]));
+
+// Resolve related events to titles
+const relatedEvents = (event.related || []).map((relId: string) => {
+  const found = allEvents.find((e) => e.id === relId);
+  return { id: relId, title: found?.title || relId, slug: found?.slug || relId };
+});
 
 const significanceLabel: Record<string, string> = {
   landmark: 'Landmark',
@@ -25,7 +36,7 @@ const significanceLabel: Record<string, string> = {
 };
 ---
 
-<Base title={event.title}>
+<Base title={event.title} description={`${event.title} — ${new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`}>
   <article class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="lg:grid lg:grid-cols-[1fr_280px] lg:gap-12">
       <!-- Main content -->
@@ -70,10 +81,30 @@ const significanceLabel: Record<string, string> = {
         </h1>
 
         <!-- Badges -->
-        <div class="flex flex-wrap gap-2 mb-8">
+        <div class="flex flex-wrap gap-2 mb-6">
           <ConfidenceBadge level={event.confidence} />
-          <ContestationBadge status={event.contestation?.status} />
+          {event.contestation?.status && (
+            <ContestationBadge status={event.contestation.status} />
+          )}
         </div>
+
+        <!-- Thread links (cross-navigation) -->
+        {linkedThreads.length > 0 && (
+          <div class="flex flex-wrap items-center gap-2 mb-6">
+            <span class="text-xs font-mono text-ledger-text-dim">Part of:</span>
+            {linkedThreads.map((thread) => (
+              <a
+                href={`/threads/${thread.slug}`}
+                class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-category-policy bg-category-policy/10 rounded-full border border-category-policy/20 hover:bg-category-policy/20 transition-colors"
+              >
+                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-3.03l4.5-4.5a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                </svg>
+                {thread.title}
+              </a>
+            ))}
+          </div>
+        )}
 
         <!-- Content -->
         <div class="prose max-w-none" set:html={event.htmlContent} />
@@ -85,36 +116,15 @@ const significanceLabel: Record<string, string> = {
           </div>
         )}
 
-        <!-- Thread links -->
-        {linkedThreads.length > 0 && (
-          <div class="mt-8 pt-8 border-t border-ledger-border">
-            <h3 class="text-xs font-mono uppercase tracking-wider text-ledger-text-dim mb-3">
-              Part of threads
-            </h3>
-            <div class="space-y-2">
-              {linkedThreads.map((thread) => (
-                <a
-                  href={`/threads/${thread.slug}`}
-                  class="block p-3 rounded-lg border border-ledger-border hover:border-ledger-border-light hover:bg-ledger-surface/50 transition-all"
-                >
-                  <span class="text-sm font-medium text-ledger-text hover:text-white">
-                    {thread.title}
-                  </span>
-                  {thread.core_question && (
-                    <p class="text-xs text-ledger-text-muted mt-1">{thread.core_question}</p>
-                  )}
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <!-- Tags -->
+        <!-- Tags as styled pills -->
         {event.tags && event.tags.length > 0 && (
           <div class="mt-8 pt-8 border-t border-ledger-border">
+            <h3 class="text-xs font-mono uppercase tracking-wider text-ledger-text-dim mb-3">
+              Tags
+            </h3>
             <div class="flex flex-wrap gap-2">
               {event.tags.map((tag: string) => (
-                <span class="px-2.5 py-1 text-xs font-mono text-ledger-text-dim bg-ledger-surface rounded-full border border-ledger-border">
+                <span class="px-2.5 py-1 text-xs font-mono text-ledger-text-muted bg-ledger-surface rounded-full border border-ledger-border hover:border-ledger-border-light transition-colors">
                   #{tag}
                 </span>
               ))}
@@ -167,36 +177,45 @@ const significanceLabel: Record<string, string> = {
             </div>
           )}
 
-          <!-- Actors -->
+          <!-- Actors as styled pills -->
           {event.actors && event.actors.length > 0 && (
             <div class="p-4 rounded-lg border border-ledger-border bg-ledger-surface/30">
               <h3 class="text-xs font-mono uppercase tracking-wider text-ledger-text-dim mb-3">
                 Actors
               </h3>
               <div class="space-y-2">
-                {event.actors.map((actor: any) => (
-                  <div class="flex items-center justify-between text-sm">
-                    <span class="text-ledger-text font-mono">{actor.id}</span>
-                    <span class="text-xs text-ledger-text-dim capitalize">{actor.role}</span>
-                  </div>
-                ))}
+                {event.actors.map((actor: any) => {
+                  const actorData = actorMap.get(actor.id);
+                  const displayName = actorData?.name || actor.id;
+                  return (
+                    <div class="flex items-center justify-between gap-2">
+                      <a
+                        href={`/explore?actor=${actor.id}`}
+                        class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono text-ledger-text bg-ledger-surface rounded-full border border-ledger-border hover:border-ledger-border-light hover:text-white transition-colors"
+                      >
+                        {displayName}
+                      </a>
+                      <span class="text-[10px] text-ledger-text-dim capitalize">{actor.role}</span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
 
-          <!-- Related events -->
-          {event.related && event.related.length > 0 && (
+          <!-- Related events as clickable links -->
+          {relatedEvents.length > 0 && (
             <div class="p-4 rounded-lg border border-ledger-border bg-ledger-surface/30">
               <h3 class="text-xs font-mono uppercase tracking-wider text-ledger-text-dim mb-3">
-                Related
+                Related Events
               </h3>
               <div class="space-y-1.5">
-                {event.related.map((relId: string) => (
+                {relatedEvents.map((rel) => (
                   <a
-                    href={`/events/${relId}`}
-                    class="block text-sm font-mono text-ledger-text-muted hover:text-category-policy transition-colors"
+                    href={`/events/${rel.slug}`}
+                    class="block text-sm text-ledger-text-muted hover:text-category-policy transition-colors py-1"
                   >
-                    {relId}
+                    {rel.title}
                   </a>
                 ))}
               </div>
