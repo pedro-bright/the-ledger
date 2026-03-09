@@ -1,0 +1,10 @@
+id: amazon
+name: Amazon
+type: company
+founded: 1994
+website: https://www.amazon.com
+aliases:
+  - Amazon.com Inc.
+  - AWS
+  - Amazon Web Services
+  - AMZN

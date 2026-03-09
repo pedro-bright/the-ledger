@@ -1,0 +1,10 @@
+id: us-congress
+name: United States Congress
+type: government
+founded: 1789
+website: https://www.congress.gov
+aliases:
+  - Congress
+  - U.S. Congress
+  - US Senate
+  - US House of Representatives
