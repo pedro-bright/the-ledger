@@ -4,7 +4,13 @@
   "title": "Controversy",
   "description": "Structured multi-axis contestation tracking.",
   "type": "object",
-  "required": ["id", "thread", "status", "polarity", "positions"],
+  "required": [
+    "id",
+    "thread",
+    "status",
+    "polarity",
+    "positions"
+  ],
   "properties": {
     "id": {
       "type": "string",
@@ -16,12 +22,19 @@
     },
     "status": {
       "type": "string",
-      "enum": ["active", "dormant", "resolved"],
+      "enum": [
+        "active",
+        "dormant",
+        "resolved"
+      ],
       "description": "Current controversy status."
     },
     "polarity": {
       "type": "string",
-      "enum": ["binary", "multi-axis"],
+      "enum": [
+        "binary",
+        "multi-axis"
+      ],
       "description": "Whether the controversy is two-sided or multi-dimensional."
     },
     "last_updated": {
@@ -33,7 +46,9 @@
       "minItems": 2,
       "items": {
         "type": "object",
-        "required": ["claim"],
+        "required": [
+          "claim"
+        ],
         "properties": {
           "claim": {
             "type": "string",
@@ -41,20 +56,33 @@
           },
           "proponents": {
             "type": "array",
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "description": "Actor IDs or descriptive labels of who holds this position."
           },
           "sources": {
             "type": "array",
-            "items": { "$ref": "source.schema.json" }
+            "items": {
+              "$ref": "source.schema.json"
+            }
           },
           "confidence": {
             "type": "string",
-            "enum": ["high", "medium", "low", "disputed"]
+            "enum": [
+              "high",
+              "medium",
+              "low",
+              "disputed"
+            ]
           }
         }
       },
       "description": "At least two competing positions."
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable title for the controversy"
     }
   },
   "additionalProperties": false
