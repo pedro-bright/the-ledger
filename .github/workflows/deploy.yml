@@ -4,14 +4,17 @@ on:
   push:
     branches: [main]
 
-# Allow only one concurrent deployment
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  group: deploy
+  cancel-in-progress: true
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 jobs:
-  build:
-    name: Build Astro Site
+  deploy:
+    name: Build & Deploy to Vercel
     runs-on: ubuntu-latest
 
     steps:
@@ -30,18 +33,20 @@ jobs:
       - name: Generate feeds
         run: |
           npm run generate-feed
+          mkdir -p site/public
           cp feed.xml rss.xml site/public/ 2>/dev/null || true
 
       - name: Install site dependencies
         working-directory: site
-        run: npm ci || npm install
+        run: npm install
 
       - name: Build site
         working-directory: site
-        run: npm run build || echo "Site build not yet configured — placeholder deploy"
+        run: npm run build
 
-      # Placeholder: replace with actual deployment (Vercel, Netlify, GitHub Pages)
-      - name: Deploy placeholder
-        run: |
-          echo "🚀 Site build complete. Deploy target not yet configured."
-          echo "Configure Vercel/Netlify/GitHub Pages deployment here."
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Deploy to Vercel
+        working-directory: site
+        run: vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} dist/
