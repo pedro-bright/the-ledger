@@ -1,0 +1,161 @@
+---
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+import '@fontsource/jetbrains-mono/400.css';
+import '@fontsource/jetbrains-mono/500.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = 'The Ledger', description = 'An open-source epistemic ledger of AI history' } = Astro.props;
+const pageTitle = title === 'The Ledger' ? title : `${title} — The Ledger`;
+---
+
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body class="bg-ledger-bg text-ledger-text font-sans antialiased min-h-screen flex flex-col">
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 border-b border-ledger-border bg-ledger-bg/80 backdrop-blur-xl">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-14">
+          <a href="/" class="text-lg font-semibold tracking-tight hover:text-white transition-colors">
+            the ledger
+          </a>
+          <div class="flex items-center gap-1">
+            <a href="/" class="nav-link">Timeline</a>
+            <a href="/explore" class="nav-link">Explore</a>
+            <a href="/threads" class="nav-link">Threads</a>
+            <a href="/about" class="nav-link">About</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main content -->
+    <main class="flex-1">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-ledger-border mt-auto">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-ledger-text-muted">
+          <p>An open-source epistemic ledger of AI history</p>
+          <div class="flex items-center gap-4">
+            <a
+              href="https://github.com/terrytang/the-ledger"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hover:text-ledger-text transition-colors"
+            >
+              GitHub
+            </a>
+            <span class="text-ledger-text-dim">·</span>
+            <span>CC BY-SA 4.0</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <style is:global>
+      .nav-link {
+        @apply px-3 py-1.5 text-sm text-ledger-text-muted hover:text-ledger-text rounded-md transition-colors;
+      }
+
+      /* Prose styles for rendered markdown */
+      .prose {
+        @apply text-ledger-text leading-relaxed;
+      }
+      .prose h1 {
+        @apply text-2xl font-bold mt-8 mb-4 text-white;
+      }
+      .prose h2 {
+        @apply text-xl font-semibold mt-8 mb-3 text-white;
+      }
+      .prose h3 {
+        @apply text-lg font-medium mt-6 mb-2 text-ledger-text;
+      }
+      .prose p {
+        @apply mb-4;
+      }
+      .prose ul,
+      .prose ol {
+        @apply mb-4 pl-6;
+      }
+      .prose ul {
+        @apply list-disc;
+      }
+      .prose ol {
+        @apply list-decimal;
+      }
+      .prose li {
+        @apply mb-1;
+      }
+      .prose a {
+        @apply text-category-policy hover:underline;
+      }
+      .prose blockquote {
+        @apply border-l-2 border-ledger-border-light pl-4 italic text-ledger-text-muted my-4;
+      }
+      .prose code {
+        @apply font-mono text-sm bg-ledger-surface px-1.5 py-0.5 rounded;
+      }
+      .prose pre {
+        @apply bg-ledger-surface p-4 rounded-lg overflow-x-auto mb-4;
+      }
+      .prose pre code {
+        @apply bg-transparent px-0 py-0;
+      }
+      .prose strong {
+        @apply font-semibold text-white;
+      }
+      .prose em {
+        @apply italic text-ledger-text-muted;
+      }
+      .prose hr {
+        @apply border-ledger-border my-8;
+      }
+
+      /* Scroll animations */
+      .fade-in-on-scroll {
+        opacity: 0;
+        transform: translateY(12px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+      }
+      .fade-in-on-scroll.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    </style>
+
+    <script>
+      // Scroll-triggered fade-in
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      document.querySelectorAll('.fade-in-on-scroll').forEach((el) => {
+        observer.observe(el);
+      });
+    </script>
+  </body>
+</html>

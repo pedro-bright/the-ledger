@@ -1,0 +1,123 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="About" description="About The Ledger — an open-source epistemic ledger of AI history.">
+  <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="mb-12">
+      <p class="text-xs font-mono uppercase tracking-[0.2em] text-ledger-text-dim mb-2">
+        About
+      </p>
+      <h1 class="text-2xl sm:text-3xl font-bold text-white mb-4">
+        An epistemic ledger of AI history
+      </h1>
+      <p class="text-lg text-ledger-text-muted leading-relaxed">
+        The Ledger is an open-source project that tracks AI history with epistemic rigor —
+        recording not just what happened, but how our understanding of what happened changes over time.
+      </p>
+    </div>
+
+    <div class="prose max-w-none">
+      <h2>Why This Exists</h2>
+      <p>
+        The AI field's history is being lost in ephemeral, scattered sources. Hot takes on Twitter,
+        newsletter archives behind paywalls, press releases that vanish. The Ledger is a machine for
+        watching collective understanding evolve.
+      </p>
+      <p>
+        We are not a news aggregator or encyclopedia. We track events, connect them into narrative threads,
+        preserve contestability, and make "here's what we got wrong" a first-class feature.
+      </p>
+
+      <h2>Editorial Principles</h2>
+      <ul>
+        <li>
+          <strong>No silent rewrites.</strong> Events are immutable once published. Updates happen via
+          retrospectives, not edits. Git history is the audit trail.
+        </li>
+        <li>
+          <strong>Contestability by default.</strong> Every substantive claim has a challenge window
+          and a visible contestation status. Disagreement is always possible, never forced.
+        </li>
+        <li>
+          <strong>Claims ≠ Facts.</strong> Claims are attributed, dated, and contestable. Factual
+          assertions require sources. Analysis is always labeled as analysis.
+        </li>
+        <li>
+          <strong>Time awareness.</strong> All interpretation is timestamped. Wrongness is a feature,
+          not a bug. We track belief decay, not errors.
+        </li>
+        <li>
+          <strong>Source primacy.</strong> Primary sources over commentary. Archived URLs mandatory
+          for primary sources.
+        </li>
+        <li>
+          <strong>Pluralism.</strong> Minority viewpoints are documented, not deleted.
+        </li>
+      </ul>
+
+      <h2>How It Works</h2>
+      <p>
+        The Ledger has two layers over the same data:
+      </p>
+      <ol>
+        <li>
+          <strong>Canonical Layer</strong> — The "current best understanding" view. This is what
+          readers see first. Clean, legible, citable.
+        </li>
+        <li>
+          <strong>Ledger Layer</strong> — The immutable audit trail. All assertions, disagreements,
+          edits, and retrospectives are preserved. History is one click away.
+        </li>
+      </ol>
+
+      <h2>Content Types</h2>
+      <ul>
+        <li><strong>Events</strong> — Individual happenings with structured metadata, sources, and confidence levels.</li>
+        <li><strong>Threads</strong> — Narrative arcs connecting events. Each has a signed canonical synthesis.</li>
+        <li><strong>Controversies</strong> — Multi-axis disagreement tracking with documented positions.</li>
+        <li><strong>Retrospectives</strong> — When understanding changes, we document how and why.</li>
+      </ul>
+
+      <h2>Significance Framework</h2>
+      <ul>
+        <li><strong>Landmark</strong> (~2-5/year) — Fundamentally alters AI trajectory. Future textbooks will cover these.</li>
+        <li><strong>Major</strong> (~2-4/month) — Meaningfully shifts the landscape.</li>
+        <li><strong>Notable</strong> (~5-10/week) — Worth documenting for the record.</li>
+      </ul>
+      <p>
+        Significance can be upgraded over time. The upgrade is tracked and surfaced —
+        enabling historical humility: "We thought this was minor. We were wrong."
+      </p>
+
+      <h2>How to Contribute</h2>
+      <p>
+        The Ledger is open source and community-maintained. Contributions happen through GitHub:
+      </p>
+      <ul>
+        <li><strong>Tier 0:</strong> Submit a claim + source via GitHub Issue form. No schema knowledge required.</li>
+        <li><strong>Tier 1:</strong> Help normalize submissions into full events (editors).</li>
+        <li><strong>Tier 2:</strong> Add thread connections, controversy structures, and signed syntheses.</li>
+      </ul>
+      <p>
+        See our <a href="https://github.com/terrytang/the-ledger/blob/main/CONTRIBUTING.md">Contributing Guide</a>
+        for full details.
+      </p>
+
+      <h2>License</h2>
+      <p>
+        All content is licensed under
+        <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">
+          Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+        </a>.
+        Attribution required, share-alike.
+      </p>
+
+      <hr />
+
+      <p class="text-ledger-text-dim italic">
+        "History is written by the present. We write it as it happens — then watch ourselves be wrong."
+      </p>
+    </div>
+  </article>
+</Base>

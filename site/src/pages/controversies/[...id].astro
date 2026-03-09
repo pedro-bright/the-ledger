@@ -1,0 +1,112 @@
+---
+import Base from '../../layouts/Base.astro';
+import { loadControversies, loadThreads } from '../../lib/content';
+
+export function getStaticPaths() {
+  const controversies = loadControversies();
+  return controversies.map((controversy) => ({
+    params: { id: controversy.slug },
+    props: { controversy },
+  }));
+}
+
+const { controversy } = Astro.props;
+const threads = loadThreads();
+const linkedThread = controversy.thread ? threads.find((t) => t.id === controversy.thread) : null;
+
+const confidenceColors: Record<string, string> = {
+  high: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20',
+  medium: 'text-amber-400 bg-amber-400/10 border-amber-400/20',
+  low: 'text-orange-400 bg-orange-400/10 border-orange-400/20',
+};
+---
+
+<Base title={controversy.id}>
+  <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-xs font-mono text-ledger-text-dim mb-6">
+      <a href="/" class="hover:text-ledger-text transition-colors">Timeline</a>
+      <span>/</span>
+      <span class="text-ledger-text-muted">Controversies</span>
+      <span>/</span>
+      <span class="text-ledger-text-muted">{controversy.id}</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex items-center gap-3 mb-3">
+        {controversy.status && (
+          <span class={`px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-full border ${
+            controversy.status === 'active'
+              ? 'text-amber-400 bg-amber-400/10 border-amber-400/20'
+              : 'text-ledger-text-dim bg-ledger-surface border-ledger-border'
+          }`}>
+            {controversy.status}
+          </span>
+        )}
+        {controversy.polarity && (
+          <span class="text-xs font-mono text-ledger-text-dim">
+            {controversy.polarity} polarity
+          </span>
+        )}
+      </div>
+
+      <h1 class="text-2xl sm:text-3xl font-bold text-white mb-3">{controversy.id}</h1>
+
+      {linkedThread && (
+        <p class="text-sm text-ledger-text-muted">
+          Part of thread: <a href={`/threads/${linkedThread.slug}`} class="text-category-policy hover:underline">{linkedThread.title}</a>
+        </p>
+      )}
+    </div>
+
+    <!-- Positions -->
+    {controversy.positions && controversy.positions.length > 0 && (
+      <section class="mb-10">
+        <h2 class="text-lg font-semibold text-white mb-4">Positions</h2>
+        <div class="space-y-4">
+          {controversy.positions.map((position, i) => (
+            <div class="p-5 rounded-lg border border-ledger-border bg-ledger-surface/50">
+              <div class="flex items-start justify-between gap-4 mb-3">
+                <h3 class="text-base font-semibold text-white">"{position.claim}"</h3>
+                {position.confidence && (
+                  <span class={`flex-shrink-0 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-full border ${
+                    confidenceColors[position.confidence] || confidenceColors.medium
+                  }`}>
+                    {position.confidence}
+                  </span>
+                )}
+              </div>
+              {position.proponents && position.proponents.length > 0 && (
+                <div class="flex flex-wrap gap-2 mb-3">
+                  <span class="text-xs text-ledger-text-dim">Proponents:</span>
+                  {position.proponents.map((p: string) => (
+                    <span class="text-xs font-mono text-ledger-text-muted bg-ledger-surface px-2 py-0.5 rounded border border-ledger-border">
+                      {p}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {position.sources && position.sources.length > 0 && (
+                <div class="flex items-center gap-2 text-xs text-ledger-text-dim">
+                  <span>{position.sources.length} source{position.sources.length !== 1 ? 's' : ''}</span>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Content -->
+    {controversy.content.trim() && (
+      <div class="prose max-w-none" set:html={controversy.htmlContent} />
+    )}
+
+    {controversy.last_updated && (
+      <p class="text-xs font-mono text-ledger-text-dim mt-8 pt-4 border-t border-ledger-border">
+        Last updated: {new Date(controversy.last_updated).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+      </p>
+    )}
+  </article>
+</Base>

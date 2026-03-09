@@ -1,0 +1,66 @@
+---
+import Base from '../layouts/Base.astro';
+import Timeline from '../components/Timeline';
+import { loadEvents, getCategories, getExcerpt } from '../lib/content';
+
+const events = loadEvents();
+const categories = getCategories();
+
+// Prepare events for the React timeline component
+const timelineEvents = events.map((e) => ({
+  id: e.id,
+  title: e.title,
+  date: e.date,
+  category: e.category,
+  significance: e.significance,
+  confidence: e.confidence,
+  contestation: e.contestation,
+  summary: getExcerpt(e.content),
+  slug: e.slug,
+}));
+---
+
+<Base title="The Ledger" description="An open-source epistemic ledger of AI history — tracking how understanding changes over time.">
+  <!-- Hero -->
+  <section class="border-b border-ledger-border">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+      <div class="max-w-2xl">
+        <p class="text-xs font-mono uppercase tracking-[0.2em] text-ledger-text-dim mb-4">
+          Epistemic Ledger
+        </p>
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4">
+          How understanding<br />changes over time.
+        </h1>
+        <p class="text-lg text-ledger-text-muted leading-relaxed max-w-xl">
+          An open-source, chronological record of AI history — tracking events,
+          connecting narratives, and making "here's what we got wrong" a first-class feature.
+        </p>
+        <div class="flex items-center gap-4 mt-8">
+          <a
+            href="/explore"
+            class="px-4 py-2 text-sm font-medium text-white bg-category-policy rounded-lg hover:bg-category-policy/80 transition-colors"
+          >
+            Explore events
+          </a>
+          <a
+            href="/about"
+            class="px-4 py-2 text-sm font-medium text-ledger-text-muted hover:text-white border border-ledger-border rounded-lg hover:border-ledger-border-light transition-colors"
+          >
+            Learn more
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="flex items-baseline justify-between mb-8">
+      <h2 class="text-xl font-semibold text-white">Timeline</h2>
+      <span class="text-xs font-mono text-ledger-text-dim">
+        {events.length} {events.length === 1 ? 'event' : 'events'}
+      </span>
+    </div>
+    <Timeline events={timelineEvents} categories={categories} client:load />
+  </section>
+</Base>

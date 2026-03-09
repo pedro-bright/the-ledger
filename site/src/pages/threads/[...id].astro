@@ -1,0 +1,132 @@
+---
+import Base from '../../layouts/Base.astro';
+import ContestationBadge from '../../components/ContestationBadge';
+import { loadThreads, loadEvents, loadControversies } from '../../lib/content';
+
+export function getStaticPaths() {
+  const threads = loadThreads();
+  return threads.map((thread) => ({
+    params: { id: thread.slug },
+    props: { thread },
+  }));
+}
+
+const { thread } = Astro.props;
+const allEvents = loadEvents();
+const allControversies = loadControversies();
+
+// Get linked events
+const linkedEvents = thread.events
+  ? allEvents.filter((e) => thread.events!.includes(e.id))
+  : [];
+linkedEvents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+// Get linked controversies
+const linkedControversies = thread.controversies
+  ? allControversies.filter((c) => thread.controversies!.includes(c.id))
+  : [];
+---
+
+<Base title={thread.title}>
+  <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-xs font-mono text-ledger-text-dim mb-6">
+      <a href="/" class="hover:text-ledger-text transition-colors">Timeline</a>
+      <span>/</span>
+      <a href="/threads" class="hover:text-ledger-text transition-colors">Threads</a>
+      <span>/</span>
+      <span class="text-ledger-text-muted">{thread.id}</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex items-center gap-3 mb-3">
+        {thread.status && (
+          <span class={`px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-full border ${
+            thread.status === 'active'
+              ? 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20'
+              : 'text-ledger-text-dim bg-ledger-surface border-ledger-border'
+          }`}>
+            {thread.status}
+          </span>
+        )}
+        <ContestationBadge status={thread.contestation?.status} />
+      </div>
+
+      <h1 class="text-2xl sm:text-3xl font-bold text-white mb-3">{thread.title}</h1>
+
+      {thread.core_question && (
+        <blockquote class="text-lg text-ledger-text-muted italic border-l-2 border-ledger-border-light pl-4 mb-4">
+          {thread.core_question}
+        </blockquote>
+      )}
+
+      <div class="flex flex-wrap items-center gap-4 text-xs font-mono text-ledger-text-dim">
+        {thread.curator && <span>Curated by <strong class="text-ledger-text-muted">{thread.curator}</strong></span>}
+        {thread.started && <span>Since {new Date(thread.started).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}</span>}
+        {thread.last_updated && <span>Updated {new Date(thread.last_updated).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>}
+      </div>
+    </div>
+
+    <!-- Canonical synthesis (content) -->
+    <div class="prose max-w-none mb-12" set:html={thread.htmlContent} />
+
+    <!-- Mini-timeline of linked events -->
+    {linkedEvents.length > 0 && (
+      <section class="mb-12">
+        <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+          <svg class="w-4 h-4 text-ledger-text-dim" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width={2}>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Events in this thread
+        </h2>
+        <div class="relative">
+          <div class="absolute left-[5px] top-2 bottom-2 w-px bg-ledger-border" />
+          <div class="space-y-3">
+            {linkedEvents.map((event) => (
+              <a
+                href={`/events/${event.slug}`}
+                class="group relative flex items-start gap-4 pl-6 hover:bg-ledger-surface/30 -mx-2 px-2 rounded-lg py-2 transition-colors"
+              >
+                <div class="absolute left-0 top-3.5 w-[11px] h-[11px] rounded-full bg-ledger-bg border-2 border-ledger-border-light z-10" />
+                <time class="text-xs font-mono text-ledger-text-dim whitespace-nowrap pt-0.5">
+                  {new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}
+                </time>
+                <div>
+                  <span class="text-sm font-medium group-hover:text-white transition-colors">{event.title}</span>
+                  {event.significance && (
+                    <span class="ml-2 text-[10px] font-mono uppercase tracking-wider text-ledger-text-dim">
+                      {event.significance}
+                    </span>
+                  )}
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Controversies panel -->
+    {linkedControversies.length > 0 && (
+      <section class="mb-12">
+        <h2 class="text-lg font-semibold text-white mb-4">Active Controversies</h2>
+        <div class="space-y-4">
+          {linkedControversies.map((controversy) => (
+            <a
+              href={`/controversies/${controversy.slug}`}
+              class="block p-4 rounded-lg border border-amber-400/20 bg-amber-400/5 hover:bg-amber-400/10 transition-colors"
+            >
+              <span class="text-sm font-medium text-amber-400">{controversy.id}</span>
+              {controversy.positions && (
+                <p class="text-xs text-ledger-text-muted mt-1">
+                  {controversy.positions.length} positions documented
+                </p>
+              )}
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+  </article>
+</Base>

@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import Explorer from '../components/Explorer';
+import { loadEvents, getCategories, getExcerpt } from '../lib/content';
+
+const events = loadEvents();
+const categories = getCategories();
+
+const explorerEvents = events.map((e) => ({
+  id: e.id,
+  title: e.title,
+  date: e.date,
+  category: e.category,
+  significance: e.significance,
+  confidence: e.confidence,
+  contestation: e.contestation,
+  summary: getExcerpt(e.content),
+  slug: e.slug,
+  tags: e.tags,
+  threads: e.threads,
+}));
+---
+
+<Base title="Explore" description="Search and filter events in the AI history ledger.">
+  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="mb-8">
+      <p class="text-xs font-mono uppercase tracking-[0.2em] text-ledger-text-dim mb-2">
+        Search & Filter
+      </p>
+      <h1 class="text-2xl sm:text-3xl font-bold text-white mb-3">Explore</h1>
+      <p class="text-ledger-text-muted max-w-xl">
+        Search, filter, and browse all documented events in the ledger.
+        Use facets to narrow by category, significance, or date.
+      </p>
+    </div>
+    <Explorer events={explorerEvents} categories={categories} client:load />
+  </section>
+</Base>
