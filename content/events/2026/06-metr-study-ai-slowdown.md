@@ -8,14 +8,23 @@ confidence: high
 tags: [productivity, software-development, evaluation, benchmarks]
 threads: [scaling-laws-debate]
 sources:
-  - url: https://metr.org
-    title: "METR Research"
+  - url: https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/
+    title: "Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity"
     type: primary_document
-    date: 2026-03-06
-  - url: https://news.ycombinator.com
-    title: "HN Discussion - 1400+ points"
+    date: 2025-07-10
+    archive_url: https://web.archive.org/web/2025/https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/
+  - url: https://arxiv.org/abs/2507.09089
+    title: "METR RCT Paper: AI Tools and Developer Productivity"
+    type: primary_document
+    date: 2025-07-10
+  - url: https://metr.org/blog/2026-02-24-uplift-update/
+    title: "METR Follow-Up: We are Changing our Developer Productivity Experiment Design"
+    type: primary_document
+    date: 2026-02-24
+  - url: https://news.ycombinator.com/item?id=44522772
+    title: "HN Discussion: Measuring the impact of AI on experienced open-source developer productivity"
     type: commentary
-    date: 2026-03-07
+    date: 2025-07-10
 ---
 
 ## Summary

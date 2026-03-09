@@ -13,6 +13,7 @@ actors:
     role: presenter
 regions: [US]
 tags: [product-launches, consumer-ai, chatgpt, marketing]
+threads: [scaling-laws-debate]
 sources:
   - url: https://openai.com/12-days/
     title: "12 Days of OpenAI"

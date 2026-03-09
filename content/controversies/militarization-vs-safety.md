@@ -1,5 +1,6 @@
 ---
 id: militarization-vs-safety
+title: "AI Militarization vs. Safety Commitments"
 thread: ai-military-ethics
 status: active
 polarity: multi-axis

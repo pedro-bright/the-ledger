@@ -1,5 +1,6 @@
 ---
 id: open-weights-risk-benefit
+title: "Open-Weight AI Models: Democratization vs. Proliferation Risk"
 thread: open-vs-closed-weights
 status: active
 polarity: multi-axis

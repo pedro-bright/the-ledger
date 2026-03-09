@@ -1,5 +1,6 @@
 ---
 id: ai-training-copyright
+title: "AI Training on Copyrighted Works: Fair Use or Infringement?"
 thread: ai-copyright-wars
 status: active
 polarity: multi-axis

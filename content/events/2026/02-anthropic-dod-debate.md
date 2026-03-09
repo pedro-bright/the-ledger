@@ -15,14 +15,14 @@ tags: [military-ai, ethics, acceptable-use-policy, national-security]
 threads: [ai-military-ethics]
 related: [openai-removes-military-ban]
 sources:
-  - url: https://www.anthropic.com/news/usage-policy
-    title: "Anthropic Usage Policy"
+  - url: https://www.anthropic.com/legal/aup
+    title: "Anthropic Acceptable Use Policy"
     type: official
     date: 2025-09-12
-  - url: https://www.reuters.com/technology/artificial-intelligence/
-    title: "Reuters AI Coverage"
+  - url: https://www.theregister.com/2024/11/07/anthropic_palantir_aws_claude/
+    title: "Flanked by Palantir and AWS, Anthropic's Claude Marches into US Defense Intelligence"
     type: secondary_reporting
-    date: 2026-02-28
+    date: 2024-11-07
 ---
 
 ## Summary

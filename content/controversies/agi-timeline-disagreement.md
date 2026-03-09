@@ -1,5 +1,6 @@
 ---
 id: agi-timeline-disagreement
+title: "When Will We Reach AGI? The Timeline Disagreement"
 thread: scaling-laws-debate
 status: active
 polarity: multi-axis
@@ -28,8 +29,8 @@ positions:
   - claim: "Whether or not we call it 'AGI,' AI systems are already transformatively capable, and the fixation on AGI timelines distracts from present-day impacts and governance needs"
     proponents: [ai-ethicists, governance-researchers, policy-focused-practitioners]
     sources:
-      - url: https://www.governance.ai/
-        title: "Centre for the Governance of AI"
+      - url: https://www.governance.ai/research
+        title: "Centre for the Governance of AI — Research"
     confidence: high
 ---
 

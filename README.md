@@ -105,6 +105,14 @@ The most interesting thing about history isn't what happened — it's how our un
 
 If the site ever feels reasonable instead of alive, we've lost.
 
+## About
+
+Curated by [Terry Tang](https://github.com/terrytangyin) under a transparent editorial framework. All editorial decisions, source selections, and significance ratings follow the principles in the [Editorial Constitution](editorial/constitution.md).
+
+Contributions, corrections, and source additions are welcome and public. See [CONTRIBUTING.md](CONTRIBUTING.md) for how to participate. Every edit is tracked in git — there are no private channels for content changes.
+
+This is an open project, not a personal blog. The goal is a durable, community-maintained historical record that outlasts any single curator.
+
 ---
 
-*Founded March 2026 by [Terry Tang](https://github.com/terrytangyin).*
+*Founded March 2026.*

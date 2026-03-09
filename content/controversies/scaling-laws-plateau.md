@@ -1,5 +1,6 @@
 ---
 id: scaling-laws-plateau
+title: "Are Scaling Laws Hitting a Wall?"
 thread: scaling-laws-debate
 status: active
 polarity: multi-axis
@@ -24,8 +25,8 @@ positions:
   - claim: "The current paradigm (transformers + language modeling) is approaching fundamental limits that no amount of scale, efficiency, or inference compute can overcome"
     proponents: [some-academic-researchers, gary-marcus, neuroscience-inspired-ai-researchers]
     sources:
-      - url: https://garymarcus.substack.com/
-        title: "Gary Marcus on the limits of LLMs"
+      - url: https://nautil.us/deep-learning-is-hitting-a-wall-238440/
+        title: "Deep Learning Is Hitting a Wall (Gary Marcus, Nautilus)"
     confidence: low
   - claim: "Scaling laws hold for training loss but not for meaningful capabilities — benchmark improvements don't translate to real-world utility gains at the same rate"
     proponents: [applied-ai-practitioners, some-enterprise-users, evaluation-researchers]

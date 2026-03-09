@@ -6,15 +6,20 @@ category: culture
 significance: notable
 confidence: high
 tags: [copyright, open-source, licensing, ai-generated-code]
-threads: [ai-copyright-wars]
+threads: [ai-copyright-wars, open-vs-closed-weights]
 sources:
-  - url: https://lucumr.pocoo.org/
-    title: "Armin Ronacher's Blog"
+  - url: https://github.com/chardet/chardet/issues/327
+    title: "chardet Issue #327: AI-rewritten relicensing discussion"
+    type: primary_document
+    date: 2026-03-01
+  - url: https://lucumr.pocoo.org/2026/3/5/theseus/
+    title: "AI And The Ship of Theseus (Armin Ronacher)"
     type: commentary
     date: 2026-03-05
-  - url: https://news.ycombinator.com
-    title: "Hacker News Discussion"
-    type: secondary_reporting
+    archive_url: https://web.archive.org/web/2026/https://lucumr.pocoo.org/2026/3/5/theseus/
+  - url: https://news.ycombinator.com/item?id=47263048
+    title: "HN Discussion: AI and the Ship of Theseus (180+ points, 189 comments)"
+    type: commentary
     date: 2026-03-05
 ---
 

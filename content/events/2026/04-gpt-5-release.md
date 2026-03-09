@@ -12,9 +12,17 @@ tags: [reasoning, frontier-models, benchmarks]
 threads: [scaling-laws-debate]
 related: [openai-gpt-5-release, openai-o1-release]
 sources:
-  - url: https://openai.com
-    title: "OpenAI"
+  - url: https://openai.com/index/introducing-gpt-5-2/
+    title: "Introducing GPT-5.2"
     type: official
+    date: 2026-02-01
+  - url: https://platform.openai.com/docs/guides/latest-model
+    title: "OpenAI Platform: Latest Model Documentation"
+    type: official
+    date: 2026-02-01
+  - url: https://cdn.openai.com/pdf/3a4153c8-c748-4b71-8e31-aecbde944f8d/oai_5_2_system-card.pdf
+    title: "GPT-5.2 System Card"
+    type: primary_document
     date: 2026-02-01
 ---
 

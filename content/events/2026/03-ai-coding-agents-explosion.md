@@ -11,7 +11,7 @@ actors:
   - id: openai
     role: participant
 tags: [coding-agents, software-development, productivity, automation]
-threads: [scaling-laws-debate]
+threads: [scaling-laws-debate, open-vs-closed-weights]
 sources:
   - url: https://www.anthropic.com/claude-code
     title: "Claude Code"
