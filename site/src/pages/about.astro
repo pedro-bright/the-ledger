@@ -33,7 +33,7 @@ import Base from '../layouts/Base.astro';
       <ul>
         <li>
           <strong>No silent rewrites.</strong> Events are immutable once published. Updates happen via
-          retrospectives, not edits. Git history is the audit trail.
+          significance history, revisions, and supersession — never silent edits. Git history is the audit trail.
         </li>
         <li>
           <strong>Contestability by default.</strong> Every substantive claim has a challenge window
@@ -67,7 +67,7 @@ import Base from '../layouts/Base.astro';
         </li>
         <li>
           <strong>Ledger Layer</strong> — The immutable audit trail. All assertions, disagreements,
-          edits, and retrospectives are preserved. History is one click away.
+          and revisions are preserved. History is one click away.
         </li>
       </ol>
 
@@ -76,7 +76,7 @@ import Base from '../layouts/Base.astro';
         <li><strong>Events</strong> — Individual happenings with structured metadata, sources, and confidence levels.</li>
         <li><strong>Threads</strong> — Narrative arcs connecting events. Each has a signed canonical synthesis.</li>
         <li><strong>Controversies</strong> — Multi-axis disagreement tracking with documented positions.</li>
-        <li><strong>Retrospectives</strong> — When understanding changes, we document how and why.</li>
+        <li><strong>Significance + Contestation tracking</strong> — Every event carries a significance level (landmark/major/notable) that can be upgraded as understanding shifts, plus a contestation status that surfaces ongoing disagreement.</li>
       </ul>
 
       <h2>Significance Framework</h2>
@@ -92,17 +92,29 @@ import Base from '../layouts/Base.astro';
 
       <h2>How to Contribute</h2>
       <p>
-        The Ledger is open source and community-maintained. Contributions happen through GitHub:
+        The Ledger is curator-led at launch. The contribution model is tiered:
       </p>
       <ul>
-        <li><strong>Tier 0:</strong> Submit a claim + source via GitHub Issue form. No schema knowledge required.</li>
-        <li><strong>Tier 1:</strong> Help normalize submissions into full events (editors).</li>
-        <li><strong>Tier 2:</strong> Add thread connections, controversy structures, and signed syntheses.</li>
+        <li><strong>Tier 0 — Active.</strong> Anyone can drop a source + claim via a <a href="https://github.com/pedro-bright/the-ledger/issues/new?template=source-tip.yml">GitHub issue</a>. The curator turns it into a structured event. This is the highest-leverage way to help.</li>
+        <li><strong>Tier 1 — Active.</strong> The curator normalizes submissions, writes summaries, attaches sources, and assigns significance.</li>
+        <li><strong>Tier 2 — Roadmap.</strong> Trusted contributors will eventually add thread connections, controversy positions, and signed syntheses. Activates once 2-3 collaborators are committed to the editorial standards.</li>
+        <li><strong>Tier 3 — Roadmap.</strong> An editorial board (3-5 rotating members) governs constitution and schema changes. Activates as the project scales.</li>
       </ul>
       <p>
-        See our <a href="https://github.com/terrytang/the-ledger/blob/main/CONTRIBUTING.md">Contributing Guide</a>
-        for full details.
+        See the <a href="https://github.com/pedro-bright/the-ledger/blob/main/CONTRIBUTING.md">Contributing Guide</a> for full process.
       </p>
+
+      <h2>Roadmap</h2>
+      <p>
+        The constitution describes content types that aren't yet active on the site:
+      </p>
+      <ul>
+        <li><strong>Standalone syntheses</strong> — Currently each thread embeds its own canonical synthesis. Once threads outgrow that, syntheses will move to dedicated documents under <code>content/syntheses/</code>.</li>
+        <li><strong>Formal challenges + resolutions</strong> — Schema and directories exist (<code>content/challenges/</code>, <code>content/resolutions/</code>); the workflow activates once the editorial board does.</li>
+        <li><strong>Editorial memos</strong> — Public-facing notes on significant editorial decisions (significance upgrades, contestation outcomes).</li>
+        <li><strong>Perspectives</strong> — Quarterly thematic essays.</li>
+        <li><strong>Graph visualization deepening</strong> — The relationship graph ships at launch as force-directed view; planned filters: by year, by category, by actor degree.</li>
+      </ul>
 
       <h2>License</h2>
       <p>

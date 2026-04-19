@@ -16,7 +16,7 @@ We don't aggregate news. We don't write encyclopedias. We build a **machine for 
 
 - **Not a news site.** We're archival, not breaking. The 72-hour rule means we don't publish hot takes.
 - **Not Wikipedia.** We're chronological, narrative, and opinionated about significance — with transparent provenance underneath.
-- **Not a newsletter.** We're structured data, open source, and community-maintained.
+- **Not a newsletter.** We're structured data, open source, and curator-led.
 - **Not Twitter.** We're curated, permanent, and evolving.
 
 ## Core Architecture
@@ -27,7 +27,7 @@ The Ledger has two layers over the same data:
 
 1. **Canonical Layer** (what readers see) — The "current best understanding" of each event, thread, and controversy. Legible, citable, periodically reviewed narratives.
 
-2. **Ledger Layer** (what powers it) — Immutable, append-only event history. All assertions, disagreements, edits, and retrospectives preserved. No silent rewriting. Git is the audit trail.
+2. **Ledger Layer** (what powers it) — Immutable, append-only event history. All assertions, disagreements, and revisions preserved. No silent rewriting. Git is the audit trail.
 
 ### What We Track
 
@@ -37,23 +37,23 @@ The Ledger has two layers over the same data:
 
 ⚡ **Controversies** — Structured multi-axis disagreements where credible positions are documented, not adjudicated.
 
-🔄 **Retrospectives** — The "wrongness" feature. When understanding changes, we don't silently rewrite — we issue formal reinterpretations that explain what changed and why.
+🔄 **Significance + Contestation tracking** — The "wrongness" feature. Every event carries a significance level (landmark/major/notable) that can be upgraded as understanding shifts, plus a contestation status that surfaces ongoing disagreement.
 
 ## Current Content
 
-As of March 2026, the seed dataset includes:
+Live counts are visible at the top of [the homepage](https://the-ledger.dev). At launch, the seed dataset spans:
 
-- **50 events** from 2023-2025, spanning model releases, policy developments, corporate governance crises, and geopolitical shifts
-- **20 actors** in the actor registry: companies, governments, research labs, and key individuals
-- **4 narrative threads** with canonical syntheses, competing interpretations, and open questions
-- **5 structured controversies** with multi-axis positions and evidence
-- **6 editorial documents** including the Editorial Constitution and evidence standards
+- Events from 2023-2026, covering model releases, policy developments, governance crises, and geopolitical shifts
+- An actor registry of companies, governments, research labs, and key individuals
+- Narrative threads with canonical syntheses, competing interpretations, and open questions
+- Structured controversies with multi-axis positions and evidence
+- A full editorial framework: constitution, evidence standards, style guide, AI assistance policy
 
 ## Editorial Constitution
 
 Nine non-negotiable principles govern The Ledger:
 
-1. **No Silent Rewrites** — Events are immutable. Updates happen via retrospectives.
+1. **No Silent Rewrites** — Events are immutable. Updates happen via significance history, revisions, and supersession.
 2. **Contestability by Default** — Every claim has a challenge window.
 3. **Claims ≠ Facts** — Claims are attributed, dated, and contestable.
 4. **Time Awareness** — Wrongness is a feature. We track belief decay.
@@ -84,12 +84,13 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
 the-ledger/
 ├── content/
 │   ├── events/          # Immutable event records (by year)
-│   ├── threads/         # Narrative arcs
+│   ├── threads/         # Narrative arcs with embedded syntheses
 │   ├── controversies/   # Multi-axis disagreements
 │   ├── actors/          # Actor registry (YAML)
-│   ├── retrospectives/  # Reinterpretations
-│   ├── syntheses/       # Canonical thread syntheses
-│   └── perspectives/    # Quarterly/thematic essays
+│   ├── challenges/      # Formal challenges to claims (scaffolded)
+│   ├── memos/           # Editorial memos (scaffolded)
+│   ├── perspectives/    # Quarterly/thematic essays (scaffolded)
+│   └── syntheses/       # Standalone canonical syntheses (scaffolded; threads currently embed their own)
 ├── editorial/           # Constitution, policies, style guide
 ├── schema/              # JSON Schema definitions
 └── scripts/             # Validation and build tools
@@ -107,11 +108,11 @@ If the site ever feels reasonable instead of alive, we've lost.
 
 ## About
 
-Curated by [Terry Tang](https://github.com/terrytangyin) under a transparent editorial framework. All editorial decisions, source selections, and significance ratings follow the principles in the [Editorial Constitution](editorial/constitution.md).
+Curated by [Terry Tang](https://github.com/terrytangyin) under the [Editorial Constitution](editorial/constitution.md). All editorial decisions, source selections, and significance ratings follow its principles.
 
-Contributions, corrections, and source additions are welcome and public. See [CONTRIBUTING.md](CONTRIBUTING.md) for how to participate. Every edit is tracked in git — there are no private channels for content changes.
+The Ledger is **curator-led** at launch. The four-tier contribution model (see [CONTRIBUTING.md](CONTRIBUTING.md)) is real but, in practice, only Tier 0 (issue-based source tips) and Tier 1 (curator-normalized events) are active. Tier 2 (trusted contributors) and Tier 3 (editorial board) are roadmap — they activate as the project finds collaborators who want to commit to its standards.
 
-This is an open project, not a personal blog. The goal is a durable, community-maintained historical record that outlasts any single curator.
+Every edit is tracked in git. There are no private channels for content changes. If you spot a missing event, a stale source, or a position that's been dropped from a controversy: open an issue.
 
 ---
 

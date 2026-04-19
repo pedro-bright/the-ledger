@@ -80,13 +80,15 @@ const significanceLabel: Record<string, string> = {
           {event.title}
         </h1>
 
-        <!-- Badges -->
-        <div class="flex flex-wrap gap-2 mb-6">
-          <ConfidenceBadge level={event.confidence} />
-          {event.contestation?.status && (
-            <ContestationBadge status={event.contestation.status} />
-          )}
-        </div>
+        <!-- Badges: render only when confidence is non-default or contestation exists -->
+        {((event.confidence && event.confidence !== 'high') || event.contestation?.status) && (
+          <div class="flex flex-wrap gap-2 mb-6">
+            <ConfidenceBadge level={event.confidence} />
+            {event.contestation?.status && (
+              <ContestationBadge status={event.contestation.status} />
+            )}
+          </div>
+        )}
 
         <!-- Thread links (cross-navigation) -->
         {linkedThreads.length > 0 && (
@@ -190,7 +192,7 @@ const significanceLabel: Record<string, string> = {
                   return (
                     <div class="flex items-center justify-between gap-2">
                       <a
-                        href={`/explore?actor=${actor.id}`}
+                        href={`/actors/${actor.id}`}
                         class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono text-ledger-text bg-ledger-surface rounded-full border border-ledger-border hover:border-ledger-border-light hover:text-white transition-colors"
                       >
                         {displayName}
@@ -223,29 +225,27 @@ const significanceLabel: Record<string, string> = {
           )}
 
           <!-- Metadata -->
-          <div class="p-4 rounded-lg border border-ledger-border bg-ledger-surface/30">
-            <h3 class="text-xs font-mono uppercase tracking-wider text-ledger-text-dim mb-3">
-              Metadata
-            </h3>
-            <dl class="space-y-2 text-sm">
-              <div class="flex justify-between">
-                <dt class="text-ledger-text-dim">ID</dt>
-                <dd class="font-mono text-xs text-ledger-text-muted">{event.id}</dd>
-              </div>
-              {event.state && (
-                <div class="flex justify-between">
-                  <dt class="text-ledger-text-dim">State</dt>
-                  <dd class="font-mono text-xs capitalize text-ledger-text-muted">{event.state}</dd>
-                </div>
-              )}
-              {event.regions && (
-                <div class="flex justify-between">
-                  <dt class="text-ledger-text-dim">Regions</dt>
-                  <dd class="font-mono text-xs text-ledger-text-muted">{event.regions.join(', ')}</dd>
-                </div>
-              )}
-            </dl>
-          </div>
+          {(event.state || event.regions) && (
+            <div class="p-4 rounded-lg border border-ledger-border bg-ledger-surface/30">
+              <h3 class="text-xs font-mono uppercase tracking-wider text-ledger-text-dim mb-3">
+                Metadata
+              </h3>
+              <dl class="space-y-2 text-sm">
+                {event.state && (
+                  <div class="flex justify-between">
+                    <dt class="text-ledger-text-dim">State</dt>
+                    <dd class="font-mono text-xs capitalize text-ledger-text-muted">{event.state}</dd>
+                  </div>
+                )}
+                {event.regions && (
+                  <div class="flex justify-between">
+                    <dt class="text-ledger-text-dim">Regions</dt>
+                    <dd class="font-mono text-xs text-ledger-text-muted">{event.regions.join(', ')}</dd>
+                  </div>
+                )}
+              </dl>
+            </div>
+          )}
         </div>
       </aside>
     </div>

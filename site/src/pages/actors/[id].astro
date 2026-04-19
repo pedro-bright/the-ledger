@@ -1,0 +1,129 @@
+---
+import Base from '../../layouts/Base.astro';
+import { loadActors, loadEvents, buildActorEventMap, getCategoryColor } from '../../lib/content';
+
+export function getStaticPaths() {
+  const actors = loadActors();
+  return actors.map((actor) => ({
+    params: { id: actor.id },
+    props: { actor },
+  }));
+}
+
+const { actor } = Astro.props;
+const events = loadEvents();
+const actorEventMap = buildActorEventMap(events);
+const actorEvents = actorEventMap.get(actor.id) || [];
+
+// Group events by year
+const byYear = actorEvents.reduce<Record<number, typeof actorEvents>>((acc, evt) => {
+  const year = new Date(evt.date).getFullYear();
+  if (!acc[year]) acc[year] = [];
+  acc[year].push(evt);
+  return acc;
+}, {});
+const years = Object.keys(byYear).map(Number).sort((a, b) => b - a);
+
+const typeLabels: Record<string, string> = {
+  company: 'Company',
+  'research-lab': 'Research Lab',
+  government: 'Government',
+  individual: 'Individual',
+  organization: 'Organization',
+};
+---
+
+<Base title={actor.name} description={`Events involving ${actor.name} in The Ledger.`}>
+  <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <nav class="flex items-center gap-2 text-xs font-mono text-ledger-text-dim mb-6">
+      <a href="/actors" class="hover:text-ledger-text transition-colors">Actors</a>
+      <span>/</span>
+      <span class="text-ledger-text-muted">{actor.name}</span>
+    </nav>
+
+    <header class="mb-10 pb-8 border-b border-ledger-border">
+      <p class="text-xs font-mono uppercase tracking-[0.2em] text-ledger-text-dim mb-2">
+        {typeLabels[actor.type] || actor.type}
+      </p>
+      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-4">{actor.name}</h1>
+
+      <dl class="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+        {actor.founded && (
+          <div class="flex items-baseline gap-2">
+            <dt class="text-ledger-text-dim">Founded</dt>
+            <dd class="font-mono text-ledger-text-muted">{actor.founded}</dd>
+          </div>
+        )}
+        {actor.website && (
+          <div class="flex items-baseline gap-2">
+            <dt class="text-ledger-text-dim">Website</dt>
+            <dd>
+              <a href={actor.website} target="_blank" rel="noopener noreferrer" class="text-category-policy hover:underline">
+                {actor.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+              </a>
+            </dd>
+          </div>
+        )}
+        <div class="flex items-baseline gap-2">
+          <dt class="text-ledger-text-dim">Tracked events</dt>
+          <dd class="font-mono text-ledger-text-muted">{actorEvents.length}</dd>
+        </div>
+      </dl>
+
+      {actor.aliases && actor.aliases.length > 0 && (
+        <div class="mt-4 flex flex-wrap items-center gap-2 text-xs">
+          <span class="text-ledger-text-dim font-mono">Also known as:</span>
+          {actor.aliases.map((alias) => (
+            <span class="px-2 py-0.5 font-mono text-ledger-text-muted bg-ledger-surface rounded border border-ledger-border">
+              {alias}
+            </span>
+          ))}
+        </div>
+      )}
+    </header>
+
+    <section>
+      <h2 class="text-lg font-semibold text-white mb-6">Events</h2>
+
+      {actorEvents.length === 0 ? (
+        <p class="text-ledger-text-muted italic">No tracked events yet.</p>
+      ) : (
+        years.map((year) => (
+          <div class="mb-8">
+            <h3 class="text-sm font-mono uppercase tracking-wider text-ledger-text-dim mb-3">{year}</h3>
+            <div class="space-y-1">
+              {byYear[year].map((evt) => {
+                const catColor = getCategoryColor(evt.category);
+                const role = evt.actors?.find((a) => a.id === actor.id)?.role;
+                return (
+                  <a
+                    href={`/events/${evt.slug}`}
+                    class="group flex items-center gap-3 sm:gap-4 py-2.5 px-3 -mx-3 rounded-lg hover:bg-ledger-surface/50 transition-colors"
+                  >
+                    <time class="flex-shrink-0 text-xs font-mono text-ledger-text-dim w-20 sm:w-24">
+                      {new Date(evt.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}
+                    </time>
+                    <span class="flex-1 text-sm text-ledger-text group-hover:text-white transition-colors line-clamp-1">
+                      {evt.title}
+                    </span>
+                    {role && (
+                      <span class="flex-shrink-0 text-[10px] font-mono uppercase tracking-wider text-ledger-text-dim hidden sm:inline">
+                        {role}
+                      </span>
+                    )}
+                    <span
+                      class="flex-shrink-0 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider rounded-full border hidden sm:inline-block"
+                      style={`background: ${catColor}15; color: ${catColor}; border-color: ${catColor}30;`}
+                    >
+                      {evt.category.replace('-', ' ')}
+                    </span>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        ))
+      )}
+    </section>
+  </article>
+</Base>
