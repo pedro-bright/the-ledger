@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://the-ledger.dev/schema/source.schema.json",
+  "$id": "https://the-ledger.net/schema/source.schema.json",
   "title": "Source",
   "description": "A typed, attributable source with archival metadata.",
   "type": "object",

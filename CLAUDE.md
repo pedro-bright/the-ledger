@@ -106,7 +106,7 @@ Required: `url`, `title`
 
 ## Deployment
 
-- **Live:** https://dist-roan-ten-72.vercel.app
+- **Live:** https://the-ledger.net
 - **CI:** Push/PR to `main` triggers `validate.yml` (schema validation + graph build). Push to `main` also triggers `deploy.yml` (build site + deploy to Vercel).
 - **Stale sources:** Weekly cron checks for broken source URLs.
 - **Branch protection:** PRs required for `main`, reviews enforced.

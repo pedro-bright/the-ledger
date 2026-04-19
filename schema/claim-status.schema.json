@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://the-ledger.dev/schema/claim-status.schema.json",
+  "$id": "https://the-ledger.net/schema/claim-status.schema.json",
   "title": "Claim Status",
   "description": "Orthogonal 6-dimension epistemic status model. Each dimension is independent.",
   "type": "object",

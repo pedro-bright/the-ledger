@@ -41,7 +41,7 @@ The Ledger has two layers over the same data:
 
 ## Current Content
 
-Live counts are visible at the top of [the homepage](https://the-ledger.dev). At launch, the seed dataset spans:
+Live counts are visible at the top of [the homepage](https://the-ledger.net). At launch, the seed dataset spans:
 
 - Events from 2023-2026, covering model releases, policy developments, governance crises, and geopolitical shifts
 - An actor registry of companies, governments, research labs, and key individuals
