@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import Graph from '../components/Graph';
+import fs from 'node:fs';
+import path from 'node:path';
+
+// Read graph.json from repo root (one level above site/)
+const graphPath = path.resolve(process.cwd(), '..', 'graph.json');
+let graph: any = { nodes: [], edges: [] };
+try {
+  graph = JSON.parse(fs.readFileSync(graphPath, 'utf-8'));
+} catch (e) {
+  console.warn('graph.json not found — run `npm run build-graph` from repo root.');
+}
+---
+
+<Base title="Graph" description="Relationship graph: events, threads, controversies, and actors connected.">
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="mb-6">
+      <p class="text-xs font-mono uppercase tracking-[0.2em] text-ledger-text-dim mb-2">Graph</p>
+      <h1 class="text-2xl sm:text-3xl font-bold text-white mb-2">
+        How everything connects
+      </h1>
+      <p class="text-ledger-text-muted">
+        {graph.nodes.length} nodes, {graph.edges.length} edges. Events belong to threads; threads contain controversies; events involve actors.
+      </p>
+    </div>
+
+    <Graph data={graph} client:only="react" />
+  </section>
+</Base>
