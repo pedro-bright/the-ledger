@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://the-ledger.dev/schema/memo.schema.json",
+  "$id": "https://the-ledger.net/schema/memo.schema.json",
   "title": "Interpretive Memo",
   "description": "Reflective analysis about framing, uncertainty, or competing readings.",
   "type": "object",

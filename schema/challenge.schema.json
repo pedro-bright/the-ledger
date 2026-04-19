@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://the-ledger.dev/schema/challenge.schema.json",
+  "$id": "https://the-ledger.net/schema/challenge.schema.json",
   "title": "Challenge Case",
   "description": "Formal contestation of a specific claim, creating a procedural record.",
   "type": "object",

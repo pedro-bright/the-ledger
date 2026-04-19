@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://the-ledger.dev/schema/actor.schema.json",
+  "$id": "https://the-ledger.net/schema/actor.schema.json",
   "title": "Actor",
   "description": "A registered entity (company, person, government, etc.) referenced by events.",
   "type": "object",

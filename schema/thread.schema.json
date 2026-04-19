@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://the-ledger.dev/schema/thread.schema.json",
+  "$id": "https://the-ledger.net/schema/thread.schema.json",
   "title": "Thread",
   "description": "A narrative arc connecting events into a coherent storyline.",
   "type": "object",

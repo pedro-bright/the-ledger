@@ -12,7 +12,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const EVENTS_DIR = path.join(ROOT, "content", "events");
 
-const SITE_URL = "https://the-ledger.dev";
+const SITE_URL = "https://the-ledger.net";
 const FEED_TITLE = "The Ledger — An Epistemic Ledger of AI History";
 const FEED_DESCRIPTION =
   "Tracking how understanding of AI history changes over time. Events, threads, and evolving interpretations.";

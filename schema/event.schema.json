@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://the-ledger.dev/schema/event.schema.json",
+  "$id": "https://the-ledger.net/schema/event.schema.json",
   "title": "Ledger Event",
   "description": "An immutable event record with kernel (required) and enriched (optional) fields.",
   "type": "object",
