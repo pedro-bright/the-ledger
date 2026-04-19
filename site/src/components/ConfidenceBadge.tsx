@@ -12,7 +12,7 @@ const config: Record<string, { label: string; color: string; bg: string }> = {
 };
 
 export default function ConfidenceBadge({ level }: Props) {
-  if (!level) return null;
+  if (!level || level === 'high') return null;
   const c = config[level] || config.medium;
 
   return (
