@@ -129,6 +129,7 @@ export default function Explorer({ events, categories }: Props) {
           <input
             type="text"
             placeholder="Search events..."
+            aria-label="Search events"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 bg-ledger-surface border border-ledger-border rounded-lg text-sm text-ledger-text placeholder:text-ledger-text-dim focus:outline-none focus:border-ledger-border-light transition-colors"

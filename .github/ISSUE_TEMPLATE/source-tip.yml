@@ -8,7 +8,7 @@ body:
       value: |
         Thanks for contributing! This is the lowest-bar way to help: just give us a source and a short note. We'll do the rest.
 
-        **Before submitting**, scan [the timeline](https://the-ledger.dev) to make sure it isn't already covered.
+        **Before submitting**, scan [the existing events](https://github.com/pedro-bright/the-ledger/tree/main/content/events) to make sure it isn't already covered.
 
   - type: input
     id: source-url

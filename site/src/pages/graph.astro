@@ -2,16 +2,11 @@
 import Base from '../layouts/Base.astro';
 import Graph from '../components/Graph';
 import fs from 'node:fs';
-import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-// Read graph.json from repo root (one level above site/)
-const graphPath = path.resolve(process.cwd(), '..', 'graph.json');
-let graph: any = { nodes: [], edges: [] };
-try {
-  graph = JSON.parse(fs.readFileSync(graphPath, 'utf-8'));
-} catch (e) {
-  console.warn('graph.json not found — run `npm run build-graph` from repo root.');
-}
+// Resolve graph.json relative to this file so the path is stable regardless of cwd.
+const graphPath = fileURLToPath(new URL('../../../graph.json', import.meta.url));
+const graph = JSON.parse(fs.readFileSync(graphPath, 'utf-8'));
 ---
 
 <Base title="Graph" description="Relationship graph: events, threads, controversies, and actors connected.">

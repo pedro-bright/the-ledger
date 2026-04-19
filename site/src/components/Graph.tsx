@@ -72,13 +72,17 @@ export default function Graph({ data }: Props) {
     });
   };
 
-  const handleNodeClick = (node: any) => {
+  const handleNodeClick = (node: any, event: MouseEvent) => {
     const route =
       node.type === 'event' ? `/events/${node.id}` :
       node.type === 'thread' ? `/threads/${node.id}` :
       node.type === 'controversy' ? `/controversies/${node.id}` :
       `/actors/${node.id}`;
-    window.location.href = route;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.button === 1) {
+      window.open(route, '_blank', 'noopener,noreferrer');
+    } else {
+      window.location.href = route;
+    }
   };
 
   const types = ['event', 'thread', 'controversy', 'actor'];

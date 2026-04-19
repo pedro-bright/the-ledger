@@ -80,13 +80,15 @@ const significanceLabel: Record<string, string> = {
           {event.title}
         </h1>
 
-        <!-- Badges -->
-        <div class="flex flex-wrap gap-2 mb-6">
-          <ConfidenceBadge level={event.confidence} />
-          {event.contestation?.status && (
-            <ContestationBadge status={event.contestation.status} />
-          )}
-        </div>
+        <!-- Badges: render only when confidence is non-default or contestation exists -->
+        {((event.confidence && event.confidence !== 'high') || event.contestation?.status) && (
+          <div class="flex flex-wrap gap-2 mb-6">
+            <ConfidenceBadge level={event.confidence} />
+            {event.contestation?.status && (
+              <ContestationBadge status={event.contestation.status} />
+            )}
+          </div>
+        )}
 
         <!-- Thread links (cross-navigation) -->
         {linkedThreads.length > 0 && (
