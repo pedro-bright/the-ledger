@@ -31,11 +31,18 @@ const categoryBorderColors: Record<string, string> = {
   'open-source': 'border-l-category-open-source',
 };
 
+const significanceColors: Record<string, string> = {
+  landmark: 'text-amber-400 bg-amber-400/10 border-amber-400/30',
+  major: 'text-indigo-400 bg-indigo-400/10 border-indigo-400/30',
+  notable: 'text-ledger-text-dim bg-ledger-surface border-ledger-border',
+};
+
 export default function EventCard({ id, title, date, category, significance, summary, confidence, contestation }: Props) {
   const isLandmark = significance === 'landmark';
   const isMajor = significance === 'major';
   const borderColor = categoryBorderColors[category] || 'border-l-ledger-border';
   const pillColor = categoryColors[category] || 'bg-ledger-surface text-ledger-text-muted border-ledger-border';
+  const sigClass = significance ? significanceColors[significance] : null;
 
   return (
     <a
@@ -45,7 +52,7 @@ export default function EventCard({ id, title, date, category, significance, sum
       }`}
     >
       {/* Meta row */}
-      <div className="flex items-center gap-2 mb-2">
+      <div className="flex flex-wrap items-center gap-2 mb-2">
         <time className="text-xs font-mono text-ledger-text-dim">
           {new Date(date).toLocaleDateString('en-US', {
             year: 'numeric',
@@ -56,9 +63,9 @@ export default function EventCard({ id, title, date, category, significance, sum
         <span className={`px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider rounded-full border ${pillColor}`}>
           {category.replace('-', ' ')}
         </span>
-        {isLandmark && (
-          <span className="px-2 py-0.5 text-[10px] font-mono font-medium uppercase tracking-wider text-white bg-white/10 rounded-full border border-white/20">
-            Landmark
+        {significance && sigClass && (
+          <span className={`px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-full border ${sigClass}`}>
+            {significance}
           </span>
         )}
       </div>
