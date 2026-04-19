@@ -1,0 +1,78 @@
+name: Source Tip
+description: Drop a source link for an AI event you think should be tracked. The curator will normalize it.
+title: "[Tip] "
+labels: ["tier-0", "source-tip"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for contributing! This is the lowest-bar way to help: just give us a source and a short note. We'll do the rest.
+
+        **Before submitting**, scan [the timeline](https://the-ledger.dev) to make sure it isn't already covered.
+
+  - type: input
+    id: source-url
+    attributes:
+      label: Source URL
+      description: A primary source preferred (announcement, paper, official statement). Secondary reporting is also welcome.
+      placeholder: https://example.com/article-or-paper
+    validations:
+      required: true
+
+  - type: input
+    id: source-title
+    attributes:
+      label: Source title
+      description: The title of the linked piece.
+    validations:
+      required: true
+
+  - type: input
+    id: source-publisher
+    attributes:
+      label: Publisher
+      description: Who published it? (Company name, news outlet, journal, etc.)
+      placeholder: e.g., Anthropic, The New York Times, arXiv
+
+  - type: input
+    id: event-date
+    attributes:
+      label: Date of the event (YYYY-MM-DD)
+      description: When did the thing happen? (Not the publish date of the source, unless they're the same.)
+      placeholder: 2026-01-15
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does this matter?
+      description: One or two sentences. What is this event, and why should The Ledger track it?
+      placeholder: |
+        e.g., "Anthropic released Claude 4.7 with a new long-context architecture. Significance: first commercial deployment of [technique]; relevant to the Scaling Laws Plateau thread."
+    validations:
+      required: true
+
+  - type: input
+    id: actors
+    attributes:
+      label: Actors involved (optional)
+      description: Comma-separated. Use names; the curator will resolve IDs.
+      placeholder: e.g., Anthropic, OpenAI, US Government
+
+  - type: textarea
+    id: archive
+    attributes:
+      label: Archived URL (optional but recommended)
+      description: A link to an archive.org or archive.today snapshot, in case the original disappears.
+      placeholder: https://web.archive.org/web/...
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: I've checked that this isn't already in the timeline
+          required: true
+        - label: The source URL is publicly accessible (not behind a paywall I can't share)
+          required: false
