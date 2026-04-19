@@ -1,0 +1,75 @@
+---
+import Base from '../../layouts/Base.astro';
+import { loadActors, loadEvents, buildActorEventMap } from '../../lib/content';
+
+const actors = loadActors();
+const events = loadEvents();
+const actorEventMap = buildActorEventMap(events);
+
+// Group by type
+const grouped = actors.reduce<Record<string, typeof actors>>((acc, actor) => {
+  const type = actor.type || 'organization';
+  if (!acc[type]) acc[type] = [];
+  acc[type].push(actor);
+  return acc;
+}, {});
+
+// Sort each group by event count desc
+for (const type in grouped) {
+  grouped[type].sort((a, b) => (actorEventMap.get(b.id)?.length || 0) - (actorEventMap.get(a.id)?.length || 0));
+}
+
+const typeOrder = ['company', 'research-lab', 'government', 'individual', 'organization'];
+const typeLabels: Record<string, string> = {
+  company: 'Companies',
+  'research-lab': 'Research Labs',
+  government: 'Governments',
+  individual: 'Individuals',
+  organization: 'Organizations',
+};
+---
+
+<Base title="Actors" description="Organizations, governments, research labs, and individuals shaping AI history.">
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="mb-8">
+      <p class="text-xs font-mono uppercase tracking-[0.2em] text-ledger-text-dim mb-2">Actors</p>
+      <h1 class="text-2xl sm:text-3xl font-bold text-white mb-2">
+        Who shapes AI history
+      </h1>
+      <p class="text-ledger-text-muted">
+        {actors.length} actors across {Object.keys(grouped).length} types — companies, governments, research labs, and individuals tracked across events.
+      </p>
+    </div>
+
+    {typeOrder.filter((t) => grouped[t]).map((type) => (
+      <section class="mb-10">
+        <h2 class="text-sm font-mono uppercase tracking-wider text-ledger-text-dim mb-4">
+          {typeLabels[type] || type} <span class="text-ledger-text-dim/60">({grouped[type].length})</span>
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {grouped[type].map((actor) => {
+            const count = actorEventMap.get(actor.id)?.length || 0;
+            return (
+              <a
+                href={`/actors/${actor.id}`}
+                class="group block p-4 rounded-lg border border-ledger-border bg-ledger-surface/30 hover:bg-ledger-surface/60 hover:border-ledger-border-light transition-all"
+              >
+                <div class="flex items-start justify-between gap-3 mb-1">
+                  <h3 class="text-sm font-semibold text-ledger-text group-hover:text-white transition-colors">
+                    {actor.name}
+                  </h3>
+                  <span class="flex-shrink-0 text-xs font-mono text-ledger-text-dim">
+                    {count} {count === 1 ? 'event' : 'events'}
+                  </span>
+                </div>
+                {actor.founded && (
+                  <p class="text-xs font-mono text-ledger-text-dim">Founded {actor.founded}</p>
+                )}
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    ))}
+  </section>
+</Base>
