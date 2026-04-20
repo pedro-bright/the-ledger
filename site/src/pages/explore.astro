@@ -30,6 +30,77 @@ const explorerEvents = events.map((e) => ({
         Search, filter, and browse every documented entry in the ledger. Narrow by category, significance, or year.
       </p>
     </div>
+
+    <!-- First-visit teaching panel — hidden until client JS confirms not-yet-dismissed. -->
+    <aside
+      id="explore-intro"
+      class="mb-8 p-5 sm:p-6 rounded-md border border-ledger-border bg-ledger-surface/30"
+      hidden
+      aria-label="About the filters"
+    >
+      <div class="flex items-start justify-between gap-4 mb-3">
+        <p class="label-eyebrow">§ How to read this</p>
+        <button
+          id="explore-intro-dismiss"
+          type="button"
+          class="text-xs font-mono text-ledger-text-dim hover:text-ledger-text transition-colors uppercase tracking-wider"
+          aria-label="Dismiss intro"
+        >
+          got it ✕
+        </button>
+      </div>
+      <p class="font-display italic text-base text-ledger-text-muted mb-4 max-w-[62ch] leading-relaxed" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
+        Every entry is sourced, dated, and carries epistemic metadata you can filter on. The short guide:
+      </p>
+      <dl class="grid sm:grid-cols-3 gap-4 text-sm">
+        <div>
+          <dt class="font-mono text-[10px] uppercase tracking-wider text-amber-400 mb-1">Landmark</dt>
+          <dd class="text-ledger-text-muted leading-snug">
+            Fundamentally alters the trajectory. Future textbooks will cover it. 2–5 per year.
+          </dd>
+        </div>
+        <div>
+          <dt class="font-mono text-[10px] uppercase tracking-wider text-indigo-300 mb-1">Major</dt>
+          <dd class="text-ledger-text-muted leading-snug">
+            Meaningfully shifts the landscape. 2–4 per month.
+          </dd>
+        </div>
+        <div>
+          <dt class="font-mono text-[10px] uppercase tracking-wider text-ledger-text-dim mb-1">Notable</dt>
+          <dd class="text-ledger-text-muted leading-snug">
+            Worth documenting for the record. Significance can be upgraded later — "wrongness" is tracked.
+          </dd>
+        </div>
+      </dl>
+    </aside>
+
     <Explorer events={explorerEvents} categories={categories} client:load />
   </section>
+
+  <script is:inline>
+    (function () {
+      const key = 'ledger:explore-intro-dismissed';
+      const panel = document.getElementById('explore-intro');
+      const dismissBtn = document.getElementById('explore-intro-dismiss');
+      if (!panel || !dismissBtn) return;
+      let dismissed = false;
+      try {
+        dismissed = localStorage.getItem(key) === '1';
+      } catch (_) {
+        // If storage is unavailable, err on the side of showing once.
+        dismissed = false;
+      }
+      if (!dismissed) {
+        panel.hidden = false;
+      }
+      dismissBtn.addEventListener('click', () => {
+        panel.hidden = true;
+        try {
+          localStorage.setItem(key, '1');
+        } catch (_) {
+          /* ignore quota / disabled storage */
+        }
+      });
+    })();
+  </script>
 </Base>

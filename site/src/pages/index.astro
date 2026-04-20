@@ -122,57 +122,67 @@ const significanceColors: Record<string, string> = {
         </a>
       </div>
 
-      <!-- Lead thread: full-width editorial treatment -->
+      <!-- Curator's note + lead thread: editorial first-read recommendation -->
       {leadThread && (
-        <a
-          href={`/threads/${leadThread.slug}`}
-          class="group block mb-12 pb-12 border-b border-ledger-border"
-        >
-          <div class="grid md:grid-cols-[1fr_auto] gap-6 md:gap-10 items-start">
+        <article class="mb-12 pb-12 border-b border-ledger-border">
+          <!-- Curator's note — makes Terry's voice visible and frames the lead as "start here" -->
+          <div class="mb-6 flex items-start gap-4">
+            <span class="hidden sm:block mt-1.5 w-6 h-px bg-category-policy/60" aria-hidden="true" />
             <div>
-              <div class="flex items-center gap-2 mb-4">
-                <span class="label-eyebrow">§ Lead thread</span>
-                {leadThread.status === 'active' && (
-                  <>
-                    <span class="text-ledger-border-light font-mono text-xs">·</span>
-                    <span class="text-[10px] font-mono uppercase tracking-wider text-emerald-400">active</span>
-                  </>
-                )}
-              </div>
-              <h3 class="font-display text-3xl sm:text-4xl md:text-5xl font-normal text-white mb-5 tracking-display-tight leading-[1.05] group-hover:text-white transition-colors" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
-                {leadThread.title}
-              </h3>
-              <p class="font-display italic text-lg sm:text-xl text-ledger-text-muted mb-6 leading-snug max-w-[56ch]" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
-                "{leadThread.excerpt}"
+              <p class="label-eyebrow mb-2">§ Start here · from the curator</p>
+              <p class="font-display italic text-base sm:text-lg text-ledger-text-muted leading-snug max-w-[58ch]" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
+                New to the ledger? This is the thread I'd read first — it threads together the most decisions, actors, and arguments of the moment. —&nbsp;<a href="/about" class="text-ledger-text hover:text-white border-b border-ledger-border-light hover:border-white transition-colors">Terry</a>
               </p>
-              <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-mono text-ledger-text-dim tabular-nums">
-                {leadThread.started && (
-                  <span>{new Date(leadThread.started).getFullYear()}–present</span>
-                )}
-                <span class="text-ledger-border-light">·</span>
-                <span>{leadThread.eventCount} events</span>
-                {leadThread.curator && (
-                  <>
-                    <span class="text-ledger-border-light">·</span>
-                    <span>Curated by {leadThread.curator}</span>
-                  </>
-                )}
-              </div>
-              {leadThread.actorNames.length > 0 && (
-                <div class="mt-5 flex flex-wrap gap-1.5">
-                  {leadThread.actorNames.map((name) => (
-                    <span class="px-2 py-0.5 text-[11px] font-mono text-ledger-text-muted bg-ledger-surface rounded-sm border border-ledger-border">
-                      {name}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-            <div class="font-mono text-xs text-category-policy group-hover:underline whitespace-nowrap self-end md:self-start md:pt-2">
-              read thread →
             </div>
           </div>
-        </a>
+
+          <a href={`/threads/${leadThread.slug}`} class="group block">
+            <div class="grid md:grid-cols-[1fr_auto] gap-6 md:gap-10 items-start">
+              <div>
+                <div class="flex items-center gap-2 mb-4">
+                  <span class="label-eyebrow">§ Lead thread</span>
+                  {leadThread.status === 'active' && (
+                    <>
+                      <span class="text-ledger-border-light font-mono text-xs">·</span>
+                      <span class="text-[10px] font-mono uppercase tracking-wider text-emerald-400">active</span>
+                    </>
+                  )}
+                </div>
+                <h3 class="font-display text-3xl sm:text-4xl md:text-5xl font-normal text-white mb-5 tracking-display-tight leading-[1.05] group-hover:text-white transition-colors" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
+                  {leadThread.title}
+                </h3>
+                <p class="font-display italic text-lg sm:text-xl text-ledger-text-muted mb-6 leading-snug max-w-[56ch]" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
+                  "{leadThread.excerpt}"
+                </p>
+                <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-mono text-ledger-text-dim tabular-nums">
+                  {leadThread.started && (
+                    <span>{new Date(leadThread.started).getFullYear()}–present</span>
+                  )}
+                  <span class="text-ledger-border-light">·</span>
+                  <span>{leadThread.eventCount} events</span>
+                  {leadThread.curator && (
+                    <>
+                      <span class="text-ledger-border-light">·</span>
+                      <span>Curated by {leadThread.curator}</span>
+                    </>
+                  )}
+                </div>
+                {leadThread.actorNames.length > 0 && (
+                  <div class="mt-5 flex flex-wrap gap-1.5">
+                    {leadThread.actorNames.map((name) => (
+                      <span class="px-2 py-0.5 text-[11px] font-mono text-ledger-text-muted bg-ledger-surface rounded-sm border border-ledger-border">
+                        {name}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div class="font-mono text-xs text-category-policy group-hover:underline whitespace-nowrap self-end md:self-start md:pt-2">
+                read thread →
+              </div>
+            </div>
+          </a>
+        </article>
       )}
 
       <!-- Supporting threads: 2×2 compact row -->
