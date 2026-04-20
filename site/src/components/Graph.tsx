@@ -41,6 +41,7 @@ export default function Graph({ data }: Props) {
   const fgRef = useRef<any>();
   const [size, setSize] = useState({ width: 800, height: 600 });
   const [hidden, setHidden] = useState<Set<string>>(new Set());
+  const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -51,6 +52,16 @@ export default function Graph({ data }: Props) {
     resize();
     window.addEventListener('resize', resize);
     return () => window.removeEventListener('resize', resize);
+  }, []);
+
+  // Respect prefers-reduced-motion: freeze physics simulation quickly to avoid continuous motion.
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setReducedMotion(mq.matches);
+    update();
+    mq.addEventListener?.('change', update);
+    return () => mq.removeEventListener?.('change', update);
   }, []);
 
   const filteredData = useMemo(() => {
@@ -129,7 +140,9 @@ export default function Graph({ data }: Props) {
           linkWidth={1}
           onNodeClick={handleNodeClick}
           backgroundColor="rgba(0,0,0,0)"
-          cooldownTicks={100}
+          cooldownTicks={reducedMotion ? 0 : 100}
+          d3AlphaDecay={reducedMotion ? 0.5 : 0.0228}
+          enableNodeDrag={!reducedMotion}
         />
       </div>
 

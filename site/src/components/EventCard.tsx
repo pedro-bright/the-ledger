@@ -33,7 +33,7 @@ const categoryBorderColors: Record<string, string> = {
 
 const significanceColors: Record<string, string> = {
   landmark: 'text-amber-400 bg-amber-400/10 border-amber-400/30',
-  major: 'text-indigo-400 bg-indigo-400/10 border-indigo-400/30',
+  major: 'text-sky-400 bg-sky-400/10 border-sky-400/30',
   notable: 'text-ledger-text-dim bg-ledger-surface border-ledger-border',
 };
 

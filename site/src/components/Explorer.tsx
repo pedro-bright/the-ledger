@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { getSignificanceOrder } from '../lib/content';
 
 interface EventData {
@@ -106,21 +106,32 @@ export default function Explorer({ events, categories }: Props) {
   const [sortOption, setSortOption] = useState<SortOption>('newest');
   const [advancedOpen, setAdvancedOpen] = useState(false);
 
+  const hydratedRef = useRef(false);
+
   // On mount: hydrate from URL. Also open advanced filters if any advanced filter is set.
+  // Re-hydrate on back/forward navigation so the UI matches the URL state in history.
   useEffect(() => {
-    const initial = readFromUrl(categoryIds);
-    setSearch(initial.search);
-    setActiveCategories(initial.categories);
-    setActiveSignificance(initial.significance);
-    setSelectedYear(initial.year);
-    setSortOption(initial.sort);
-    if (initial.year != null || initial.sort !== 'newest') {
-      setAdvancedOpen(true);
-    }
+    const hydrate = () => {
+      const next = readFromUrl(categoryIds);
+      setSearch(next.search);
+      setActiveCategories(next.categories);
+      setActiveSignificance(next.significance);
+      setSelectedYear(next.year);
+      setSortOption(next.sort);
+      if (next.year != null || next.sort !== 'newest') {
+        setAdvancedOpen(true);
+      }
+      hydratedRef.current = true;
+    };
+    hydrate();
+    window.addEventListener('popstate', hydrate);
+    return () => window.removeEventListener('popstate', hydrate);
   }, [categoryIds]);
 
-  // On state change: sync to URL.
+  // On state change: sync to URL. Skip until hydration has completed — otherwise the first
+  // effect run would write an empty URL before hydrate has read the current one.
   useEffect(() => {
+    if (!hydratedRef.current) return;
     writeToUrl({
       search,
       categories: activeCategories,
@@ -522,7 +533,7 @@ export default function Explorer({ events, categories }: Props) {
                 {event.significance && event.significance !== 'notable' && (
                   <span
                     className={`hidden sm:block text-[10px] font-mono uppercase tracking-wider whitespace-nowrap self-start mt-1 ${
-                      event.significance === 'landmark' ? 'text-amber-400' : 'text-indigo-300'
+                      event.significance === 'landmark' ? 'text-amber-400' : 'text-sky-300'
                     }`}
                   >
                     {event.significance}
