@@ -6,6 +6,8 @@ import '@fontsource/inter/600.css';
 import '@fontsource/inter/700.css';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/500.css';
+// Fraunces variable — weight + optical size axes. Loaded once, serves display + reading serif.
+import '@fontsource-variable/fraunces/opsz.css';
 import SEO from '../components/SEO.astro';
 
 interface Props {
@@ -37,8 +39,8 @@ const pageTitle = !title || title === 'The Ledger'
     <nav class="sticky top-0 z-50 border-b border-ledger-border bg-ledger-bg/80 backdrop-blur-xl">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-14">
-          <a href="/" class="text-lg font-semibold tracking-tight hover:text-white transition-colors">
-            the ledger
+          <a href="/" class="font-display text-xl font-medium tracking-display-tight hover:text-white transition-colors" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
+            The Ledger
           </a>
           <div class="flex items-center gap-1">
             <a href="/" class="nav-link">Timeline</a>
@@ -80,7 +82,7 @@ const pageTitle = !title || title === 'The Ledger'
     <footer class="border-t border-ledger-border mt-auto">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-ledger-text-muted">
-          <p>A durable historical record of AI</p>
+          <p class="font-display italic" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">A durable historical record of AI</p>
           <div class="flex items-center gap-4">
             <a
               href="https://github.com/pedro-bright/the-ledger"
@@ -103,7 +105,7 @@ const pageTitle = !title || title === 'The Ledger'
               RSS
             </a>
             <span class="text-ledger-text-dim">·</span>
-            <span>CC BY-SA 4.0</span>
+            <span class="font-mono text-xs">CC BY-SA 4.0</span>
           </div>
         </div>
       </div>
@@ -114,88 +116,140 @@ const pageTitle = !title || title === 'The Ledger'
         @apply px-3 py-1.5 text-sm text-ledger-text-muted hover:text-ledger-text rounded-md transition-colors;
       }
 
-      /* Prose styles for rendered markdown */
+      /* Prose styles for rendered markdown — long-form editorial reading. */
       .prose {
-        @apply text-ledger-text leading-relaxed;
+        @apply text-ledger-text;
+        max-width: 65ch;
+        font-size: 1.0625rem; /* 17px — slight bump over base for comfortable long-reads */
+        line-height: 1.72;
       }
       .prose h1 {
-        @apply text-2xl font-bold mt-8 mb-4 text-white;
+        font-family: 'Fraunces Variable', 'Iowan Old Style', Georgia, serif;
+        font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;
+        font-feature-settings: 'kern', 'liga', 'ss01';
+        font-weight: 500;
+        font-size: 2.25rem;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        color: #fff;
+        margin: 2rem 0 1rem;
       }
       .prose h2 {
-        @apply text-xl font-semibold mt-8 mb-3 text-white;
+        font-family: 'Fraunces Variable', 'Iowan Old Style', Georgia, serif;
+        font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;
+        font-feature-settings: 'kern', 'liga', 'ss01';
+        font-weight: 500;
+        font-size: 1.625rem;
+        line-height: 1.15;
+        letter-spacing: -0.015em;
+        color: #fff;
+        margin: 2.25rem 0 0.75rem;
       }
       .prose h3 {
-        @apply text-lg font-medium mt-6 mb-2 text-ledger-text;
+        @apply text-lg font-semibold mt-8 mb-2 text-ledger-text tracking-tight;
       }
       .prose p {
-        @apply mb-4;
+        @apply mb-5;
       }
       .prose ul,
       .prose ol {
-        @apply mb-4 pl-6;
+        @apply mb-5 pl-6;
       }
       .prose ul {
-        @apply list-disc;
+        @apply list-disc marker:text-ledger-text-dim;
       }
       .prose ol {
-        @apply list-decimal;
+        @apply list-decimal marker:text-ledger-text-dim;
       }
       .prose li {
-        @apply mb-1;
+        @apply mb-1.5;
       }
       .prose a {
-        @apply text-category-policy hover:underline;
+        @apply text-category-policy border-b border-category-policy/30 hover:border-category-policy transition-colors;
       }
       .prose blockquote {
-        @apply border-l-2 border-ledger-border-light pl-4 italic text-ledger-text-muted my-4;
+        font-family: 'Fraunces Variable', 'Iowan Old Style', Georgia, serif;
+        font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;
+        font-style: italic;
+        font-size: 1.125rem;
+        line-height: 1.65;
+        border-left: 2px solid #2A2A3E;
+        padding-left: 1.25rem;
+        color: #9B97A0;
+        margin: 1.5rem 0;
       }
       .prose code {
-        @apply font-mono text-sm bg-ledger-surface px-1.5 py-0.5 rounded;
+        @apply font-mono text-[0.9em] bg-ledger-surface px-1.5 py-0.5 rounded;
       }
       .prose pre {
-        @apply bg-ledger-surface p-4 rounded-lg overflow-x-auto mb-4;
+        @apply bg-ledger-surface p-4 rounded-lg overflow-x-auto mb-5 text-sm;
       }
       .prose pre code {
-        @apply bg-transparent px-0 py-0;
+        @apply bg-transparent px-0 py-0 text-[0.95em];
       }
       .prose strong {
         @apply font-semibold text-white;
       }
       .prose em {
-        @apply italic text-ledger-text-muted;
+        @apply italic;
       }
       .prose hr {
-        @apply border-ledger-border my-8;
+        @apply border-ledger-border my-10;
       }
 
-      /* Scroll animations */
+      /* Scroll animations — honored only when motion is not reduced. */
       .fade-in-on-scroll {
         opacity: 0;
         transform: translateY(12px);
-        transition: opacity 0.5s ease, transform 0.5s ease;
+        transition: opacity 0.6s ease, transform 0.6s ease;
       }
       .fade-in-on-scroll.visible {
         opacity: 1;
         transform: translateY(0);
       }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        .fade-in-on-scroll {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
     </style>
 
     <script>
-      // Scroll-triggered fade-in
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
-            }
-          });
-        },
-        { threshold: 0.1 }
-      );
-
-      document.querySelectorAll('.fade-in-on-scroll').forEach((el) => {
-        observer.observe(el);
-      });
+      // Scroll-triggered fade-in — skipped entirely when user prefers reduced motion.
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!prefersReducedMotion) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+              }
+            });
+          },
+          { threshold: 0.1 }
+        );
+        document.querySelectorAll('.fade-in-on-scroll').forEach((el) => {
+          observer.observe(el);
+        });
+      } else {
+        // Immediately reveal everything when motion is reduced.
+        document.querySelectorAll('.fade-in-on-scroll').forEach((el) => {
+          el.classList.add('visible');
+        });
+      }
     </script>
   </body>
 </html>

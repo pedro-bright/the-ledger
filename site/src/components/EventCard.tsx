@@ -70,18 +70,23 @@ export default function EventCard({ id, title, date, category, significance, sum
         )}
       </div>
 
-      {/* Title */}
+      {/* Title — serif display for landmark/major, sans for notable */}
       <h3
-        className={`font-semibold group-hover:text-white transition-colors ${
-          isLandmark ? 'text-lg' : isMajor ? 'text-base' : 'text-sm'
-        }`}
+        className={
+          isLandmark
+            ? 'font-display text-2xl font-medium leading-tight text-ledger-text group-hover:text-white transition-colors'
+            : isMajor
+              ? 'font-display text-xl font-medium leading-snug text-ledger-text group-hover:text-white transition-colors'
+              : 'text-sm font-semibold text-ledger-text group-hover:text-white transition-colors'
+        }
+        style={isLandmark || isMajor ? { fontVariationSettings: "'opsz' 144, 'SOFT' 0, 'WONK' 0" } : undefined}
       >
         {title}
       </h3>
 
       {/* Summary */}
       {summary && (
-        <p className={`mt-2 text-ledger-text-muted line-clamp-2 ${isLandmark ? 'text-sm' : 'text-xs'}`}>
+        <p className={`mt-2 text-ledger-text-muted line-clamp-2 ${isLandmark ? 'text-sm leading-relaxed' : 'text-xs leading-relaxed'}`}>
           {summary}
         </p>
       )}

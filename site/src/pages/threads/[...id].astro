@@ -53,10 +53,10 @@ const linkedControversies = thread.controversies
         <ContestationBadge status={thread.contestation?.status} />
       </div>
 
-      <h1 class="text-2xl sm:text-3xl font-bold text-white mb-3">{thread.title}</h1>
+      <h1 class="font-display text-display-sm font-normal text-white mb-5 leading-[1.05]" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">{thread.title}</h1>
 
       {thread.core_question && (
-        <blockquote class="text-lg text-ledger-text-muted italic border-l-2 border-ledger-border-light pl-4 mb-4">
+        <blockquote class="font-display italic text-xl sm:text-2xl text-ledger-text-muted border-l-2 border-category-policy/40 pl-5 mb-6 leading-snug max-w-[58ch]" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
           {thread.core_question}
         </blockquote>
       )}
@@ -73,12 +73,10 @@ const linkedControversies = thread.controversies
 
     <!-- Mini-timeline of linked events -->
     {linkedEvents.length > 0 && (
-      <section class="mb-12">
-        <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <svg class="w-4 h-4 text-ledger-text-dim" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width={2}>
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          Events in this thread
+      <section class="mb-14 pt-8 border-t border-ledger-border">
+        <p class="label-eyebrow mb-2">§ In This Thread</p>
+        <h2 class="font-display text-2xl sm:text-3xl font-normal text-white mb-6 tracking-display-tight" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
+          Events
         </h2>
         <div class="relative">
           <div class="absolute left-[5px] top-2 bottom-2 w-px bg-ledger-border" />
@@ -109,8 +107,11 @@ const linkedControversies = thread.controversies
 
     <!-- Controversies panel -->
     {linkedControversies.length > 0 && (
-      <section class="mb-12">
-        <h2 class="text-lg font-semibold text-white mb-4">Active Controversies</h2>
+      <section class="mb-12 pt-8 border-t border-ledger-border">
+        <p class="label-eyebrow mb-2">§ Unsettled</p>
+        <h2 class="font-display text-2xl sm:text-3xl font-normal text-white mb-6 tracking-display-tight" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
+          Active Controversies
+        </h2>
         <div class="space-y-4">
           {linkedControversies.map((controversy) => (
             <a

@@ -3,6 +3,42 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* Semantic type tokens — reference these rather than raw sizes. */
+    --text-caption: 0.75rem;     /* 12px — metadata, captions */
+    --text-small: 0.875rem;      /* 14px — UI labels, small body */
+    --text-body: 1rem;           /* 16px — body default */
+    --text-lead: 1.125rem;       /* 18px — lead paragraphs */
+    --text-section: 1.5rem;      /* 24px — H3 */
+    --text-title: 1.875rem;      /* 30px — H2 */
+  }
+
+  html {
+    /* Respect user root size for a11y. Kerning + ligatures for refined serif display. */
+    font-kerning: normal;
+    font-feature-settings: 'kern', 'liga', 'calt';
+    scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Display serif — Fraunces opsz=144 for sharp editorial display. */
+  .font-display {
+    font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;
+    font-feature-settings: 'kern', 'liga', 'ss01', 'ss02';
+  }
+
+  /* When serif is used in reading-size body copy, drop opsz for softer curves. */
+  .font-display-text {
+    font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;
+  }
+
+  /* Tabular numerics for dates, counts, metadata in mono. */
+  .font-mono {
+    font-variant-numeric: tabular-nums;
+  }
+
   /* Scrollbar styling */
   ::-webkit-scrollbar {
     width: 6px;
@@ -23,11 +59,6 @@
   ::selection {
     background: rgba(99, 102, 241, 0.3);
     color: #E8E4DF;
-  }
-
-  /* Smooth scroll */
-  html {
-    scroll-behavior: smooth;
   }
 
   /* Focus styles */
@@ -51,5 +82,15 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+
+  /* Small-caps style for editorial section labels (archival voice). */
+  .label-eyebrow {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: #6B6770;
   }
 }

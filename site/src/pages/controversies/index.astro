@@ -8,15 +8,12 @@ const threadMap = new Map(threads.map((t) => [t.id, t]));
 ---
 
 <Base title="Controversies" description="Active debates and contested positions in AI history.">
-  <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="mb-8">
-      <p class="text-xs font-mono uppercase tracking-[0.2em] text-ledger-text-dim mb-2">
-        Active Debates
-      </p>
-      <h1 class="text-2xl sm:text-3xl font-bold text-white mb-3">Controversies</h1>
-      <p class="text-ledger-text-muted max-w-xl">
-        Not everything in AI has a clear consensus. These controversies document multiple positions,
-        their proponents, and the evidence behind each claim.
+  <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="mb-10">
+      <p class="label-eyebrow mb-3">§ Active Debates</p>
+      <h1 class="font-display text-display-sm font-normal text-white mb-4 leading-[1.05]" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">Controversies</h1>
+      <p class="font-display italic text-lg text-ledger-text-muted max-w-[58ch] leading-relaxed" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
+        Not everything in AI has consensus. These document multiple positions, their proponents, and the evidence behind each claim.
       </p>
     </div>
 
@@ -41,12 +38,12 @@ const threadMap = new Map(threads.map((t) => [t.id, t]));
               href={`/controversies/${controversy.slug}`}
               class="group block p-5 rounded-lg border border-ledger-border bg-ledger-surface/50 hover:bg-ledger-surface hover:border-ledger-border-light transition-all duration-200"
             >
-              <div class="flex items-center gap-3 mb-2">
-                <h2 class="text-lg font-semibold group-hover:text-white transition-colors">
+              <div class="flex items-start gap-3 mb-2">
+                <h2 class="font-display text-xl sm:text-2xl font-medium leading-tight group-hover:text-white transition-colors" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
                   {controversy.title}
                 </h2>
                 {controversy.status && (
-                  <span class={`flex-shrink-0 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-full border ${
+                  <span class={`flex-shrink-0 mt-1.5 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-sm border ${
                     controversy.status === 'active'
                       ? 'text-amber-400 bg-amber-400/10 border-amber-400/20'
                       : controversy.status === 'resolved'

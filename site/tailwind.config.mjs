@@ -25,8 +25,31 @@ export default {
         },
       },
       fontFamily: {
+        // Editorial display — serif for hero, titles, section heads. Fraunces variable with opsz axis.
+        display: ['"Fraunces Variable"', 'Fraunces', 'Iowan Old Style', 'Apple Garamond', 'Georgia', 'Times New Roman', 'serif'],
+        // UI chrome and body — Inter retained for readability in long form.
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
+        // Metadata, dates, identifiers — the ledger's "data layer" voice.
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+      },
+      fontSize: {
+        // Fluid display sizes for marketing surfaces (hero, page titles).
+        'display-xs': ['clamp(1.75rem, 1.5rem + 1.2vw, 2.5rem)', { lineHeight: '1.12', letterSpacing: '-0.012em' }],
+        'display-sm': ['clamp(2.25rem, 1.8rem + 2vw, 3.25rem)', { lineHeight: '1.08', letterSpacing: '-0.016em' }],
+        'display': ['clamp(2.75rem, 2rem + 3.5vw, 4.5rem)', { lineHeight: '1.04', letterSpacing: '-0.02em' }],
+        'display-lg': ['clamp(3.25rem, 2.25rem + 4.5vw, 5.5rem)', { lineHeight: '1.0', letterSpacing: '-0.024em' }],
+      },
+      letterSpacing: {
+        'display-tight': '-0.024em',
+        'mono-wide': '0.08em',
+      },
+      lineHeight: {
+        'prose': '1.75',
+        'display': '1.04',
+      },
+      maxWidth: {
+        'prose': '65ch',
+        'reading': '68ch',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-out forwards',

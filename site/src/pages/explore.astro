@@ -22,15 +22,12 @@ const explorerEvents = events.map((e) => ({
 ---
 
 <Base title="Explore" description="Search and filter events in the AI history ledger.">
-  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="mb-8">
-      <p class="text-xs font-mono uppercase tracking-[0.2em] text-ledger-text-dim mb-2">
-        Search & Filter
-      </p>
-      <h1 class="text-2xl sm:text-3xl font-bold text-white mb-3">Explore</h1>
-      <p class="text-ledger-text-muted max-w-xl">
-        Search, filter, and browse all documented events in the ledger.
-        Use facets to narrow by category, significance, or date.
+  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="mb-10">
+      <p class="label-eyebrow mb-3">§ Search & Filter</p>
+      <h1 class="font-display text-display-sm font-normal text-white mb-4 leading-[1.05]" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">Explore</h1>
+      <p class="font-display italic text-lg text-ledger-text-muted max-w-[58ch] leading-relaxed" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
+        Search, filter, and browse every documented entry in the ledger. Narrow by category, significance, or year.
       </p>
     </div>
     <Explorer events={explorerEvents} categories={categories} client:load />

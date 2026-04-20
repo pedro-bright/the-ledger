@@ -115,7 +115,12 @@ export default function Timeline({ events, categories }: Props) {
               {/* Year marker */}
               <div className="flex items-center gap-4 mb-6 relative">
                 <div className="w-[15px] h-[15px] rounded-full bg-ledger-bg border-2 border-ledger-border-light z-10 flex-shrink-0" />
-                <h2 className="text-2xl font-bold font-mono text-white">{year}</h2>
+                <h2
+                  className="font-display text-4xl font-normal text-white tracking-display-tight tabular-nums"
+                  style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 0, 'WONK' 0" }}
+                >
+                  {year}
+                </h2>
               </div>
 
               {/* Events */}
@@ -150,15 +155,20 @@ function EmptyState() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       </div>
-      <h3 className="text-lg font-medium text-ledger-text mb-2">No events yet</h3>
-      <p className="text-sm text-ledger-text-muted max-w-md mx-auto mb-6">
+      <h3
+        className="font-display text-2xl font-normal text-ledger-text mb-2"
+        style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 0, 'WONK' 0" }}
+      >
+        No events yet
+      </h3>
+      <p className="text-sm text-ledger-text-muted max-w-md mx-auto mb-6 leading-relaxed">
         The timeline is empty. Events are loaded from markdown files in the <code className="font-mono text-xs bg-ledger-surface px-1.5 py-0.5 rounded">content/events/</code> directory.
       </p>
       <a
-        href="https://github.com/terrytang/the-ledger"
+        href="https://github.com/pedro-bright/the-ledger"
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-category-policy rounded-lg hover:bg-category-policy/80 transition-colors"
+        className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-category-policy rounded-md hover:bg-category-policy/80 transition-colors"
       >
         Contribute on GitHub
       </a>

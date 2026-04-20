@@ -6,15 +6,12 @@ const threads = loadThreads();
 ---
 
 <Base title="Threads" description="Narrative arcs connecting events in AI history.">
-  <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="mb-8">
-      <p class="text-xs font-mono uppercase tracking-[0.2em] text-ledger-text-dim mb-2">
-        Narrative Arcs
-      </p>
-      <h1 class="text-2xl sm:text-3xl font-bold text-white mb-3">Threads</h1>
-      <p class="text-ledger-text-muted max-w-xl">
-        Threads connect events into narrative arcs — tracing how themes and debates
-        evolve across time. Each thread has a signed canonical synthesis.
+  <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="mb-10">
+      <p class="label-eyebrow mb-3">§ Narrative Arcs</p>
+      <h1 class="font-display text-display-sm font-normal text-white mb-4 leading-[1.05]" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">Threads</h1>
+      <p class="font-display italic text-lg text-ledger-text-muted max-w-[58ch] leading-relaxed" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
+        Threads connect events into narrative arcs — tracing how themes and debates evolve across time. Each has a signed canonical synthesis.
       </p>
     </div>
 
@@ -37,12 +34,12 @@ const threads = loadThreads();
             href={`/threads/${thread.slug}`}
             class="group block p-5 rounded-lg border border-ledger-border bg-ledger-surface/50 hover:bg-ledger-surface hover:border-ledger-border-light transition-all duration-200"
           >
-            <div class="flex items-center gap-3 mb-2">
-              <h2 class="text-lg font-semibold group-hover:text-white transition-colors">
+            <div class="flex items-start gap-3 mb-3">
+              <h2 class="font-display text-xl sm:text-2xl font-medium leading-tight group-hover:text-white transition-colors" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
                 {thread.title}
               </h2>
               {thread.status && (
-                <span class={`px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-full border ${
+                <span class={`flex-shrink-0 mt-1.5 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-sm border ${
                   thread.status === 'active'
                     ? 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20'
                     : 'text-ledger-text-dim bg-ledger-surface border-ledger-border'
@@ -52,7 +49,7 @@ const threads = loadThreads();
               )}
             </div>
             {thread.core_question && (
-              <p class="text-sm text-ledger-text-muted italic mb-2">"{thread.core_question}"</p>
+              <p class="font-display italic text-base text-ledger-text-muted mb-3 leading-snug" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">"{thread.core_question}"</p>
             )}
             <div class="flex items-center gap-4 text-xs text-ledger-text-dim font-mono">
               {thread.started && (
