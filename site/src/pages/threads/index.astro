@@ -1,13 +1,29 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { loadThreads } from '../../lib/content';
+import { loadThreads, loadEvents, buildThreadEventMap } from '../../lib/content';
 
 const threads = loadThreads();
+const events = loadEvents();
+const threadEventMap = buildThreadEventMap(events);
+
+const enriched = threads
+  .map((t) => ({
+    ...t,
+    eventCount: t.events?.length || (threadEventMap.get(t.id)?.length ?? 0),
+  }))
+  .sort((a, b) => {
+    // Active first, then by event count desc.
+    if (a.status !== b.status) {
+      if (a.status === 'active') return -1;
+      if (b.status === 'active') return 1;
+    }
+    return b.eventCount - a.eventCount;
+  });
 ---
 
 <Base title="Threads" description="Narrative arcs connecting events in AI history.">
   <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <div class="mb-10">
+    <div class="mb-14">
       <p class="label-eyebrow mb-3">§ Narrative Arcs</p>
       <h1 class="font-display text-display-sm font-normal text-white mb-4 leading-[1.05]" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">Threads</h1>
       <p class="font-display italic text-lg text-ledger-text-muted max-w-[58ch] leading-relaxed" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
@@ -15,56 +31,76 @@ const threads = loadThreads();
       </p>
     </div>
 
-    {threads.length === 0 ? (
+    {enriched.length === 0 ? (
       <div class="text-center py-20">
         <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-ledger-surface border border-ledger-border mb-6">
           <svg class="w-7 h-7 text-ledger-text-dim" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width={1.5}>
             <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-3.03l4.5-4.5a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
           </svg>
         </div>
-        <h3 class="text-lg font-medium text-ledger-text mb-2">No threads yet</h3>
+        <h3 class="font-display text-2xl font-normal text-ledger-text mb-2" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">No threads yet</h3>
         <p class="text-sm text-ledger-text-muted max-w-md mx-auto">
           Threads are loaded from markdown files in the <code class="font-mono text-xs bg-ledger-surface px-1.5 py-0.5 rounded">content/threads/</code> directory.
         </p>
       </div>
     ) : (
-      <div class="space-y-4">
-        {threads.map((thread) => (
-          <a
-            href={`/threads/${thread.slug}`}
-            class="group block p-5 rounded-lg border border-ledger-border bg-ledger-surface/50 hover:bg-ledger-surface hover:border-ledger-border-light transition-all duration-200"
-          >
-            <div class="flex items-start gap-3 mb-3">
-              <h2 class="font-display text-xl sm:text-2xl font-medium leading-tight group-hover:text-white transition-colors" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
-                {thread.title}
-              </h2>
-              {thread.status && (
-                <span class={`flex-shrink-0 mt-1.5 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-sm border ${
-                  thread.status === 'active'
-                    ? 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20'
-                    : 'text-ledger-text-dim bg-ledger-surface border-ledger-border'
-                }`}>
-                  {thread.status}
+      <ol class="divide-y divide-ledger-border">
+        {enriched.map((thread, idx) => (
+          <li>
+            <a
+              href={`/threads/${thread.slug}`}
+              class="group block py-8 hover:bg-ledger-surface/20 -mx-4 px-4 rounded-sm transition-colors"
+            >
+              <div class="grid md:grid-cols-[auto_1fr_auto] gap-4 md:gap-6 items-start">
+                <span class="font-mono text-xs text-ledger-text-dim tabular-nums md:w-10">
+                  № {String(idx + 1).padStart(2, '0')}
                 </span>
-              )}
-            </div>
-            {thread.core_question && (
-              <p class="font-display italic text-base text-ledger-text-muted mb-3 leading-snug" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">"{thread.core_question}"</p>
-            )}
-            <div class="flex items-center gap-4 text-xs text-ledger-text-dim font-mono">
-              {thread.started && (
-                <span>Since {new Date(thread.started).getFullYear()}</span>
-              )}
-              {thread.events && (
-                <span>{thread.events.length} events</span>
-              )}
-              {thread.curator && (
-                <span>Curated by {thread.curator}</span>
-              )}
-            </div>
-          </a>
+                <div>
+                  <div class="flex items-center flex-wrap gap-2 mb-2">
+                    <h2 class="font-display text-2xl sm:text-3xl font-medium leading-tight text-ledger-text group-hover:text-white transition-colors" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
+                      {thread.title}
+                    </h2>
+                    {thread.status && (
+                      <span class={`flex-shrink-0 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-sm border ${
+                        thread.status === 'active'
+                          ? 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20'
+                          : 'text-ledger-text-dim bg-ledger-surface border-ledger-border'
+                      }`}>
+                        {thread.status}
+                      </span>
+                    )}
+                  </div>
+                  {thread.core_question && (
+                    <p class="font-display italic text-base sm:text-lg text-ledger-text-muted mb-3 leading-snug max-w-[62ch]" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
+                      "{thread.core_question}"
+                    </p>
+                  )}
+                  <div class="flex items-center gap-3 text-xs text-ledger-text-dim font-mono tabular-nums">
+                    {thread.started && (
+                      <span>Since {new Date(thread.started).getFullYear()}</span>
+                    )}
+                    {thread.events && (
+                      <>
+                        <span class="text-ledger-border-light">·</span>
+                        <span>{thread.events.length} events</span>
+                      </>
+                    )}
+                    {thread.curator && (
+                      <>
+                        <span class="text-ledger-border-light">·</span>
+                        <span>{thread.curator}</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+                <span class="hidden md:inline-flex items-start font-mono text-xs text-ledger-text-dim group-hover:text-category-policy transition-colors pt-1.5 whitespace-nowrap">
+                  read →
+                </span>
+              </div>
+            </a>
+          </li>
         ))}
-      </div>
+      </ol>
     )}
   </section>
 </Base>

@@ -28,20 +28,14 @@ interface Props {
 
 type SortOption = 'newest' | 'oldest' | 'significance';
 
-const categoryColors: Record<string, string> = {
-  policy: 'bg-category-policy/20 text-category-policy border-category-policy/30',
-  models: 'bg-category-models/20 text-category-models border-category-models/30',
-  research: 'bg-category-research/20 text-category-research border-category-research/30',
-  industry: 'bg-category-industry/20 text-category-industry border-category-industry/30',
-  safety: 'bg-category-safety/20 text-category-safety border-category-safety/30',
-  culture: 'bg-category-culture/20 text-category-culture border-category-culture/30',
-  'open-source': 'bg-category-open-source/20 text-category-open-source border-category-open-source/30',
-};
-
-const significanceColors: Record<string, string> = {
-  landmark: 'text-amber-400 bg-amber-400/10 border-amber-400/30',
-  major: 'text-indigo-400 bg-indigo-400/10 border-indigo-400/30',
-  notable: 'text-ledger-text-dim bg-ledger-surface border-ledger-border',
+const categoryHex: Record<string, string> = {
+  policy: '#6366F1',
+  models: '#F59E0B',
+  research: '#10B981',
+  industry: '#8B5CF6',
+  safety: '#EF4444',
+  culture: '#EC4899',
+  'open-source': '#06B6D4',
 };
 
 export default function Explorer({ events, categories }: Props) {
@@ -208,53 +202,77 @@ export default function Explorer({ events, categories }: Props) {
         {search && ` matching "${search}"`}
       </p>
 
-      {/* Grid */}
+      {/* Table-like archival list */}
       {filtered.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-sm text-ledger-text-muted">No events match your search.</p>
         </div>
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="divide-y divide-ledger-border/60 border-t border-ledger-border/60">
           {filtered.map((event) => {
-            const pillColor = categoryColors[event.category] || 'bg-ledger-surface text-ledger-text-muted border-ledger-border';
-            const sigClass = event.significance ? significanceColors[event.significance] : null;
+            const catHex = categoryHex[event.category] || '#6B6770';
+            const isLandmark = event.significance === 'landmark';
+            const isMajor = event.significance === 'major';
             return (
               <a
                 key={event.id}
                 href={`/events/${event.slug}`}
-                className="group block p-4 rounded-lg border border-ledger-border bg-ledger-surface/50 hover:bg-ledger-surface hover:border-ledger-border-light transition-all duration-200"
+                className="group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[auto_auto_1fr_auto_auto] gap-3 sm:gap-5 py-4 px-3 -mx-3 items-baseline hover:bg-ledger-surface/30 transition-colors rounded-sm"
               >
-                <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <time className="text-xs font-mono text-ledger-text-dim">
-                    {new Date(event.date).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    })}
-                  </time>
-                  <span className={`px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider rounded-full border ${pillColor}`}>
-                    {event.category.replace('-', ' ')}
-                  </span>
-                  {event.significance && sigClass && (
-                    <span className={`px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-full border ${sigClass}`}>
-                      {event.significance}
-                    </span>
+                <time className="text-xs font-mono text-ledger-text-dim tabular-nums w-24">
+                  {new Date(event.date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </time>
+                <span
+                  className="hidden sm:block w-0.5 self-stretch mt-1 mb-1"
+                  style={{ backgroundColor: catHex }}
+                  aria-hidden
+                />
+                <div className="col-span-2 sm:col-span-1 min-w-0">
+                  <h3
+                    className={
+                      isLandmark
+                        ? 'font-display text-lg sm:text-xl font-medium leading-snug text-ledger-text group-hover:text-white transition-colors'
+                        : isMajor
+                          ? 'font-display text-base sm:text-lg font-medium leading-snug text-ledger-text group-hover:text-white transition-colors'
+                          : 'text-sm sm:text-[15px] font-medium leading-snug text-ledger-text group-hover:text-white transition-colors'
+                    }
+                    style={isLandmark || isMajor ? { fontVariationSettings: "'opsz' 144, 'SOFT' 0, 'WONK' 0" } : undefined}
+                  >
+                    {event.title}
+                  </h3>
+                  {event.summary && (
+                    <p className="mt-1 text-xs text-ledger-text-muted line-clamp-2 leading-relaxed">
+                      {event.summary}
+                    </p>
+                  )}
+                  {event.tags && event.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {event.tags.slice(0, 4).map((tag) => (
+                        <span key={tag} className="text-[10px] font-mono text-ledger-text-dim">
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
                   )}
                 </div>
-                <h3 className="text-sm font-semibold group-hover:text-white transition-colors line-clamp-2">
-                  {event.title}
-                </h3>
-                {event.summary && (
-                  <p className="mt-1.5 text-xs text-ledger-text-muted line-clamp-2">{event.summary}</p>
-                )}
-                {event.tags && event.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    {event.tags.slice(0, 3).map((tag) => (
-                      <span key={tag} className="text-[10px] font-mono text-ledger-text-dim">
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
+                <span
+                  className="hidden sm:block text-[10px] font-mono uppercase tracking-wider whitespace-nowrap self-start mt-1"
+                  style={{ color: catHex }}
+                >
+                  {event.category.replace('-', ' ')}
+                </span>
+                {event.significance && event.significance !== 'notable' && (
+                  <span
+                    className={`hidden sm:block text-[10px] font-mono uppercase tracking-wider whitespace-nowrap self-start mt-1 ${
+                      event.significance === 'landmark' ? 'text-amber-400' : 'text-indigo-300'
+                    }`}
+                  >
+                    {event.significance}
+                  </span>
                 )}
               </a>
             );

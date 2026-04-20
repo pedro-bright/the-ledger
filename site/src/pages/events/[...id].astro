@@ -37,38 +37,45 @@ const significanceLabel: Record<string, string> = {
 ---
 
 <Base title={event.title} description={`${event.title} — ${new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`}>
-  <article class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="lg:grid lg:grid-cols-[1fr_280px] lg:gap-12">
+  <article class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="lg:grid lg:grid-cols-[1fr_300px] lg:gap-14">
       <!-- Main content -->
       <div>
         <!-- Breadcrumb -->
-        <nav class="flex items-center gap-2 text-xs font-mono text-ledger-text-dim mb-6">
+        <nav class="flex items-center gap-2 text-xs font-mono text-ledger-text-dim mb-8" aria-label="Breadcrumb">
           <a href="/" class="hover:text-ledger-text transition-colors">Timeline</a>
-          <span>/</span>
+          <span class="text-ledger-border-light">/</span>
           <a href="/explore" class="hover:text-ledger-text transition-colors">Events</a>
-          <span>/</span>
+          <span class="text-ledger-border-light">/</span>
           <span class="text-ledger-text-muted">{event.id}</span>
         </nav>
 
-        <!-- Meta -->
-        <div class="flex flex-wrap items-center gap-3 mb-4">
-          <time class="text-sm font-mono text-ledger-text-dim">
+        <!-- Archival meta strip — editorial dateline -->
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-mono text-ledger-text-dim uppercase tracking-wider mb-5 tabular-nums">
+          <time class="text-ledger-text-muted">
             {new Date(event.date).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',
               day: 'numeric',
-            })}
+            }).toUpperCase()}
           </time>
-          <span
-            class="px-2.5 py-0.5 text-xs font-medium uppercase tracking-wider rounded-full border"
-            style={`background: ${categoryColor}20; color: ${categoryColor}; border-color: ${categoryColor}40;`}
-          >
+          <span class="text-ledger-border-light">·</span>
+          <span style={`color: ${categoryColor};`}>
             {event.category.replace('-', ' ')}
           </span>
           {event.significance && (
-            <span class="px-2.5 py-0.5 text-xs font-mono font-medium uppercase tracking-wider text-ledger-text-muted bg-ledger-surface rounded-full border border-ledger-border">
-              {significanceLabel[event.significance] || event.significance}
-            </span>
+            <>
+              <span class="text-ledger-border-light">·</span>
+              <span class={
+                event.significance === 'landmark'
+                  ? 'text-amber-400'
+                  : event.significance === 'major'
+                    ? 'text-indigo-300'
+                    : 'text-ledger-text-dim'
+              }>
+                {significanceLabel[event.significance] || event.significance}
+              </span>
+            </>
           )}
         </div>
 
