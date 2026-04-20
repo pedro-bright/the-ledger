@@ -42,7 +42,7 @@ const linkedControversies = thread.controversies
     <div class="mb-8">
       <div class="flex items-center gap-3 mb-3">
         {thread.status && (
-          <span class={`px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-full border ${
+          <span class={`px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-sm border ${
             thread.status === 'active'
               ? 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20'
               : 'text-ledger-text-dim bg-ledger-surface border-ledger-border'
@@ -53,10 +53,10 @@ const linkedControversies = thread.controversies
         <ContestationBadge status={thread.contestation?.status} />
       </div>
 
-      <h1 class="text-2xl sm:text-3xl font-bold text-white mb-3">{thread.title}</h1>
+      <h1 class="font-display text-display-sm font-normal text-white mb-5 leading-[1.05]" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">{thread.title}</h1>
 
       {thread.core_question && (
-        <blockquote class="text-lg text-ledger-text-muted italic border-l-2 border-ledger-border-light pl-4 mb-4">
+        <blockquote class="font-display italic text-xl sm:text-2xl text-ledger-text-muted border-l-2 border-category-policy/40 pl-5 mb-6 leading-snug max-w-[58ch]" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
           {thread.core_question}
         </blockquote>
       )}
@@ -73,12 +73,10 @@ const linkedControversies = thread.controversies
 
     <!-- Mini-timeline of linked events -->
     {linkedEvents.length > 0 && (
-      <section class="mb-12">
-        <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <svg class="w-4 h-4 text-ledger-text-dim" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width={2}>
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          Events in this thread
+      <section class="mb-14 pt-8 border-t border-ledger-border">
+        <p class="label-eyebrow mb-2">§ In This Thread</p>
+        <h2 class="font-display text-2xl sm:text-3xl font-normal text-white mb-6 tracking-display-tight" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
+          Events
         </h2>
         <div class="relative">
           <div class="absolute left-[5px] top-2 bottom-2 w-px bg-ledger-border" />
@@ -86,7 +84,7 @@ const linkedControversies = thread.controversies
             {linkedEvents.map((event) => (
               <a
                 href={`/events/${event.slug}`}
-                class="group relative flex items-start gap-4 pl-6 hover:bg-ledger-surface/30 -mx-2 px-2 rounded-lg py-2 transition-colors"
+                class="group relative flex items-start gap-4 pl-6 hover:bg-ledger-surface/30 -mx-2 px-2 rounded-sm py-2 transition-colors"
               >
                 <div class="absolute left-0 top-3.5 w-[11px] h-[11px] rounded-full bg-ledger-bg border-2 border-ledger-border-light z-10" />
                 <time class="text-xs font-mono text-ledger-text-dim whitespace-nowrap pt-0.5">
@@ -109,13 +107,16 @@ const linkedControversies = thread.controversies
 
     <!-- Controversies panel -->
     {linkedControversies.length > 0 && (
-      <section class="mb-12">
-        <h2 class="text-lg font-semibold text-white mb-4">Active Controversies</h2>
+      <section class="mb-12 pt-8 border-t border-ledger-border">
+        <p class="label-eyebrow mb-2">§ Unsettled</p>
+        <h2 class="font-display text-2xl sm:text-3xl font-normal text-white mb-6 tracking-display-tight" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
+          Active Controversies
+        </h2>
         <div class="space-y-4">
           {linkedControversies.map((controversy) => (
             <a
               href={`/controversies/${controversy.slug}`}
-              class="block p-4 rounded-lg border border-amber-400/20 bg-amber-400/5 hover:bg-amber-400/10 transition-colors"
+              class="block p-4 rounded-md border border-amber-400/20 bg-amber-400/5 hover:bg-amber-400/10 transition-colors"
             >
               <span class="text-sm font-medium text-amber-400">{controversy.title}</span>
               {controversy.positions && (

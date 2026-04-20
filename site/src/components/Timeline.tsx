@@ -96,15 +96,13 @@ export default function Timeline({ events, categories }: Props) {
       {events.length === 0 ? (
         <EmptyState />
       ) : filteredEvents.length === 0 ? (
-        <div className="text-center py-16">
-          <p className="text-ledger-text-muted text-sm">No events match the current filters.</p>
-          <button
-            onClick={resetFilters}
-            className="mt-3 text-sm text-category-policy hover:underline"
-          >
-            Clear filters
-          </button>
-        </div>
+        <NoMatchesState
+          activeCategories={activeCategories}
+          activeSignificance={activeSignificance}
+          onClear={resetFilters}
+          onClearCategories={() => setActiveCategories(new Set())}
+          onClearSignificance={() => setActiveSignificance(new Set())}
+        />
       ) : (
         <div className="relative">
           {/* Timeline line */}
@@ -115,7 +113,12 @@ export default function Timeline({ events, categories }: Props) {
               {/* Year marker */}
               <div className="flex items-center gap-4 mb-6 relative">
                 <div className="w-[15px] h-[15px] rounded-full bg-ledger-bg border-2 border-ledger-border-light z-10 flex-shrink-0" />
-                <h2 className="text-2xl font-bold font-mono text-white">{year}</h2>
+                <h2
+                  className="font-display text-4xl font-normal text-white tracking-display-tight tabular-nums"
+                  style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 0, 'WONK' 0" }}
+                >
+                  {year}
+                </h2>
               </div>
 
               {/* Events */}
@@ -142,25 +145,100 @@ export default function Timeline({ events, categories }: Props) {
   );
 }
 
+function NoMatchesState({
+  activeCategories,
+  activeSignificance,
+  onClear,
+  onClearCategories,
+  onClearSignificance,
+}: {
+  activeCategories: Set<string>;
+  activeSignificance: Set<string>;
+  onClear: () => void;
+  onClearCategories: () => void;
+  onClearSignificance: () => void;
+}) {
+  const hasCat = activeCategories.size > 0;
+  const hasSig = activeSignificance.size > 0;
+  const activeCatList = Array.from(activeCategories).join(', ');
+  const activeSigList = Array.from(activeSignificance).join(', ');
+
+  return (
+    <div className="py-16 px-4 max-w-xl mx-auto text-center">
+      <p
+        className="font-display italic text-xl text-ledger-text-muted mb-2 leading-snug"
+        style={{ fontVariationSettings: "'opsz' 14, 'SOFT' 0, 'WONK' 0" }}
+      >
+        Nothing matches that combination.
+      </p>
+      {hasCat && hasSig && (
+        <p className="text-sm text-ledger-text-muted mb-5 leading-relaxed">
+          No {activeSigList} events are tagged {activeCatList}. Try widening one axis.
+        </p>
+      )}
+      {hasCat && !hasSig && (
+        <p className="text-sm text-ledger-text-muted mb-5 leading-relaxed">
+          No events match {activeCatList}. Try dropping the category filter.
+        </p>
+      )}
+      {!hasCat && hasSig && (
+        <p className="text-sm text-ledger-text-muted mb-5 leading-relaxed">
+          No events at {activeSigList} significance yet. Try all significance levels.
+        </p>
+      )}
+      <div className="flex flex-wrap justify-center gap-2 text-sm font-mono">
+        {hasCat && (
+          <button
+            type="button"
+            onClick={onClearCategories}
+            className="px-3 py-1 rounded-sm border border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text transition-colors"
+          >
+            clear category
+          </button>
+        )}
+        {hasSig && (
+          <button
+            type="button"
+            onClick={onClearSignificance}
+            className="px-3 py-1 rounded-sm border border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text transition-colors"
+          >
+            clear significance
+          </button>
+        )}
+        {(hasCat || hasSig) && (
+          <button
+            type="button"
+            onClick={onClear}
+            className="px-3 py-1 rounded-sm border border-category-policy/30 text-category-policy hover:border-category-policy/60 hover:bg-category-policy/10 transition-colors"
+          >
+            clear all filters →
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function EmptyState() {
   return (
-    <div className="text-center py-24 px-4">
-      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-ledger-surface border border-ledger-border mb-6">
-        <svg className="w-7 h-7 text-ledger-text-dim" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      </div>
-      <h3 className="text-lg font-medium text-ledger-text mb-2">No events yet</h3>
-      <p className="text-sm text-ledger-text-muted max-w-md mx-auto mb-6">
-        The timeline is empty. Events are loaded from markdown files in the <code className="font-mono text-xs bg-ledger-surface px-1.5 py-0.5 rounded">content/events/</code> directory.
+    <div className="py-24 px-4 max-w-xl mx-auto text-center">
+      <p className="label-eyebrow mb-3">§ Nothing here yet</p>
+      <p
+        className="font-display text-3xl font-normal text-ledger-text mb-3 leading-tight"
+        style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 0, 'WONK' 0" }}
+      >
+        The ledger is empty.
+      </p>
+      <p className="text-sm text-ledger-text-muted mb-6 leading-relaxed">
+        Entries are loaded from markdown files in <code className="font-mono text-xs text-ledger-text">content/events/</code>. The fastest way to help: drop a source link via a GitHub issue.
       </p>
       <a
-        href="https://github.com/terrytang/the-ledger"
+        href="https://github.com/pedro-bright/the-ledger/issues/new?template=source-tip.yml"
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-category-policy rounded-lg hover:bg-category-policy/80 transition-colors"
+        className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-category-policy rounded-md hover:bg-category-policy/80 transition-colors"
       >
-        Contribute on GitHub
+        Submit a source tip
       </a>
     </div>
   );

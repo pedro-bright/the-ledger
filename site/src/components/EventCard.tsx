@@ -33,7 +33,7 @@ const categoryBorderColors: Record<string, string> = {
 
 const significanceColors: Record<string, string> = {
   landmark: 'text-amber-400 bg-amber-400/10 border-amber-400/30',
-  major: 'text-indigo-400 bg-indigo-400/10 border-indigo-400/30',
+  major: 'text-sky-400 bg-sky-400/10 border-sky-400/30',
   notable: 'text-ledger-text-dim bg-ledger-surface border-ledger-border',
 };
 
@@ -47,7 +47,7 @@ export default function EventCard({ id, title, date, category, significance, sum
   return (
     <a
       href={`/events/${id}`}
-      className={`group block rounded-lg border border-ledger-border bg-ledger-surface/50 hover:bg-ledger-surface hover:border-ledger-border-light transition-all duration-200 ${
+      className={`group block rounded-md border border-ledger-border bg-ledger-surface/50 hover:bg-ledger-surface hover:border-ledger-border-light transition-all duration-200 ${
         isLandmark ? `border-l-[3px] ${borderColor} p-5` : isMajor ? `border-l-2 ${borderColor} p-4` : 'p-4'
       }`}
     >
@@ -60,28 +60,40 @@ export default function EventCard({ id, title, date, category, significance, sum
             day: 'numeric',
           })}
         </time>
-        <span className={`px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider rounded-full border ${pillColor}`}>
+        <span className={`px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider rounded-sm border ${pillColor}`}>
           {category.replace('-', ' ')}
         </span>
         {significance && sigClass && (
-          <span className={`px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-full border ${sigClass}`}>
+          <span className={`px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-sm border ${sigClass}`}>
             {significance}
           </span>
         )}
       </div>
 
-      {/* Title */}
+      {/* Title — serif display for landmark/major, sans for notable.
+         Opsz matches rendered size: 36 for landmark (~24px), 24 for major (~20px). */}
       <h3
-        className={`font-semibold group-hover:text-white transition-colors ${
-          isLandmark ? 'text-lg' : isMajor ? 'text-base' : 'text-sm'
-        }`}
+        className={
+          isLandmark
+            ? 'font-display text-2xl font-medium leading-tight text-ledger-text group-hover:text-white transition-colors'
+            : isMajor
+              ? 'font-display text-xl font-medium leading-snug text-ledger-text group-hover:text-white transition-colors'
+              : 'text-sm font-semibold text-ledger-text group-hover:text-white transition-colors'
+        }
+        style={
+          isLandmark
+            ? { fontVariationSettings: "'opsz' 36, 'SOFT' 0, 'WONK' 0" }
+            : isMajor
+              ? { fontVariationSettings: "'opsz' 24, 'SOFT' 0, 'WONK' 0" }
+              : undefined
+        }
       >
         {title}
       </h3>
 
       {/* Summary */}
       {summary && (
-        <p className={`mt-2 text-ledger-text-muted line-clamp-2 ${isLandmark ? 'text-sm' : 'text-xs'}`}>
+        <p className={`mt-2 text-ledger-text-muted line-clamp-2 ${isLandmark ? 'text-sm leading-relaxed' : 'text-xs leading-relaxed'}`}>
           {summary}
         </p>
       )}

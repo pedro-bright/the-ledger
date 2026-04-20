@@ -98,11 +98,48 @@ Required: `url`, `title`
 4. **Progressive formalization** -- Tier 0 (source + claim from anyone) -> Tier 1 (editor normalizes) -> Tier 2 (specialists enrich with threads, controversies, syntheses).
 5. **Signed syntheses** -- thread syntheses have named curators responsible for maintenance.
 
-## Design
+## Design Context
 
-- Dark mode only. Background `#0A0A0F`, surface `#111118`, text `#E8E4DF`.
-- Category colors: policy=indigo, models=amber, research=emerald, industry=violet, safety=red, culture=pink, open-source=cyan.
-- All custom colors/fonts defined in `site/tailwind.config.mjs` under `ledger.*` and `category.*` tokens.
+### Users
+Primary: AI-interested readers who want **history, not news** — researchers, journalists, policy people, engineers. They arrive curious and skeptical; they stay because the sourcing holds up. Context is deliberate reading, not doomscrolling. Long-read experience on mobile matters — syntheses run long. Job to be done: "show me what happened, who said what, when we were wrong, and how I can check the sources myself."
+
+Secondary: contributors submitting source tips via GitHub. Provenance must be one click away; contribution obvious without schema knowledge.
+
+### Brand Personality
+**Archival, sober, precise.** Curator-led — Terry Tang is visibly responsible for the editorial framework, not an anonymous aggregator. Quiet authority; trust earned through rigor, never claimed through adjectives. Epistemically humble — "wrongness is a feature" (significance upgrades, contestation badges, belief-decay tracking are visible, not hidden). No hype, no marketing gloss. Should feel like a court record or research archive that happens to be beautifully typeset.
+
+Emotional goals: **confidence** (sourcing is solid), **curiosity** (threads invite further reading), **responsibility** (the reader feels the weight of getting AI history right).
+
+### Aesthetic Direction
+**Editorial typography meets data journalism.** Stripe Press / Works in Progress rigor (generous whitespace, careful hierarchy, serif-mono interplay) combined with Pudding.cool / Observable information density (timelines, graphs, cross-references).
+
+Locked in — do not redesign without cause:
+- **Dark mode only.** Background `#0A0A0F`, surface `#111118`, text `#E8E4DF`.
+- **Inter (sans) + JetBrains Mono (mono).** Mono is reserved for metadata: dates, counts, tags, IDs, categories. This contrast is a load-bearing pattern.
+- **Category colors** are tokens, not decoration: policy=indigo, models=amber, research=emerald, industry=violet, safety=red, culture=pink, open-source=cyan. Always paired with text; never color-only.
+- **Primary accent** is `category-policy` indigo (#6366F1) for links, CTAs, focus rings.
+- **Significance scale**: landmark=amber, major=sky, notable=dim neutral. `text-sky-400` on a tinted background (`bg-sky-400/10`), `text-sky-300` for inline uppercase labels on the bg itself — the lighter shade compensates for the missing background tint so legibility stays even. Don't collapse these to one value without re-checking contrast.
+- All tokens live in `site/tailwind.config.mjs` under `ledger.*` and `category.*`.
+
+Push toward: longer line lengths and more generous leading on bodies; subtle fade-in/slide-up animation only (no parallax, no scroll-hijacking); monospace metadata strips, thin 1px borders, understated hover states; dense-but-legible list layouts over card-heavy grids where scanning matters.
+
+Anti-references — reject changes that make the site resemble any of these:
+- **SaaS landing pages** — gradient heroes, product mocks, "Trusted by" logo walls, emoji value props.
+- **Crypto / AI startup sites** — neon glows, animated gradients, glassmorphism, generated orbs.
+- **Generic AI dashboards** — chatbot bubbles, sparkle icons, "Ask anything" inputs, "Powered by GPT" badges.
+
+### Design Principles
+1. **Evidence over polish.** Every claim-bearing element (event, thread, controversy) should feel sourced and inspectable. Provenance is a first-class UI concern.
+2. **Rigor over excitement.** No hype typography, no hero gradients, no sparkles. If it would look at home on a research-paper preprint, it belongs here.
+3. **Information density with breathing room.** Dense where density aids comprehension (timelines, metadata strips); spacious where reading fatigue matters (event bodies, thread syntheses).
+4. **Designed to last a decade.** Favor timeless editorial patterns over trend-driven styling. A visitor in 2035 should read this as rigorous, not dated.
+5. **Contestability is visible.** Significance level, confidence, contestation status, and revision history are core design elements — never afterthoughts.
+
+### Accessibility Commitments
+- **Respect `prefers-reduced-motion`.** Fade-ins, slide-ups, scroll-triggered animations must disable cleanly. Motion is never load-bearing for meaning.
+- **Color-blind safe.** Category and status color is always paired with text labels.
+- **Long-read optimized.** Target ~65ch measure on body copy, strong heading hierarchy, generous line-height on event/thread pages.
+- **Keyboard + focus.** Visible focus-visible rings, logical tab order, no keyboard traps in Graph/Explore views.
 
 ## Deployment
 

@@ -1,9 +1,13 @@
 ---
 import Base from '../../layouts/Base.astro';
-import ConfidenceBadge from '../../components/ConfidenceBadge';
-import ContestationBadge from '../../components/ContestationBadge';
+import ConfidenceBadge, { confidenceHints } from '../../components/ConfidenceBadge';
+import ContestationBadge, { contestationHints } from '../../components/ContestationBadge';
 import SignificanceHistory from '../../components/SignificanceHistory';
 import { loadEvents, getCategoryColor, loadThreads, loadActors } from '../../lib/content';
+
+function formatSourceType(t: string): string {
+  return t.replace(/_/g, ' ').replace(/-/g, ' ');
+}
 
 export function getStaticPaths() {
   const events = loadEvents();
@@ -37,56 +41,79 @@ const significanceLabel: Record<string, string> = {
 ---
 
 <Base title={event.title} description={`${event.title} — ${new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`}>
-  <article class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="lg:grid lg:grid-cols-[1fr_280px] lg:gap-12">
+  <article class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="lg:grid lg:grid-cols-[1fr_300px] lg:gap-14">
       <!-- Main content -->
       <div>
         <!-- Breadcrumb -->
-        <nav class="flex items-center gap-2 text-xs font-mono text-ledger-text-dim mb-6">
+        <nav class="flex items-center gap-2 text-xs font-mono text-ledger-text-dim mb-8" aria-label="Breadcrumb">
           <a href="/" class="hover:text-ledger-text transition-colors">Timeline</a>
-          <span>/</span>
+          <span class="text-ledger-border-light">/</span>
           <a href="/explore" class="hover:text-ledger-text transition-colors">Events</a>
-          <span>/</span>
+          <span class="text-ledger-border-light">/</span>
           <span class="text-ledger-text-muted">{event.id}</span>
         </nav>
 
-        <!-- Meta -->
-        <div class="flex flex-wrap items-center gap-3 mb-4">
-          <time class="text-sm font-mono text-ledger-text-dim">
+        <!-- Archival meta strip — editorial dateline -->
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-mono text-ledger-text-dim uppercase tracking-wider mb-5 tabular-nums">
+          <time class="text-ledger-text-muted">
             {new Date(event.date).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',
               day: 'numeric',
-            })}
+            }).toUpperCase()}
           </time>
-          <span
-            class="px-2.5 py-0.5 text-xs font-medium uppercase tracking-wider rounded-full border"
-            style={`background: ${categoryColor}20; color: ${categoryColor}; border-color: ${categoryColor}40;`}
-          >
+          <span class="text-ledger-border-light">·</span>
+          <span style={`color: ${categoryColor};`}>
             {event.category.replace('-', ' ')}
           </span>
           {event.significance && (
-            <span class="px-2.5 py-0.5 text-xs font-mono font-medium uppercase tracking-wider text-ledger-text-muted bg-ledger-surface rounded-full border border-ledger-border">
-              {significanceLabel[event.significance] || event.significance}
-            </span>
+            <>
+              <span class="text-ledger-border-light">·</span>
+              <span class={
+                event.significance === 'landmark'
+                  ? 'text-amber-400'
+                  : event.significance === 'major'
+                    ? 'text-sky-300'
+                    : 'text-ledger-text-dim'
+              }>
+                {significanceLabel[event.significance] || event.significance}
+              </span>
+            </>
           )}
         </div>
 
         <!-- Title -->
         <h1
-          class="text-2xl sm:text-3xl font-bold text-white mb-4 border-l-[3px] pl-4"
-          style={`border-color: ${categoryColor};`}
+          class="font-display text-display-sm font-normal text-white mb-5 border-l-[3px] pl-4 leading-[1.1]"
+          style={`border-color: ${categoryColor}; font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;`}
         >
           {event.title}
         </h1>
 
-        <!-- Badges: render only when confidence is non-default or contestation exists -->
+        <!-- Epistemic badges + inline glossary strip. Only renders when non-default values exist. -->
         {((event.confidence && event.confidence !== 'high') || event.contestation?.status) && (
-          <div class="flex flex-wrap gap-2 mb-6">
-            <ConfidenceBadge level={event.confidence} />
-            {event.contestation?.status && (
-              <ContestationBadge status={event.contestation.status} />
-            )}
+          <div class="mb-8 p-4 rounded-md border border-ledger-border-light/40 bg-ledger-surface/40">
+            <div class="flex flex-wrap gap-2 mb-3">
+              <ConfidenceBadge level={event.confidence} />
+              {event.contestation?.status && (
+                <ContestationBadge status={event.contestation.status} />
+              )}
+            </div>
+            <dl class="grid sm:grid-cols-2 gap-x-6 gap-y-1 text-xs text-ledger-text-muted leading-relaxed">
+              {event.confidence && event.confidence !== 'high' && confidenceHints[event.confidence] && (
+                <div>
+                  <dt class="inline font-mono uppercase tracking-wider text-ledger-text-dim text-[10px]">{event.confidence}:</dt>
+                  <dd class="inline ml-1">{confidenceHints[event.confidence]}</dd>
+                </div>
+              )}
+              {event.contestation?.status && contestationHints[event.contestation.status] && (
+                <div>
+                  <dt class="inline font-mono uppercase tracking-wider text-ledger-text-dim text-[10px]">{event.contestation.status}:</dt>
+                  <dd class="inline ml-1">{contestationHints[event.contestation.status]}</dd>
+                </div>
+              )}
+            </dl>
           </div>
         )}
 
@@ -97,7 +124,7 @@ const significanceLabel: Record<string, string> = {
             {linkedThreads.map((thread) => (
               <a
                 href={`/threads/${thread.slug}`}
-                class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-category-policy bg-category-policy/10 rounded-full border border-category-policy/20 hover:bg-category-policy/20 transition-colors"
+                class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-category-policy bg-category-policy/10 rounded-sm border border-category-policy/20 hover:bg-category-policy/20 transition-colors"
               >
                 <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-3.03l4.5-4.5a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
@@ -126,7 +153,7 @@ const significanceLabel: Record<string, string> = {
             </h3>
             <div class="flex flex-wrap gap-2">
               {event.tags.map((tag: string) => (
-                <span class="px-2.5 py-1 text-xs font-mono text-ledger-text-muted bg-ledger-surface rounded-full border border-ledger-border hover:border-ledger-border-light transition-colors">
+                <span class="px-2.5 py-1 text-xs font-mono text-ledger-text-muted bg-ledger-surface rounded-sm border border-ledger-border hover:border-ledger-border-light transition-colors">
                   #{tag}
                 </span>
               ))}
@@ -140,7 +167,7 @@ const significanceLabel: Record<string, string> = {
         <div class="sticky top-20 space-y-6">
           <!-- Sources -->
           {event.sources && event.sources.length > 0 && (
-            <div class="p-4 rounded-lg border border-ledger-border bg-ledger-surface/30">
+            <div class="p-4 rounded-md border border-ledger-border bg-ledger-surface/30">
               <h3 class="text-xs font-mono uppercase tracking-wider text-ledger-text-dim mb-3">
                 Sources ({event.sources.length})
               </h3>
@@ -155,24 +182,30 @@ const significanceLabel: Record<string, string> = {
                     >
                       {source.title || source.url}
                     </a>
-                    <div class="flex items-center gap-2 mt-0.5">
+                    <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-1">
                       {source.publisher && (
                         <span class="text-xs text-ledger-text-muted">{source.publisher}</span>
                       )}
-                      <span class="text-[10px] font-mono uppercase tracking-wider text-ledger-text-dim px-1.5 py-0.5 bg-ledger-surface rounded border border-ledger-border">
-                        {source.type}
-                      </span>
+                      {source.type && (
+                        <span class="text-[10px] font-mono uppercase tracking-wider text-ledger-text-dim px-1.5 py-0.5 bg-ledger-surface rounded-sm border border-ledger-border">
+                          {formatSourceType(source.type)}
+                        </span>
+                      )}
+                      {source.archive_url && (
+                        <a
+                          href={source.archive_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="inline-flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider text-ledger-text-muted hover:text-category-policy transition-colors px-1.5 py-0.5 border border-ledger-border rounded-sm"
+                          title="Archived copy on the Wayback Machine"
+                        >
+                          <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          archive
+                        </a>
+                      )}
                     </div>
-                    {source.archive_url && (
-                      <a
-                        href={source.archive_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="text-xs text-ledger-text-dim hover:text-ledger-text-muted transition-colors"
-                      >
-                        [archive]
-                      </a>
-                    )}
                   </div>
                 ))}
               </div>
@@ -181,7 +214,7 @@ const significanceLabel: Record<string, string> = {
 
           <!-- Actors as styled pills -->
           {event.actors && event.actors.length > 0 && (
-            <div class="p-4 rounded-lg border border-ledger-border bg-ledger-surface/30">
+            <div class="p-4 rounded-md border border-ledger-border bg-ledger-surface/30">
               <h3 class="text-xs font-mono uppercase tracking-wider text-ledger-text-dim mb-3">
                 Actors
               </h3>
@@ -193,7 +226,7 @@ const significanceLabel: Record<string, string> = {
                     <div class="flex items-center justify-between gap-2">
                       <a
                         href={`/actors/${actor.id}`}
-                        class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono text-ledger-text bg-ledger-surface rounded-full border border-ledger-border hover:border-ledger-border-light hover:text-white transition-colors"
+                        class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono text-ledger-text bg-ledger-surface rounded-sm border border-ledger-border hover:border-ledger-border-light hover:text-white transition-colors"
                       >
                         {displayName}
                       </a>
@@ -207,7 +240,7 @@ const significanceLabel: Record<string, string> = {
 
           <!-- Related events as clickable links -->
           {relatedEvents.length > 0 && (
-            <div class="p-4 rounded-lg border border-ledger-border bg-ledger-surface/30">
+            <div class="p-4 rounded-md border border-ledger-border bg-ledger-surface/30">
               <h3 class="text-xs font-mono uppercase tracking-wider text-ledger-text-dim mb-3">
                 Related Events
               </h3>
@@ -226,7 +259,7 @@ const significanceLabel: Record<string, string> = {
 
           <!-- Metadata -->
           {(event.state || event.regions) && (
-            <div class="p-4 rounded-lg border border-ledger-border bg-ledger-surface/30">
+            <div class="p-4 rounded-md border border-ledger-border bg-ledger-surface/30">
               <h3 class="text-xs font-mono uppercase tracking-wider text-ledger-text-dim mb-3">
                 Metadata
               </h3>

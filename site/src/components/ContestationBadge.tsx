@@ -4,11 +4,34 @@ interface Props {
   status?: 'uncontested' | 'contested' | 'superseded' | 'unresolved';
 }
 
-const config: Record<string, { label: string; color: string; bg: string }> = {
-  uncontested: { label: 'Uncontested', color: 'text-emerald-400', bg: 'bg-emerald-400/10 border-emerald-400/20' },
-  contested: { label: 'Contested', color: 'text-amber-400', bg: 'bg-amber-400/10 border-amber-400/20' },
-  superseded: { label: 'Superseded', color: 'text-gray-400', bg: 'bg-gray-400/10 border-gray-400/20' },
-  unresolved: { label: 'Unresolved', color: 'text-orange-400', bg: 'bg-orange-400/10 border-orange-400/20' },
+const config: Record<
+  string,
+  { label: string; color: string; bg: string; hint: string }
+> = {
+  uncontested: {
+    label: 'Uncontested',
+    color: 'text-emerald-400',
+    bg: 'bg-emerald-400/10 border-emerald-400/20',
+    hint: 'No formal challenge has been filed against this claim.',
+  },
+  contested: {
+    label: 'Contested',
+    color: 'text-amber-400',
+    bg: 'bg-amber-400/10 border-amber-400/20',
+    hint: 'At least one formal challenge is open against this claim.',
+  },
+  superseded: {
+    label: 'Superseded',
+    color: 'text-gray-400',
+    bg: 'bg-gray-400/10 border-gray-400/20',
+    hint: 'Replaced by a later entry that re-evaluates the facts.',
+  },
+  unresolved: {
+    label: 'Unresolved',
+    color: 'text-orange-400',
+    bg: 'bg-orange-400/10 border-orange-400/20',
+    hint: 'The dispute remains open — no authoritative resolution yet.',
+  },
 };
 
 export default function ContestationBadge({ status }: Props) {
@@ -17,9 +40,10 @@ export default function ContestationBadge({ status }: Props) {
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono font-medium rounded-full border ${c.bg} ${c.color}`}
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono font-medium rounded-sm border ${c.bg} ${c.color}`}
+      title={c.hint}
     >
-      <svg className="w-3 h-3" viewBox="0 0 12 12" fill="none">
+      <svg className="w-3 h-3" viewBox="0 0 12 12" fill="none" aria-hidden="true">
         {status === 'uncontested' && (
           <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         )}
@@ -45,3 +69,7 @@ export default function ContestationBadge({ status }: Props) {
     </span>
   );
 }
+
+export const contestationHints = Object.fromEntries(
+  Object.entries(config).map(([k, v]) => [k, v.hint]),
+);
