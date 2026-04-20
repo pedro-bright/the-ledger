@@ -1,0 +1,8 @@
+id: x-corp
+name: X Corp
+type: company
+website: https://x.com
+aliases:
+  - Twitter
+  - X
+  - Twitter Inc.
