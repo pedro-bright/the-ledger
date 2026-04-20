@@ -30,6 +30,17 @@ events:
   - stability-ai-funding-crisis
   - meta-llama-4-release
   - apple-intelligence-announcement
+  - qwen2-5-vl-release
+  - mistral-small-3-release
+  - google-gemma-3-release
+  - deepseek-v3-0324-release
+  - qwen3-release
+  - anthropic-claude-sonnet-4-5-release
+  - anthropic-claude-haiku-4-5-release
+  - ai2-olmo-3-release
+  - deepseek-v3-2-release
+  - mistral-large-3-release
+  - anthropic-claude-sonnet-4-6-release
 controversies:
   - open-weights-risk-benefit
 ---

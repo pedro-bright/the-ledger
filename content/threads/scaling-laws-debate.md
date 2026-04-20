@@ -40,6 +40,11 @@ events:
   - google-gemini-2-release
   - meta-llama-4-release
   - ai-agent-tools-proliferate
+  - google-gemini-2-5-pro-experimental
+  - openai-o3-o4-mini-release
+  - xai-grok-4-release
+  - google-gemini-3-pro-release
+  - openai-gpt-5-4-release
 controversies:
   - scaling-laws-plateau
 ---

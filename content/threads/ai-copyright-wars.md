@@ -17,6 +17,16 @@ events:
   - scarlett-johansson-openai-voice
   - google-ai-overviews-launch
   - eu-ai-act-final-vote
+  - usco-ai-report-part-2-copyrightability
+  - openai-copyright-mdl-3143-consolidation
+  - nyt-openai-mtd-ruling-2025
+  - usco-ai-report-part-3-training
+  - openai-mdl-output-infringement-ruling
+  - umg-udio-settlement-licensed-music
+  - getty-v-stability-ai-uk-ruling
+  - warner-music-suno-settlement
+  - nyt-tribune-v-perplexity-copyright
+  - uk-drops-tdm-opt-out-ai-copyright
 controversies:
   - ai-training-copyright
 ---

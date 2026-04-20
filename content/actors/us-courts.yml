@@ -1,0 +1,9 @@
+id: us-courts
+name: United States Federal Courts
+type: government
+website: https://www.uscourts.gov
+aliases:
+  - Federal Courts
+  - US District Court
+  - SDNY
+  - JPML
