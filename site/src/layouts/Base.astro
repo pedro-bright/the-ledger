@@ -21,6 +21,13 @@ const { title, description, image, type } = Astro.props;
 const pageTitle = !title || title === 'The Ledger'
   ? 'The Ledger — A durable historical record of AI'
   : `${title} — The Ledger`;
+
+// Active nav detection. Normalize so `/threads/foo` still highlights `/threads`.
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+function isActive(href: string): boolean {
+  if (href === '/') return currentPath === '/';
+  return currentPath === href || currentPath.startsWith(href + '/');
+}
 ---
 
 <!doctype html>
@@ -35,18 +42,21 @@ const pageTitle = !title || title === 'The Ledger'
     <SEO title={pageTitle} description={description} image={image} type={type} />
   </head>
   <body class="bg-ledger-bg text-ledger-text font-sans antialiased min-h-screen flex flex-col">
+    <!-- Skip link — visually hidden until focused, for keyboard users. -->
+    <a href="#main" class="skip-link">Skip to content</a>
+
     <!-- Navigation -->
-    <nav class="sticky top-0 z-50 border-b border-ledger-border bg-ledger-bg/80 backdrop-blur-xl">
+    <nav class="sticky top-0 z-50 border-b border-ledger-border bg-ledger-bg/80 backdrop-blur-xl" aria-label="Primary">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-14">
           <a href="/" class="font-display text-xl font-medium tracking-display-tight hover:text-white transition-colors" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
             The Ledger
           </a>
           <div class="flex items-center gap-0.5 sm:gap-1">
-            <a href="/" class="nav-link">Timeline</a>
-            <a href="/threads" class="nav-link">Threads</a>
-            <a href="/graph" class="nav-link">Graph</a>
-            <a href="/about" class="nav-link">About</a>
+            <a href="/" class="nav-link" aria-current={isActive('/') ? 'page' : undefined}>Timeline</a>
+            <a href="/threads" class="nav-link" aria-current={isActive('/threads') ? 'page' : undefined}>Threads</a>
+            <a href="/graph" class="nav-link" aria-current={isActive('/graph') ? 'page' : undefined}>Graph</a>
+            <a href="/about" class="nav-link" aria-current={isActive('/about') ? 'page' : undefined}>About</a>
             <a
               href="/feed.xml"
               class="nav-link ml-1 flex items-center"
@@ -65,7 +75,7 @@ const pageTitle = !title || title === 'The Ledger'
     </nav>
 
     <!-- Main content -->
-    <main class="flex-1">
+    <main id="main" class="flex-1" tabindex="-1">
       <slot />
     </main>
 
@@ -162,8 +172,40 @@ const pageTitle = !title || title === 'The Ledger'
     </footer>
 
     <style is:global>
+      /* Skip link — visually hidden until focused. Keyboard a11y baseline. */
+      .skip-link {
+        position: absolute;
+        top: 0.5rem;
+        left: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        background: #0A0A0F;
+        color: #E8E4DF;
+        border: 1px solid #6366F1;
+        border-radius: 0.25rem;
+        font-size: 0.875rem;
+        z-index: 100;
+        transform: translateY(-200%);
+        transition: transform 120ms ease-out;
+      }
+      .skip-link:focus {
+        transform: translateY(0);
+      }
+
       .nav-link {
         @apply px-3 py-1.5 text-sm text-ledger-text-muted hover:text-ledger-text rounded-md transition-colors;
+      }
+      .nav-link[aria-current="page"] {
+        @apply text-white;
+        position: relative;
+      }
+      .nav-link[aria-current="page"]::after {
+        content: '';
+        position: absolute;
+        left: 0.75rem;
+        right: 0.75rem;
+        bottom: -2px;
+        height: 1px;
+        background: #6366F1;
       }
 
       /* Prose styles for rendered markdown — long-form editorial reading. */
@@ -214,8 +256,18 @@ const pageTitle = !title || title === 'The Ledger'
       .prose li {
         @apply mb-1.5;
       }
+      /* Prose links — use text-decoration so the underline respects descenders
+         and doesn't stack visually with the global focus-visible outline. */
       .prose a {
-        @apply text-category-policy border-b border-category-policy/30 hover:border-category-policy transition-colors;
+        color: #818CF8;
+        text-decoration: underline;
+        text-decoration-color: rgba(99, 102, 241, 0.4);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 3px;
+        transition: text-decoration-color 150ms ease;
+      }
+      .prose a:hover {
+        text-decoration-color: #818CF8;
       }
       .prose blockquote {
         font-family: 'Fraunces Variable', 'Iowan Old Style', Georgia, serif;
@@ -229,10 +281,10 @@ const pageTitle = !title || title === 'The Ledger'
         margin: 1.5rem 0;
       }
       .prose code {
-        @apply font-mono text-[0.9em] bg-ledger-surface px-1.5 py-0.5 rounded;
+        @apply font-mono text-[0.9em] bg-ledger-surface px-1.5 py-0.5 rounded-sm;
       }
       .prose pre {
-        @apply bg-ledger-surface p-4 rounded-lg overflow-x-auto mb-5 text-sm;
+        @apply bg-ledger-surface p-4 rounded-md overflow-x-auto mb-5 text-sm;
       }
       .prose pre code {
         @apply bg-transparent px-0 py-0 text-[0.95em];
@@ -265,6 +317,9 @@ const pageTitle = !title || title === 'The Ledger'
         .fade-in-on-scroll {
           opacity: 1;
           transform: none;
+          transition: none;
+        }
+        .skip-link {
           transition: none;
         }
         *,

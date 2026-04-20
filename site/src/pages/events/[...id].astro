@@ -124,7 +124,7 @@ const significanceLabel: Record<string, string> = {
             {linkedThreads.map((thread) => (
               <a
                 href={`/threads/${thread.slug}`}
-                class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-category-policy bg-category-policy/10 rounded-full border border-category-policy/20 hover:bg-category-policy/20 transition-colors"
+                class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-category-policy bg-category-policy/10 rounded-sm border border-category-policy/20 hover:bg-category-policy/20 transition-colors"
               >
                 <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-3.03l4.5-4.5a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
@@ -153,7 +153,7 @@ const significanceLabel: Record<string, string> = {
             </h3>
             <div class="flex flex-wrap gap-2">
               {event.tags.map((tag: string) => (
-                <span class="px-2.5 py-1 text-xs font-mono text-ledger-text-muted bg-ledger-surface rounded-full border border-ledger-border hover:border-ledger-border-light transition-colors">
+                <span class="px-2.5 py-1 text-xs font-mono text-ledger-text-muted bg-ledger-surface rounded-sm border border-ledger-border hover:border-ledger-border-light transition-colors">
                   #{tag}
                 </span>
               ))}
@@ -167,7 +167,7 @@ const significanceLabel: Record<string, string> = {
         <div class="sticky top-20 space-y-6">
           <!-- Sources -->
           {event.sources && event.sources.length > 0 && (
-            <div class="p-4 rounded-lg border border-ledger-border bg-ledger-surface/30">
+            <div class="p-4 rounded-md border border-ledger-border bg-ledger-surface/30">
               <h3 class="text-xs font-mono uppercase tracking-wider text-ledger-text-dim mb-3">
                 Sources ({event.sources.length})
               </h3>
@@ -214,7 +214,7 @@ const significanceLabel: Record<string, string> = {
 
           <!-- Actors as styled pills -->
           {event.actors && event.actors.length > 0 && (
-            <div class="p-4 rounded-lg border border-ledger-border bg-ledger-surface/30">
+            <div class="p-4 rounded-md border border-ledger-border bg-ledger-surface/30">
               <h3 class="text-xs font-mono uppercase tracking-wider text-ledger-text-dim mb-3">
                 Actors
               </h3>
@@ -226,7 +226,7 @@ const significanceLabel: Record<string, string> = {
                     <div class="flex items-center justify-between gap-2">
                       <a
                         href={`/actors/${actor.id}`}
-                        class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono text-ledger-text bg-ledger-surface rounded-full border border-ledger-border hover:border-ledger-border-light hover:text-white transition-colors"
+                        class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono text-ledger-text bg-ledger-surface rounded-sm border border-ledger-border hover:border-ledger-border-light hover:text-white transition-colors"
                       >
                         {displayName}
                       </a>
@@ -240,7 +240,7 @@ const significanceLabel: Record<string, string> = {
 
           <!-- Related events as clickable links -->
           {relatedEvents.length > 0 && (
-            <div class="p-4 rounded-lg border border-ledger-border bg-ledger-surface/30">
+            <div class="p-4 rounded-md border border-ledger-border bg-ledger-surface/30">
               <h3 class="text-xs font-mono uppercase tracking-wider text-ledger-text-dim mb-3">
                 Related Events
               </h3>
@@ -259,7 +259,7 @@ const significanceLabel: Record<string, string> = {
 
           <!-- Metadata -->
           {(event.state || event.regions) && (
-            <div class="p-4 rounded-lg border border-ledger-border bg-ledger-surface/30">
+            <div class="p-4 rounded-md border border-ledger-border bg-ledger-surface/30">
               <h3 class="text-xs font-mono uppercase tracking-wider text-ledger-text-dim mb-3">
                 Metadata
               </h3>

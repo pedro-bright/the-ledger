@@ -104,19 +104,22 @@ export default function Graph({ data }: Props) {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="label-eyebrow mr-1">Show</span>
         {types.map((type) => {
           const isHidden = hidden.has(type);
           return (
             <button
               key={type}
+              type="button"
               onClick={() => toggleType(type)}
-              className={`px-3 py-1.5 text-xs font-mono uppercase tracking-wider rounded-full border transition-all ${
+              aria-pressed={!isHidden}
+              className={`px-2.5 py-1.5 text-xs font-medium rounded-sm border transition-colors duration-150 tabular-nums ${
                 isHidden
-                  ? 'border-ledger-border text-ledger-text-dim bg-transparent opacity-50'
+                  ? 'border-ledger-border text-ledger-text-dim bg-transparent hover:border-ledger-border-light hover:text-ledger-text-muted'
                   : 'border-ledger-border-light text-ledger-text bg-ledger-surface'
               }`}
-              style={!isHidden ? { borderColor: NODE_COLORS[type], color: NODE_COLORS[type] } : {}}
+              style={!isHidden ? { borderColor: NODE_COLORS[type] + '60', backgroundColor: NODE_COLORS[type] + '20', color: NODE_COLORS[type] } : undefined}
             >
               {TYPE_LABELS[type]} ({counts[type]})
             </button>
@@ -126,7 +129,7 @@ export default function Graph({ data }: Props) {
 
       <div
         ref={containerRef}
-        className="border border-ledger-border rounded-lg bg-ledger-surface/30 overflow-hidden"
+        className="border border-ledger-border rounded-md bg-ledger-surface/30 overflow-hidden"
       >
         <ForceGraph2D
           ref={fgRef}

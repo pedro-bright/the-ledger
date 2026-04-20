@@ -42,7 +42,7 @@ const linkedControversies = thread.controversies
     <div class="mb-8">
       <div class="flex items-center gap-3 mb-3">
         {thread.status && (
-          <span class={`px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-full border ${
+          <span class={`px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-sm border ${
             thread.status === 'active'
               ? 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20'
               : 'text-ledger-text-dim bg-ledger-surface border-ledger-border'
@@ -84,7 +84,7 @@ const linkedControversies = thread.controversies
             {linkedEvents.map((event) => (
               <a
                 href={`/events/${event.slug}`}
-                class="group relative flex items-start gap-4 pl-6 hover:bg-ledger-surface/30 -mx-2 px-2 rounded-lg py-2 transition-colors"
+                class="group relative flex items-start gap-4 pl-6 hover:bg-ledger-surface/30 -mx-2 px-2 rounded-sm py-2 transition-colors"
               >
                 <div class="absolute left-0 top-3.5 w-[11px] h-[11px] rounded-full bg-ledger-bg border-2 border-ledger-border-light z-10" />
                 <time class="text-xs font-mono text-ledger-text-dim whitespace-nowrap pt-0.5">
@@ -116,7 +116,7 @@ const linkedControversies = thread.controversies
           {linkedControversies.map((controversy) => (
             <a
               href={`/controversies/${controversy.slug}`}
-              class="block p-4 rounded-lg border border-amber-400/20 bg-amber-400/5 hover:bg-amber-400/10 transition-colors"
+              class="block p-4 rounded-md border border-amber-400/20 bg-amber-400/5 hover:bg-amber-400/10 transition-colors"
             >
               <span class="text-sm font-medium text-amber-400">{controversy.title}</span>
               {controversy.positions && (

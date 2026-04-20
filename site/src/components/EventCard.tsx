@@ -47,7 +47,7 @@ export default function EventCard({ id, title, date, category, significance, sum
   return (
     <a
       href={`/events/${id}`}
-      className={`group block rounded-lg border border-ledger-border bg-ledger-surface/50 hover:bg-ledger-surface hover:border-ledger-border-light transition-all duration-200 ${
+      className={`group block rounded-md border border-ledger-border bg-ledger-surface/50 hover:bg-ledger-surface hover:border-ledger-border-light transition-all duration-200 ${
         isLandmark ? `border-l-[3px] ${borderColor} p-5` : isMajor ? `border-l-2 ${borderColor} p-4` : 'p-4'
       }`}
     >
@@ -60,17 +60,18 @@ export default function EventCard({ id, title, date, category, significance, sum
             day: 'numeric',
           })}
         </time>
-        <span className={`px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider rounded-full border ${pillColor}`}>
+        <span className={`px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider rounded-sm border ${pillColor}`}>
           {category.replace('-', ' ')}
         </span>
         {significance && sigClass && (
-          <span className={`px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-full border ${sigClass}`}>
+          <span className={`px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-sm border ${sigClass}`}>
             {significance}
           </span>
         )}
       </div>
 
-      {/* Title — serif display for landmark/major, sans for notable */}
+      {/* Title — serif display for landmark/major, sans for notable.
+         Opsz matches rendered size: 36 for landmark (~24px), 24 for major (~20px). */}
       <h3
         className={
           isLandmark
@@ -79,7 +80,13 @@ export default function EventCard({ id, title, date, category, significance, sum
               ? 'font-display text-xl font-medium leading-snug text-ledger-text group-hover:text-white transition-colors'
               : 'text-sm font-semibold text-ledger-text group-hover:text-white transition-colors'
         }
-        style={isLandmark || isMajor ? { fontVariationSettings: "'opsz' 144, 'SOFT' 0, 'WONK' 0" } : undefined}
+        style={
+          isLandmark
+            ? { fontVariationSettings: "'opsz' 36, 'SOFT' 0, 'WONK' 0" }
+            : isMajor
+              ? { fontVariationSettings: "'opsz' 24, 'SOFT' 0, 'WONK' 0" }
+              : undefined
+        }
       >
         {title}
       </h3>

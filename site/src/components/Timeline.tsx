@@ -221,28 +221,24 @@ function NoMatchesState({
 
 function EmptyState() {
   return (
-    <div className="text-center py-24 px-4">
-      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-ledger-surface border border-ledger-border mb-6">
-        <svg className="w-7 h-7 text-ledger-text-dim" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      </div>
-      <h3
-        className="font-display text-2xl font-normal text-ledger-text mb-2"
+    <div className="py-24 px-4 max-w-xl mx-auto text-center">
+      <p className="label-eyebrow mb-3">§ Nothing here yet</p>
+      <p
+        className="font-display text-3xl font-normal text-ledger-text mb-3 leading-tight"
         style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 0, 'WONK' 0" }}
       >
-        No events yet
-      </h3>
-      <p className="text-sm text-ledger-text-muted max-w-md mx-auto mb-6 leading-relaxed">
-        The timeline is empty. Events are loaded from markdown files in the <code className="font-mono text-xs bg-ledger-surface px-1.5 py-0.5 rounded">content/events/</code> directory.
+        The ledger is empty.
+      </p>
+      <p className="text-sm text-ledger-text-muted mb-6 leading-relaxed">
+        Entries are loaded from markdown files in <code className="font-mono text-xs text-ledger-text">content/events/</code>. The fastest way to help: drop a source link via a GitHub issue.
       </p>
       <a
-        href="https://github.com/pedro-bright/the-ledger"
+        href="https://github.com/pedro-bright/the-ledger/issues/new?template=source-tip.yml"
         target="_blank"
         rel="noopener noreferrer"
         className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-category-policy rounded-md hover:bg-category-policy/80 transition-colors"
       >
-        Contribute on GitHub
+        Submit a source tip
       </a>
     </div>
   );

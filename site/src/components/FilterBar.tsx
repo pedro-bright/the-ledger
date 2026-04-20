@@ -44,7 +44,7 @@ export default function FilterBar({
               type="button"
               onClick={() => onToggleCategory(cat.id)}
               aria-pressed={isActive}
-              className={`px-2.5 py-1 text-xs font-medium rounded-sm border transition-colors duration-150 ${
+              className={`px-3 py-1.5 text-xs font-medium rounded-sm border min-h-[32px] transition-colors duration-150 ${
                 isActive
                   ? 'border-white/30 text-white bg-white/10'
                   : 'border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text'
@@ -68,7 +68,7 @@ export default function FilterBar({
               type="button"
               onClick={() => onToggleSignificance(level)}
               aria-pressed={isActive}
-              className={`px-2.5 py-1 text-xs font-medium rounded-sm border capitalize transition-colors duration-150 ${
+              className={`px-3 py-1.5 text-xs font-medium rounded-sm border min-h-[32px] capitalize transition-colors duration-150 ${
                 isActive
                   ? 'border-white/30 text-white bg-white/10'
                   : 'border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text'

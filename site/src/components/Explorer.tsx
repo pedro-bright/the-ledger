@@ -209,20 +209,13 @@ export default function Explorer({ events, categories }: Props) {
 
   if (events.length === 0) {
     return (
-      <div className="text-center py-24 px-4">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-ledger-surface border border-ledger-border mb-6">
-          <svg className="w-7 h-7 text-ledger-text-dim" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-          </svg>
-        </div>
-        <h3
-          className="font-display text-2xl font-normal text-ledger-text mb-2"
+      <div className="py-24 px-4 max-w-xl mx-auto text-center">
+        <p className="label-eyebrow mb-3">§ Nothing to explore yet</p>
+        <p
+          className="font-display text-3xl font-normal text-ledger-text leading-tight"
           style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 0, 'WONK' 0" }}
         >
-          Nothing to explore yet
-        </h3>
-        <p className="text-sm text-ledger-text-muted max-w-md mx-auto">
-          Events will appear here once content is added to the ledger.
+          Entries will appear here once content is added.
         </p>
       </div>
     );
@@ -265,7 +258,7 @@ export default function Explorer({ events, categories }: Props) {
                 type="button"
                 onClick={() => toggle(setActiveCategories, cat.id)}
                 aria-pressed={isActive}
-                className={`px-2.5 py-1 text-xs font-medium rounded-sm border transition-colors duration-150 ${
+                className={`px-3 py-1.5 text-xs font-medium rounded-sm border min-h-[32px] transition-colors duration-150 ${
                   isActive
                     ? 'border-white/30 text-white bg-white/10'
                     : 'border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text'
@@ -289,7 +282,7 @@ export default function Explorer({ events, categories }: Props) {
                 type="button"
                 onClick={() => toggle(setActiveSignificance, level)}
                 aria-pressed={isActive}
-                className={`px-2.5 py-1 text-xs font-medium rounded-sm border capitalize transition-colors duration-150 ${
+                className={`px-3 py-1.5 text-xs font-medium rounded-sm border min-h-[32px] capitalize transition-colors duration-150 ${
                   isActive
                     ? 'border-white/30 text-white bg-white/10'
                     : 'border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text'
@@ -332,7 +325,7 @@ export default function Explorer({ events, categories }: Props) {
                     type="button"
                     onClick={() => setSelectedYear(null)}
                     aria-pressed={selectedYear === null}
-                    className={`px-2.5 py-1 text-xs font-medium rounded-sm border transition-colors duration-150 ${
+                    className={`px-3 py-1.5 text-xs font-medium rounded-sm border min-h-[32px] transition-colors duration-150 ${
                       selectedYear === null
                         ? 'border-white/30 text-white bg-white/10'
                         : 'border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text'
@@ -348,7 +341,7 @@ export default function Explorer({ events, categories }: Props) {
                         type="button"
                         onClick={() => setSelectedYear(isActive ? null : year)}
                         aria-pressed={isActive}
-                        className={`px-2.5 py-1 text-xs font-mono font-medium rounded-sm border transition-colors duration-150 tabular-nums ${
+                        className={`px-3 py-1.5 text-xs font-mono font-medium rounded-sm border transition-colors duration-150 tabular-nums min-h-[32px] ${
                           isActive
                             ? 'border-white/30 text-white bg-white/10'
                             : 'border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text'
@@ -373,7 +366,7 @@ export default function Explorer({ events, categories }: Props) {
                       type="button"
                       onClick={() => setSortOption(opt)}
                       aria-pressed={isActive}
-                      className={`px-2.5 py-1 text-xs font-medium rounded-sm border transition-colors duration-150 ${
+                      className={`px-3 py-1.5 text-xs font-medium rounded-sm border min-h-[32px] transition-colors duration-150 ${
                         isActive
                           ? 'border-white/30 text-white bg-white/10'
                           : 'border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text'

@@ -99,7 +99,7 @@ const typeLabels: Record<string, string> = {
                 return (
                   <a
                     href={`/events/${evt.slug}`}
-                    class="group flex items-center gap-3 sm:gap-4 py-2.5 px-3 -mx-3 rounded-lg hover:bg-ledger-surface/50 transition-colors"
+                    class="group flex items-center gap-3 sm:gap-4 py-2.5 px-3 -mx-3 rounded-sm hover:bg-ledger-surface/50 transition-colors"
                   >
                     <time class="flex-shrink-0 text-xs font-mono text-ledger-text-dim w-20 sm:w-24">
                       {new Date(evt.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}
@@ -113,7 +113,7 @@ const typeLabels: Record<string, string> = {
                       </span>
                     )}
                     <span
-                      class="flex-shrink-0 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider rounded-full border hidden sm:inline-block"
+                      class="flex-shrink-0 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider rounded-sm border hidden sm:inline-block"
                       style={`background: ${catColor}15; color: ${catColor}; border-color: ${catColor}30;`}
                     >
                       {evt.category.replace('-', ' ')}
