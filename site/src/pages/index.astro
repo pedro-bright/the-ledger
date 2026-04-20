@@ -268,9 +268,10 @@ const significanceColors: Record<string, string> = {
         <p class="label-eyebrow mb-2">§ Timeline</p>
         <h2 class="font-display text-2xl sm:text-3xl font-normal text-white tracking-display-tight" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">The Record</h2>
       </div>
-      <span class="text-xs font-mono text-ledger-text-dim tabular-nums">
-        {events.length} {events.length === 1 ? 'entry' : 'entries'}
-      </span>
+      <div class="flex items-baseline gap-4 text-xs font-mono text-ledger-text-dim tabular-nums">
+        <a href="/explore" class="text-category-policy hover:underline">search &amp; filter →</a>
+        <span class="hidden sm:inline">{events.length} {events.length === 1 ? 'entry' : 'entries'}</span>
+      </div>
     </div>
     <Timeline events={timelineEvents} categories={categories} client:load />
   </section>

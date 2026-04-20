@@ -42,27 +42,18 @@ const pageTitle = !title || title === 'The Ledger'
           <a href="/" class="font-display text-xl font-medium tracking-display-tight hover:text-white transition-colors" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
             The Ledger
           </a>
-          <div class="flex items-center gap-1">
+          <div class="flex items-center gap-0.5 sm:gap-1">
             <a href="/" class="nav-link">Timeline</a>
             <a href="/threads" class="nav-link">Threads</a>
-            <a href="/controversies" class="nav-link">Controversies</a>
-            <a href="/actors" class="nav-link">Actors</a>
             <a href="/graph" class="nav-link">Graph</a>
-            <a href="/explore" class="nav-link">Explore</a>
-            <a
-              href="https://github.com/pedro-bright/the-ledger/issues/new?template=source-tip.yml"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="nav-link"
-            >
-              Contribute
-            </a>
+            <a href="/about" class="nav-link">About</a>
             <a
               href="/feed.xml"
               class="nav-link ml-1 flex items-center"
+              aria-label="RSS feed"
               title="RSS Feed"
             >
-              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M4 11a9 9 0 0 1 9 9" />
                 <path d="M4 4a16 16 0 0 1 16 16" />
                 <circle cx="5" cy="19" r="1" />
@@ -78,35 +69,94 @@ const pageTitle = !title || title === 'The Ledger'
       <slot />
     </main>
 
-    <!-- Footer -->
+    <!-- Footer — holds secondary navigation and colophon. -->
     <footer class="border-t border-ledger-border mt-auto">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-ledger-text-muted">
-          <p class="font-display italic" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">A durable historical record of AI</p>
-          <div class="flex items-center gap-4">
-            <a
-              href="https://github.com/pedro-bright/the-ledger"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="hover:text-ledger-text transition-colors"
-            >
-              GitHub
-            </a>
-            <span class="text-ledger-text-dim">·</span>
-            <a
-              href="/feed.xml"
-              class="hover:text-ledger-text transition-colors flex items-center gap-1"
-            >
-              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 11a9 9 0 0 1 9 9" />
-                <path d="M4 4a16 16 0 0 1 16 16" />
-                <circle cx="5" cy="19" r="1" />
-              </svg>
-              RSS
-            </a>
-            <span class="text-ledger-text-dim">·</span>
-            <span class="font-mono text-xs">CC BY-SA 4.0</span>
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid gap-10 md:grid-cols-[2fr_1fr_1fr_1fr]">
+          <div>
+            <p class="font-display italic text-lg text-ledger-text leading-snug max-w-[40ch]" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
+              A durable historical record of AI.
+            </p>
+            <p class="mt-3 text-xs font-mono text-ledger-text-dim uppercase tracking-wider">
+              Curated by Terry Tang · CC BY-SA 4.0
+            </p>
           </div>
+          <nav aria-labelledby="footer-browse">
+            <h3 id="footer-browse" class="label-eyebrow mb-3">§ Browse</h3>
+            <ul class="space-y-2 text-sm">
+              <li><a href="/" class="text-ledger-text-muted hover:text-ledger-text transition-colors">Timeline</a></li>
+              <li><a href="/explore" class="text-ledger-text-muted hover:text-ledger-text transition-colors">Search &amp; Filter</a></li>
+              <li><a href="/threads" class="text-ledger-text-muted hover:text-ledger-text transition-colors">Threads</a></li>
+              <li><a href="/controversies" class="text-ledger-text-muted hover:text-ledger-text transition-colors">Controversies</a></li>
+              <li><a href="/actors" class="text-ledger-text-muted hover:text-ledger-text transition-colors">Actors</a></li>
+              <li><a href="/graph" class="text-ledger-text-muted hover:text-ledger-text transition-colors">Graph</a></li>
+            </ul>
+          </nav>
+          <nav aria-labelledby="footer-contribute">
+            <h3 id="footer-contribute" class="label-eyebrow mb-3">§ Contribute</h3>
+            <ul class="space-y-2 text-sm">
+              <li>
+                <a
+                  href="https://github.com/pedro-bright/the-ledger/issues/new?template=source-tip.yml"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-ledger-text-muted hover:text-ledger-text transition-colors"
+                >
+                  Submit a source tip
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://github.com/pedro-bright/the-ledger/blob/main/CONTRIBUTING.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-ledger-text-muted hover:text-ledger-text transition-colors"
+                >
+                  Contribution guide
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://github.com/pedro-bright/the-ledger/blob/main/editorial/constitution.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-ledger-text-muted hover:text-ledger-text transition-colors"
+                >
+                  Editorial constitution
+                </a>
+              </li>
+            </ul>
+          </nav>
+          <nav aria-labelledby="footer-feeds">
+            <h3 id="footer-feeds" class="label-eyebrow mb-3">§ Follow</h3>
+            <ul class="space-y-2 text-sm">
+              <li>
+                <a href="/feed.xml" class="inline-flex items-center gap-1.5 text-ledger-text-muted hover:text-ledger-text transition-colors">
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M4 11a9 9 0 0 1 9 9" />
+                    <path d="M4 4a16 16 0 0 1 16 16" />
+                    <circle cx="5" cy="19" r="1" />
+                  </svg>
+                  RSS feed
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://github.com/pedro-bright/the-ledger"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-ledger-text-muted hover:text-ledger-text transition-colors"
+                >
+                  GitHub
+                </a>
+              </li>
+              <li>
+                <a href="/about" class="text-ledger-text-muted hover:text-ledger-text transition-colors">
+                  About
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
     </footer>
