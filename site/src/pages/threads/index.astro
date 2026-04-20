@@ -58,6 +58,10 @@ const enriched = threads
                     <h2 class="font-display text-2xl sm:text-3xl font-medium leading-tight text-ledger-text group-hover:text-white transition-colors" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
                       {thread.title}
                     </h2>
+                    {/* Index surfaces thread activity (active/dormant), not epistemic
+                        contestation. Thread-level contestation status is a detail-page
+                        concern — the core-question blockquote + any linked controversies
+                        carry that signal. Here we want a scannable activity cue only. */}
                     {thread.status && (
                       <span class={`flex-shrink-0 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-sm border ${
                         thread.status === 'active'

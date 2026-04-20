@@ -118,6 +118,7 @@ Locked in — do not redesign without cause:
 - **Inter (sans) + JetBrains Mono (mono).** Mono is reserved for metadata: dates, counts, tags, IDs, categories. This contrast is a load-bearing pattern.
 - **Category colors** are tokens, not decoration: policy=indigo, models=amber, research=emerald, industry=violet, safety=red, culture=pink, open-source=cyan. Always paired with text; never color-only.
 - **Primary accent** is `category-policy` indigo (#6366F1) for links, CTAs, focus rings.
+- **Significance scale**: landmark=amber, major=sky, notable=dim neutral. `text-sky-400` on a tinted background (`bg-sky-400/10`), `text-sky-300` for inline uppercase labels on the bg itself — the lighter shade compensates for the missing background tint so legibility stays even. Don't collapse these to one value without re-checking contrast.
 - All tokens live in `site/tailwind.config.mjs` under `ledger.*` and `category.*`.
 
 Push toward: longer line lengths and more generous leading on bodies; subtle fade-in/slide-up animation only (no parallax, no scroll-hijacking); monospace metadata strips, thin 1px borders, understated hover states; dense-but-legible list layouts over card-heavy grids where scanning matters.

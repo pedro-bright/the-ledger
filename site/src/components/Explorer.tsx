@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { getSignificanceOrder } from '../lib/content';
 
 interface EventData {
@@ -106,7 +106,11 @@ export default function Explorer({ events, categories }: Props) {
   const [sortOption, setSortOption] = useState<SortOption>('newest');
   const [advancedOpen, setAdvancedOpen] = useState(false);
 
-  const hydratedRef = useRef(false);
+  // Hydration lives in React state (not a ref) so the write effect re-runs *after*
+  // hydrate has applied the URL-derived state. A ref flipped synchronously inside
+  // the hydrate effect would still let the write effect execute once with the
+  // render-1 default closure and briefly strip the URL's query params.
+  const [hasHydrated, setHasHydrated] = useState(false);
 
   // On mount: hydrate from URL. Also open advanced filters if any advanced filter is set.
   // Re-hydrate on back/forward navigation so the UI matches the URL state in history.
@@ -121,25 +125,29 @@ export default function Explorer({ events, categories }: Props) {
       if (next.year != null || next.sort !== 'newest') {
         setAdvancedOpen(true);
       }
-      hydratedRef.current = true;
+      setHasHydrated(true);
     };
     hydrate();
     window.addEventListener('popstate', hydrate);
     return () => window.removeEventListener('popstate', hydrate);
   }, [categoryIds]);
 
-  // On state change: sync to URL. Skip until hydration has completed — otherwise the first
-  // effect run would write an empty URL before hydrate has read the current one.
+  // On state change: sync to URL. Debounce search writes so typing doesn't call
+  // history.replaceState on every keystroke. Category/significance/year/sort writes
+  // fire immediately — they're discrete clicks, not continuous input.
   useEffect(() => {
-    if (!hydratedRef.current) return;
-    writeToUrl({
-      search,
-      categories: activeCategories,
-      significance: activeSignificance,
-      year: selectedYear,
-      sort: sortOption,
-    });
-  }, [search, activeCategories, activeSignificance, selectedYear, sortOption]);
+    if (!hasHydrated) return;
+    const t = setTimeout(() => {
+      writeToUrl({
+        search,
+        categories: activeCategories,
+        significance: activeSignificance,
+        year: selectedYear,
+        sort: sortOption,
+      });
+    }, 180);
+    return () => clearTimeout(t);
+  }, [hasHydrated, search, activeCategories, activeSignificance, selectedYear, sortOption]);
 
   const availableYears = useMemo(() => {
     const years = new Set<number>();

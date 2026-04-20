@@ -114,7 +114,7 @@ export default function Graph({ data }: Props) {
               type="button"
               onClick={() => toggleType(type)}
               aria-pressed={!isHidden}
-              className={`px-2.5 py-1.5 text-xs font-medium rounded-sm border transition-colors duration-150 tabular-nums ${
+              className={`px-3 py-1.5 text-xs font-medium rounded-sm border transition-colors duration-150 tabular-nums min-h-[32px] ${
                 isHidden
                   ? 'border-ledger-border text-ledger-text-dim bg-transparent hover:border-ledger-border-light hover:text-ledger-text-muted'
                   : 'border-ledger-border-light text-ledger-text bg-ledger-surface'
