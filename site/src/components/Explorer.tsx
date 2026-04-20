@@ -399,17 +399,67 @@ export default function Explorer({ events, categories }: Props) {
 
       {/* Results — table-like archival list */}
       {filtered.length === 0 ? (
-        <div className="text-center py-16">
-          <p className="font-display italic text-lg text-ledger-text-muted mb-3" style={{ fontVariationSettings: "'opsz' 14, 'SOFT' 0, 'WONK' 0" }}>
-            No entries match your filters.
-          </p>
-          <button
-            type="button"
-            onClick={resetAll}
-            className="text-sm font-mono text-category-policy hover:underline"
+        <div className="py-16 px-4 max-w-xl mx-auto text-center">
+          <p
+            className="font-display italic text-xl text-ledger-text-muted mb-2 leading-snug"
+            style={{ fontVariationSettings: "'opsz' 14, 'SOFT' 0, 'WONK' 0" }}
           >
-            clear all filters →
-          </button>
+            Nothing matches that combination.
+          </p>
+          <p className="text-sm text-ledger-text-muted mb-5 leading-relaxed">
+            {search && activeCategories.size === 0 && activeSignificance.size === 0 && selectedYear === null ? (
+              <>
+                No entries contain "<span className="font-mono text-ledger-text">{search}</span>". Try a shorter query or a different spelling.
+              </>
+            ) : (
+              <>Try dropping one filter — the most constraining combinations rarely return results.</>
+            )}
+          </p>
+          <div className="flex flex-wrap justify-center gap-2 text-sm font-mono">
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch('')}
+                className="px-3 py-1 rounded-sm border border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text transition-colors"
+              >
+                clear search
+              </button>
+            )}
+            {activeCategories.size > 0 && (
+              <button
+                type="button"
+                onClick={() => setActiveCategories(new Set())}
+                className="px-3 py-1 rounded-sm border border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text transition-colors"
+              >
+                clear category
+              </button>
+            )}
+            {activeSignificance.size > 0 && (
+              <button
+                type="button"
+                onClick={() => setActiveSignificance(new Set())}
+                className="px-3 py-1 rounded-sm border border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text transition-colors"
+              >
+                clear significance
+              </button>
+            )}
+            {selectedYear !== null && (
+              <button
+                type="button"
+                onClick={() => setSelectedYear(null)}
+                className="px-3 py-1 rounded-sm border border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text transition-colors"
+              >
+                clear year
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={resetAll}
+              className="px-3 py-1 rounded-sm border border-category-policy/30 text-category-policy hover:border-category-policy/60 hover:bg-category-policy/10 transition-colors"
+            >
+              clear all filters →
+            </button>
+          </div>
         </div>
       ) : (
         <div className="divide-y divide-ledger-border/60 border-t border-ledger-border/60">

@@ -1,9 +1,13 @@
 ---
 import Base from '../../layouts/Base.astro';
-import ConfidenceBadge from '../../components/ConfidenceBadge';
-import ContestationBadge from '../../components/ContestationBadge';
+import ConfidenceBadge, { confidenceHints } from '../../components/ConfidenceBadge';
+import ContestationBadge, { contestationHints } from '../../components/ContestationBadge';
 import SignificanceHistory from '../../components/SignificanceHistory';
 import { loadEvents, getCategoryColor, loadThreads, loadActors } from '../../lib/content';
+
+function formatSourceType(t: string): string {
+  return t.replace(/_/g, ' ').replace(/-/g, ' ');
+}
 
 export function getStaticPaths() {
   const events = loadEvents();
@@ -87,13 +91,29 @@ const significanceLabel: Record<string, string> = {
           {event.title}
         </h1>
 
-        <!-- Badges: render only when confidence is non-default or contestation exists -->
+        <!-- Epistemic badges + inline glossary strip. Only renders when non-default values exist. -->
         {((event.confidence && event.confidence !== 'high') || event.contestation?.status) && (
-          <div class="flex flex-wrap gap-2 mb-6">
-            <ConfidenceBadge level={event.confidence} />
-            {event.contestation?.status && (
-              <ContestationBadge status={event.contestation.status} />
-            )}
+          <div class="mb-8 p-4 rounded-md border border-ledger-border-light/40 bg-ledger-surface/40">
+            <div class="flex flex-wrap gap-2 mb-3">
+              <ConfidenceBadge level={event.confidence} />
+              {event.contestation?.status && (
+                <ContestationBadge status={event.contestation.status} />
+              )}
+            </div>
+            <dl class="grid sm:grid-cols-2 gap-x-6 gap-y-1 text-xs text-ledger-text-muted leading-relaxed">
+              {event.confidence && event.confidence !== 'high' && confidenceHints[event.confidence] && (
+                <div>
+                  <dt class="inline font-mono uppercase tracking-wider text-ledger-text-dim text-[10px]">{event.confidence}:</dt>
+                  <dd class="inline ml-1">{confidenceHints[event.confidence]}</dd>
+                </div>
+              )}
+              {event.contestation?.status && contestationHints[event.contestation.status] && (
+                <div>
+                  <dt class="inline font-mono uppercase tracking-wider text-ledger-text-dim text-[10px]">{event.contestation.status}:</dt>
+                  <dd class="inline ml-1">{contestationHints[event.contestation.status]}</dd>
+                </div>
+              )}
+            </dl>
           </div>
         )}
 
@@ -162,24 +182,30 @@ const significanceLabel: Record<string, string> = {
                     >
                       {source.title || source.url}
                     </a>
-                    <div class="flex items-center gap-2 mt-0.5">
+                    <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-1">
                       {source.publisher && (
                         <span class="text-xs text-ledger-text-muted">{source.publisher}</span>
                       )}
-                      <span class="text-[10px] font-mono uppercase tracking-wider text-ledger-text-dim px-1.5 py-0.5 bg-ledger-surface rounded border border-ledger-border">
-                        {source.type}
-                      </span>
+                      {source.type && (
+                        <span class="text-[10px] font-mono uppercase tracking-wider text-ledger-text-dim px-1.5 py-0.5 bg-ledger-surface rounded-sm border border-ledger-border">
+                          {formatSourceType(source.type)}
+                        </span>
+                      )}
+                      {source.archive_url && (
+                        <a
+                          href={source.archive_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="inline-flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider text-ledger-text-muted hover:text-category-policy transition-colors px-1.5 py-0.5 border border-ledger-border rounded-sm"
+                          title="Archived copy on the Wayback Machine"
+                        >
+                          <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          archive
+                        </a>
+                      )}
                     </div>
-                    {source.archive_url && (
-                      <a
-                        href={source.archive_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="text-xs text-ledger-text-dim hover:text-ledger-text-muted transition-colors"
-                      >
-                        [archive]
-                      </a>
-                    )}
                   </div>
                 ))}
               </div>
