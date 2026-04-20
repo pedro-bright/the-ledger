@@ -31,7 +31,10 @@ jobs:
         run: npm ci
 
       - name: Build graph
-        run: npm run build-graph
+        run: |
+          npm run build-graph
+          mkdir -p site/public
+          cp graph.json site/public/
 
       - name: Generate feeds
         run: |
