@@ -1,0 +1,73 @@
+---
+// Footer: editorial credit, license, secondary nav, colophon.
+const buildYear = new Date().getFullYear();
+const buildMonth = String(new Date().getMonth() + 1).padStart(2, '0');
+---
+<footer class="wiki-footer">
+  <div class="wiki-footer__inner">
+    <p class="wiki-footer__credit">
+      Curated by <a href="/about">Terry Tang</a>. Content licensed under
+      <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener license">CC&nbsp;BY-SA&nbsp;4.0</a>;
+      quote freely with attribution. Source available on
+      <a href="https://github.com/pedro-bright/the-ledger" target="_blank" rel="noopener">GitHub</a>.
+    </p>
+    <nav class="wiki-footer__links" aria-label="Secondary">
+      <a href="/about">About</a>
+      <a href="https://github.com/pedro-bright/the-ledger/blob/main/editorial/constitution.md" target="_blank" rel="noopener">Editorial constitution</a>
+      <a href="https://github.com/pedro-bright/the-ledger/blob/main/editorial/style-guide.md" target="_blank" rel="noopener">Style guide</a>
+      <a href="https://github.com/pedro-bright/the-ledger/blob/main/editorial/evidence-standards.md" target="_blank" rel="noopener">Evidence standards</a>
+      <a href="https://github.com/pedro-bright/the-ledger/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contribute</a>
+      <a href="/feed.xml">RSS</a>
+    </nav>
+    <p class="wiki-footer__rev">
+      v0.1 · Build {buildYear}.{buildMonth} · Ledger since 2023
+    </p>
+  </div>
+</footer>
+
+<style>
+  .wiki-footer {
+    background: var(--color-page-bg);
+    border-top: 1px solid var(--color-rule-strong);
+    margin-top: 40px;
+    font-family: var(--font-sans);
+    color: var(--color-ink-muted);
+  }
+  .wiki-footer__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 28px 24px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .wiki-footer__credit {
+    font-size: 13px;
+    line-height: 1.55;
+    max-width: 84ch;
+    color: var(--color-ink-muted);
+  }
+  .wiki-footer__credit a { color: var(--color-wiki-link); }
+  .wiki-footer__credit a:hover { text-decoration: underline; }
+  .wiki-footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 20px;
+    font-size: 13px;
+  }
+  .wiki-footer__links a {
+    color: var(--color-wiki-link);
+  }
+  .wiki-footer__links a:hover { text-decoration: underline; }
+  .wiki-footer__rev {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-ink-faint);
+    letter-spacing: 0.02em;
+  }
+  @media (max-width: 780px) {
+    .wiki-footer__inner {
+      padding: 20px 16px 32px;
+    }
+  }
+</style>

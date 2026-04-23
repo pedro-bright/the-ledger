@@ -1,0 +1,124 @@
+---
+// Masthead: brand mark (Fraunces "L"), site title, tagline, and a search input.
+// Search submits to /explore?q= (will move to /timeline in Wave 3).
+---
+<header class="wiki-masthead">
+  <div class="wiki-masthead__inner">
+    <a href="/" class="wiki-masthead__brand" aria-label="The Ledger, home">
+      <span class="wiki-masthead__mark" aria-hidden="true">L</span>
+      <span class="wiki-masthead__text">
+        <span class="wiki-masthead__title">The Ledger</span>
+        <span class="wiki-masthead__tag">A durable historical record of AI</span>
+      </span>
+    </a>
+    <form class="wiki-masthead__search" action="/explore" method="get" role="search">
+      <label for="search-q" class="sr-only">Search the ledger</label>
+      <input
+        type="search"
+        id="search-q"
+        name="q"
+        placeholder="Search entries, threads, actors…"
+        autocomplete="off"
+        aria-label="Search the ledger"
+      />
+    </form>
+  </div>
+</header>
+
+<style>
+  .wiki-masthead {
+    background: var(--color-page-bg);
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .wiki-masthead__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 22px 24px 18px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .wiki-masthead__brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--color-ink);
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .wiki-masthead__brand:hover { text-decoration: none; }
+  .wiki-masthead__brand:hover .wiki-masthead__title { color: var(--color-wiki-link); }
+
+  .wiki-masthead__mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border: 1.5px solid var(--color-ink);
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;
+    font-weight: 500;
+    font-size: 28px;
+    color: var(--color-ink);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .wiki-masthead__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .wiki-masthead__title {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;
+    font-weight: 500;
+    font-size: 1.75rem;
+    letter-spacing: -0.012em;
+    color: var(--color-ink);
+    transition: color 120ms ease;
+    line-height: 1.1;
+  }
+  .wiki-masthead__tag {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--color-ink-muted);
+    line-height: 1.3;
+  }
+  .wiki-masthead__search {
+    flex: 0 1 360px;
+    min-width: 200px;
+  }
+  .wiki-masthead__search input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid #B8AE95;
+    border-radius: 2px;
+    background: #FFFFFF;
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 14px;
+  }
+  .wiki-masthead__search input::placeholder {
+    color: var(--color-ink-faint);
+  }
+  .wiki-masthead__search input:focus {
+    outline: 2px solid var(--color-wiki-link);
+    outline-offset: 0;
+    border-color: var(--color-wiki-link);
+  }
+  @media (max-width: 780px) {
+    .wiki-masthead__inner {
+      padding: 16px;
+      gap: 16px;
+    }
+    .wiki-masthead__mark { width: 40px; height: 40px; font-size: 24px; }
+    .wiki-masthead__title { font-size: 1.375rem; }
+    .wiki-masthead__tag { font-size: 12px; }
+    .wiki-masthead__search { flex: 1 1 100%; }
+  }
+</style>
