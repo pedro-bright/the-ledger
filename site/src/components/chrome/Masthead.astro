@@ -8,7 +8,7 @@
       <span class="wiki-masthead__mark" aria-hidden="true">L</span>
       <span class="wiki-masthead__text">
         <span class="wiki-masthead__title">The Ledger</span>
-        <span class="wiki-masthead__tag">A durable historical record of AI</span>
+        <span class="wiki-masthead__tag">A sourced historical record of AI — curated by Terry Tang</span>
       </span>
     </a>
     <form class="wiki-masthead__search" action="/explore" method="get" role="search">
@@ -20,10 +20,38 @@
         placeholder="Search entries, threads, actors…"
         autocomplete="off"
         aria-label="Search the ledger"
+        aria-keyshortcuts="Slash Control+K Meta+K"
       />
+      <kbd aria-hidden="true" title="Press / to search">/</kbd>
     </form>
   </div>
 </header>
+
+<script is:inline>
+  (function () {
+    function isTypingIn(el) {
+      if (!el) return false;
+      const tag = el.tagName;
+      return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el.isContentEditable;
+    }
+    document.addEventListener('keydown', function (e) {
+      const target = document.getElementById('search-q');
+      if (!target) return;
+      // Cmd/Ctrl+K
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        target.focus();
+        target.select();
+        return;
+      }
+      // `/` only when not already typing
+      if (e.key === '/' && !isTypingIn(document.activeElement) && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        e.preventDefault();
+        target.focus();
+      }
+    });
+  })();
+</script>
 
 <style>
   .wiki-masthead {
@@ -58,7 +86,7 @@
     height: 48px;
     border: 1.5px solid var(--color-ink);
     font-family: var(--font-display);
-    font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;
+    font-variation-settings: 'opsz' 36, 'SOFT' 0, 'WONK' 0;
     font-weight: 500;
     font-size: 28px;
     color: var(--color-ink);
@@ -73,7 +101,7 @@
   }
   .wiki-masthead__title {
     font-family: var(--font-display);
-    font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;
+    font-variation-settings: 'opsz' 36, 'SOFT' 0, 'WONK' 0;
     font-weight: 500;
     font-size: 1.75rem;
     letter-spacing: -0.012em;
@@ -92,24 +120,44 @@
   .wiki-masthead__search {
     flex: 0 1 360px;
     min-width: 200px;
+    position: relative;
   }
   .wiki-masthead__search input {
     width: 100%;
-    padding: 9px 12px;
-    border: 1px solid #B8AE95;
+    padding: 10px 36px 10px 12px;
+    border: 1px solid var(--color-rule-strong);
     border-radius: 2px;
-    background: #FFFFFF;
+    background: var(--color-page-bg);
     color: var(--color-ink);
     font-family: var(--font-sans);
     font-size: 14px;
+    min-height: 40px;
   }
   .wiki-masthead__search input::placeholder {
     color: var(--color-ink-faint);
   }
-  .wiki-masthead__search input:focus {
+  .wiki-masthead__search input:focus-visible {
     outline: 2px solid var(--color-wiki-link);
     outline-offset: 0;
     border-color: var(--color-wiki-link);
+  }
+  .wiki-masthead__search kbd {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 2px 6px;
+    border: 1px solid var(--color-rule-strong);
+    border-radius: 2px;
+    background: var(--color-wiki-surface);
+    color: var(--color-ink-muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    pointer-events: none;
+  }
+  @media (max-width: 780px) {
+    .wiki-masthead__search kbd { display: none; }
   }
   @media (max-width: 780px) {
     .wiki-masthead__inner {

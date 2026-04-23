@@ -28,9 +28,10 @@ const { title, date, meta } = Astro.props;
 <style>
   .wiki-box {
     border: 1px solid var(--color-rule-strong);
+    border-left: 3px solid var(--color-ink-dim);
     border-radius: 2px;
-    background: #FFFFFF;
-    margin-bottom: 32px;
+    background: var(--color-page-bg);
+    margin-bottom: 36px;
   }
   .wiki-box__head {
     padding: 9px 16px 8px;
@@ -74,13 +75,13 @@ const { title, date, meta } = Astro.props;
   }
   .wiki-box__body :global(h3) {
     font-family: var(--font-display);
-    font-variation-settings: 'opsz' 72, 'SOFT' 0, 'WONK' 0;
+    font-variation-settings: 'opsz' 36, 'SOFT' 0, 'WONK' 0;
     font-weight: 500;
-    font-size: 1.5rem;
+    font-size: 1.625rem;
     line-height: 1.2;
     letter-spacing: -0.008em;
     color: var(--color-ink-dim);
-    margin: 0 0 10px;
+    margin: 0 0 12px;
   }
   .wiki-box__body :global(h3 a) {
     color: var(--color-ink-dim);

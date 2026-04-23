@@ -93,13 +93,17 @@ const stats = {
 };
 ---
 
-<Base layout="index" description="An open-source ledger of AI history: events, threads, controversies, and the retrospectives that re-interpret them.">
+<Base layout="index" description="An open-source, sourced chronicle of AI history — events, threads, controversies, and the revisions that reinterpret them. Curated by Terry Tang.">
   <!-- 1. Intro block -->
   <section class="intro">
     <p class="label-eyebrow">§ The Ledger</p>
     <h1 class="intro__title font-display">A durable historical record of AI.</h1>
     <p class="intro__lede">
-      An open-source ledger of AI history: events, threads, controversies, and the retrospectives that re-interpret them. Every claim is sourced and contestable.
+      An open-source ledger of AI history: events, threads, controversies, and the revisions that reinterpret them. Every claim is sourced and contestable.
+    </p>
+    <p class="intro__curator">
+      <span class="intro__curator-label">Curator's note.</span>
+      This ledger treats AI as history in the making, not a running news cycle. Every entry is sourced, dated, and contestable; where the record changes, the history stays visible. <span class="intro__curator-sig">— Terry Tang</span>
     </p>
     <p class="intro__stats font-mono">
       <span>{stats.entries} entries</span>
@@ -130,7 +134,7 @@ const stats = {
 
   <!-- 3. On this day -->
   {onThisDay.length > 0 && (
-    <section class="home-section">
+    <section class="home-section home-section--compact">
       <h2 class="home-section__title font-display">On this day</h2>
       <ul class="wiki-list-dated">
         {onThisDay.map((e) => (
@@ -184,7 +188,7 @@ const stats = {
   <hr class="wiki-hr" />
 
   <!-- 7. Contribute -->
-  <section class="home-section home-contribute">
+  <section class="home-section home-section--quiet home-contribute">
     <h2 class="home-section__title font-display">Contribute</h2>
     <p>
       The Ledger is open source and improves through careful contribution. Submit a source tip, challenge a claim, or propose a thread — the constitution is in the repo.
@@ -317,6 +321,30 @@ const stats = {
     max-width: 62ch;
     margin: 0 0 14px;
   }
+  .intro__curator {
+    font-family: var(--font-serif);
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--color-ink-mid);
+    max-width: 62ch;
+    margin: 0 0 16px;
+    padding: 10px 0 12px 14px;
+    border-left: 2px solid var(--color-rule-double);
+  }
+  .intro__curator-label {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--color-ink);
+    margin-right: 4px;
+  }
+  .intro__curator-sig {
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    color: var(--color-ink-muted);
+    white-space: nowrap;
+  }
   .intro__stats {
     font-size: 0.75rem;
     color: var(--color-ink-faint);
@@ -332,9 +360,15 @@ const stats = {
     .intro__lede { font-size: 1rem; }
   }
 
-  /* Shared section scaffold */
+  /* Section scaffold — default / compact / quiet tiers for rhythm. */
   .home-section {
     margin: 0 0 36px;
+  }
+  .home-section--compact {
+    margin-bottom: 28px;
+  }
+  .home-section--quiet {
+    margin-bottom: 20px;
   }
   .home-section__title {
     font-variation-settings: 'opsz' 36, 'SOFT' 0, 'WONK' 0;
@@ -345,6 +379,17 @@ const stats = {
     margin: 0 0 12px;
     padding-bottom: 6px;
     border-bottom: 1px solid var(--color-rule);
+  }
+  .home-section--compact .home-section__title {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+  }
+  .home-section--quiet .home-section__title {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--color-ink-mid);
+    border-bottom-color: var(--color-rule);
+    margin-bottom: 8px;
   }
 
   /* Featured box body extras */

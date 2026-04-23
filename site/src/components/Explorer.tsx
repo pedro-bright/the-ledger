@@ -276,8 +276,7 @@ export default function Explorer({ events, categories }: Props) {
               aria-label="Search events by title, summary, or tag"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-[9px] bg-white border text-sm text-ink placeholder:text-ink-faint font-sans"
-              style={{ borderColor: '#B8AE95', borderRadius: '2px' }}
+              className="w-full pl-9 pr-3 py-[10px] bg-page-bg border border-rule-strong text-sm text-ink placeholder:text-ink-faint font-sans rounded-sm min-h-[40px]"
             />
           </div>
         </div>
@@ -389,8 +388,7 @@ export default function Explorer({ events, categories }: Props) {
                   id="explorer-sort"
                   value={sortOption}
                   onChange={(e) => setSortOption(e.target.value as SortOption)}
-                  className="bg-white border text-sm text-ink font-sans py-[9px] px-3"
-                  style={{ borderColor: '#B8AE95', borderRadius: '2px' }}
+                  className="bg-page-bg border border-rule-strong text-sm text-ink font-sans py-[9px] px-3 rounded-sm min-h-[36px]"
                 >
                   <option value="newest">Newest first</option>
                   <option value="oldest">Oldest first</option>
@@ -400,6 +398,20 @@ export default function Explorer({ events, categories }: Props) {
             </div>
           )}
         </div>
+
+        {/* sr-only live region announces filter result counts to assistive tech */}
+        <span
+          className="sr-only"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          {hasAnyFilter
+            ? filtered.length === 0
+              ? 'No entries match the current filters.'
+              : `${filtered.length} of ${events.length} entries match the current filters.`
+            : `Showing all ${events.length} entries.`}
+        </span>
 
         {/* Active filters summary + status */}
         <div className="border-t border-rule pt-3 flex flex-col gap-2">
