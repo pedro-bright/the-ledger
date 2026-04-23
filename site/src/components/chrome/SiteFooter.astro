@@ -47,8 +47,14 @@ const buildMonth = String(new Date().getMonth() + 1).padStart(2, '0');
     max-width: 84ch;
     color: var(--color-ink-muted);
   }
-  .wiki-footer__credit a { color: var(--color-wiki-link); }
-  .wiki-footer__credit a:hover { text-decoration: underline; }
+  .wiki-footer__credit a {
+    color: var(--color-wiki-link);
+    text-decoration: underline;
+    text-decoration-color: rgba(6, 69, 173, 0.35);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+  .wiki-footer__credit a:hover { text-decoration-color: var(--color-wiki-link); }
   .wiki-footer__links {
     display: flex;
     flex-wrap: wrap;

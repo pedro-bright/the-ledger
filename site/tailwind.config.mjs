@@ -11,7 +11,7 @@ export default {
           dim: '#0F0E0C',
           mid: '#3C3731',
           muted: '#5C564D',
-          faint: '#7A7368',
+          faint: '#645E51',
           soft: '#B8B2A7',
         },
         rule: {

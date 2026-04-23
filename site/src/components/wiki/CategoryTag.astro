@@ -18,7 +18,6 @@ const display = category ? category.replace(/-/g, ' ').replace(/_/g, ' ') : '';
 {category && variant === 'pip' && (
   <span
     class={`category-pip category-pip--${category} ${className}`}
-    aria-label={`Category: ${display}`}
     title={display}
   ></span>
 )}

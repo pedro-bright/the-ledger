@@ -29,7 +29,7 @@
     --color-ink-dim: #0F0E0C;
     --color-ink-mid: #3C3731;
     --color-ink-muted: #5C564D;
-    --color-ink-faint: #7A7368;
+    --color-ink-faint: #645E51;
     --color-rule: #E8E4DA;
     --color-rule-strong: #D9D3C5;
     --color-rule-double: #C9C0AE;
@@ -54,7 +54,25 @@
     font-family: var(--font-serif);
     font-size: var(--text-body);
     line-height: 1.6;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
   }
+
+  /* Narrow viewports: forbid horizontal overflow. Safety net against any
+     long unbreakable string (URLs, mono stats) in lists or rail blocks. */
+  @media (max-width: 780px) {
+    html, body { overflow-x: clip; }
+  }
+
+  /* Paragraph links need a non-color distinguishing feature — axe
+     enforces WCAG 1.4.1. */
+  p a {
+    text-decoration: underline;
+    text-decoration-color: rgba(6, 69, 173, 0.35);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+  p a:hover { text-decoration-color: var(--color-wiki-link); }
 
   /* Display serif — opsz 144 for sharp display, 36 for subheads, 14 for body italic. */
   .font-display {

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { getSignificanceOrder } from '../lib/content';
+import { getSignificanceOrder } from '../lib/epistemic';
 
 interface EventData {
   id: string;
@@ -318,12 +318,10 @@ export default function Explorer({ events, categories }: Props) {
                 type="button"
                 onClick={() => toggle(setActiveSignificance, level)}
                 aria-pressed={isActive}
+                aria-label={`Filter by ${SIGNIFICANCE_LABEL[level]} significance`}
                 className={`${chipBase} ${isActive ? chipActive : chipResting}`}
               >
-                <span
-                  className={`flag-chip flag-chip--${level}`}
-                  aria-hidden
-                >
+                <span className={`flag-chip flag-chip--${level}`}>
                   {SIGNIFICANCE_LABEL[level]}
                 </span>
               </button>

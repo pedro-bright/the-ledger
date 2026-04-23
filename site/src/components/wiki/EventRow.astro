@@ -80,11 +80,16 @@ const href = `/events/${event.slug || event.id}`;
   .event-row--compact .event-row__title {
     font-size: 13.5px;
   }
-  @media (max-width: 480px) {
+  @media (max-width: 780px) {
     .event-row {
       flex-wrap: wrap;
       row-gap: 4px;
+      max-width: 100%;
     }
-    .event-row__date { min-width: 5.5em; font-size: 11.5px; }
+    .event-row__date { flex: 0 0 auto; min-width: 0; }
+    .event-row__title { flex: 1 1 100%; min-width: 0; }
+  }
+  @media (max-width: 480px) {
+    .event-row__date { font-size: 11.5px; }
   }
 </style>

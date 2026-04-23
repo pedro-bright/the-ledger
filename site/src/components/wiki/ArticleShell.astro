@@ -191,6 +191,16 @@ const hasFooter = Astro.slots.has('footer');
     margin-bottom: 4px;
     font-size: 0.9375rem;
   }
+  .wiki-article__see-also :global(a) {
+    color: var(--color-wiki-link);
+    text-decoration: underline;
+    text-decoration-color: rgba(6, 69, 173, 0.35);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+  .wiki-article__see-also :global(a:hover) {
+    text-decoration-color: var(--color-wiki-link);
+  }
   .wiki-article__lastmod {
     margin-top: 2.5rem;
     padding-top: 10px;
