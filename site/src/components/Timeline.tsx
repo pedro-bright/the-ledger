@@ -106,16 +106,16 @@ export default function Timeline({ events, categories }: Props) {
       ) : (
         <div className="relative">
           {/* Timeline line */}
-          <div className="absolute left-[7px] top-0 bottom-0 w-px bg-ledger-border" />
+          <div className="absolute left-[7px] top-0 bottom-0 w-px bg-rule" />
 
           {Array.from(yearGroups.entries()).map(([year, yearEvents]) => (
             <div key={year} className="relative">
               {/* Year marker */}
               <div className="flex items-center gap-4 mb-6 relative">
-                <div className="w-[15px] h-[15px] rounded-full bg-ledger-bg border-2 border-ledger-border-light z-10 flex-shrink-0" />
+                <div className="w-[15px] h-[15px] rounded-full bg-page-bg border-2 border-rule-strong z-10 flex-shrink-0" />
                 <h2
-                  className="font-display text-4xl font-normal text-white tracking-display-tight tabular-nums"
-                  style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 0, 'WONK' 0" }}
+                  className="font-display text-4xl font-medium text-ink tabular-nums"
+                  style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 0, 'WONK' 0", letterSpacing: '-0.018em' }}
                 >
                   {year}
                 </h2>
@@ -164,81 +164,81 @@ function NoMatchesState({
   const activeSigList = Array.from(activeSignificance).join(', ');
 
   return (
-    <div className="py-16 px-4 max-w-xl mx-auto text-center">
+    <div className="py-14 px-4 max-w-xl mx-auto text-center">
       <p
-        className="font-display italic text-xl text-ledger-text-muted mb-2 leading-snug"
+        className="font-display italic text-lg text-ink-mid mb-2 leading-snug"
         style={{ fontVariationSettings: "'opsz' 14, 'SOFT' 0, 'WONK' 0" }}
       >
-        Nothing matches that combination.
+        No entries match this combination.
       </p>
       {hasCat && hasSig && (
-        <p className="text-sm text-ledger-text-muted mb-5 leading-relaxed">
+        <p className="text-sm text-ink-muted mb-5 leading-relaxed font-sans">
           No {activeSigList} events are tagged {activeCatList}. Try widening one axis.
         </p>
       )}
       {hasCat && !hasSig && (
-        <p className="text-sm text-ledger-text-muted mb-5 leading-relaxed">
+        <p className="text-sm text-ink-muted mb-5 leading-relaxed font-sans">
           No events match {activeCatList}. Try dropping the category filter.
         </p>
       )}
       {!hasCat && hasSig && (
-        <p className="text-sm text-ledger-text-muted mb-5 leading-relaxed">
+        <p className="text-sm text-ink-muted mb-5 leading-relaxed font-sans">
           No events at {activeSigList} significance yet. Try all significance levels.
         </p>
       )}
-      <div className="flex flex-wrap justify-center gap-2 text-sm font-mono">
+      <p className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm font-sans">
         {hasCat && (
           <button
             type="button"
             onClick={onClearCategories}
-            className="px-3 py-1 rounded-sm border border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text transition-colors"
+            className="text-wiki-link hover:underline bg-transparent border-0 p-0 cursor-pointer"
           >
-            clear category
+            Clear category
           </button>
         )}
         {hasSig && (
           <button
             type="button"
             onClick={onClearSignificance}
-            className="px-3 py-1 rounded-sm border border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text transition-colors"
+            className="text-wiki-link hover:underline bg-transparent border-0 p-0 cursor-pointer"
           >
-            clear significance
+            Clear significance
           </button>
         )}
         {(hasCat || hasSig) && (
           <button
             type="button"
             onClick={onClear}
-            className="px-3 py-1 rounded-sm border border-category-policy/30 text-category-policy hover:border-category-policy/60 hover:bg-category-policy/10 transition-colors"
+            className="text-wiki-link hover:underline bg-transparent border-0 p-0 cursor-pointer"
           >
-            clear all filters →
+            Reset all filters
           </button>
         )}
-      </div>
+      </p>
     </div>
   );
 }
 
 function EmptyState() {
   return (
-    <div className="py-24 px-4 max-w-xl mx-auto text-center">
+    <div className="py-20 px-4 max-w-xl mx-auto text-center">
       <p className="label-eyebrow mb-3">§ Nothing here yet</p>
       <p
-        className="font-display text-3xl font-normal text-ledger-text mb-3 leading-tight"
+        className="font-display text-2xl font-medium text-ink mb-3 leading-tight"
         style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 0, 'WONK' 0" }}
       >
         The ledger is empty.
       </p>
-      <p className="text-sm text-ledger-text-muted mb-6 leading-relaxed">
-        Entries are loaded from markdown files in <code className="font-mono text-xs text-ledger-text">content/events/</code>. The fastest way to help: drop a source link via a GitHub issue.
+      <p className="text-sm text-ink-muted mb-6 leading-relaxed font-sans">
+        Entries are loaded from markdown files in <code className="font-mono text-xs text-ink bg-wiki-surface px-1 py-0.5 rounded-sm">content/events/</code>. The fastest way to help: drop a source link via a GitHub issue.
       </p>
       <a
         href="https://github.com/pedro-bright/the-ledger/issues/new?template=source-tip.yml"
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-category-policy rounded-md hover:bg-category-policy/80 transition-colors"
+        className="inline-flex items-center gap-2 text-sm text-wiki-link font-sans"
       >
-        Submit a source tip
+        Submit a source tip →
       </a>
     </div>
   );

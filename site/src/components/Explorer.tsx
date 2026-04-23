@@ -29,14 +29,21 @@ interface Props {
 type SortOption = 'newest' | 'oldest' | 'significance';
 const SIGNIFICANCE_LEVELS: Array<'landmark' | 'major' | 'notable'> = ['landmark', 'major', 'notable'];
 
-const categoryHex: Record<string, string> = {
-  policy: '#6366F1',
-  models: '#F59E0B',
-  research: '#10B981',
-  industry: '#8B5CF6',
-  safety: '#EF4444',
-  culture: '#EC4899',
-  'open-source': '#06B6D4',
+// Light-mode (AA on page-bg) category text colors, mirroring the wiki palette.
+const categoryTextColor: Record<string, string> = {
+  policy: '#4338CA',
+  models: '#B45309',
+  research: '#047857',
+  industry: '#6D28D9',
+  safety: '#B91C1C',
+  culture: '#BE185D',
+  'open-source': '#0E7490',
+};
+
+const SIGNIFICANCE_LABEL: Record<'landmark' | 'major' | 'notable', string> = {
+  landmark: 'Landmark',
+  major: 'Major',
+  notable: 'Notable',
 };
 
 /** Parse filter state from the current URL. Pure, no side effects. */
@@ -215,12 +222,22 @@ export default function Explorer({ events, categories }: Props) {
     setSortOption('newest');
   };
 
+  // Shared chip-style button classes. Resting: page-bg, 1px rule border, ink-muted.
+  // Active: wiki-surface bg, rule-strong border, ink text, semibold.
+  // Focus state inherits the global :focus-visible outline (2px wiki-link).
+  const chipBase =
+    'inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-sans rounded-sm border min-h-[32px] transition-colors duration-150 cursor-pointer';
+  const chipResting =
+    'bg-page-bg border-rule text-ink-muted hover:text-ink hover:border-rule-strong';
+  const chipActive =
+    'bg-wiki-surface border-rule-strong text-ink font-semibold';
+
   if (events.length === 0) {
     return (
-      <div className="py-24 px-4 max-w-xl mx-auto text-center">
+      <div className="py-20 px-4 max-w-xl mx-auto text-center">
         <p className="label-eyebrow mb-3">§ Nothing to explore yet</p>
         <p
-          className="font-display text-3xl font-normal text-ledger-text leading-tight"
+          className="font-display text-2xl font-medium text-ink leading-tight"
           style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 0, 'WONK' 0" }}
         >
           Entries will appear here once content is added.
@@ -232,55 +249,66 @@ export default function Explorer({ events, categories }: Props) {
   return (
     <div>
       {/* Filter panel */}
-      <div className="flex flex-col gap-4 mb-8 p-5 rounded-md border border-ledger-border bg-ledger-surface/30">
+      <section
+        aria-label="Filter controls"
+        className="mb-6 p-5 rounded-sm border border-rule-strong bg-wiki-surface/60 flex flex-col gap-4"
+      >
         {/* Search */}
-        <div className="relative">
-          <svg
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ledger-text-dim"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-            aria-hidden
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-          </svg>
-          <input
-            type="search"
-            placeholder="Search events by title, summary, or tag…"
-            aria-label="Search events"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-ledger-bg border border-ledger-border rounded-md text-sm text-ledger-text placeholder:text-ledger-text-dim focus:outline-none focus:border-category-policy/60 transition-colors"
-          />
+        <div>
+          <label htmlFor="explorer-search" className="label-eyebrow block mb-1.5">
+            Keyword search
+          </label>
+          <div className="relative">
+            <svg
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-faint pointer-events-none"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+              aria-hidden
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
+            <input
+              id="explorer-search"
+              type="search"
+              placeholder="Search title, summary, or tag…"
+              aria-label="Search events by title, summary, or tag"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-9 pr-3 py-[9px] bg-white border text-sm text-ink placeholder:text-ink-faint font-sans"
+              style={{ borderColor: '#B8AE95', borderRadius: '2px' }}
+            />
+          </div>
         </div>
 
         {/* Category chips */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-baseline gap-2">
           <span className="label-eyebrow mr-1">Category</span>
           {categories.map((cat) => {
             const isActive = activeCategories.has(cat.id);
+            const hex = categoryTextColor[cat.id] || '#5C564D';
             return (
               <button
                 key={cat.id}
                 type="button"
                 onClick={() => toggle(setActiveCategories, cat.id)}
                 aria-pressed={isActive}
-                className={`px-3 py-1.5 text-xs font-medium rounded-sm border min-h-[32px] transition-colors duration-150 ${
-                  isActive
-                    ? 'border-white/30 text-white bg-white/10'
-                    : 'border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text'
-                }`}
-                style={isActive ? { borderColor: cat.color + '60', backgroundColor: cat.color + '20', color: cat.color } : undefined}
+                className={`${chipBase} ${isActive ? chipActive : chipResting}`}
               >
-                {cat.label}
+                <span
+                  aria-hidden
+                  className="inline-block w-1.5 h-1.5 rounded-full"
+                  style={{ background: hex }}
+                />
+                <span>{cat.label}</span>
               </button>
             );
           })}
         </div>
 
         {/* Significance chips */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-baseline gap-2">
           <span className="label-eyebrow mr-1">Significance</span>
           {SIGNIFICANCE_LEVELS.map((level) => {
             const isActive = activeSignificance.has(level);
@@ -290,25 +318,27 @@ export default function Explorer({ events, categories }: Props) {
                 type="button"
                 onClick={() => toggle(setActiveSignificance, level)}
                 aria-pressed={isActive}
-                className={`px-3 py-1.5 text-xs font-medium rounded-sm border min-h-[32px] capitalize transition-colors duration-150 ${
-                  isActive
-                    ? 'border-white/30 text-white bg-white/10'
-                    : 'border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text'
-                }`}
+                className={`${chipBase} ${isActive ? chipActive : chipResting}`}
               >
-                {level}
+                <span
+                  className={`flag-chip flag-chip--${level}`}
+                  aria-hidden
+                >
+                  {SIGNIFICANCE_LABEL[level]}
+                </span>
               </button>
             );
           })}
         </div>
 
         {/* Advanced filters — disclosed on demand */}
-        <div className="border-t border-ledger-border/60 pt-4">
+        <div className="border-t border-rule pt-4">
           <button
             type="button"
             onClick={() => setAdvancedOpen((v) => !v)}
             aria-expanded={advancedOpen}
-            className="text-xs font-mono text-ledger-text-dim hover:text-ledger-text transition-colors uppercase tracking-wider inline-flex items-center gap-1.5"
+            className="text-xs font-mono text-ink-muted hover:text-wiki-link transition-colors uppercase tracking-wider inline-flex items-center gap-1.5 bg-transparent border-0 p-0 cursor-pointer"
+            style={{ letterSpacing: '0.08em' }}
           >
             <svg
               className={`w-3 h-3 transition-transform ${advancedOpen ? 'rotate-90' : ''}`}
@@ -320,24 +350,20 @@ export default function Explorer({ events, categories }: Props) {
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
-            More filters
+            {advancedOpen ? 'Hide' : 'Show'} year & sort
           </button>
 
           {advancedOpen && (
-            <div className="mt-4 flex flex-col gap-3">
+            <div className="mt-4 flex flex-col gap-4">
               {/* Year chips */}
               {availableYears.length > 0 && (
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="flex flex-wrap items-baseline gap-2">
                   <span className="label-eyebrow mr-1">Year</span>
                   <button
                     type="button"
                     onClick={() => setSelectedYear(null)}
                     aria-pressed={selectedYear === null}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-sm border min-h-[32px] transition-colors duration-150 ${
-                      selectedYear === null
-                        ? 'border-white/30 text-white bg-white/10'
-                        : 'border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text'
-                    }`}
+                    className={`${chipBase} ${selectedYear === null ? chipActive : chipResting}`}
                   >
                     All
                   </button>
@@ -349,11 +375,7 @@ export default function Explorer({ events, categories }: Props) {
                         type="button"
                         onClick={() => setSelectedYear(isActive ? null : year)}
                         aria-pressed={isActive}
-                        className={`px-3 py-1.5 text-xs font-mono font-medium rounded-sm border transition-colors duration-150 tabular-nums min-h-[32px] ${
-                          isActive
-                            ? 'border-white/30 text-white bg-white/10'
-                            : 'border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text'
-                        }`}
+                        className={`${chipBase} font-mono tabular-nums ${isActive ? chipActive : chipResting}`}
                       >
                         {year}
                       </button>
@@ -362,189 +384,215 @@ export default function Explorer({ events, categories }: Props) {
                 </div>
               )}
 
-              {/* Sort chips */}
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="label-eyebrow mr-1">Sort</span>
-                {(['newest', 'oldest', 'significance'] as SortOption[]).map((opt) => {
-                  const isActive = sortOption === opt;
-                  const label = opt === 'newest' ? 'Newest first' : opt === 'oldest' ? 'Oldest first' : 'Most significant';
-                  return (
-                    <button
-                      key={opt}
-                      type="button"
-                      onClick={() => setSortOption(opt)}
-                      aria-pressed={isActive}
-                      className={`px-3 py-1.5 text-xs font-medium rounded-sm border min-h-[32px] transition-colors duration-150 ${
-                        isActive
-                          ? 'border-white/30 text-white bg-white/10'
-                          : 'border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text'
-                      }`}
-                    >
-                      {label}
-                    </button>
-                  );
-                })}
+              {/* Sort */}
+              <div className="flex flex-wrap items-baseline gap-2">
+                <label htmlFor="explorer-sort" className="label-eyebrow mr-1">Sort</label>
+                <select
+                  id="explorer-sort"
+                  value={sortOption}
+                  onChange={(e) => setSortOption(e.target.value as SortOption)}
+                  className="bg-white border text-sm text-ink font-sans py-[9px] px-3"
+                  style={{ borderColor: '#B8AE95', borderRadius: '2px' }}
+                >
+                  <option value="newest">Newest first</option>
+                  <option value="oldest">Oldest first</option>
+                  <option value="significance">Most significant</option>
+                </select>
               </div>
             </div>
           )}
         </div>
 
-        {/* Status bar */}
-        <div className="flex items-center justify-between text-xs text-ledger-text-dim font-mono tabular-nums">
-          <span>
-            {filtered.length === events.length
-              ? `${events.length} entries`
-              : `${filtered.length} of ${events.length} entries`}
-            {search && <span className="ml-2 italic normal-case font-sans">matching "{search}"</span>}
-          </span>
+        {/* Active filters summary + status */}
+        <div className="border-t border-rule pt-3 flex flex-col gap-2">
+          {/* Selected filter chips with remove × */}
           {hasAnyFilter && (
-            <button
-              type="button"
-              onClick={resetAll}
-              className="text-ledger-text-muted hover:text-ledger-text transition-colors"
-            >
-              Clear all
-            </button>
+            <div className="flex flex-wrap items-baseline gap-2">
+              <span className="label-eyebrow mr-1">Active</span>
+              {search && (
+                <ActiveChip label={`"${search}"`} onRemove={() => setSearch('')} />
+              )}
+              {Array.from(activeCategories).map((cat) => (
+                <ActiveChip
+                  key={`cat-${cat}`}
+                  label={categories.find((c) => c.id === cat)?.label || cat}
+                  onRemove={() => toggle(setActiveCategories, cat)}
+                  color={categoryTextColor[cat]}
+                />
+              ))}
+              {Array.from(activeSignificance).map((level) => (
+                <ActiveChip
+                  key={`sig-${level}`}
+                  label={SIGNIFICANCE_LABEL[level as 'landmark' | 'major' | 'notable']}
+                  onRemove={() => toggle(setActiveSignificance, level)}
+                />
+              ))}
+              {selectedYear !== null && (
+                <ActiveChip
+                  label={String(selectedYear)}
+                  onRemove={() => setSelectedYear(null)}
+                />
+              )}
+              {sortOption !== 'newest' && (
+                <ActiveChip
+                  label={sortOption === 'oldest' ? 'Oldest first' : 'Most significant'}
+                  onRemove={() => setSortOption('newest')}
+                />
+              )}
+              <button
+                type="button"
+                onClick={resetAll}
+                className="text-xs font-sans text-wiki-link hover:underline ml-1 bg-transparent border-0 p-0 cursor-pointer"
+              >
+                Reset all
+              </button>
+            </div>
           )}
+          <div className="flex items-center justify-between text-xs font-mono text-ink-faint tabular-nums">
+            <span>
+              {filtered.length === events.length
+                ? `${events.length} entries`
+                : `${filtered.length} of ${events.length} entries`}
+            </span>
+          </div>
         </div>
-      </div>
+      </section>
 
-      {/* Results — table-like archival list */}
+      {/* Results — wiki-native row list */}
       {filtered.length === 0 ? (
-        <div className="py-16 px-4 max-w-xl mx-auto text-center">
+        <div className="py-14 px-4 max-w-xl mx-auto text-center">
           <p
-            className="font-display italic text-xl text-ledger-text-muted mb-2 leading-snug"
+            className="font-display italic text-lg text-ink-mid mb-2 leading-snug"
             style={{ fontVariationSettings: "'opsz' 14, 'SOFT' 0, 'WONK' 0" }}
           >
-            Nothing matches that combination.
+            No entries match this combination.
           </p>
-          <p className="text-sm text-ledger-text-muted mb-5 leading-relaxed">
+          <p className="text-sm text-ink-muted mb-5 leading-relaxed font-sans">
             {search && activeCategories.size === 0 && activeSignificance.size === 0 && selectedYear === null ? (
               <>
-                No entries contain "<span className="font-mono text-ledger-text">{search}</span>". Try a shorter query or a different spelling.
+                Nothing contains "<span className="font-mono text-ink">{search}</span>". Try a shorter query or a different spelling.
               </>
             ) : (
               <>Try dropping one filter — the most constraining combinations rarely return results.</>
             )}
           </p>
-          <div className="flex flex-wrap justify-center gap-2 text-sm font-mono">
+          <p className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm font-sans">
             {search && (
               <button
                 type="button"
                 onClick={() => setSearch('')}
-                className="px-3 py-1 rounded-sm border border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text transition-colors"
+                className="text-wiki-link hover:underline bg-transparent border-0 p-0 cursor-pointer"
               >
-                clear search
+                Clear search
               </button>
             )}
             {activeCategories.size > 0 && (
               <button
                 type="button"
                 onClick={() => setActiveCategories(new Set())}
-                className="px-3 py-1 rounded-sm border border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text transition-colors"
+                className="text-wiki-link hover:underline bg-transparent border-0 p-0 cursor-pointer"
               >
-                clear category
+                Drop category filter
               </button>
             )}
             {activeSignificance.size > 0 && (
               <button
                 type="button"
                 onClick={() => setActiveSignificance(new Set())}
-                className="px-3 py-1 rounded-sm border border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text transition-colors"
+                className="text-wiki-link hover:underline bg-transparent border-0 p-0 cursor-pointer"
               >
-                clear significance
+                Drop significance filter
               </button>
             )}
             {selectedYear !== null && (
               <button
                 type="button"
                 onClick={() => setSelectedYear(null)}
-                className="px-3 py-1 rounded-sm border border-ledger-border text-ledger-text-muted hover:border-ledger-border-light hover:text-ledger-text transition-colors"
+                className="text-wiki-link hover:underline bg-transparent border-0 p-0 cursor-pointer"
               >
-                clear year
+                Drop year filter
               </button>
             )}
             <button
               type="button"
               onClick={resetAll}
-              className="px-3 py-1 rounded-sm border border-category-policy/30 text-category-policy hover:border-category-policy/60 hover:bg-category-policy/10 transition-colors"
+              className="text-wiki-link hover:underline bg-transparent border-0 p-0 cursor-pointer"
             >
-              clear all filters →
+              Reset all filters
             </button>
-          </div>
+          </p>
         </div>
       ) : (
-        <div className="divide-y divide-ledger-border/60 border-t border-ledger-border/60">
-          {filtered.map((event) => {
-            const catHex = categoryHex[event.category] || '#6B6770';
-            const isLandmark = event.significance === 'landmark';
-            const isMajor = event.significance === 'major';
-            return (
-              <a
-                key={event.id}
-                href={`/events/${event.slug}`}
-                className="group grid grid-cols-[auto_1fr_auto] sm:grid-cols-[auto_auto_1fr_auto_auto] gap-3 sm:gap-5 py-4 px-3 -mx-3 items-baseline hover:bg-ledger-surface/30 transition-colors rounded-sm"
-              >
-                <time className="text-xs font-mono text-ledger-text-dim tabular-nums w-24">
-                  {new Date(event.date).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                  })}
-                </time>
-                <span
-                  className="hidden sm:block w-0.5 self-stretch mt-1 mb-1"
-                  style={{ backgroundColor: catHex }}
-                  aria-hidden
-                />
-                <div className="col-span-2 sm:col-span-1 min-w-0">
-                  <h3
-                    className={
-                      isLandmark
-                        ? 'font-display text-lg sm:text-xl font-medium leading-snug text-ledger-text group-hover:text-white transition-colors'
-                        : isMajor
-                          ? 'font-display text-base sm:text-lg font-medium leading-snug text-ledger-text group-hover:text-white transition-colors'
-                          : 'text-sm sm:text-[15px] font-medium leading-snug text-ledger-text group-hover:text-white transition-colors'
-                    }
-                    style={isLandmark || isMajor ? { fontVariationSettings: "'opsz' 144, 'SOFT' 0, 'WONK' 0" } : undefined}
-                  >
-                    {event.title}
-                  </h3>
-                  {event.summary && (
-                    <p className="mt-1 text-xs text-ledger-text-muted line-clamp-2 leading-relaxed">
-                      {event.summary}
-                    </p>
-                  )}
-                  {event.tags && event.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {event.tags.slice(0, 4).map((tag) => (
-                        <span key={tag} className="text-[10px] font-mono text-ledger-text-dim">
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <span
-                  className="hidden sm:block text-[10px] font-mono uppercase tracking-wider whitespace-nowrap self-start mt-1"
-                  style={{ color: catHex }}
-                >
-                  {event.category.replace('-', ' ')}
-                </span>
-                {event.significance && event.significance !== 'notable' && (
-                  <span
-                    className={`hidden sm:block text-[10px] font-mono uppercase tracking-wider whitespace-nowrap self-start mt-1 ${
-                      event.significance === 'landmark' ? 'text-amber-400' : 'text-sky-300'
-                    }`}
-                  >
-                    {event.significance}
-                  </span>
-                )}
-              </a>
-            );
-          })}
-        </div>
+        <ul className="explorer-results" aria-label={`${filtered.length} filtered results`}>
+          {filtered.map((event) => (
+            <ResultRow key={event.id} event={event} />
+          ))}
+        </ul>
       )}
     </div>
+  );
+}
+
+// ─── Small subcomponents ────────────────────────────────────────
+
+function ActiveChip({
+  label,
+  onRemove,
+  color,
+}: {
+  label: string;
+  onRemove: () => void;
+  color?: string;
+}) {
+  return (
+    <span
+      className="inline-flex items-center gap-1 px-2 py-0.5 text-[11px] font-sans font-medium rounded-sm border border-rule-strong bg-wiki-surface-strong text-ink"
+      style={color ? { color } : undefined}
+    >
+      <span>{label}</span>
+      <button
+        type="button"
+        onClick={onRemove}
+        aria-label={`Remove ${label} filter`}
+        className="ml-0.5 text-ink-faint hover:text-ink bg-transparent border-0 p-0 cursor-pointer leading-none"
+      >
+        ×
+      </button>
+    </span>
+  );
+}
+
+function ResultRow({ event }: { event: EventData }) {
+  const hex = categoryTextColor[event.category] || '#5C564D';
+  const displayCategory = event.category.replace('-', ' ');
+  return (
+    <li className="explorer-row">
+      <time
+        className="explorer-row__date font-mono"
+        dateTime={event.date}
+      >
+        {event.date}
+      </time>
+      <span
+        className="explorer-row__pip"
+        aria-hidden
+        title={displayCategory}
+        style={{ background: hex }}
+      />
+      <a href={`/events/${event.slug}`} className="explorer-row__title">
+        {event.title}
+      </a>
+      <span
+        className="explorer-row__category font-mono"
+        style={{ color: hex }}
+      >
+        {displayCategory}
+      </span>
+      {event.significance && (
+        <span className={`flag-chip flag-chip--${event.significance}`}>
+          {SIGNIFICANCE_LABEL[event.significance]}
+        </span>
+      )}
+    </li>
   );
 }
