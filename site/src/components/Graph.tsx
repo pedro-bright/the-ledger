@@ -22,11 +22,12 @@ type Props = {
   data: { nodes: GraphNode[]; edges: GraphEdge[] };
 };
 
+// Wiki-native palette — balanced for the pale page-bg (#FAFAF7) canvas.
 const NODE_COLORS: Record<string, string> = {
-  event: '#6366F1',       // indigo (policy color, used as event default)
-  thread: '#8B5CF6',      // violet
-  controversy: '#EF4444', // red
-  actor: '#06B6D4',       // cyan
+  event: '#0645AD',       // wiki-link blue
+  thread: '#B45309',      // category-models amber
+  controversy: '#B91C1C', // category-safety red
+  actor: '#047857',       // category-research emerald
 };
 
 const TYPE_LABELS: Record<string, string> = {
@@ -108,20 +109,24 @@ export default function Graph({ data }: Props) {
         <span className="label-eyebrow mr-1">Show</span>
         {types.map((type) => {
           const isHidden = hidden.has(type);
+          const base =
+            'inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-sans rounded-sm border transition-colors duration-150 min-h-[32px]';
+          const visible = 'bg-wiki-surface-strong text-ink font-semibold';
+          const hiddenCls =
+            'bg-page-bg border-rule-strong text-ink hover:bg-wiki-surface';
           return (
             <button
               key={type}
               type="button"
               onClick={() => toggleType(type)}
               aria-pressed={!isHidden}
-              className={`px-3 py-1.5 text-xs font-medium rounded-sm border transition-colors duration-150 tabular-nums min-h-[32px] ${
-                isHidden
-                  ? 'border-ledger-border text-ledger-text-dim bg-transparent hover:border-ledger-border-light hover:text-ledger-text-muted'
-                  : 'border-ledger-border-light text-ledger-text bg-ledger-surface'
-              }`}
-              style={!isHidden ? { borderColor: NODE_COLORS[type] + '60', backgroundColor: NODE_COLORS[type] + '20', color: NODE_COLORS[type] } : undefined}
+              className={`${base} ${isHidden ? hiddenCls : visible}`}
+              style={!isHidden ? { borderColor: NODE_COLORS[type] } : undefined}
             >
-              {TYPE_LABELS[type]} ({counts[type]})
+              <span>{TYPE_LABELS[type]}</span>
+              <span className="font-mono text-[11px] tabular-nums text-ink-faint">
+                ({counts[type]})
+              </span>
             </button>
           );
         })}
@@ -129,27 +134,28 @@ export default function Graph({ data }: Props) {
 
       <div
         ref={containerRef}
-        className="border border-ledger-border rounded-md bg-ledger-surface/30 overflow-hidden"
+        className="border border-rule-strong rounded-sm overflow-hidden"
+        style={{ background: '#FAFAF7' }}
       >
         <ForceGraph2D
           ref={fgRef}
           graphData={filteredData}
           width={size.width}
           height={size.height}
-          nodeColor={(node: any) => NODE_COLORS[node.type] || '#888'}
+          nodeColor={(node: any) => NODE_COLORS[node.type] || '#7A7368'}
           nodeRelSize={4}
           nodeLabel={(node: any) => `${node.title} (${node.type})`}
-          linkColor={() => 'rgba(255,255,255,0.1)'}
+          linkColor={() => 'rgba(201, 192, 174, 0.5)'}
           linkWidth={1}
           onNodeClick={handleNodeClick}
-          backgroundColor="rgba(0,0,0,0)"
+          backgroundColor="#FAFAF7"
           cooldownTicks={reducedMotion ? 0 : 100}
           d3AlphaDecay={reducedMotion ? 0.5 : 0.0228}
           enableNodeDrag={!reducedMotion}
         />
       </div>
 
-      <p className="text-xs text-ledger-text-dim font-mono">
+      <p className="text-[12px] text-ink-faint font-mono">
         Click a node to open. Drag to pan, scroll to zoom. Toggle types above to filter.
       </p>
     </div>

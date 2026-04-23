@@ -1,0 +1,72 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/wiki/PageHeader.astro';
+---
+
+<Base
+  layout="full"
+  title="Page not found"
+  description="The page you followed has no match in the ledger."
+>
+  <PageHeader
+    eyebrow="§ 404"
+    title="This entry does not exist"
+    subtitle="The page you followed has no match in the ledger. It may have been renamed, superseded, or never written."
+    noRule
+  />
+
+  <div class="notfound-body">
+    <p>
+      If you believe a page should exist here, check that the link is correct, or
+      submit a source tip — adding missing entries is how the ledger grows.
+    </p>
+
+    <ul class="notfound-links">
+      <li><a href="/">Return to the main page</a></li>
+      <li><a href="/explore">Browse the timeline</a></li>
+      <li><a href="/explore">Search for something specific</a></li>
+      <li>
+        <a
+          href="https://github.com/pedro-bright/the-ledger/issues/new?template=source-tip.yml"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Submit a source tip</a>
+      </li>
+    </ul>
+  </div>
+</Base>
+
+<style>
+  .notfound-body {
+    max-width: 65ch;
+    margin: 0 auto;
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--color-ink);
+  }
+  .notfound-body p {
+    margin: 0 0 18px;
+  }
+  .notfound-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid var(--color-rule);
+    padding-top: 14px;
+  }
+  .notfound-links li {
+    padding: 4px 0;
+    font-family: var(--font-sans);
+    font-size: 14px;
+  }
+  .notfound-links a {
+    color: var(--color-wiki-link);
+    text-decoration: underline;
+    text-decoration-color: rgba(6, 69, 173, 0.35);
+    text-underline-offset: 2px;
+  }
+  .notfound-links a:hover {
+    text-decoration-color: var(--color-wiki-link);
+  }
+</style>
