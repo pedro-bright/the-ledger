@@ -1,0 +1,106 @@
+---
+// "Today's featured entry" box — Wikipedia main-page homage.
+// Header strip with title + date; body holds lead paragraph + link.
+interface Props {
+  title: string;
+  date?: string;
+  /** Secondary label shown at right of the header, e.g. "§ Editor's pick". */
+  meta?: string;
+}
+
+const { title, date, meta } = Astro.props;
+---
+<section class="wiki-box wiki-box--featured" aria-labelledby="featured-title">
+  <header class="wiki-box__head">
+    <h2 id="featured-title" class="wiki-box__title">{title}</h2>
+    {(date || meta) && (
+      <span class="wiki-box__meta">
+        {date && <time class="wiki-box__date" datetime={date}>{date}</time>}
+        {meta && <span class="wiki-box__sub">{meta}</span>}
+      </span>
+    )}
+  </header>
+  <div class="wiki-box__body">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .wiki-box {
+    border: 1px solid var(--color-rule-strong);
+    border-radius: 2px;
+    background: #FFFFFF;
+    margin-bottom: 32px;
+  }
+  .wiki-box__head {
+    padding: 9px 16px 8px;
+    background: var(--color-wiki-surface);
+    border-bottom: 1px solid var(--color-rule-strong);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .wiki-box__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 36, 'SOFT' 0, 'WONK' 0;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+  }
+  .wiki-box__meta {
+    display: inline-flex;
+    gap: 10px;
+    align-items: baseline;
+  }
+  .wiki-box__date {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-ink-faint);
+    letter-spacing: 0.02em;
+  }
+  .wiki-box__sub {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    color: var(--color-ink-muted);
+    font-style: italic;
+  }
+  .wiki-box__body {
+    padding: 18px 20px 20px;
+  }
+  .wiki-box__body :global(h3) {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 72, 'SOFT' 0, 'WONK' 0;
+    font-weight: 500;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    letter-spacing: -0.008em;
+    color: var(--color-ink-dim);
+    margin: 0 0 10px;
+  }
+  .wiki-box__body :global(h3 a) {
+    color: var(--color-ink-dim);
+  }
+  .wiki-box__body :global(h3 a:hover) {
+    color: var(--color-wiki-link);
+    text-decoration: underline;
+  }
+  .wiki-box__body :global(p) {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-ink);
+    margin: 0 0 12px;
+  }
+  .wiki-box__body :global(p:last-child) { margin-bottom: 0; }
+  .wiki-box__body :global(.read-more) {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--color-wiki-link);
+  }
+  .wiki-box__body :global(.read-more:hover) { text-decoration: underline; }
+</style>
