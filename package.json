@@ -8,7 +8,10 @@
     "validate": "tsx scripts/validate.ts",
     "check-links": "tsx scripts/check-links.ts",
     "build-graph": "tsx scripts/build-graph.ts",
-    "generate-feed": "tsx scripts/generate-feed.ts"
+    "generate-feed": "tsx scripts/generate-feed.ts",
+    "test:parity": "tsx scripts/test-parity.ts",
+    "test:no-dark-leaks": "tsx scripts/test-no-dark-leaks.ts",
+    "test:build": "npm run build-graph && npm run generate-feed && cd site && npm run build && cd .. && npm run test:parity && npm run test:no-dark-leaks"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",

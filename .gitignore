@@ -11,3 +11,8 @@ feed.xml
 rss.xml
 broken-links-report.md
 .vercel
+
+# Playwright
+site/test-results/
+site/playwright-report/
+site/playwright/.cache/
