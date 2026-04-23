@@ -1,113 +1,260 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { loadControversies, loadThreads } from '../../lib/content';
+import PageHeader from '../../components/wiki/PageHeader.astro';
+import RailSection from '../../components/wiki/RailSection.astro';
+import { loadControversies, loadThreads, getExcerpt } from '../../lib/content';
 
 const controversies = loadControversies();
 const threads = loadThreads();
 const threadMap = new Map(threads.map((t) => [t.id, t]));
+
+const active = controversies.filter((c) => c.status === 'active');
+const other = controversies.filter((c) => c.status !== 'active');
+
+function preview(claim?: string): string {
+  if (!claim) return '';
+  return claim.length > 120 ? getExcerpt(claim, 120) : claim;
+}
+
+function positionCountLabel(n: number): string {
+  return `${n} position${n === 1 ? '' : 's'}`;
+}
 ---
 
-<Base title="Controversies" description="Active debates and contested positions in AI history.">
-  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <div class="mb-14">
-      <p class="label-eyebrow mb-3">§ Active Debates</p>
-      <h1 class="font-display text-display-sm font-normal text-white mb-4 leading-[1.05]" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">Controversies</h1>
-      <p class="font-display italic text-lg text-ledger-text-muted max-w-[58ch] leading-relaxed" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
-        Not everything in AI has consensus. These document multiple positions, their proponents, and the evidence behind each claim.
-      </p>
-    </div>
+<Base
+  layout="index"
+  title="Controversies"
+  description="Claims in active dispute across AI history: positions, proponents, sources."
+>
+  <PageHeader
+    eyebrow="§ Controversies"
+    title="Controversies"
+    subtitle="Claims in active dispute. Each controversy has multiple positions, each with proponents and sources. ‘Uncontested’ is not a requirement — scholarship evolves."
+  />
 
-    {controversies.length === 0 ? (
-      <div class="py-20 px-4 max-w-xl mx-auto text-center">
-        <p class="label-eyebrow mb-3">§ No controversies yet</p>
-        <p class="font-display text-3xl font-normal text-ledger-text leading-tight" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
-          A rare moment of consensus.
-        </p>
-        <p class="text-sm text-ledger-text-muted mt-4 leading-relaxed">
-          Controversies are loaded from <code class="font-mono text-xs text-ledger-text">content/controversies/</code>.
-        </p>
-      </div>
-    ) : (
-      <div class="space-y-6">
-        {controversies.map((controversy) => {
-          const linkedThread = controversy.thread ? threadMap.get(controversy.thread) : null;
-          const positions = controversy.positions || [];
-          const previewA = positions[0];
-          const previewB = positions[1];
-          const rest = Math.max(0, positions.length - 2);
+  {active.length > 0 && (
+    <section class="cx-section" id="active">
+      <h2
+        class="cx-section__head font-display"
+        style="font-variation-settings:'opsz' 36, 'SOFT' 0, 'WONK' 0;"
+      >Active</h2>
+      <div class="cx-grid">
+        {active.map((c) => {
+          const positions = c.positions || [];
+          const linkedThread = c.thread ? threadMap.get(c.thread) : null;
           return (
-            <a
-              href={`/controversies/${controversy.slug}`}
-              class="group block rounded-md border border-ledger-border bg-ledger-surface/30 hover:bg-ledger-surface/50 hover:border-ledger-border-light transition-all"
-            >
-              <!-- Header strip -->
-              <header class="px-6 pt-6 pb-4 border-b border-ledger-border/60">
-                <div class="flex items-start gap-3 mb-2">
-                  <h2 class="font-display text-2xl sm:text-3xl font-medium leading-tight text-ledger-text group-hover:text-white transition-colors flex-1" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
-                    {controversy.title}
-                  </h2>
-                  {controversy.status && (
-                    <span class={`flex-shrink-0 mt-2 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-sm border ${
-                      controversy.status === 'active'
-                        ? 'text-amber-400 bg-amber-400/10 border-amber-400/20'
-                        : controversy.status === 'resolved'
-                          ? 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20'
-                          : 'text-ledger-text-dim bg-ledger-surface border-ledger-border'
-                    }`}>
-                      {controversy.status}
-                    </span>
-                  )}
-                </div>
-                <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ledger-text-dim font-mono tabular-nums">
-                  {controversy.polarity && (
-                    <span>{controversy.polarity} polarity</span>
-                  )}
-                  {positions.length > 0 && (
-                    <>
-                      <span class="text-ledger-border-light">·</span>
-                      <span>{positions.length} positions</span>
-                    </>
-                  )}
-                  {linkedThread && (
-                    <>
-                      <span class="text-ledger-border-light">·</span>
-                      <span>Thread: <span class="text-category-policy">{linkedThread.title}</span></span>
-                    </>
-                  )}
-                </div>
-              </header>
-
-              <!-- Dual-column position preview -->
-              {(previewA || previewB) && (
-                <div class="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-ledger-border/60">
-                  {previewA && (
-                    <div class="p-6">
-                      <p class="label-eyebrow mb-2">Position A</p>
-                      <p class="font-display italic text-base leading-snug text-ledger-text-muted line-clamp-3" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
-                        "{previewA.claim}"
-                      </p>
+            <article class="cx-card">
+              <h3 class="cx-card__title font-display" style="font-variation-settings:'opsz' 36, 'SOFT' 0, 'WONK' 0;">
+                <a href={`/controversies/${c.slug}`}>{c.title}</a>
+              </h3>
+              <p class="cx-card__meta font-mono">
+                {linkedThread && (
+                  <>
+                    <a href={`/threads/${linkedThread.slug}`}>{linkedThread.title}</a>
+                    <span class="cx-sep" aria-hidden="true">·</span>
+                  </>
+                )}
+                {c.polarity && (
+                  <>
+                    <span>{c.polarity}</span>
+                    <span class="cx-sep" aria-hidden="true">·</span>
+                  </>
+                )}
+                <span>{positionCountLabel(positions.length)}</span>
+              </p>
+              {(positions[0] || positions[1]) && (
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 cx-card__positions">
+                  {positions[0] && (
+                    <div class="cx-pos">
+                      <p class="label-eyebrow cx-pos__label">Position A</p>
+                      <p class="cx-pos__claim">“{preview(positions[0].claim)}”</p>
                     </div>
                   )}
-                  {previewB && (
-                    <div class="p-6">
-                      <p class="label-eyebrow mb-2">Position B</p>
-                      <p class="font-display italic text-base leading-snug text-ledger-text-muted line-clamp-3" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
-                        "{previewB.claim}"
-                      </p>
+                  {positions[1] && (
+                    <div class="cx-pos">
+                      <p class="label-eyebrow cx-pos__label">Position B</p>
+                      <p class="cx-pos__claim">“{preview(positions[1].claim)}”</p>
                     </div>
                   )}
                 </div>
               )}
-
-              {rest > 0 && (
-                <div class="px-6 py-3 border-t border-ledger-border/60 text-xs font-mono text-ledger-text-dim">
-                  + {rest} more {rest === 1 ? 'position' : 'positions'} →
-                </div>
-              )}
-            </a>
+              <p class="cx-card__link">
+                <a href={`/controversies/${c.slug}`}>Full debate →</a>
+              </p>
+            </article>
           );
         })}
       </div>
-    )}
-  </section>
+    </section>
+  )}
+
+  {other.length > 0 && (
+    <section class="cx-section" id="resolved">
+      <h2
+        class="cx-section__head font-display"
+        style="font-variation-settings:'opsz' 36, 'SOFT' 0, 'WONK' 0;"
+      >Resolved or dormant</h2>
+      <div class="cx-grid">
+        {other.map((c) => {
+          const positions = c.positions || [];
+          const linkedThread = c.thread ? threadMap.get(c.thread) : null;
+          return (
+            <article class="cx-card cx-card--muted">
+              <h3 class="cx-card__title font-display" style="font-variation-settings:'opsz' 36, 'SOFT' 0, 'WONK' 0;">
+                <a href={`/controversies/${c.slug}`}>{c.title}</a>
+              </h3>
+              <p class="cx-card__meta font-mono">
+                {linkedThread && (
+                  <>
+                    <a href={`/threads/${linkedThread.slug}`}>{linkedThread.title}</a>
+                    <span class="cx-sep" aria-hidden="true">·</span>
+                  </>
+                )}
+                {c.status && (
+                  <>
+                    <span>{c.status}</span>
+                    <span class="cx-sep" aria-hidden="true">·</span>
+                  </>
+                )}
+                {c.polarity && (
+                  <>
+                    <span>{c.polarity}</span>
+                    <span class="cx-sep" aria-hidden="true">·</span>
+                  </>
+                )}
+                <span>{positionCountLabel(positions.length)}</span>
+              </p>
+              {(positions[0] || positions[1]) && (
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 cx-card__positions">
+                  {positions[0] && (
+                    <div class="cx-pos">
+                      <p class="label-eyebrow cx-pos__label">Position A</p>
+                      <p class="cx-pos__claim">“{preview(positions[0].claim)}”</p>
+                    </div>
+                  )}
+                  {positions[1] && (
+                    <div class="cx-pos">
+                      <p class="label-eyebrow cx-pos__label">Position B</p>
+                      <p class="cx-pos__claim">“{preview(positions[1].claim)}”</p>
+                    </div>
+                  )}
+                </div>
+              )}
+              <p class="cx-card__link">
+                <a href={`/controversies/${c.slug}`}>Full debate →</a>
+              </p>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  )}
+
+  {controversies.length === 0 && (
+    <p class="cx-empty">Controversies are loaded from <code>content/controversies/</code>.</p>
+  )}
+
+  <Fragment slot="leftRail">
+    <RailSection title="Navigate">
+      <ul class="rail-list rail-list--plain">
+        <li><a href="/">Main page</a></li>
+        <li><a href="/explore">Timeline</a></li>
+        <li><a href="/threads">Threads</a></li>
+        <li><a href="/controversies">Controversies</a></li>
+        <li><a href="/actors">Actors</a></li>
+        <li><a href="/graph">Graph</a></li>
+        <li><a href="/about">About</a></li>
+      </ul>
+    </RailSection>
+
+    <RailSection title="On this page">
+      <ul class="rail-list rail-list--plain">
+        {active.length > 0 && <li><a href="#active">Active ({active.length})</a></li>}
+        {other.length > 0 && <li><a href="#resolved">Resolved or dormant ({other.length})</a></li>}
+      </ul>
+    </RailSection>
+  </Fragment>
 </Base>
+
+<style>
+  .cx-section {
+    margin: 0 0 36px;
+    scroll-margin-top: 20px;
+  }
+  .cx-section__head {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--color-ink-dim);
+    margin: 0 0 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .cx-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .cx-card {
+    border: 1px solid var(--color-rule);
+    background: color-mix(in srgb, var(--color-wiki-surface) 30%, transparent);
+    padding: 14px 16px;
+    border-radius: 2px;
+  }
+  .cx-card--muted {
+    background: color-mix(in srgb, var(--color-wiki-surface) 15%, transparent);
+  }
+  .cx-card__title {
+    font-size: 1.375rem;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.003em;
+    margin: 0 0 4px;
+    color: var(--color-ink-dim);
+  }
+  .cx-card__title a {
+    color: var(--color-wiki-link);
+  }
+  .cx-card__title a:hover { text-decoration: underline; }
+  .cx-card__meta {
+    font-size: 12px;
+    color: var(--color-ink-faint);
+    margin: 0 0 10px;
+    letter-spacing: 0.02em;
+  }
+  .cx-card__meta a { color: var(--color-wiki-link); }
+  .cx-card__meta a:hover { text-decoration: underline; }
+  .cx-sep { color: var(--color-rule-strong); margin: 0 6px; }
+  .cx-card__positions { margin-top: 6px; }
+  .cx-pos {
+    border-left: 2px solid var(--color-rule-strong);
+    padding: 2px 0 2px 10px;
+  }
+  .cx-pos__label { margin: 0 0 4px; }
+  .cx-pos__claim {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;
+    font-style: italic;
+    font-size: 0.9375rem;
+    line-height: 1.45;
+    color: var(--color-ink-mid);
+    margin: 0;
+  }
+  .cx-card__link {
+    margin: 10px 0 0;
+    font-family: var(--font-sans);
+    font-size: 13px;
+  }
+  .cx-card__link a { color: var(--color-wiki-link); }
+  .cx-card__link a:hover { text-decoration: underline; }
+  .cx-empty {
+    font-family: var(--font-serif);
+    color: var(--color-ink-mid);
+  }
+  .cx-empty code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--color-wiki-surface);
+    padding: 0.1em 0.35em;
+    border-radius: 2px;
+  }
+</style>
