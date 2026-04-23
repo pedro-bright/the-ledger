@@ -1,108 +1,298 @@
 ---
 import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/wiki/PageHeader.astro';
+import RailSection from '../../components/wiki/RailSection.astro';
 import { loadThreads, loadEvents, buildThreadEventMap } from '../../lib/content';
 
 const threads = loadThreads();
 const events = loadEvents();
 const threadEventMap = buildThreadEventMap(events);
 
-const enriched = threads
-  .map((t) => ({
-    ...t,
-    eventCount: t.events?.length || (threadEventMap.get(t.id)?.length ?? 0),
-  }))
-  .sort((a, b) => {
-    // Active first, then by event count desc.
-    if (a.status !== b.status) {
-      if (a.status === 'active') return -1;
-      if (b.status === 'active') return 1;
-    }
-    return b.eventCount - a.eventCount;
-  });
+type EnrichedThread = ReturnType<typeof enrich>;
+function enrich(t: (typeof threads)[number]) {
+  const evts = threadEventMap.get(t.id) || [];
+  const eventCount = t.events?.length || evts.length;
+  // Last updated = max of explicit `last_updated` or latest event date in thread.
+  let latestTs = t.last_updated ? new Date(t.last_updated).getTime() : 0;
+  for (const e of evts) {
+    const et = new Date(e.date).getTime();
+    if (!Number.isNaN(et) && et > latestTs) latestTs = et;
+  }
+  const lastUpdated = latestTs > 0 ? new Date(latestTs).toISOString().slice(0, 10) : undefined;
+  return { ...t, eventCount, lastUpdated };
+}
+
+const allEnriched: EnrichedThread[] = threads.map(enrich);
+// Active first, then by event count desc.
+allEnriched.sort((a, b) => b.eventCount - a.eventCount);
+
+const active = allEnriched.filter((t) => t.status === 'active');
+const dormant = allEnriched.filter((t) => t.status !== 'active');
 ---
 
-<Base title="Threads" description="Narrative arcs connecting events in AI history.">
-  <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <div class="mb-14">
-      <p class="label-eyebrow mb-3">§ Narrative Arcs</p>
-      <h1 class="font-display text-display-sm font-normal text-white mb-4 leading-[1.05]" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">Threads</h1>
-      <p class="font-display italic text-lg text-ledger-text-muted max-w-[58ch] leading-relaxed" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
-        Threads connect events into narrative arcs — tracing how themes and debates evolve across time. Each has a signed canonical synthesis.
-      </p>
-    </div>
+<Base
+  title="Threads"
+  description="Narrative threads in The Ledger — long-running lines of inquiry that connect events into a larger story."
+  layout="index"
+>
+  <Fragment slot="leftRail">
+    <RailSection title="Navigate">
+      <ul class="rail-list">
+        <li><a href="/">Main page</a></li>
+        <li><a href="/explore">Timeline</a></li>
+        <li><a href="/controversies">Controversies</a></li>
+        <li><a href="/actors">Actors</a></li>
+        <li><a href="/about">About the ledger</a></li>
+      </ul>
+    </RailSection>
 
-    {enriched.length === 0 ? (
-      <div class="py-20 px-4 max-w-xl mx-auto text-center">
-        <p class="label-eyebrow mb-3">§ No threads yet</p>
-        <p class="font-display text-3xl font-normal text-ledger-text leading-tight" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
-          Narrative arcs take time to assemble.
-        </p>
-        <p class="text-sm text-ledger-text-muted mt-4 leading-relaxed">
-          Threads are loaded from <code class="font-mono text-xs text-ledger-text">content/threads/</code>.
-        </p>
-      </div>
-    ) : (
-      <ol class="divide-y divide-ledger-border">
-        {enriched.map((thread, idx) => (
-          <li>
-            <a
-              href={`/threads/${thread.slug}`}
-              class="group block py-8 hover:bg-ledger-surface/20 -mx-4 px-4 rounded-sm transition-colors"
-            >
-              <div class="grid md:grid-cols-[auto_1fr_auto] gap-4 md:gap-6 items-start">
-                <span class="font-mono text-xs text-ledger-text-dim tabular-nums md:w-10">
-                  № {String(idx + 1).padStart(2, '0')}
-                </span>
-                <div>
-                  <div class="flex items-center flex-wrap gap-2 mb-2">
-                    <h2 class="font-display text-2xl sm:text-3xl font-medium leading-tight text-ledger-text group-hover:text-white transition-colors" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
-                      {thread.title}
-                    </h2>
-                    {/* Index surfaces thread activity (active/dormant), not epistemic
-                        contestation. Thread-level contestation status is a detail-page
-                        concern — the core-question blockquote + any linked controversies
-                        carry that signal. Here we want a scannable activity cue only. */}
-                    {thread.status && (
-                      <span class={`flex-shrink-0 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-sm border ${
-                        thread.status === 'active'
-                          ? 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20'
-                          : 'text-ledger-text-dim bg-ledger-surface border-ledger-border'
-                      }`}>
-                        {thread.status}
-                      </span>
+    <RailSection title="Threads by status">
+      <ul class="rail-list">
+        <li><span>Active</span><span class="count">{active.length}</span></li>
+        <li><span>Dormant</span><span class="count">{dormant.length}</span></li>
+        <li><span>Total</span><span class="count">{allEnriched.length}</span></li>
+      </ul>
+    </RailSection>
+
+    <RailSection title="About threads">
+      <p>
+        Threads are long-running lines of inquiry. Each bundles a group of events around a single question and carries a named curator responsible for its synthesis.
+      </p>
+      <p>
+        A thread never resolves — understanding always evolves. Status tracks whether the curator is still actively maintaining it.
+      </p>
+    </RailSection>
+  </Fragment>
+
+  <PageHeader
+    eyebrow="§ Threads"
+    title="Narrative threads"
+    subtitle="Long-running lines of inquiry. Each thread links events into a larger story; each has a named curator responsible for its synthesis."
+  />
+
+  {allEnriched.length === 0 ? (
+    <p class="threads-empty">
+      No threads are loaded yet. Threads are written in <code>content/threads/</code>.
+    </p>
+  ) : (
+    <>
+      {active.length > 0 && (
+        <section class="threads-section">
+          <h2 class="threads-section__head">
+            Active
+            <span class="threads-section__count font-mono">{active.length}</span>
+          </h2>
+          <table class="threads-table">
+            <thead>
+              <tr>
+                <th scope="col">Thread</th>
+                <th scope="col" class="threads-table__col-curator">Curator</th>
+                <th scope="col" class="threads-table__col-count">Events</th>
+                <th scope="col" class="threads-table__col-date">Updated</th>
+              </tr>
+            </thead>
+            <tbody>
+              {active.map((t) => (
+                <tr>
+                  <td class="threads-table__title-cell">
+                    <a href={`/threads/${t.slug}`} class="threads-table__title">{t.title}</a>
+                    {t.core_question && (
+                      <p class="threads-table__question">{t.core_question}</p>
                     )}
-                  </div>
-                  {thread.core_question && (
-                    <p class="font-display italic text-base sm:text-lg text-ledger-text-muted mb-3 leading-snug max-w-[62ch]" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
-                      "{thread.core_question}"
-                    </p>
-                  )}
-                  <div class="flex items-center gap-3 text-xs text-ledger-text-dim font-mono tabular-nums">
-                    {thread.started && (
-                      <span>Since {new Date(thread.started).getFullYear()}</span>
+                  </td>
+                  <td class="threads-table__curator font-mono">{t.curator || '—'}</td>
+                  <td class="threads-table__count font-mono">{t.eventCount}</td>
+                  <td class="threads-table__date font-mono">
+                    {t.lastUpdated ? <time datetime={t.lastUpdated}>{t.lastUpdated}</time> : '—'}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      )}
+
+      {dormant.length > 0 && (
+        <section class="threads-section">
+          <h2 class="threads-section__head">
+            Dormant
+            <span class="threads-section__count font-mono">{dormant.length}</span>
+          </h2>
+          <table class="threads-table threads-table--dormant">
+            <thead>
+              <tr>
+                <th scope="col">Thread</th>
+                <th scope="col" class="threads-table__col-curator">Curator</th>
+                <th scope="col" class="threads-table__col-count">Events</th>
+                <th scope="col" class="threads-table__col-date">Updated</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dormant.map((t) => (
+                <tr>
+                  <td class="threads-table__title-cell">
+                    <a href={`/threads/${t.slug}`} class="threads-table__title">{t.title}</a>
+                    {t.core_question && (
+                      <p class="threads-table__question">{t.core_question}</p>
                     )}
-                    {thread.events && (
-                      <>
-                        <span class="text-ledger-border-light">·</span>
-                        <span>{thread.events.length} events</span>
-                      </>
-                    )}
-                    {thread.curator && (
-                      <>
-                        <span class="text-ledger-border-light">·</span>
-                        <span>{thread.curator}</span>
-                      </>
-                    )}
-                  </div>
-                </div>
-                <span class="hidden md:inline-flex items-start font-mono text-xs text-ledger-text-dim group-hover:text-category-policy transition-colors pt-1.5 whitespace-nowrap">
-                  read →
-                </span>
-              </div>
-            </a>
-          </li>
-        ))}
-      </ol>
-    )}
-  </section>
+                  </td>
+                  <td class="threads-table__curator font-mono">{t.curator || '—'}</td>
+                  <td class="threads-table__count font-mono">{t.eventCount}</td>
+                  <td class="threads-table__date font-mono">
+                    {t.lastUpdated ? <time datetime={t.lastUpdated}>{t.lastUpdated}</time> : '—'}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      )}
+    </>
+  )}
 </Base>
+
+<style>
+  .threads-empty {
+    color: var(--color-ink-mid);
+    font-style: italic;
+    padding: 24px 0;
+  }
+  .threads-empty code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--color-wiki-surface);
+    padding: 0.1em 0.35em;
+    border-radius: 2px;
+  }
+
+  .threads-section {
+    margin-bottom: 48px;
+  }
+  .threads-section:last-child { margin-bottom: 0; }
+  .threads-section__head {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 36, 'SOFT' 0, 'WONK' 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--color-ink-dim);
+    margin: 0 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--color-rule);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .threads-section__count {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--color-ink-faint);
+    letter-spacing: 0.04em;
+  }
+
+  .threads-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-serif);
+  }
+  .threads-table thead th {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-ink-muted);
+    text-align: left;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--color-rule-strong);
+  }
+  .threads-table__col-curator {
+    width: 12em;
+    white-space: nowrap;
+  }
+  .threads-table__col-count {
+    width: 5em;
+    text-align: right;
+  }
+  .threads-table__col-date {
+    width: 8em;
+    white-space: nowrap;
+    text-align: right;
+  }
+  .threads-table tbody tr {
+    border-bottom: 1px solid var(--color-rule);
+    transition: background 120ms ease;
+  }
+  .threads-table tbody tr:hover {
+    background: rgba(240, 237, 228, 0.45);
+  }
+  .threads-table td {
+    padding: 12px 10px;
+    vertical-align: top;
+  }
+  .threads-table__title-cell {
+    padding-right: 24px;
+  }
+  .threads-table__title {
+    font-family: var(--font-serif);
+    font-size: 1.0625rem;
+    font-weight: 500;
+    color: var(--color-wiki-link);
+    line-height: 1.3;
+  }
+  .threads-table__title:visited { color: var(--color-wiki-link-visited); }
+  .threads-table__title:hover { text-decoration: underline; }
+  .threads-table__question {
+    margin: 4px 0 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;
+    font-style: italic;
+    font-size: 0.9375rem;
+    line-height: 1.45;
+    color: var(--color-ink-mid);
+    max-width: 60ch;
+  }
+  .threads-table__curator {
+    font-size: 12.5px;
+    color: var(--color-ink-mid);
+  }
+  .threads-table__count {
+    font-size: 13px;
+    color: var(--color-ink-mid);
+    text-align: right;
+  }
+  .threads-table__date {
+    font-size: 12.5px;
+    color: var(--color-ink-faint);
+    text-align: right;
+  }
+  .threads-table--dormant .threads-table__title {
+    color: var(--color-ink-mid);
+  }
+
+  @media (max-width: 680px) {
+    .threads-table thead { display: none; }
+    .threads-table tr {
+      display: block;
+      padding: 10px 0;
+    }
+    .threads-table td {
+      display: block;
+      padding: 2px 0;
+    }
+    .threads-table__title-cell { padding-right: 0; }
+    .threads-table__curator::before {
+      content: 'Curator: ';
+      color: var(--color-ink-faint);
+    }
+    .threads-table__count::before {
+      content: 'Events: ';
+      color: var(--color-ink-faint);
+    }
+    .threads-table__date::before {
+      content: 'Updated: ';
+      color: var(--color-ink-faint);
+    }
+    .threads-table__count,
+    .threads-table__date { text-align: left; }
+  }
+</style>

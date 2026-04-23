@@ -1,7 +1,10 @@
 ---
 import Base from '../../layouts/Base.astro';
-import ContestationBadge from '../../components/ContestationBadge';
-import { loadThreads, loadEvents, loadControversies } from '../../lib/content';
+import ArticleShell from '../../components/wiki/ArticleShell.astro';
+import Infobox from '../../components/wiki/Infobox.astro';
+import RailSection from '../../components/wiki/RailSection.astro';
+import EventRow from '../../components/wiki/EventRow.astro';
+import { loadThreads, loadEvents, loadControversies, buildThreadEventMap } from '../../lib/content';
 
 export function getStaticPaths() {
   const threads = loadThreads();
@@ -13,121 +16,228 @@ export function getStaticPaths() {
 
 const { thread } = Astro.props;
 const allEvents = loadEvents();
+const allThreads = loadThreads();
 const allControversies = loadControversies();
+const threadEventMap = buildThreadEventMap(allEvents);
 
-// Get linked events
+// Linked events, chronological.
+const sortByDate = (a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime();
 const linkedEvents = thread.events
-  ? allEvents.filter((e) => thread.events!.includes(e.id))
-  : [];
-linkedEvents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  ? allEvents.filter((e) => thread.events!.includes(e.id)).sort(sortByDate)
+  : (threadEventMap.get(thread.id) || []).slice().sort(sortByDate);
 
-// Get linked controversies
 const linkedControversies = thread.controversies
   ? allControversies.filter((c) => thread.controversies!.includes(c.id))
   : [];
+
+const firstEvent = linkedEvents[0];
+const lastEvent = linkedEvents[linkedEvents.length - 1];
+const spanYears = firstEvent && lastEvent
+  ? Math.max(1, new Date(lastEvent.date).getFullYear() - new Date(firstEvent.date).getFullYear() + 1)
+  : undefined;
+
+const curatorOtherThreads = thread.curator
+  ? allThreads.filter((t) => t.curator === thread.curator && t.id !== thread.id)
+  : [];
+const otherActiveThreads = allThreads.filter((t) => t.status === 'active' && t.id !== thread.id).slice(0, 5);
+
+// Last updated = max of explicit + event dates.
+let lastUpdatedTs = thread.last_updated ? new Date(thread.last_updated).getTime() : 0;
+for (const e of linkedEvents) {
+  const t = new Date(e.date).getTime();
+  if (!Number.isNaN(t) && t > lastUpdatedTs) lastUpdatedTs = t;
+}
+const lastUpdatedIso = lastUpdatedTs > 0 ? new Date(lastUpdatedTs).toISOString().slice(0, 10) : undefined;
+
+const sourcePath = `content/threads/${thread.slug}.md`;
+const breadcrumb = [
+  { label: 'Main page', href: '/' },
+  { label: 'Threads', href: '/threads' },
+  { label: thread.title },
+];
+const subtitle = thread.core_question ? `— ${thread.core_question}` : undefined;
 ---
 
-<Base title={thread.title}>
-  <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <!-- Breadcrumb -->
-    <nav class="flex items-center gap-2 text-xs font-mono text-ledger-text-dim mb-6">
-      <a href="/" class="hover:text-ledger-text transition-colors">Timeline</a>
-      <span>/</span>
-      <a href="/threads" class="hover:text-ledger-text transition-colors">Threads</a>
-      <span>/</span>
-      <span class="text-ledger-text-muted">{thread.id}</span>
-    </nav>
+<Base
+  title={thread.title}
+  description={thread.core_question || `Thread: ${thread.title}`}
+  layout="article"
+>
+  <!-- LEFT RAIL -->
+  <Fragment slot="leftRail">
+    <RailSection title="Navigate">
+      <ul class="rail-list">
+        <li><a href="/threads">All threads</a></li>
+        <li><a href="/">Main page</a></li>
+        <li><a href="/explore">Timeline</a></li>
+        <li><a href="/controversies">Controversies</a></li>
+      </ul>
+    </RailSection>
 
-    <!-- Header -->
-    <div class="mb-8">
-      <div class="flex items-center gap-3 mb-3">
-        {thread.status && (
-          <span class={`px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-sm border ${
-            thread.status === 'active'
-              ? 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20'
-              : 'text-ledger-text-dim bg-ledger-surface border-ledger-border'
-          }`}>
-            {thread.status}
-          </span>
-        )}
-        <ContestationBadge status={thread.contestation?.status} />
-      </div>
-
-      <h1 class="font-display text-display-sm font-normal text-white mb-5 leading-[1.05]" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">{thread.title}</h1>
-
-      {thread.core_question && (
-        <blockquote class="font-display italic text-xl sm:text-2xl text-ledger-text-muted border-l-2 border-category-policy/40 pl-5 mb-6 leading-snug max-w-[58ch]" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
-          {thread.core_question}
-        </blockquote>
-      )}
-
-      <div class="flex flex-wrap items-center gap-4 text-xs font-mono text-ledger-text-dim">
-        {thread.curator && <span>Curated by <strong class="text-ledger-text-muted">{thread.curator}</strong></span>}
-        {thread.started && <span>Since {new Date(thread.started).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}</span>}
-        {thread.last_updated && <span>Updated {new Date(thread.last_updated).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>}
-      </div>
-    </div>
-
-    <!-- Canonical synthesis (content) -->
-    <div class="prose max-w-none mb-12" set:html={thread.htmlContent} />
-
-    <!-- Mini-timeline of linked events -->
-    {linkedEvents.length > 0 && (
-      <section class="mb-14 pt-8 border-t border-ledger-border">
-        <p class="label-eyebrow mb-2">§ In This Thread</p>
-        <h2 class="font-display text-2xl sm:text-3xl font-normal text-white mb-6 tracking-display-tight" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
-          Events
-        </h2>
-        <div class="relative">
-          <div class="absolute left-[5px] top-2 bottom-2 w-px bg-ledger-border" />
-          <div class="space-y-3">
-            {linkedEvents.map((event) => (
-              <a
-                href={`/events/${event.slug}`}
-                class="group relative flex items-start gap-4 pl-6 hover:bg-ledger-surface/30 -mx-2 px-2 rounded-sm py-2 transition-colors"
-              >
-                <div class="absolute left-0 top-3.5 w-[11px] h-[11px] rounded-full bg-ledger-bg border-2 border-ledger-border-light z-10" />
-                <time class="text-xs font-mono text-ledger-text-dim whitespace-nowrap pt-0.5">
-                  {new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}
-                </time>
-                <div>
-                  <span class="text-sm font-medium group-hover:text-white transition-colors">{event.title}</span>
-                  {event.significance && (
-                    <span class="ml-2 text-[10px] font-mono uppercase tracking-wider text-ledger-text-dim">
-                      {event.significance}
-                    </span>
-                  )}
-                </div>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
-    )}
-
-    <!-- Controversies panel -->
-    {linkedControversies.length > 0 && (
-      <section class="mb-12 pt-8 border-t border-ledger-border">
-        <p class="label-eyebrow mb-2">§ Unsettled</p>
-        <h2 class="font-display text-2xl sm:text-3xl font-normal text-white mb-6 tracking-display-tight" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
-          Active Controversies
-        </h2>
-        <div class="space-y-4">
-          {linkedControversies.map((controversy) => (
-            <a
-              href={`/controversies/${controversy.slug}`}
-              class="block p-4 rounded-md border border-amber-400/20 bg-amber-400/5 hover:bg-amber-400/10 transition-colors"
-            >
-              <span class="text-sm font-medium text-amber-400">{controversy.title}</span>
-              {controversy.positions && (
-                <p class="text-xs text-ledger-text-muted mt-1">
-                  {controversy.positions.length} positions documented
-                </p>
-              )}
-            </a>
+    {curatorOtherThreads.length > 0 && (
+      <RailSection title={`Other threads by ${thread.curator}`}>
+        <ul class="rail-list">
+          {curatorOtherThreads.map((t) => (
+            <li><a href={`/threads/${t.slug}`}>{t.title}</a></li>
           ))}
-        </div>
+        </ul>
+      </RailSection>
+    )}
+
+    <RailSection title="Threads index">
+      <ul class="rail-list">
+        {allThreads.slice(0, 8).map((t) => (
+          <li><a href={`/threads/${t.slug}`}>{t.title}</a></li>
+        ))}
+      </ul>
+    </RailSection>
+  </Fragment>
+
+  <!-- RIGHT RAIL -->
+  <Fragment slot="rightRail">
+    {linkedEvents.length > 0 && (
+      <RailSection title="Timeline snapshot">
+        <dl class="snapshot">
+          <dt>First event</dt>
+          <dd>
+            <a href={`/events/${firstEvent!.slug}`}>{firstEvent!.title}</a>
+            <time class="snapshot__date font-mono" datetime={firstEvent!.date}>{firstEvent!.date}</time>
+          </dd>
+          {lastEvent && lastEvent.id !== firstEvent!.id && (
+            <>
+              <dt>Last event</dt>
+              <dd>
+                <a href={`/events/${lastEvent.slug}`}>{lastEvent.title}</a>
+                <time class="snapshot__date font-mono" datetime={lastEvent.date}>{lastEvent.date}</time>
+              </dd>
+            </>
+          )}
+          {spanYears && (
+            <>
+              <dt>Span</dt>
+              <dd class="font-mono">{spanYears} {spanYears === 1 ? 'year' : 'years'}</dd>
+            </>
+          )}
+          <dt>Events</dt>
+          <dd class="font-mono">{linkedEvents.length}</dd>
+        </dl>
+      </RailSection>
+    )}
+
+    {thread.curator && (
+      <RailSection title="Curator note">
+        <p>
+          Curated by <a href="/about">{thread.curator}</a>.
+        </p>
+        {thread.curator_scope && <p><em>Scope:</em> {thread.curator_scope}</p>}
+        <p>
+          The curator writes and maintains this thread's canonical synthesis and vouches for its sourcing.
+        </p>
+      </RailSection>
+    )}
+  </Fragment>
+
+  <!-- ARTICLE BODY -->
+  <ArticleShell
+    title={thread.title}
+    subtitle={subtitle}
+    breadcrumb={breadcrumb}
+    lastModified={lastUpdatedIso || thread.last_updated}
+    sourcePath={sourcePath}
+  >
+    <Fragment slot="infobox">
+      <Infobox title="Thread metadata">
+        <dl>
+          {thread.status && <><dt>Status</dt><dd><span class={`status-chip status-chip--${thread.status}`}>{thread.status}</span></dd></>}
+          {thread.started && <><dt>Started</dt><dd><time class="mono" datetime={thread.started}>{thread.started}</time></dd></>}
+          {(lastUpdatedIso || thread.last_updated) && (
+            <><dt>Last updated</dt><dd><time class="mono" datetime={lastUpdatedIso || thread.last_updated}>{lastUpdatedIso || thread.last_updated}</time></dd></>
+          )}
+          {thread.curator && <><dt>Curator</dt><dd><a href="/about">{thread.curator}</a></dd></>}
+          {thread.curator_scope && <><dt>Scope</dt><dd>{thread.curator_scope}</dd></>}
+          <dt>Events</dt><dd class="mono">{linkedEvents.length}</dd>
+          {linkedControversies.length > 0 && <><dt>Controversies</dt><dd class="mono">{linkedControversies.length}</dd></>}
+          <dt>ID</dt><dd class="mono">{thread.id}</dd>
+        </dl>
+      </Infobox>
+    </Fragment>
+
+    <!-- Canonical synthesis (rendered markdown) -->
+    <Fragment set:html={thread.htmlContent} />
+
+    {linkedEvents.length > 0 && (
+      <section class="thread-section">
+        <h2 class="wiki-article__h2">Event timeline</h2>
+        <ul class="thread-timeline">
+          {linkedEvents.map((e) => (
+            <EventRow event={e} />
+          ))}
+        </ul>
       </section>
     )}
-  </article>
+
+    {linkedControversies.length > 0 && (
+      <section class="thread-section">
+        <h2 class="wiki-article__h2">Linked controversies</h2>
+        <ul class="controversy-list">
+          {linkedControversies.map((c) => (
+            <li>
+              <a href={`/controversies/${c.slug}`}>{c.title}</a>
+              {c.status && (
+                <span class={`status-chip status-chip--${c.status === 'active' ? 'active' : c.status === 'resolved' ? 'active' : 'dormant'}`}>
+                  {c.status}
+                </span>
+              )}
+              {c.positions && (
+                <span class="controversy-list__count font-mono">
+                  · {c.positions.length} {c.positions.length === 1 ? 'position' : 'positions'}
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    {otherActiveThreads.length > 0 && (
+      <Fragment slot="seeAlso">
+        <ul>
+          {otherActiveThreads.map((t) => (
+            <li><a href={`/threads/${t.slug}`}>{t.title}</a></li>
+          ))}
+        </ul>
+      </Fragment>
+    )}
+  </ArticleShell>
 </Base>
+
+<style>
+  .thread-section { margin-top: 2rem; }
+  .thread-timeline,
+  .controversy-list { list-style: none; padding: 0; margin: 12px 0 0; }
+  .controversy-list li {
+    padding: 8px 0; border-bottom: 1px dotted var(--color-rule);
+    display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px;
+  }
+  .controversy-list li:last-child { border-bottom: none; }
+  .controversy-list a { font-family: var(--font-serif); font-size: 0.9375rem; color: var(--color-wiki-link); }
+  .controversy-list a:hover { text-decoration: underline; }
+  .controversy-list__count { font-size: 12px; color: var(--color-ink-faint); }
+
+  .status-chip {
+    display: inline-block; font-family: var(--font-sans); font-size: 10px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 1px 7px 2px; border-radius: 2px; line-height: 1.4; vertical-align: middle;
+  }
+  .status-chip--active { background: #E5F3E9; color: #0A7C32; }
+  .status-chip--dormant { background: #EDEAE3; color: #7A7368; }
+
+  .snapshot { display: grid; grid-template-columns: 1fr; gap: 2px 0; margin: 0; }
+  .snapshot dt {
+    margin-top: 8px; font-family: var(--font-sans); font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-ink-muted);
+  }
+  .snapshot dt:first-child { margin-top: 0; }
+  .snapshot dd { margin: 2px 0 0; font-size: 13px; color: var(--color-ink); line-height: 1.4; }
+  .snapshot__date { display: block; font-size: 11.5px; color: var(--color-ink-faint); margin-top: 1px; }
+</style>
