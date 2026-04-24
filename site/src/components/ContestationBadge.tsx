@@ -53,6 +53,7 @@ export default function ContestationBadge({ status, iconOnly = false }: Props) {
         borderColor: c.border,
       }}
       title={c.hint}
+      aria-label={iconOnly ? `${c.label}. ${c.hint}` : c.hint}
     >
       <svg className="w-3 h-3 flex-shrink-0" viewBox="0 0 12 12" fill="none" aria-hidden="true">
         {status === 'uncontested' && (

@@ -54,7 +54,11 @@ const items = [
     display: flex;
     gap: 0;
     overflow-x: auto;
-    scrollbar-width: thin;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .wiki-nav__list::-webkit-scrollbar {
+    display: none;
   }
   .wiki-nav__link {
     display: inline-block;
@@ -75,6 +79,7 @@ const items = [
   }
   @media (max-width: 780px) {
     .wiki-nav__inner { padding: 0 8px; }
-    .wiki-nav__link { padding: 12px 12px; font-size: 12.5px; }
+    /* Mobile: 14px vertical padding + 13px line-height lifts tap target above 44px. */
+    .wiki-nav__link { padding: 14px 14px; font-size: 12.5px; }
   }
 </style>

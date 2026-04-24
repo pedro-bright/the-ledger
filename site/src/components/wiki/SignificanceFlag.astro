@@ -16,12 +16,19 @@ const defaults = {
   major: 'Major',
   notable: 'Notable',
 } as const;
+const hints: Record<string, string> = {
+  landmark: 'Fundamentally alters the trajectory.',
+  major: 'Meaningfully shifts the landscape.',
+  notable: 'Worth documenting for the record.',
+};
 const display = level ? (label ?? defaults[level]) : '';
+const ariaLabel = level ? `Significance: ${display}. ${hints[level] || ''}` : undefined;
 ---
 {level && (
   <span
     class={`flag-chip flag-chip--${level}${compact ? ' flag-chip--compact' : ''}`}
-    aria-label={`Significance: ${display}`}
+    aria-label={ariaLabel}
+    title={hints[level]}
   >
     {display}
   </span>

@@ -103,6 +103,15 @@ export default function Graph({ data }: Props) {
     return acc;
   }, {});
 
+  // Accessible fallback: flat node list grouped by type, with route links
+  // identical to the canvas click handler. Screen readers + keyboard users
+  // get the same navigation affordances as the pointer interaction.
+  const fallbackRoute = (n: GraphNode) =>
+    n.type === 'event' ? `/events/${n.id}` :
+    n.type === 'thread' ? `/threads/${n.id}` :
+    n.type === 'controversy' ? `/controversies/${n.id}` :
+    `/actors/${n.id}`;
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
@@ -120,6 +129,7 @@ export default function Graph({ data }: Props) {
               type="button"
               onClick={() => toggleType(type)}
               aria-pressed={!isHidden}
+              aria-label={`${isHidden ? 'Show' : 'Hide'} ${TYPE_LABELS[type].toLowerCase()}`}
               className={`${base} ${isHidden ? hiddenCls : visible}`}
               style={!isHidden ? { borderColor: NODE_COLORS[type] } : undefined}
             >
@@ -134,6 +144,8 @@ export default function Graph({ data }: Props) {
 
       <div
         ref={containerRef}
+        role="img"
+        aria-label={`Relational graph of ${data.nodes.length} nodes — events, threads, controversies, and actors linked by shared references. A text list follows for keyboard and screen-reader navigation.`}
         className="border border-rule-strong rounded-sm overflow-hidden"
         style={{ background: '#FAFAF7' }}
       >
@@ -158,6 +170,52 @@ export default function Graph({ data }: Props) {
       <p className="text-[12px] text-ink-faint font-mono">
         Click a node to open. Drag to pan, scroll to zoom. Toggle types above to filter.
       </p>
+
+      {/* Accessible text-list equivalent of the graph. Keyboard and screen-reader
+          users can navigate the full node set; pointer users can ignore it. */}
+      <details className="graph-fallback">
+        <summary className="graph-fallback__summary">
+          All {data.nodes.length} nodes as a linked list
+        </summary>
+        <div className="graph-fallback__body">
+          {types.map((type) => {
+            const nodes = filteredData.nodes.filter((n: any) => n.type === type);
+            if (nodes.length === 0) return null;
+            return (
+              <section key={type} className="graph-fallback__section" aria-labelledby={`graph-fallback-${type}`}>
+                <h3 id={`graph-fallback-${type}`} className="graph-fallback__heading">
+                  <span
+                    className="graph-fallback__dot"
+                    aria-hidden="true"
+                    style={{ background: NODE_COLORS[type] }}
+                  />
+                  {TYPE_LABELS[type]}
+                  <span className="graph-fallback__count font-mono tabular-nums">
+                    ({nodes.length})
+                  </span>
+                </h3>
+                <ul className="graph-fallback__list">
+                  {nodes
+                    .slice()
+                    .sort((a: any, b: any) =>
+                      (b.date || '').localeCompare(a.date || '') || a.title.localeCompare(b.title)
+                    )
+                    .map((n: any) => (
+                      <li key={n.id}>
+                        <a href={fallbackRoute(n)}>{n.title}</a>
+                        {n.date && (
+                          <time className="graph-fallback__date font-mono" dateTime={n.date}>
+                            {' '}— {n.date}
+                          </time>
+                        )}
+                      </li>
+                    ))}
+                </ul>
+              </section>
+            );
+          })}
+        </div>
+      </details>
     </div>
   );
 }

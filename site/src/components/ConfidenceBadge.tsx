@@ -57,6 +57,7 @@ export default function ConfidenceBadge({ level }: Props) {
         borderColor: c.border,
       }}
       title={c.hint}
+      aria-label={`${c.label}. ${c.hint}`}
     >
       <span
         className="w-1.5 h-1.5 rounded-full"

@@ -187,6 +187,7 @@
     border-radius: 2px;
     line-height: 1.4;
     vertical-align: middle;
+    border: 1px solid transparent;
   }
   .flag-chip--landmark { background: #FDF2C5; color: #7A5A00; }
   .flag-chip--major    { background: #DBECF9; color: #0A4D82; }
@@ -196,7 +197,7 @@
   .wiki-hr {
     border: none;
     border-top: 2px double var(--color-rule-double);
-    margin: 40px 0;
+    margin: 32px 0;
   }
 
   /* -------- Wiki-style dated list. -------- */
@@ -265,6 +266,15 @@
     font-size: 13px;
     color: var(--color-ink-mid);
     line-height: 1.5;
+  }
+  /* Left rail = navigation / index. Subtly lighter weight so the article
+     body and right-rail metadata read as primary. */
+  .wiki-rail[data-side="left"] {
+    font-size: 12.5px;
+    color: var(--color-ink-muted);
+  }
+  .wiki-rail[data-side="left"] .rail-list a {
+    color: var(--color-wiki-link);
   }
 
   /* Gradual rail collapse: at 1200px narrow both rails, at 1024px drop the
@@ -459,6 +469,74 @@
     }
   }
 
+  /* -------- Graph: accessible text-list fallback under the canvas. -------- */
+  .graph-fallback {
+    margin-top: 4px;
+    border-top: 1px solid var(--color-rule);
+    padding-top: 16px;
+  }
+  .graph-fallback__summary {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-ink-mid);
+    cursor: pointer;
+    padding: 4px 0;
+    list-style-position: outside;
+  }
+  .graph-fallback__summary:hover { color: var(--color-wiki-link); }
+  .graph-fallback__body {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px 24px;
+    padding-top: 14px;
+  }
+  .graph-fallback__section { min-width: 0; }
+  .graph-fallback__heading {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-ink-muted);
+    margin: 0 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .graph-fallback__dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .graph-fallback__count {
+    font-size: 11px;
+    color: var(--color-ink-faint);
+    font-weight: 400;
+    margin-left: auto;
+  }
+  .graph-fallback__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .graph-fallback__list a {
+    font-family: var(--font-serif);
+    font-size: 0.9375rem;
+    line-height: 1.4;
+  }
+  .graph-fallback__date {
+    font-size: 11px;
+    color: var(--color-ink-faint);
+  }
+
   /* -------- Prose: long-form rendered markdown. -------- */
   .prose {
     font-family: var(--font-serif);
@@ -648,9 +726,10 @@
     --color-rule-double: #3C3731;
   }
   a { text-decoration: underline; }
-  .flag-chip--landmark { color: #4D3800; border: 1px solid #7A5A00; }
-  .flag-chip--major    { color: #062F52; border: 1px solid #0A4D82; }
-  .flag-chip--notable  { color: #2D2822; border: 1px solid #5C564D; }
+  .flag-chip { border-width: 1px; border-style: solid; }
+  .flag-chip--landmark { color: #4D3800; border-color: #7A5A00; }
+  .flag-chip--major    { color: #062F52; border-color: #0A4D82; }
+  .flag-chip--notable  { color: #2D2822; border-color: #5C564D; }
   .wiki-article__header,
   .home-section__title,
   .rail-block__title {
@@ -658,6 +737,8 @@
   }
   .intro { border-bottom-width: 2px; }
   .event-row, .explorer-row { border-bottom-style: solid; }
+  /* Focus indicator needs to stand out against every surface. */
+  *:focus-visible { outline-width: 3px; }
 }
 
 /* -------- Print: archival-grade output. -------- */

@@ -124,7 +124,7 @@ const description = `${event.title} — ${event.date}`;
       </RailSection>
     )}
 
-    <RailSection title="Epistemic key">
+    <RailSection title="Epistemic key" id="epistemic-key">
       <dl class="epistemic-key">
         <dt class="epistemic-key__term epistemic-key__term--landmark">Landmark</dt>
         <dd>Fundamentally alters the trajectory. Future textbooks will cover it. 2–5 per year.</dd>
@@ -134,6 +134,8 @@ const description = `${event.title} — ${event.date}`;
         <dd>Worth documenting for the record. Significance can be upgraded later.</dd>
         <dt class="epistemic-key__term">Confidence</dt>
         <dd>High = primary sources corroborate. Medium = credible secondary only. Low = provisional. Disputed = credible sources disagree.</dd>
+        <dt class="epistemic-key__term">Contestation</dt>
+        <dd>Uncontested = no formal challenge. Contested = at least one challenge filed. Superseded = replaced by a later entry. Unresolved = dispute still open.</dd>
       </dl>
     </RailSection>
   </Fragment>
@@ -191,6 +193,23 @@ const description = `${event.title} — ${event.date}`;
 
     <!-- Rendered markdown body -->
     <Fragment set:html={event.htmlContent} />
+
+    {/* Mobile-only epistemic key — right rail is hidden below 780px. */}
+    <details class="mobile-epistemic-key" aria-label="Epistemic key">
+      <summary>§ How to read the metadata</summary>
+      <dl>
+        <dt>Landmark</dt>
+        <dd>Fundamentally alters the trajectory; 2–5 per year.</dd>
+        <dt>Major</dt>
+        <dd>Meaningfully shifts the landscape; 2–4 per month.</dd>
+        <dt>Notable</dt>
+        <dd>Worth documenting; significance can be upgraded later.</dd>
+        <dt>Confidence</dt>
+        <dd>High = primary sources corroborate. Medium = credible secondary only. Low = provisional. Disputed = credible sources disagree.</dd>
+        <dt>Contestation</dt>
+        <dd>Uncontested = no formal challenge. Contested = at least one challenge open. Superseded = replaced by a later entry. Unresolved = dispute still open.</dd>
+      </dl>
+    </details>
 
     {hasSigHistory && (
       <section class="wiki-section">
@@ -254,6 +273,56 @@ const description = `${event.title} — ${event.date}`;
   .rail-stack__type { text-transform: capitalize; }
   .rail-stack__role { margin-left: 3px; }
   .infobox-role { color: var(--color-ink-faint); font-size: 11px; }
+
+  /* Mobile-only epistemic key — the right rail is hidden below 780px,
+     so we duplicate the definitions at the end of the article body. */
+  .mobile-epistemic-key {
+    display: none;
+    margin: 24px 0 0;
+    padding: 14px 16px 16px;
+    background: var(--color-wiki-surface);
+    border: 1px solid var(--color-rule-strong);
+    border-radius: 2px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--color-ink-mid);
+  }
+  .mobile-epistemic-key > summary {
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+    padding: 2px 0;
+  }
+  .mobile-epistemic-key > summary:hover { color: var(--color-wiki-link); }
+  .mobile-epistemic-key[open] > summary { margin-bottom: 10px; }
+  .mobile-epistemic-key dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 6px 14px;
+  }
+  .mobile-epistemic-key dt {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-ink-muted);
+    margin: 0;
+  }
+  .mobile-epistemic-key dd {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 13px;
+    color: var(--color-ink-mid);
+    line-height: 1.45;
+  }
+  @media (max-width: 780px) {
+    .mobile-epistemic-key { display: block; }
+  }
 
   .epistemic-key { display: grid; grid-template-columns: 1fr; gap: 2px 0; margin: 0; }
   .epistemic-key dt {

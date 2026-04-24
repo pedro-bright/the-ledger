@@ -88,6 +88,18 @@ const { title, wide = false } = Astro.props;
     font-size: 11.5px;
   }
 
+  /* Between 1024–1200px the right rail narrows to 240px and the main column
+     tightens; shrink the infobox in step so prose keeps a readable measure. */
+  @media (max-width: 1200px) {
+    .wiki-infobox { width: 240px; margin: 4px 0 18px 24px; }
+    .wiki-infobox--wide { width: 280px; }
+  }
+  /* At 1024px the right rail drops and the main column widens again — the
+     floated infobox is fine, just slightly narrower to leave prose headroom. */
+  @media (max-width: 1024px) {
+    .wiki-infobox { width: 260px; }
+    .wiki-infobox--wide { width: 300px; }
+  }
   /* Below the right-rail breakpoint: become a full-width block above prose. */
   @media (max-width: 780px) {
     .wiki-infobox,

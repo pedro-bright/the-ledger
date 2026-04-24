@@ -236,12 +236,20 @@ export default function Explorer({ events, categories }: Props) {
     return (
       <div className="py-20 px-4 max-w-xl mx-auto text-center">
         <p className="label-eyebrow mb-3">§ Nothing to explore yet</p>
-        <p
-          className="font-display text-2xl font-medium text-ink leading-tight"
-          style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 0, 'WONK' 0" }}
-        >
-          Entries will appear here once content is added.
+        <p className="font-display-subhead text-2xl font-medium text-ink leading-tight mb-4">
+          The ledger is being built.
         </p>
+        <p className="font-serif text-base text-ink-mid leading-relaxed mb-5">
+          Entries appear here as they pass editorial review. Check back shortly, or propose a source tip to help seed the record.
+        </p>
+        <a
+          href="https://github.com/pedro-bright/the-ledger/issues/new?template=source-tip.yml"
+          className="text-sm font-sans text-wiki-link hover:underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Submit a source tip →
+        </a>
       </div>
     );
   }
@@ -251,7 +259,7 @@ export default function Explorer({ events, categories }: Props) {
       {/* Filter panel */}
       <section
         aria-label="Filter controls"
-        className="mb-6 p-5 rounded-sm border border-rule-strong bg-wiki-surface/60 flex flex-col gap-4"
+        className="mb-6 p-5 rounded-sm border border-rule-strong bg-wiki-surface flex flex-col gap-4"
       >
         {/* Search */}
         <div>
@@ -272,7 +280,7 @@ export default function Explorer({ events, categories }: Props) {
             <input
               id="explorer-search"
               type="search"
-              placeholder="Search title, summary, or tag…"
+              placeholder="Search title, summary, or tag — e.g. GPT-4 release"
               aria-label="Search events by title, summary, or tag"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -471,10 +479,7 @@ export default function Explorer({ events, categories }: Props) {
       {/* Results — wiki-native row list */}
       {filtered.length === 0 ? (
         <div className="py-14 px-4 max-w-xl mx-auto text-center">
-          <p
-            className="font-display italic text-lg text-ink-mid mb-2 leading-snug"
-            style={{ fontVariationSettings: "'opsz' 14, 'SOFT' 0, 'WONK' 0" }}
-          >
+          <p className="font-display-text italic text-lg text-ink-mid mb-2 leading-snug">
             No entries match this combination.
           </p>
           <p className="text-sm text-ink-muted mb-5 leading-relaxed font-sans">

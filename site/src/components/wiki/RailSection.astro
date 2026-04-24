@@ -5,11 +5,13 @@ interface Props {
   title: string;
   /** Render title as a link (e.g., Categories → /timeline?category=…). */
   titleHref?: string;
+  /** DOM id for in-page anchors (e.g., "epistemic-key"). */
+  id?: string;
 }
 
-const { title, titleHref } = Astro.props;
+const { title, titleHref, id } = Astro.props;
 ---
-<section class="rail-block">
+<section class="rail-block" id={id}>
   {titleHref ? (
     <h4 class="rail-block__title">
       <a href={titleHref}>{title}</a>

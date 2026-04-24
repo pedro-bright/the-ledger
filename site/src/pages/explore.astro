@@ -84,7 +84,7 @@ const years = Array.from(yearCounts.keys()).sort((a, b) => b - a);
       </div>
       <div>
         <dt><SignificanceFlag level="notable" /></dt>
-        <dd>Worth documenting for the record. Significance can be upgraded later — "wrongness" is tracked.</dd>
+        <dd>Worth documenting for the record. Significance can be upgraded later — past reassessments stay visible in each entry's significance history.</dd>
       </div>
     </dl>
   </aside>
@@ -182,13 +182,15 @@ const years = Array.from(yearCounts.keys()).sort((a, b) => b - a);
   .explore-intro__dismiss {
     background: none;
     border: none;
-    padding: 0;
+    padding: 4px 6px;
+    margin: -4px -6px;
     font-size: 11px;
-    color: var(--color-ink-faint);
+    color: var(--color-ink-mid);
     letter-spacing: 0.02em;
     text-transform: lowercase;
     cursor: pointer;
     transition: color 120ms ease;
+    border-radius: 2px;
   }
   .explore-intro__dismiss:hover {
     color: var(--color-wiki-link);
