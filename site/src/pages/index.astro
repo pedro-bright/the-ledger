@@ -35,8 +35,22 @@ const todayLabel = today.toLocaleDateString('en-US', {
 });
 
 // ─── Today's featured entry ───────────────────────────────────
+// Rotate daily through landmarks (and fall back to majors, then to any
+// event) so the front page actually changes day-to-day. The index is a
+// deterministic function of today's calendar date — same entry for every
+// reader on the same UTC day, then advances at midnight UTC.
 const landmarkEvents = events.filter((e) => e.significance === 'landmark');
-const featured = landmarkEvents[0] || events[0];
+const majorEvents = events.filter((e) => e.significance === 'major');
+const featuredPool =
+  landmarkEvents.length > 0 ? landmarkEvents :
+  majorEvents.length > 0 ? majorEvents :
+  events;
+const daysSinceEpoch = Math.floor(
+  Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) / 86_400_000,
+);
+const featured = featuredPool.length > 0
+  ? featuredPool[daysSinceEpoch % featuredPool.length]
+  : undefined;
 const featuredExcerpt = featured ? getExcerpt(featured.content, 320) : '';
 // Parse ISO date as a local-date (not UTC midnight) so the visible label
 // can't drift off-by-one in negative-offset timezones.
