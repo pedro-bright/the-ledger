@@ -1,6 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
 import Explorer from '../components/Explorer';
+import PageHeader from '../components/wiki/PageHeader.astro';
+import RailSection from '../components/wiki/RailSection.astro';
+import SignificanceFlag from '../components/wiki/SignificanceFlag.astro';
+import CategoryTag from '../components/wiki/CategoryTag.astro';
 import { loadEvents, getCategories, getExcerpt } from '../lib/content';
 
 const events = loadEvents();
@@ -19,63 +23,118 @@ const explorerEvents = events.map((e) => ({
   tags: e.tags,
   threads: e.threads,
 }));
+
+// ─── Rail: per-category counts ─────────────────────────────────
+const categoryCounts = new Map<string, number>();
+for (const e of events) {
+  categoryCounts.set(e.category, (categoryCounts.get(e.category) || 0) + 1);
+}
+
+// ─── Rail: per-significance counts ─────────────────────────────
+const landmarkCount = events.filter((e) => e.significance === 'landmark').length;
+const majorCount = events.filter((e) => e.significance === 'major').length;
+const notableCount = events.filter((e) => e.significance === 'notable').length;
+
+// ─── Rail: per-year counts (newest first) ──────────────────────
+const yearCounts = new Map<number, number>();
+for (const e of events) {
+  const y = new Date(e.date).getFullYear();
+  if (!Number.isNaN(y)) yearCounts.set(y, (yearCounts.get(y) || 0) + 1);
+}
+const years = Array.from(yearCounts.keys()).sort((a, b) => b - a);
 ---
 
-<Base title="Explore" description="Search and filter events in the AI history ledger.">
-  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <div class="mb-10">
-      <p class="label-eyebrow mb-3">§ Search & Filter</p>
-      <h1 class="font-display text-display-sm font-normal text-white mb-4 leading-[1.05]" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">Explore</h1>
-      <p class="font-display italic text-lg text-ledger-text-muted max-w-[58ch] leading-relaxed" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
-        Search, filter, and browse every documented entry in the ledger. Narrow by category, significance, or year.
-      </p>
+<Base layout="index" title="Timeline" description="Search and filter events in the AI history ledger.">
+  <PageHeader
+    eyebrow="§ Timeline"
+    title="Every entry in the ledger"
+    subtitle="Search and filter the full chronicle. Narrow by category, year, significance, or keyword; share the URL to preserve your filters."
+    noRule
+  />
+
+  <!-- First-visit teaching panel — hidden until client JS confirms not-yet-dismissed. -->
+  <aside
+    id="explore-intro"
+    class="explore-intro"
+    hidden
+    aria-label="About the filters"
+  >
+    <div class="explore-intro__head">
+      <p class="label-eyebrow">§ How to read this</p>
+      <button
+        id="explore-intro-dismiss"
+        type="button"
+        class="explore-intro__dismiss font-mono"
+        aria-label="Dismiss intro"
+      >
+        got it ✕
+      </button>
     </div>
-
-    <!-- First-visit teaching panel — hidden until client JS confirms not-yet-dismissed. -->
-    <aside
-      id="explore-intro"
-      class="mb-8 p-5 sm:p-6 rounded-md border border-ledger-border bg-ledger-surface/30"
-      hidden
-      aria-label="About the filters"
-    >
-      <div class="flex items-start justify-between gap-4 mb-3">
-        <p class="label-eyebrow">§ How to read this</p>
-        <button
-          id="explore-intro-dismiss"
-          type="button"
-          class="text-xs font-mono text-ledger-text-dim hover:text-ledger-text transition-colors uppercase tracking-wider"
-          aria-label="Dismiss intro"
-        >
-          got it ✕
-        </button>
+    <p class="explore-intro__lead font-display">
+      Every entry is sourced, dated, and carries epistemic metadata you can filter on. The short guide:
+    </p>
+    <dl class="explore-intro__grid">
+      <div>
+        <dt><SignificanceFlag level="landmark" /></dt>
+        <dd>Fundamentally alters the trajectory. Future textbooks will cover it. 2–5 per year.</dd>
       </div>
-      <p class="font-display italic text-base text-ledger-text-muted mb-4 max-w-[62ch] leading-relaxed" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
-        Every entry is sourced, dated, and carries epistemic metadata you can filter on. The short guide:
-      </p>
-      <dl class="grid sm:grid-cols-3 gap-4 text-sm">
-        <div>
-          <dt class="font-mono text-[10px] uppercase tracking-wider text-amber-400 mb-1">Landmark</dt>
-          <dd class="text-ledger-text-muted leading-snug">
-            Fundamentally alters the trajectory. Future textbooks will cover it. 2–5 per year.
-          </dd>
-        </div>
-        <div>
-          <dt class="font-mono text-[10px] uppercase tracking-wider text-sky-300 mb-1">Major</dt>
-          <dd class="text-ledger-text-muted leading-snug">
-            Meaningfully shifts the landscape. 2–4 per month.
-          </dd>
-        </div>
-        <div>
-          <dt class="font-mono text-[10px] uppercase tracking-wider text-ledger-text-dim mb-1">Notable</dt>
-          <dd class="text-ledger-text-muted leading-snug">
-            Worth documenting for the record. Significance can be upgraded later — "wrongness" is tracked.
-          </dd>
-        </div>
-      </dl>
-    </aside>
+      <div>
+        <dt><SignificanceFlag level="major" /></dt>
+        <dd>Meaningfully shifts the landscape. 2–4 per month.</dd>
+      </div>
+      <div>
+        <dt><SignificanceFlag level="notable" /></dt>
+        <dd>Worth documenting for the record. Significance can be upgraded later — past reassessments stay visible in each entry's significance history.</dd>
+      </div>
+    </dl>
+  </aside>
 
-    <Explorer events={explorerEvents} categories={categories} client:load />
-  </section>
+  <Explorer events={explorerEvents} categories={categories} client:load />
+
+  <!-- ─── Left rail ─── -->
+  <Fragment slot="leftRail">
+    <RailSection title="Browse">
+      <ul class="rail-list">
+        {categories.map((c) => (
+          <li>
+            <a href={`/explore?cat=${c.id}`}>
+              <CategoryTag category={c.id} variant="pip" class="rail-pip" />
+              {c.label}
+            </a>
+            <span class="count">{categoryCounts.get(c.id) || 0}</span>
+          </li>
+        ))}
+      </ul>
+    </RailSection>
+
+    <RailSection title="By significance">
+      <ul class="rail-list">
+        <li>
+          <a href="/explore?sig=landmark">Only landmarks</a>
+          <span class="count">{landmarkCount}</span>
+        </li>
+        <li>
+          <a href="/explore?sig=major">Only major</a>
+          <span class="count">{majorCount}</span>
+        </li>
+        <li>
+          <a href="/explore?sig=notable">Only notable</a>
+          <span class="count">{notableCount}</span>
+        </li>
+      </ul>
+    </RailSection>
+
+    <RailSection title="By year">
+      <ul class="rail-list">
+        {years.map((y) => (
+          <li>
+            <a href={`/explore?year=${y}`}>{y}</a>
+            <span class="count">{yearCounts.get(y) || 0}</span>
+          </li>
+        ))}
+      </ul>
+    </RailSection>
+  </Fragment>
 
   <script is:inline>
     (function () {
@@ -104,3 +163,74 @@ const explorerEvents = events.map((e) => ({
     })();
   </script>
 </Base>
+
+<style>
+  .explore-intro {
+    background: var(--color-wiki-surface);
+    border: 1px solid var(--color-rule-strong);
+    border-radius: 2px;
+    padding: 18px 20px;
+    margin-bottom: 24px;
+  }
+  .explore-intro__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+  .explore-intro__dismiss {
+    background: none;
+    border: none;
+    padding: 4px 6px;
+    margin: -4px -6px;
+    font-size: 11px;
+    color: var(--color-ink-mid);
+    letter-spacing: 0.02em;
+    text-transform: lowercase;
+    cursor: pointer;
+    transition: color 120ms ease;
+    border-radius: 2px;
+  }
+  .explore-intro__dismiss:hover {
+    color: var(--color-wiki-link);
+    text-decoration: underline;
+  }
+  .explore-intro__lead {
+    font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;
+    font-style: italic;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--color-ink-mid);
+    margin: 0 0 14px;
+    max-width: 62ch;
+  }
+  .explore-intro__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px 20px;
+    margin: 0;
+  }
+  .explore-intro__grid > div {
+    min-width: 0;
+  }
+  .explore-intro__grid dt {
+    margin: 0 0 6px;
+  }
+  .explore-intro__grid dd {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--color-ink-mid);
+  }
+  @media (max-width: 640px) {
+    .explore-intro__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  :global(.rail-pip) {
+    margin-right: 6px;
+  }
+</style>

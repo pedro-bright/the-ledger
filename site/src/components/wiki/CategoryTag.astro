@@ -1,0 +1,61 @@
+---
+// Category label with inline color pip. Monospace lowercase — archival data voice.
+// Used in lists, rows, infoboxes.
+interface Props {
+  category?: string;
+  /** Variant: 'inline' (pip + label) or 'pip' (color dot only, title-attr label). */
+  variant?: 'inline' | 'pip';
+  /** Hide the pip and just show the text. */
+  textOnly?: boolean;
+  class?: string;
+}
+
+const { category, variant = 'inline', textOnly = false, class: className = '' } = Astro.props;
+
+// Display name: convert "open-source" → "open source" for natural reading.
+const display = category ? category.replace(/-/g, ' ').replace(/_/g, ' ') : '';
+---
+{category && variant === 'pip' && (
+  <span
+    class={`category-pip category-pip--${category} ${className}`}
+    title={display}
+  ></span>
+)}
+{category && variant === 'inline' && (
+  <span class={`category-tag category-tag--${category} ${className}`}>
+    {!textOnly && <span class={`category-pip category-pip--${category}`} aria-hidden="true"></span>}
+    <span class="category-tag__text">{display}</span>
+  </span>
+)}
+
+<style>
+  .category-tag {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-ink-muted);
+    letter-spacing: 0.02em;
+    text-transform: lowercase;
+    white-space: nowrap;
+  }
+  .category-tag__text {
+    line-height: 1.3;
+  }
+  .category-pip {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    transform: translateY(-1px);
+  }
+  .category-pip--policy       { background: #4338CA; }
+  .category-pip--models       { background: #B45309; }
+  .category-pip--research     { background: #047857; }
+  .category-pip--industry     { background: #6D28D9; }
+  .category-pip--safety       { background: #B91C1C; }
+  .category-pip--culture      { background: #BE185D; }
+  .category-pip--open-source  { background: #0E7490; }
+</style>

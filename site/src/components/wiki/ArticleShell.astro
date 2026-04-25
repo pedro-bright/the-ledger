@@ -1,0 +1,218 @@
+---
+// Article-page shell: breadcrumb → title → subtitle → body (with floated infobox) → footer.
+// Page provides `infobox`, default body, `references`, `seeAlso`, `footer` via slots.
+interface Props {
+  title: string;
+  subtitle?: string;
+  breadcrumb?: Array<{ label: string; href?: string }>;
+  /** Last modified ISO date — shown in the footer line. */
+  lastModified?: string;
+  /** Source file on GitHub (for "View source" editorial transparency). */
+  sourcePath?: string;
+}
+
+const { title, subtitle, breadcrumb = [], lastModified, sourcePath } = Astro.props;
+const hasInfobox = Astro.slots.has('infobox');
+const hasReferences = Astro.slots.has('references');
+const hasSeeAlso = Astro.slots.has('seeAlso');
+const hasFooter = Astro.slots.has('footer');
+---
+<article class="wiki-article">
+  {breadcrumb.length > 0 && (
+    <nav class="wiki-article__breadcrumb" aria-label="Breadcrumb">
+      {breadcrumb.map((crumb, i) => (
+        <Fragment>
+          {i > 0 && <span class="wiki-article__crumb-sep" aria-hidden="true">›</span>}
+          {crumb.href ? (
+            <a href={crumb.href}>{crumb.label}</a>
+          ) : (
+            <span class="wiki-article__crumb-current" aria-current="page">{crumb.label}</span>
+          )}
+        </Fragment>
+      ))}
+    </nav>
+  )}
+
+  <header class="wiki-article__header">
+    <h1 class="wiki-article__title">{title}</h1>
+    {subtitle && <p class="wiki-article__subtitle">{subtitle}</p>}
+  </header>
+
+  <div class="wiki-article__body">
+    {hasInfobox && <slot name="infobox" />}
+    <div class="wiki-article__prose prose">
+      <slot />
+    </div>
+  </div>
+
+  {hasReferences && (
+    <section class="wiki-article__references" aria-labelledby="refs-head">
+      <h2 id="refs-head" class="wiki-article__h2">References</h2>
+      <slot name="references" />
+    </section>
+  )}
+
+  {hasSeeAlso && (
+    <section class="wiki-article__see-also" aria-labelledby="see-also-head">
+      <h2 id="see-also-head" class="wiki-article__h2">See also</h2>
+      <slot name="seeAlso" />
+    </section>
+  )}
+
+  {hasFooter && (
+    <div class="wiki-article__footer-slot">
+      <slot name="footer" />
+    </div>
+  )}
+
+  {(lastModified || sourcePath) && (
+    <footer class="wiki-article__lastmod">
+      {lastModified && (
+        <span>This record last modified <time datetime={lastModified}>{lastModified}</time>.</span>
+      )}
+      {sourcePath && (
+        <Fragment>
+          {' '}
+          <a
+            href={`https://github.com/pedro-bright/the-ledger/blob/main/${sourcePath}`}
+            target="_blank"
+            rel="noopener"
+          >View source on GitHub</a>.
+        </Fragment>
+      )}
+    </footer>
+  )}
+</article>
+
+<style>
+  .wiki-article {
+    max-width: 100%;
+  }
+  .wiki-article__breadcrumb {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--color-ink-faint);
+    margin-bottom: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: baseline;
+  }
+  .wiki-article__breadcrumb a {
+    color: var(--color-wiki-link);
+  }
+  .wiki-article__breadcrumb a:hover { text-decoration: underline; }
+  .wiki-article__crumb-sep {
+    color: var(--color-ink-faint);
+  }
+  .wiki-article__crumb-current {
+    color: var(--color-ink-muted);
+  }
+  .wiki-article__header {
+    border-bottom: 1px solid var(--color-rule-strong);
+    padding-bottom: 14px;
+    margin-bottom: 24px;
+  }
+  .wiki-article__title {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;
+    font-weight: 500;
+    font-size: 2.25rem;
+    line-height: 1.1;
+    letter-spacing: -0.012em;
+    color: var(--color-ink-dim);
+    margin: 0;
+    text-wrap: balance;
+  }
+  .wiki-article__subtitle {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;
+    font-style: italic;
+    font-size: 1.0625rem;
+    line-height: 1.5;
+    color: var(--color-ink-mid);
+    margin: 10px 0 0;
+    max-width: 62ch;
+  }
+  /* The prose block is constrained to 68ch on its own; if infobox floats right,
+     text wraps naturally around it. No width lockdown here. */
+  .wiki-article__body {
+    overflow: visible;
+  }
+  .wiki-article__body::after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+  .wiki-article__prose {
+    max-width: 100%;
+  }
+  .wiki-article__h2 {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 36, 'SOFT' 0, 'WONK' 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--color-ink-dim);
+    margin: 2rem 0 0.625rem;
+    padding-bottom: 0.375rem;
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .wiki-article__references {
+    margin-top: 2.5rem;
+  }
+  .wiki-article__references :global(ol) {
+    padding-left: 1.5rem;
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--color-ink-mid);
+  }
+  .wiki-article__references :global(ol li) {
+    margin-bottom: 8px;
+  }
+  .wiki-article__references :global(a) {
+    color: var(--color-wiki-link);
+    text-decoration: underline;
+    text-decoration-color: rgba(6, 69, 173, 0.35);
+  }
+  .wiki-article__references :global(a:hover) {
+    text-decoration-color: var(--color-wiki-link);
+  }
+  .wiki-article__see-also {
+    margin-top: 2rem;
+  }
+  .wiki-article__see-also :global(ul) {
+    list-style: disc;
+    padding-left: 1.5rem;
+    margin: 0;
+  }
+  .wiki-article__see-also :global(li) {
+    margin-bottom: 4px;
+    font-size: 0.9375rem;
+  }
+  .wiki-article__see-also :global(a) {
+    color: var(--color-wiki-link);
+    text-decoration: underline;
+    text-decoration-color: rgba(6, 69, 173, 0.35);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+  .wiki-article__see-also :global(a:hover) {
+    text-decoration-color: var(--color-wiki-link);
+  }
+  .wiki-article__lastmod {
+    margin-top: 2.5rem;
+    padding-top: 10px;
+    border-top: 1px solid var(--color-rule);
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-style: italic;
+    color: var(--color-ink-faint);
+  }
+  .wiki-article__lastmod a {
+    color: var(--color-wiki-link);
+    font-style: normal;
+  }
+  .wiki-article__lastmod a:hover { text-decoration: underline; }
+</style>

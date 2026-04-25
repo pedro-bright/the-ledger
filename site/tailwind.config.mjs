@@ -1,68 +1,103 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
-  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        ledger: {
-          bg: '#0A0A0F',
-          surface: '#111118',
-          border: '#1A1A2E',
-          'border-light': '#2A2A3E',
-          text: '#E8E4DF',
-          'text-muted': '#9B97A0',
-          'text-dim': '#6B6770',
+        // Core wiki-native palette. Light-first, warm, archival.
+        'page-bg': '#FAFAF7',
+        ink: {
+          DEFAULT: '#14130F',
+          dim: '#0F0E0C',
+          mid: '#3C3731',
+          muted: '#5C564D',
+          faint: '#645E51',
+          soft: '#B8B2A7',
         },
+        rule: {
+          DEFAULT: '#E8E4DA',
+          strong: '#D9D3C5',
+          double: '#C9C0AE',
+          utility: '#E3DECF',
+        },
+        wiki: {
+          link: '#0645AD',
+          'link-visited': '#0B0080',
+          'link-hover': '#3366BB',
+          surface: '#F0EDE4',
+          'surface-strong': '#E8E2D0',
+        },
+        flag: {
+          'landmark-bg': '#FDF2C5',
+          'landmark-text': '#7A5A00',
+          'major-bg': '#DBECF9',
+          'major-text': '#0A4D82',
+          'notable-bg': '#EDEAE3',
+          'notable-text': '#5C564D',
+        },
+        status: {
+          active: '#0A7C32',
+          'active-bg': '#E5F3E9',
+          dormant: '#7A7368',
+          'dormant-bg': '#EDEAE3',
+        },
+        // Legacy aliases — kept remapped to light values so existing pages
+        // compile during the wave-by-wave rewrite. Remove once nothing uses them.
+        ledger: {
+          bg: '#FAFAF7',
+          surface: '#F0EDE4',
+          border: '#E8E4DA',
+          'border-light': '#D9D3C5',
+          text: '#14130F',
+          'text-muted': '#5C564D',
+          'text-dim': '#7A7368',
+        },
+        // Category colors — AA-contrast variants for text on page-bg.
         category: {
-          policy: '#6366F1',
-          models: '#F59E0B',
-          research: '#10B981',
-          industry: '#8B5CF6',
-          safety: '#EF4444',
-          culture: '#EC4899',
-          'open-source': '#06B6D4',
+          policy: '#4338CA',
+          models: '#B45309',
+          research: '#047857',
+          industry: '#6D28D9',
+          safety: '#B91C1C',
+          culture: '#BE185D',
+          'open-source': '#0E7490',
         },
       },
       fontFamily: {
-        // Editorial display — serif for hero, titles, section heads. Fraunces variable with opsz axis.
-        display: ['"Fraunces Variable"', 'Fraunces', 'Iowan Old Style', 'Apple Garamond', 'Georgia', 'Times New Roman', 'serif'],
-        // UI chrome and body — Inter retained for readability in long form.
+        display: ['"Fraunces Variable"', 'Fraunces', 'Iowan Old Style', 'Apple Garamond', 'Georgia', 'serif'],
+        serif: ['"Source Serif 4 Variable"', '"Source Serif 4"', 'Iowan Old Style', 'Georgia', 'serif'],
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        // Metadata, dates, identifiers — the ledger's "data layer" voice.
         mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       fontSize: {
-        // Fluid display sizes for marketing surfaces (hero, page titles).
-        'display-xs': ['clamp(1.75rem, 1.5rem + 1.2vw, 2.5rem)', { lineHeight: '1.12', letterSpacing: '-0.012em' }],
-        'display-sm': ['clamp(2.25rem, 1.8rem + 2vw, 3.25rem)', { lineHeight: '1.08', letterSpacing: '-0.016em' }],
-        'display': ['clamp(2.75rem, 2rem + 3.5vw, 4.5rem)', { lineHeight: '1.04', letterSpacing: '-0.02em' }],
-        'display-lg': ['clamp(3.25rem, 2.25rem + 4.5vw, 5.5rem)', { lineHeight: '1.0', letterSpacing: '-0.024em' }],
+        // Wiki-native: restrained, fixed sizes for predictable long-form rhythm.
+        'display-xl': ['2.5rem', { lineHeight: '1.05', letterSpacing: '-0.018em' }],
+        'display-lg': ['2.25rem', { lineHeight: '1.08', letterSpacing: '-0.014em' }],
+        'display':    ['1.875rem', { lineHeight: '1.12', letterSpacing: '-0.01em' }],
+        'display-sm': ['1.625rem', { lineHeight: '1.18', letterSpacing: '-0.006em' }],
+        'display-xs': ['1.375rem', { lineHeight: '1.22', letterSpacing: '-0.003em' }],
       },
       letterSpacing: {
-        'display-tight': '-0.024em',
-        'mono-wide': '0.08em',
+        'wiki-label': '0.06em',
+        'wiki-meta': '0.04em',
+        'wiki-caps': '0.08em',
       },
       lineHeight: {
-        'prose': '1.75',
-        'display': '1.04',
+        'prose': '1.7',
+        'display': '1.1',
       },
       maxWidth: {
-        'prose': '65ch',
-        'reading': '68ch',
+        prose: '68ch',
+        article: '72ch',
+        reading: '65ch',
       },
       animation: {
-        'fade-in': 'fadeIn 0.5s ease-out forwards',
-        'slide-up': 'slideUp 0.4s ease-out forwards',
+        'fade-in': 'fadeIn 0.4s ease-out forwards',
       },
       keyframes: {
         fadeIn: {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
-        },
-        slideUp: {
-          '0%': { opacity: '0', transform: 'translateY(12px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
         },
       },
     },

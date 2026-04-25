@@ -1,78 +1,186 @@
 ---
 import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/wiki/PageHeader.astro';
+import RailSection from '../../components/wiki/RailSection.astro';
 import { loadActors, loadEvents, buildActorEventMap } from '../../lib/content';
 
 const actors = loadActors();
 const events = loadEvents();
 const actorEventMap = buildActorEventMap(events);
 
-// Group by type
-const grouped = actors.reduce<Record<string, typeof actors>>((acc, actor) => {
-  const type = actor.type || 'organization';
-  if (!acc[type]) acc[type] = [];
-  acc[type].push(actor);
-  return acc;
-}, {});
+type ActorType = 'company' | 'government' | 'research-lab' | 'individual' | 'organization';
 
-// Sort each group by event count desc
-for (const type in grouped) {
-  grouped[type].sort((a, b) => (actorEventMap.get(b.id)?.length || 0) - (actorEventMap.get(a.id)?.length || 0));
+const grouped: Record<string, typeof actors> = {};
+for (const a of actors) {
+  const t = a.type || 'organization';
+  if (!grouped[t]) grouped[t] = [];
+  grouped[t].push(a);
 }
 
-const typeOrder = ['company', 'research-lab', 'government', 'individual', 'organization'];
-const typeLabels: Record<string, string> = {
+// Alphabetical order within each group
+for (const t in grouped) {
+  grouped[t].sort((a, b) => a.name.localeCompare(b.name));
+}
+
+const typeOrder: ActorType[] = ['company', 'research-lab', 'government', 'individual', 'organization'];
+const typePlural: Record<string, string> = {
   company: 'Companies',
-  'research-lab': 'Research Labs',
+  'research-lab': 'Research labs',
   government: 'Governments',
   individual: 'Individuals',
   organization: 'Organizations',
 };
+const typeAnchor: Record<string, string> = {
+  company: 'companies',
+  'research-lab': 'research-labs',
+  government: 'governments',
+  individual: 'individuals',
+  organization: 'organizations',
+};
+
+const presentTypes = typeOrder.filter((t) => grouped[t] && grouped[t].length > 0);
 ---
 
-<Base title="Actors" description="Organizations, governments, research labs, and individuals shaping AI history.">
-  <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="mb-10">
-      <p class="label-eyebrow mb-3">§ Actors</p>
-      <h1 class="font-display text-display-sm font-normal text-white mb-4 leading-[1.05]" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
-        Who shapes AI&nbsp;history
-      </h1>
-      <p class="font-display italic text-lg text-ledger-text-muted max-w-[58ch] leading-relaxed" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
-        {actors.length} actors across {Object.keys(grouped).length} types — companies, governments, research labs, and individuals tracked across events.
-      </p>
-    </div>
+<Base
+  layout="index"
+  title="Actors"
+  description="Companies, governments, research labs, and individuals who shape AI history."
+>
+  <PageHeader
+    eyebrow="§ Actors"
+    title="Actors in the ledger"
+    subtitle="Companies, governments, research labs, and individuals who shape AI history. Each is linked to the entries they appear in."
+  />
 
-    {typeOrder.filter((t) => grouped[t]).map((type) => (
-      <section class="mb-12">
-        <div class="flex items-baseline gap-3 mb-5 pb-2 border-b border-ledger-border">
-          <h2 class="font-display text-xl font-medium text-white" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
-            {typeLabels[type] || type}
-          </h2>
-          <span class="font-mono text-xs text-ledger-text-dim">({grouped[type].length})</span>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {grouped[type].map((actor) => {
-            const count = actorEventMap.get(actor.id)?.length || 0;
-            return (
-              <a
-                href={`/actors/${actor.id}`}
-                class="group block p-4 rounded-md border border-ledger-border bg-ledger-surface/30 hover:bg-ledger-surface/60 hover:border-ledger-border-light transition-all"
-              >
-                <div class="flex items-start justify-between gap-3 mb-1">
-                  <h3 class="text-base font-semibold text-ledger-text group-hover:text-white transition-colors">
-                    {actor.name}
-                  </h3>
-                  <span class="flex-shrink-0 text-xs font-mono text-ledger-text-dim">
-                    {count}
-                  </span>
-                </div>
-                {actor.founded && (
-                  <p class="text-xs font-mono text-ledger-text-dim">Founded {actor.founded}</p>
-                )}
-              </a>
-            );
-          })}
-        </div>
-      </section>
-    ))}
-  </section>
+  <p class="actors-stats font-mono">
+    <span>{actors.length} actors</span>
+    <span class="actors-stats__sep" aria-hidden="true">·</span>
+    <span>{presentTypes.length} types</span>
+    <span class="actors-stats__sep" aria-hidden="true">·</span>
+    <span>{events.length} entries indexed</span>
+  </p>
+
+  {presentTypes.map((t) => (
+    <section class="actors-group" id={typeAnchor[t]}>
+      <h2
+        class="actors-group__head font-display"
+        style="font-variation-settings:'opsz' 36, 'SOFT' 0, 'WONK' 0;"
+      >
+        {typePlural[t] || t}
+        <span class="actors-group__count font-mono">{grouped[t].length}</span>
+      </h2>
+      <ul class="actors-list">
+        {grouped[t].map((a) => {
+          const count = actorEventMap.get(a.id)?.length || 0;
+          return (
+            <li class="actors-row">
+              <a class="actors-row__name" href={`/actors/${a.id}`}>{a.name}</a>
+              {a.aliases && a.aliases.length > 0 && (
+                <span class="actors-row__alias font-mono">(aka {a.aliases.join(', ')})</span>
+              )}
+              <span class="actors-row__count font-mono">{count} {count === 1 ? 'entry' : 'entries'}</span>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  ))}
+
+  <Fragment slot="leftRail">
+    <RailSection title="Navigate">
+      <ul class="rail-list rail-list--plain">
+        <li><a href="/">Main page</a></li>
+        <li><a href="/explore">Timeline</a></li>
+        <li><a href="/threads">Threads</a></li>
+        <li><a href="/controversies">Controversies</a></li>
+        <li><a href="/actors">Actors</a></li>
+        <li><a href="/graph">Graph</a></li>
+        <li><a href="/about">About</a></li>
+      </ul>
+    </RailSection>
+
+    <RailSection title="By type">
+      <ul class="rail-list">
+        {presentTypes.map((t) => (
+          <li>
+            <a href={`#${typeAnchor[t]}`}>{typePlural[t]}</a>
+            <span class="count">{grouped[t].length}</span>
+          </li>
+        ))}
+      </ul>
+    </RailSection>
+  </Fragment>
 </Base>
+
+<style>
+  .actors-stats {
+    font-size: 12px;
+    color: var(--color-ink-faint);
+    letter-spacing: 0.04em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: -14px 0 24px;
+  }
+  .actors-stats__sep { color: var(--color-rule-strong); }
+
+  .actors-group {
+    margin: 0 0 32px;
+    scroll-margin-top: 20px;
+  }
+  .actors-group__head {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--color-ink-dim);
+    margin: 0 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--color-rule);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .actors-group__count {
+    font-size: 12px;
+    color: var(--color-ink-faint);
+    letter-spacing: 0.02em;
+    font-weight: 400;
+  }
+
+  .actors-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .actors-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px dotted var(--color-rule);
+    line-height: 1.45;
+    flex-wrap: wrap;
+  }
+  .actors-row:last-child { border-bottom: none; }
+  .actors-row__name {
+    flex: 0 1 auto;
+    font-family: var(--font-serif);
+    font-size: 0.9375rem;
+    color: var(--color-wiki-link);
+  }
+  .actors-row__name:hover { text-decoration: underline; }
+  .actors-row__name:visited { color: var(--color-wiki-link-visited); }
+  .actors-row__alias {
+    font-size: 11.5px;
+    color: var(--color-ink-faint);
+    letter-spacing: 0.02em;
+    flex: 0 1 auto;
+  }
+  .actors-row__count {
+    margin-left: auto;
+    font-size: 11.5px;
+    color: var(--color-ink-faint);
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+  }
+</style>

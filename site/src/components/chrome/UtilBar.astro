@@ -1,0 +1,113 @@
+---
+// Wiki-style utility bar: namespace tabs on the left, account/meta actions on the right.
+// Sits at the very top of every page.
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isArticleContext =
+  currentPath === '/' ||
+  currentPath.startsWith('/events') ||
+  currentPath.startsWith('/threads') ||
+  currentPath.startsWith('/controversies') ||
+  currentPath.startsWith('/actors');
+const isDiscussionContext = currentPath.startsWith('/about');
+---
+<div class="wiki-utilbar">
+  <div class="wiki-utilbar__inner">
+    <nav class="wiki-utilbar__tabs" aria-label="Namespace">
+      <a href="/" class="wiki-utilbar__tab" data-active={isArticleContext}>Article</a>
+      <a href="/about" class="wiki-utilbar__tab" data-active={isDiscussionContext}>Discussion</a>
+      <a
+        href="https://github.com/pedro-bright/the-ledger/commits/main"
+        target="_blank"
+        rel="noopener"
+        class="wiki-utilbar__tab"
+      >History</a>
+      <a
+        href="https://github.com/pedro-bright/the-ledger/blob/main/CONTRIBUTING.md"
+        target="_blank"
+        rel="noopener"
+        class="wiki-utilbar__tab"
+      >Contribute</a>
+    </nav>
+    <div class="wiki-utilbar__meta">
+      <a href="/feed.xml" class="wiki-utilbar__link">RSS</a>
+      <span aria-hidden="true" class="wiki-utilbar__sep">·</span>
+      <a
+        href="https://github.com/pedro-bright/the-ledger"
+        target="_blank"
+        rel="noopener"
+        class="wiki-utilbar__link"
+      >GitHub</a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .wiki-utilbar {
+    background: var(--color-wiki-surface);
+    border-bottom: 1px solid var(--color-rule);
+    font-family: var(--font-sans);
+    font-size: 13px;
+  }
+  .wiki-utilbar__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    min-height: 34px;
+  }
+  .wiki-utilbar__tabs {
+    display: flex;
+  }
+  .wiki-utilbar__tab {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 14px;
+    color: var(--color-ink-muted);
+    border-right: 1px solid #E3DECF;
+    transition: color 120ms ease, background-color 120ms ease;
+  }
+  .wiki-utilbar__tab:first-child {
+    border-left: 1px solid #E3DECF;
+  }
+  .wiki-utilbar__tab[data-active="true"] {
+    background: var(--color-page-bg);
+    color: var(--color-ink);
+    font-weight: 600;
+    margin-bottom: -1px;
+    border-bottom: 1px solid var(--color-page-bg);
+  }
+  .wiki-utilbar__tab:hover {
+    color: var(--color-wiki-link);
+    text-decoration: none;
+  }
+  .wiki-utilbar__meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-ink-faint);
+  }
+  .wiki-utilbar__sep {
+    color: var(--color-ink-faint);
+  }
+  .wiki-utilbar__link {
+    color: var(--color-ink-muted);
+    transition: color 120ms ease;
+  }
+  .wiki-utilbar__link:hover {
+    color: var(--color-wiki-link);
+    text-decoration: underline;
+  }
+  @media (max-width: 780px) {
+    .wiki-utilbar__inner { padding: 0 12px; min-height: 38px; }
+    .wiki-utilbar__tab { padding: 9px 10px; font-size: 12px; }
+    .wiki-utilbar__meta { font-size: 12px; }
+  }
+  @media (max-width: 480px) {
+    .wiki-utilbar__inner { padding: 0 8px; gap: 4px; min-height: 38px; }
+    .wiki-utilbar__tab { padding: 9px 8px; font-size: 11.5px; }
+    .wiki-utilbar__meta { gap: 6px; font-size: 11.5px; }
+    .wiki-utilbar__meta .wiki-utilbar__sep { display: none; }
+  }
+</style>

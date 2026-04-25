@@ -1,0 +1,71 @@
+name: E2E & Content Parity
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  e2e:
+    name: Build, Parity, and Playwright
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install site dependencies
+        working-directory: site
+        run: npm ci
+
+      - name: Install Playwright browsers
+        working-directory: site
+        run: npx playwright install --with-deps chromium
+
+      - name: Run content validation
+        run: npm run validate
+
+      - name: Build graph and feeds
+        run: |
+          npm run build-graph
+          npm run generate-feed
+          mkdir -p site/public
+          cp graph.json site/public/
+          cp feed.xml rss.xml site/public/ 2>/dev/null || true
+
+      - name: Build site
+        working-directory: site
+        run: npm run build
+
+      - name: Run content parity check
+        run: npm run test:parity
+
+      - name: Run dark-leak check
+        run: npm run test:no-dark-leaks
+
+      - name: Run Playwright tests
+        working-directory: site
+        run: |
+          if [ -d "tests" ]; then
+            npx playwright test
+          else
+            echo "No site/tests/ directory found — skipping Playwright tests."
+          fi
+
+      - name: Upload Playwright test-results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: site/test-results/
+          retention-days: 14
+          if-no-files-found: ignore

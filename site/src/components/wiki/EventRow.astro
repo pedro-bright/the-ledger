@@ -1,0 +1,95 @@
+---
+// Event row — single line in a chronicle list. Date + category pip + title + flag.
+// Used in homepage timeline, rail Recent entries, actor event lists, etc.
+import CategoryTag from './CategoryTag.astro';
+import SignificanceFlag from './SignificanceFlag.astro';
+
+interface Props {
+  event: {
+    id: string;
+    slug: string;
+    title: string;
+    date: string;
+    category: string;
+    significance?: 'landmark' | 'major' | 'notable';
+  };
+  /** Hide the date (useful when list is grouped by date already). */
+  hideDate?: boolean;
+  /** Hide the category tag (e.g., when grouping by category). */
+  hideCategory?: boolean;
+  /** Hide the significance flag. */
+  hideFlag?: boolean;
+  /** Compact spacing — use for dense rails. */
+  compact?: boolean;
+}
+
+const { event, hideDate = false, hideCategory = false, hideFlag = false, compact = false } = Astro.props;
+const href = `/events/${event.slug || event.id}`;
+---
+<li class={`event-row${compact ? ' event-row--compact' : ''}`}>
+  {!hideDate && (
+    <time class="event-row__date" datetime={event.date}>{event.date}</time>
+  )}
+  {!hideCategory && (
+    <CategoryTag category={event.category} variant="pip" class="event-row__pip" />
+  )}
+  <a href={href} class="event-row__title">{event.title}</a>
+  {!hideFlag && event.significance && (
+    <SignificanceFlag level={event.significance} compact={compact} />
+  )}
+</li>
+
+<style>
+  .event-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 6px 0;
+    line-height: 1.45;
+    border-bottom: 1px dotted var(--color-rule);
+  }
+  .event-row:last-child {
+    border-bottom: none;
+  }
+  .event-row--compact {
+    padding: 3px 0;
+    gap: 8px;
+    border-bottom: none;
+  }
+  .event-row__date {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-ink-faint);
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+    min-width: 6.5em;
+  }
+  .event-row__pip {
+    flex-shrink: 0;
+    transform: translateY(-2px);
+  }
+  .event-row__title {
+    flex: 1 1 auto;
+    font-family: var(--font-serif);
+    font-size: 0.9375rem;
+    color: var(--color-wiki-link);
+    min-width: 0;
+  }
+  .event-row__title:hover { text-decoration: underline; }
+  .event-row__title:visited { color: var(--color-wiki-link-visited); }
+  .event-row--compact .event-row__title {
+    font-size: 13.5px;
+  }
+  @media (max-width: 780px) {
+    .event-row {
+      flex-wrap: wrap;
+      row-gap: 4px;
+      max-width: 100%;
+    }
+    .event-row__date { flex: 0 0 auto; min-width: 0; }
+    .event-row__title { flex: 1 1 100%; min-width: 0; }
+  }
+  @media (max-width: 480px) {
+    .event-row__date { font-size: 11.5px; }
+  }
+</style>

@@ -1,0 +1,107 @@
+name: Preview Deploy
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+jobs:
+  preview:
+    name: Build & Deploy PR Preview
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Build graph
+        run: |
+          npm run build-graph
+          mkdir -p site/public
+          cp graph.json site/public/
+
+      - name: Generate feeds
+        run: |
+          npm run generate-feed
+          mkdir -p site/public
+          cp feed.xml rss.xml site/public/ 2>/dev/null || true
+
+      - name: Install site dependencies
+        working-directory: site
+        run: npm install
+
+      - name: Build site
+        working-directory: site
+        run: npm run build
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Deploy preview to Vercel
+        id: deploy
+        working-directory: site
+        run: |
+          url=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} --yes dist/)
+          if [[ -z "$url" || "$url" != https* ]]; then
+            echo "Vercel did not return a preview URL" >&2
+            exit 1
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "Deployed preview: $url"
+
+      - name: Comment preview URL on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const url = '${{ steps.deploy.outputs.url }}';
+            const marker = '<!-- preview-deploy-comment -->';
+            const body = [
+              marker,
+              '## Preview deploy',
+              `🔍 ${url}`,
+              '',
+              `Built from \`${context.sha.slice(0, 7)}\`. Re-runs on every push to this PR.`,
+            ].join('\n');
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              per_page: 100,
+            });
+            const existing = comments.find((c) => c.body && c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }

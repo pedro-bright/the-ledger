@@ -1,0 +1,54 @@
+---
+// Rail sidebar section: small H4 title + free-form content.
+// Used inside Base's leftRail / rightRail slots.
+interface Props {
+  title: string;
+  /** Render title as a link (e.g., Categories → /timeline?category=…). */
+  titleHref?: string;
+  /** DOM id for in-page anchors (e.g., "epistemic-key"). */
+  id?: string;
+}
+
+const { title, titleHref, id } = Astro.props;
+---
+<section class="rail-block" id={id}>
+  {titleHref ? (
+    <h4 class="rail-block__title">
+      <a href={titleHref}>{title}</a>
+    </h4>
+  ) : (
+    <h4 class="rail-block__title">{title}</h4>
+  )}
+  <div class="rail-block__body">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .rail-block__title a {
+    color: inherit;
+  }
+  .rail-block__title a:hover {
+    color: var(--color-wiki-link);
+    text-decoration: underline;
+  }
+  .rail-block__body :global(.rail-list a) {
+    color: var(--color-wiki-link);
+  }
+  .rail-block__body :global(.rail-list a:hover) {
+    text-decoration: underline;
+  }
+  .rail-block__body :global(p) {
+    margin: 0 0 8px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--color-ink-mid);
+  }
+  .rail-block__body :global(p:last-child) { margin-bottom: 0; }
+  .rail-block__body :global(em) {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;
+    font-style: italic;
+    color: var(--color-ink-mid);
+  }
+</style>

@@ -1,132 +1,208 @@
 ---
 import Base from '../layouts/Base.astro';
+import PageHeader from '../components/wiki/PageHeader.astro';
+
+const currentYear = new Date().getFullYear();
 ---
 
-<Base title="About" description="About The Ledger — an open-source epistemic ledger of AI history.">
-  <article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <div class="mb-14">
-      <p class="label-eyebrow mb-3">§ About</p>
-      <h1 class="font-display text-display-sm font-normal text-white mb-5 leading-[1.05]" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
-        An epistemic ledger of AI history
-      </h1>
-      <p class="font-display italic text-xl text-ledger-text-muted leading-relaxed max-w-[58ch]" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
-        The Ledger tracks AI history with epistemic rigor — recording not just what happened, but how our understanding of what happened changes over time.
-      </p>
-    </div>
+<Base
+  layout="full"
+  title="About"
+  description="About The Ledger — an open-source epistemic ledger of AI history."
+>
+  <PageHeader
+    eyebrow="§ About the Ledger"
+    title="About"
+    subtitle="A durable, sourced record of AI history — and a commitment to being wrong in public."
+  />
 
-    <div class="prose max-w-none">
-      <h2>Why This Exists</h2>
-      <p>
-        The AI field's history is being lost in ephemeral, scattered sources. Hot takes on Twitter,
-        newsletter archives behind paywalls, press releases that vanish. The Ledger is a machine for
-        watching collective understanding evolve.
-      </p>
-      <p>
-        We are not a news aggregator or encyclopedia. We track events, connect them into narrative threads,
-        preserve contestability, and make "here's what we got wrong" a first-class feature.
-      </p>
+  <article class="prose about-prose">
+    <h2 id="what-this-is">What this is</h2>
+    <p>
+      The Ledger is an open-source archival record of AI history. It tracks events,
+      narrative threads, controversies, and the retrospective reinterpretations that
+      change how we understand past moments. Every claim is sourced; every source is
+      inspectable; every entry is immutable once published.
+    </p>
+    <p>
+      It is not a news aggregator, a wiki, or an encyclopedia. Hot takes, press
+      releases, and ephemeral commentary erode quickly. The Ledger is an attempt at
+      something slower and more durable: a shared reference surface for researchers,
+      journalists, policy people, and engineers who need the field's history to hold
+      up under scrutiny.
+    </p>
+    <blockquote>
+      History is written by the present. We write it as it happens — then watch
+      ourselves be wrong.
+    </blockquote>
 
-      <h2>Editorial Principles</h2>
-      <ul>
-        <li>
-          <strong>No silent rewrites.</strong> Events are immutable once published. Updates happen via
-          significance history, revisions, and supersession — never silent edits. Git history is the audit trail.
-        </li>
-        <li>
-          <strong>Contestability by default.</strong> Every substantive claim has a challenge window
-          and a visible contestation status. Disagreement is always possible, never forced.
-        </li>
-        <li>
-          <strong>Claims ≠ Facts.</strong> Claims are attributed, dated, and contestable. Factual
-          assertions require sources. Analysis is always labeled as analysis.
-        </li>
-        <li>
-          <strong>Time awareness.</strong> All interpretation is timestamped. Wrongness is a feature,
-          not a bug. We track belief decay, not errors.
-        </li>
-        <li>
-          <strong>Source primacy.</strong> Primary sources over commentary. Archived URLs mandatory
-          for primary sources.
-        </li>
-        <li>
-          <strong>Pluralism.</strong> Minority viewpoints are documented, not deleted.
-        </li>
-      </ul>
+    <hr class="wiki-hr" />
 
-      <h2>How It Works</h2>
-      <p>
-        The Ledger has two layers over the same data:
-      </p>
-      <ol>
-        <li>
-          <strong>Canonical Layer</strong> — The "current best understanding" view. This is what
-          readers see first. Clean, legible, citable.
-        </li>
-        <li>
-          <strong>Ledger Layer</strong> — The immutable audit trail. All assertions, disagreements,
-          and revisions are preserved. History is one click away.
-        </li>
-      </ol>
+    <h2 id="how-it-works">How it works</h2>
+    <p>
+      The Ledger has two layers over the same data. The <strong>ledger layer</strong>
+      is an immutable, append-only record — every assertion, disagreement, and revision
+      is preserved; git history is the audit trail. The <strong>canonical layer</strong>
+      is the "current best understanding" view — cleaned up, cross-referenced, and
+      legible. Readers see canonical by default; provenance is always one click away.
+    </p>
 
-      <h2>Content Types</h2>
-      <ul>
-        <li><strong>Events</strong> — Individual happenings with structured metadata, sources, and confidence levels.</li>
-        <li><strong>Threads</strong> — Narrative arcs connecting events. Each has a signed canonical synthesis.</li>
-        <li><strong>Controversies</strong> — Multi-axis disagreement tracking with documented positions.</li>
-        <li><strong>Significance + Contestation tracking</strong> — Every event carries a significance level (landmark/major/notable) that can be upgraded as understanding shifts, plus a contestation status that surfaces ongoing disagreement.</li>
-      </ul>
+    <h3 id="progressive-formalization">Progressive formalization</h3>
+    <p>
+      Entries improve in tiers rather than springing into being fully formed:
+    </p>
+    <ul>
+      <li><strong>Tier 0</strong> — anyone can submit a source and a claim via a GitHub issue.</li>
+      <li><strong>Tier 1</strong> — the curator normalizes the submission into a structured event with metadata, confidence, and significance.</li>
+      <li><strong>Tier 2</strong> — specialists enrich entries by connecting them to threads, opening controversies, and signing canonical syntheses.</li>
+    </ul>
 
-      <h2>Significance Framework</h2>
-      <ul>
-        <li><strong>Landmark</strong> (~2-5/year) — Fundamentally alters AI trajectory. Future textbooks will cover these.</li>
-        <li><strong>Major</strong> (~2-4/month) — Meaningfully shifts the landscape.</li>
-        <li><strong>Notable</strong> (~5-10/week) — Worth documenting for the record.</li>
-      </ul>
-      <p>
-        Significance can be upgraded over time. The upgrade is tracked and surfaced —
-        enabling historical humility: "We thought this was minor. We were wrong."
-      </p>
+    <h3 id="contestability">Contestability</h3>
+    <p>
+      Every substantive claim has a challenge window and a visible contestation status.
+      Disagreement is always possible; "uncontested" is a valid state, not an aspiration.
+      Claims are attributed, dated, and inspectable; factual assertions require sources;
+      analysis is always labeled as analysis.
+    </p>
 
-      <h2>How to Contribute</h2>
-      <p>
-        The Ledger is curator-led at launch. The contribution model is tiered:
-      </p>
-      <ul>
-        <li><strong>Tier 0 — Active.</strong> Anyone can drop a source + claim via a <a href="https://github.com/pedro-bright/the-ledger/issues/new?template=source-tip.yml">GitHub issue</a>. The curator turns it into a structured event. This is the highest-leverage way to help.</li>
-        <li><strong>Tier 1 — Active.</strong> The curator normalizes submissions, writes summaries, attaches sources, and assigns significance.</li>
-        <li><strong>Tier 2 — Roadmap.</strong> Trusted contributors will eventually add thread connections, controversy positions, and signed syntheses. Activates once 2-3 collaborators are committed to the editorial standards.</li>
-        <li><strong>Tier 3 — Roadmap.</strong> An editorial board (3-5 rotating members) governs constitution and schema changes. Activates as the project scales.</li>
-      </ul>
-      <p>
-        See the <a href="https://github.com/pedro-bright/the-ledger/blob/main/CONTRIBUTING.md">Contributing Guide</a> for full process.
-      </p>
+    <h3 id="significance-upgrades">Significance upgrades</h3>
+    <p>
+      Events carry a significance level — <em>landmark</em>, <em>major</em>, or
+      <em>notable</em> — that can be upgraded over time. The upgrade is tracked and
+      surfaced rather than silently corrected: "we thought this was minor in 2024; we
+      were wrong." Wrongness is a first-class feature, not a bug.
+    </p>
 
-      <h2>Roadmap</h2>
-      <p>
-        The constitution describes content types that aren't yet active on the site:
-      </p>
-      <ul>
-        <li><strong>Standalone syntheses</strong> — Currently each thread embeds its own canonical synthesis. Once threads outgrow that, syntheses will move to dedicated documents under <code>content/syntheses/</code>.</li>
-        <li><strong>Formal challenges + resolutions</strong> — Schema and directories exist (<code>content/challenges/</code>, <code>content/resolutions/</code>); the workflow activates once the editorial board does.</li>
-        <li><strong>Editorial memos</strong> — Public-facing notes on significant editorial decisions (significance upgrades, contestation outcomes).</li>
-        <li><strong>Perspectives</strong> — Quarterly thematic essays.</li>
-        <li><strong>Graph visualization deepening</strong> — The relationship graph ships at launch as force-directed view; planned filters: by year, by category, by actor degree.</li>
-      </ul>
+    <hr class="wiki-hr" />
 
-      <h2>License</h2>
-      <p>
-        All content is licensed under
-        <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">
-          Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
-        </a>.
-        Attribution required, share-alike.
-      </p>
+    <h2 id="who-runs-it">Who runs it</h2>
+    <p>
+      The Ledger is curated by <strong>Terry Tang</strong>. Curator-led means named
+      responsibility: syntheses carry the curator's name, revisions carry dates, and
+      editorial decisions are public. The project launched as a single-curator
+      framework with an explicit roadmap toward a rotating editorial board as
+      contributors onboard to the standards.
+    </p>
+    <p>
+      All content is licensed under
+      <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">
+        Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+      </a>.
+      Contributions happen on GitHub — source tips, corrections, and challenges are all
+      welcome through the repository's issue templates.
+    </p>
+    <ul>
+      <li>
+        <a
+          href="https://github.com/pedro-bright/the-ledger/issues/new?template=source-tip.yml"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Submit a source tip</a>
+      </li>
+      <li>
+        <a
+          href="https://github.com/pedro-bright/the-ledger/blob/main/CONTRIBUTING.md"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Contribution guide</a>
+      </li>
+      <li>
+        <a
+          href="https://github.com/pedro-bright/the-ledger"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Repository on GitHub</a>
+      </li>
+    </ul>
 
-      <hr />
+    <hr class="wiki-hr" />
 
-      <p class="text-ledger-text-dim italic">
-        "History is written by the present. We write it as it happens — then watch ourselves be wrong."
-      </p>
-    </div>
+    <h2 id="the-constitution">The constitution</h2>
+    <p>
+      The editorial framework — on immutability, contestability, source primacy, time
+      awareness, and pluralism — is codified in the project's constitution. The long
+      version lives in the repo alongside the evidence standards and style guide.
+    </p>
+    <ul>
+      <li>
+        <a
+          href="https://github.com/pedro-bright/the-ledger/blob/main/editorial/constitution.md"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Editorial constitution</a>
+      </li>
+      <li>
+        <a
+          href="https://github.com/pedro-bright/the-ledger/blob/main/editorial/evidence-standards.md"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Evidence standards</a>
+      </li>
+      <li>
+        <a
+          href="https://github.com/pedro-bright/the-ledger/blob/main/editorial/style-guide.md"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Style guide</a>
+      </li>
+    </ul>
+
+    <hr class="wiki-hr" />
+
+    <h2 id="ai-assistance">AI assistance disclosure</h2>
+    <p>
+      Some entries are marked <code>draft_assistance: ai-assisted</code> in their
+      frontmatter. This means the initial draft was produced with AI help; every such
+      entry is reviewed, edited, and sourced by the curator before publication.
+      AI-assisted drafting is a tool, not a byline — the curator is accountable for
+      every published claim.
+    </p>
+    <ul>
+      <li>
+        <a
+          href="https://github.com/pedro-bright/the-ledger/blob/main/editorial/ai-assistance.md"
+          target="_blank"
+          rel="noopener noreferrer"
+        >AI assistance policy</a>
+      </li>
+    </ul>
+
+    <hr class="wiki-hr" />
+
+    <h2 id="colophon">Thanks &amp; colophon</h2>
+    <p>
+      Built with <a href="https://astro.build" target="_blank" rel="noopener noreferrer">Astro</a>,
+      styled with <a href="https://tailwindcss.com" target="_blank" rel="noopener noreferrer">Tailwind</a>,
+      typeset with <em>Fraunces</em> (display), <em>Source Serif 4</em> (body),
+      <em>Inter</em> (chrome), and <em>JetBrains Mono</em> (metadata).
+      Hosted on <a href="https://vercel.com" target="_blank" rel="noopener noreferrer">Vercel</a>.
+      Force-directed relationship graph powered by
+      <a href="https://github.com/vasturiano/react-force-graph" target="_blank" rel="noopener noreferrer">react-force-graph</a>.
+    </p>
+    <p>
+      Thanks to everyone who has submitted tips, flagged errors, or questioned a claim.
+      The ledger is better for it.
+    </p>
   </article>
+
+  <p class="about-colophon font-mono">
+    Version 0.1 · <time datetime={`${currentYear}`}>{currentYear}</time> · Licensed CC-BY-SA-4.0
+  </p>
 </Base>
+
+<style>
+  /* Keep the article readable without fighting the full-layout 72ch cap.
+     .prose already sets its own max-width: 68ch; the wrapper stays centered. */
+  .about-prose {
+    margin: 0 auto;
+  }
+  .about-colophon {
+    margin: 40px auto 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-rule);
+    font-size: 11px;
+    color: var(--color-ink-faint);
+    letter-spacing: 0.04em;
+    max-width: 68ch;
+  }
+</style>

@@ -1,6 +1,10 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { loadActors, loadEvents, buildActorEventMap, getCategoryColor } from '../../lib/content';
+import ArticleShell from '../../components/wiki/ArticleShell.astro';
+import Infobox from '../../components/wiki/Infobox.astro';
+import EventRow from '../../components/wiki/EventRow.astro';
+import RailSection from '../../components/wiki/RailSection.astro';
+import { loadActors, loadEvents, buildActorEventMap } from '../../lib/content';
 
 export function getStaticPaths() {
   const actors = loadActors();
@@ -12,119 +16,220 @@ export function getStaticPaths() {
 
 const { actor } = Astro.props;
 const events = loadEvents();
+const allActors = loadActors();
 const actorEventMap = buildActorEventMap(events);
 const actorEvents = actorEventMap.get(actor.id) || [];
 
-// Group events by year
-const byYear = actorEvents.reduce<Record<number, typeof actorEvents>>((acc, evt) => {
-  const year = new Date(evt.date).getFullYear();
-  if (!acc[year]) acc[year] = [];
-  acc[year].push(evt);
-  return acc;
-}, {});
-const years = Object.keys(byYear).map(Number).sort((a, b) => b - a);
+// Group events by year desc; within each year, sort by date desc
+const byYear = new Map<number, typeof actorEvents>();
+for (const e of actorEvents) {
+  const y = new Date(e.date).getFullYear();
+  if (!byYear.has(y)) byYear.set(y, []);
+  byYear.get(y)!.push(e);
+}
+const years = [...byYear.keys()].sort((a, b) => b - a);
+for (const y of years) {
+  byYear.get(y)!.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}
 
-const typeLabels: Record<string, string> = {
+// Top categories tally
+const catCounts = new Map<string, number>();
+for (const e of actorEvents) {
+  catCounts.set(e.category, (catCounts.get(e.category) || 0) + 1);
+}
+const topCategories = [...catCounts.entries()]
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 5);
+
+const typeDisplay: Record<string, string> = {
+  company: 'company',
+  'research-lab': 'research laboratory',
+  government: 'government body',
+  individual: 'individual',
+  organization: 'organization',
+};
+const typeLabel: Record<string, string> = {
   company: 'Company',
-  'research-lab': 'Research Lab',
+  'research-lab': 'Research lab',
   government: 'Government',
   individual: 'Individual',
   organization: 'Organization',
 };
+
+const entryCount = actorEvents.length;
+const subtitle = `A ${typeDisplay[actor.type] || 'entity'} referenced in ${entryCount} ledger ${entryCount === 1 ? 'entry' : 'entries'}.`;
+
+// Related: same type, excluding self, alphabetical, up to 6
+const related = allActors
+  .filter((a) => a.type === actor.type && a.id !== actor.id)
+  .sort((a, b) => a.name.localeCompare(b.name))
+  .slice(0, 6);
+
+// Short list of same-type actors for left rail (up to 10, alphabetical)
+const sameTypeRail = allActors
+  .filter((a) => a.type === actor.type && a.id !== actor.id)
+  .sort((a, b) => a.name.localeCompare(b.name))
+  .slice(0, 10);
+
+function cleanUrl(url: string): string {
+  return url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+}
 ---
 
-<Base title={actor.name} description={`Events involving ${actor.name} in The Ledger.`}>
-  <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <nav class="flex items-center gap-2 text-xs font-mono text-ledger-text-dim mb-6">
-      <a href="/actors" class="hover:text-ledger-text transition-colors">Actors</a>
-      <span>/</span>
-      <span class="text-ledger-text-muted">{actor.name}</span>
-    </nav>
+<Base
+  layout="article"
+  title={actor.name}
+  description={`Ledger entries involving ${actor.name}.`}
+>
+  <ArticleShell
+    title={actor.name}
+    subtitle={subtitle}
+    breadcrumb={[
+      { label: 'Main page', href: '/' },
+      { label: 'Actors', href: '/actors' },
+      { label: actor.name },
+    ]}
+    sourcePath={`content/actors/${actor.id}.yml`}
+  >
+    <Fragment slot="infobox">
+      <Infobox title="Actor metadata">
+        <dl>
+          <dt>Type</dt>
+          <dd>{typeLabel[actor.type] || actor.type}</dd>
+          {actor.founded && (
+            <>
+              <dt>Founded</dt>
+              <dd><span class="mono">{actor.founded}</span></dd>
+            </>
+          )}
+          {actor.website && (
+            <>
+              <dt>Website</dt>
+              <dd>
+                <a href={actor.website} target="_blank" rel="noopener noreferrer">
+                  {cleanUrl(actor.website)}
+                </a>
+              </dd>
+            </>
+          )}
+          {actor.aliases && actor.aliases.length > 0 && (
+            <>
+              <dt>Aliases</dt>
+              <dd><span class="mono">{actor.aliases.join(', ')}</span></dd>
+            </>
+          )}
+          <dt>Entries</dt>
+          <dd><span class="mono">{entryCount}</span></dd>
+          <dt>ID</dt>
+          <dd><span class="mono">{actor.id}</span></dd>
+        </dl>
+      </Infobox>
+    </Fragment>
 
-    <header class="mb-12 pb-8 border-b border-ledger-border">
-      <p class="label-eyebrow mb-3">§ {typeLabels[actor.type] || actor.type}</p>
-      <h1 class="font-display text-display-sm font-normal text-white mb-5 leading-[1.05]" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">{actor.name}</h1>
+    {entryCount === 0 ? (
+      <p><em>No tracked ledger entries yet.</em></p>
+    ) : (
+      <Fragment>
+        <p>
+          {actor.name} appears across <strong>{entryCount}</strong> {entryCount === 1 ? 'entry' : 'entries'}
+          {years.length > 0 && (
+            <> spanning <span class="font-mono">{years[years.length - 1]}</span>–<span class="font-mono">{years[0]}</span></>
+          )}.
+        </p>
+        {years.map((year) => (
+          <section class="actor-year" id={`y-${year}`}>
+            <h2>{year}</h2>
+            <ul class="actor-year__list">
+              {byYear.get(year)!.map((e) => (
+                <EventRow event={e} />
+              ))}
+            </ul>
+          </section>
+        ))}
+      </Fragment>
+    )}
 
-      <dl class="flex flex-wrap gap-x-6 gap-y-2 text-sm">
-        {actor.founded && (
-          <div class="flex items-baseline gap-2">
-            <dt class="text-ledger-text-dim">Founded</dt>
-            <dd class="font-mono text-ledger-text-muted">{actor.founded}</dd>
-          </div>
-        )}
-        {actor.website && (
-          <div class="flex items-baseline gap-2">
-            <dt class="text-ledger-text-dim">Website</dt>
-            <dd>
-              <a href={actor.website} target="_blank" rel="noopener noreferrer" class="text-category-policy hover:underline">
-                {actor.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
-              </a>
-            </dd>
-          </div>
-        )}
-        <div class="flex items-baseline gap-2">
-          <dt class="text-ledger-text-dim">Tracked events</dt>
-          <dd class="font-mono text-ledger-text-muted">{actorEvents.length}</dd>
-        </div>
-      </dl>
-
-      {actor.aliases && actor.aliases.length > 0 && (
-        <div class="mt-4 flex flex-wrap items-center gap-2 text-xs">
-          <span class="text-ledger-text-dim font-mono">Also known as:</span>
-          {actor.aliases.map((alias) => (
-            <span class="px-2 py-0.5 font-mono text-ledger-text-muted bg-ledger-surface rounded border border-ledger-border">
-              {alias}
-            </span>
+    {related.length > 0 && (
+      <Fragment slot="seeAlso">
+        <ul>
+          {related.map((a) => (
+            <li><a href={`/actors/${a.id}`}>{a.name}</a></li>
           ))}
-        </div>
-      )}
-    </header>
+          <li><a href="/actors">All actors</a></li>
+        </ul>
+      </Fragment>
+    )}
+  </ArticleShell>
 
-    <section>
-      <p class="label-eyebrow mb-2">§ Record</p>
-      <h2 class="font-display text-2xl sm:text-3xl font-normal text-white mb-6 tracking-display-tight" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
-        Events
-      </h2>
+  <Fragment slot="leftRail">
+    <RailSection title="Navigate">
+      <ul class="rail-list rail-list--plain">
+        <li><a href="/">Main page</a></li>
+        <li><a href="/actors">All actors</a></li>
+        <li><a href="/explore">Timeline</a></li>
+        <li><a href="/threads">Threads</a></li>
+        <li><a href="/about">About</a></li>
+      </ul>
+    </RailSection>
 
-      {actorEvents.length === 0 ? (
-        <p class="text-ledger-text-muted italic">No tracked events yet.</p>
-      ) : (
-        years.map((year) => (
-          <div class="mb-8">
-            <h3 class="text-sm font-mono uppercase tracking-wider text-ledger-text-dim mb-3">{year}</h3>
-            <div class="space-y-1">
-              {byYear[year].map((evt) => {
-                const catColor = getCategoryColor(evt.category);
-                const role = evt.actors?.find((a) => a.id === actor.id)?.role;
-                return (
-                  <a
-                    href={`/events/${evt.slug}`}
-                    class="group flex items-center gap-3 sm:gap-4 py-2.5 px-3 -mx-3 rounded-sm hover:bg-ledger-surface/50 transition-colors"
-                  >
-                    <time class="flex-shrink-0 text-xs font-mono text-ledger-text-dim w-20 sm:w-24">
-                      {new Date(evt.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}
-                    </time>
-                    <span class="flex-1 text-sm text-ledger-text group-hover:text-white transition-colors line-clamp-1">
-                      {evt.title}
-                    </span>
-                    {role && (
-                      <span class="flex-shrink-0 text-[10px] font-mono uppercase tracking-wider text-ledger-text-dim hidden sm:inline">
-                        {role}
-                      </span>
-                    )}
-                    <span
-                      class="flex-shrink-0 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider rounded-sm border hidden sm:inline-block"
-                      style={`background: ${catColor}15; color: ${catColor}; border-color: ${catColor}30;`}
-                    >
-                      {evt.category.replace('-', ' ')}
-                    </span>
-                  </a>
-                );
-              })}
-            </div>
-          </div>
-        ))
-      )}
-    </section>
-  </article>
+    {years.length > 1 && (
+      <RailSection title="Years">
+        <ul class="rail-list">
+          {years.map((y) => (
+            <li>
+              <a href={`#y-${y}`}>{y}</a>
+              <span class="count">{byYear.get(y)!.length}</span>
+            </li>
+          ))}
+        </ul>
+      </RailSection>
+    )}
+
+    {sameTypeRail.length > 0 && (
+      <RailSection title={`Other ${(typeLabel[actor.type] || 'actors').toLowerCase()}s`}>
+        <ul class="rail-list rail-list--plain">
+          {sameTypeRail.map((a) => (
+            <li><a href={`/actors/${a.id}`}>{a.name}</a></li>
+          ))}
+        </ul>
+      </RailSection>
+    )}
+  </Fragment>
+
+  {topCategories.length > 0 && (
+    <Fragment slot="rightRail">
+      <RailSection title="Categories appeared in">
+        <ul class="rail-list">
+          {topCategories.map(([cat, n]) => (
+            <li>
+              <a href={`/explore?category=${cat}`}>{cat.replace('-', ' ')}</a>
+              <span class="count">{n}</span>
+            </li>
+          ))}
+        </ul>
+      </RailSection>
+    </Fragment>
+  )}
 </Base>
+
+<style>
+  .actor-year {
+    margin: 1.5rem 0 0;
+    scroll-margin-top: 20px;
+  }
+  .actor-year h2 {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 36, 'SOFT' 0, 'WONK' 0;
+    font-weight: 500;
+    font-size: 1.25rem;
+    color: var(--color-ink-dim);
+    margin: 1.25rem 0 0.4rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .actor-year__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+</style>

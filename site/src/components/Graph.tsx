@@ -22,11 +22,12 @@ type Props = {
   data: { nodes: GraphNode[]; edges: GraphEdge[] };
 };
 
+// Wiki-native palette — balanced for the pale page-bg (#FAFAF7) canvas.
 const NODE_COLORS: Record<string, string> = {
-  event: '#6366F1',       // indigo (policy color, used as event default)
-  thread: '#8B5CF6',      // violet
-  controversy: '#EF4444', // red
-  actor: '#06B6D4',       // cyan
+  event: '#0645AD',       // wiki-link blue
+  thread: '#B45309',      // category-models amber
+  controversy: '#B91C1C', // category-safety red
+  actor: '#047857',       // category-research emerald
 };
 
 const TYPE_LABELS: Record<string, string> = {
@@ -102,26 +103,40 @@ export default function Graph({ data }: Props) {
     return acc;
   }, {});
 
+  // Accessible fallback: flat node list grouped by type, with route links
+  // identical to the canvas click handler. Screen readers + keyboard users
+  // get the same navigation affordances as the pointer interaction.
+  const fallbackRoute = (n: GraphNode) =>
+    n.type === 'event' ? `/events/${n.id}` :
+    n.type === 'thread' ? `/threads/${n.id}` :
+    n.type === 'controversy' ? `/controversies/${n.id}` :
+    `/actors/${n.id}`;
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
         <span className="label-eyebrow mr-1">Show</span>
         {types.map((type) => {
           const isHidden = hidden.has(type);
+          const base =
+            'inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-sans rounded-sm border transition-colors duration-150 min-h-[32px]';
+          const visible = 'bg-wiki-surface-strong text-ink font-semibold';
+          const hiddenCls =
+            'bg-page-bg border-rule-strong text-ink hover:bg-wiki-surface';
           return (
             <button
               key={type}
               type="button"
               onClick={() => toggleType(type)}
               aria-pressed={!isHidden}
-              className={`px-3 py-1.5 text-xs font-medium rounded-sm border transition-colors duration-150 tabular-nums min-h-[32px] ${
-                isHidden
-                  ? 'border-ledger-border text-ledger-text-dim bg-transparent hover:border-ledger-border-light hover:text-ledger-text-muted'
-                  : 'border-ledger-border-light text-ledger-text bg-ledger-surface'
-              }`}
-              style={!isHidden ? { borderColor: NODE_COLORS[type] + '60', backgroundColor: NODE_COLORS[type] + '20', color: NODE_COLORS[type] } : undefined}
+              aria-label={`${isHidden ? 'Show' : 'Hide'} ${TYPE_LABELS[type].toLowerCase()}`}
+              className={`${base} ${isHidden ? hiddenCls : visible}`}
+              style={!isHidden ? { borderColor: NODE_COLORS[type] } : undefined}
             >
-              {TYPE_LABELS[type]} ({counts[type]})
+              <span>{TYPE_LABELS[type]}</span>
+              <span className="font-mono text-[11px] tabular-nums text-ink-faint">
+                ({counts[type]})
+              </span>
             </button>
           );
         })}
@@ -129,29 +144,78 @@ export default function Graph({ data }: Props) {
 
       <div
         ref={containerRef}
-        className="border border-ledger-border rounded-md bg-ledger-surface/30 overflow-hidden"
+        role="img"
+        aria-label={`Relational graph of ${data.nodes.length} nodes — events, threads, controversies, and actors linked by shared references. A text list follows for keyboard and screen-reader navigation.`}
+        className="border border-rule-strong rounded-sm overflow-hidden"
+        style={{ background: '#FAFAF7' }}
       >
         <ForceGraph2D
           ref={fgRef}
           graphData={filteredData}
           width={size.width}
           height={size.height}
-          nodeColor={(node: any) => NODE_COLORS[node.type] || '#888'}
+          nodeColor={(node: any) => NODE_COLORS[node.type] || '#7A7368'}
           nodeRelSize={4}
           nodeLabel={(node: any) => `${node.title} (${node.type})`}
-          linkColor={() => 'rgba(255,255,255,0.1)'}
+          linkColor={() => 'rgba(201, 192, 174, 0.5)'}
           linkWidth={1}
           onNodeClick={handleNodeClick}
-          backgroundColor="rgba(0,0,0,0)"
+          backgroundColor="#FAFAF7"
           cooldownTicks={reducedMotion ? 0 : 100}
           d3AlphaDecay={reducedMotion ? 0.5 : 0.0228}
           enableNodeDrag={!reducedMotion}
         />
       </div>
 
-      <p className="text-xs text-ledger-text-dim font-mono">
+      <p className="text-[12px] text-ink-faint font-mono">
         Click a node to open. Drag to pan, scroll to zoom. Toggle types above to filter.
       </p>
+
+      {/* Accessible text-list equivalent of the graph. Keyboard and screen-reader
+          users can navigate the full node set; pointer users can ignore it. */}
+      <details className="graph-fallback">
+        <summary className="graph-fallback__summary">
+          All {data.nodes.length} nodes as a linked list
+        </summary>
+        <div className="graph-fallback__body">
+          {types.map((type) => {
+            const nodes = filteredData.nodes.filter((n: any) => n.type === type);
+            if (nodes.length === 0) return null;
+            return (
+              <section key={type} className="graph-fallback__section" aria-labelledby={`graph-fallback-${type}`}>
+                <h3 id={`graph-fallback-${type}`} className="graph-fallback__heading">
+                  <span
+                    className="graph-fallback__dot"
+                    aria-hidden="true"
+                    style={{ background: NODE_COLORS[type] }}
+                  />
+                  {TYPE_LABELS[type]}
+                  <span className="graph-fallback__count font-mono tabular-nums">
+                    ({nodes.length})
+                  </span>
+                </h3>
+                <ul className="graph-fallback__list">
+                  {nodes
+                    .slice()
+                    .sort((a: any, b: any) =>
+                      (b.date || '').localeCompare(a.date || '') || a.title.localeCompare(b.title)
+                    )
+                    .map((n: any) => (
+                      <li key={n.id}>
+                        <a href={fallbackRoute(n)}>{n.title}</a>
+                        {n.date && (
+                          <time className="graph-fallback__date font-mono" dateTime={n.date}>
+                            {' '}— {n.date}
+                          </time>
+                        )}
+                      </li>
+                    ))}
+                </ul>
+              </section>
+            );
+          })}
+        </div>
+      </details>
     </div>
   );
 }

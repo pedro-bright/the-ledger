@@ -1,6 +1,10 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { loadControversies, loadThreads } from '../../lib/content';
+import ArticleShell from '../../components/wiki/ArticleShell.astro';
+import Infobox from '../../components/wiki/Infobox.astro';
+import RailSection from '../../components/wiki/RailSection.astro';
+import ConfidenceBadge from '../../components/ConfidenceBadge';
+import { loadControversies, loadThreads, loadActors, getExcerpt } from '../../lib/content';
 
 export function getStaticPaths() {
   const controversies = loadControversies();
@@ -12,115 +16,271 @@ export function getStaticPaths() {
 
 const { controversy } = Astro.props;
 const threads = loadThreads();
+const actors = loadActors();
+const actorMap = new Map(actors.map((a) => [a.id, a]));
+
 const linkedThread = controversy.thread ? threads.find((t) => t.id === controversy.thread) : null;
 
-const confidenceColors: Record<string, string> = {
-  high: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20',
-  medium: 'text-amber-400 bg-amber-400/10 border-amber-400/20',
-  low: 'text-orange-400 bg-orange-400/10 border-orange-400/20',
-};
+const allControversies = loadControversies();
+const siblings = linkedThread
+  ? allControversies.filter((c) => c.thread === linkedThread.id && c.id !== controversy.id)
+  : [];
+
+const positions = controversy.positions || [];
+
+// Union + dedupe of sources across positions
+const dedupedSources: Array<{ url: string; title: string; publisher?: string }> = [];
+const seenUrls = new Set<string>();
+for (const p of positions) {
+  for (const s of p.sources || []) {
+    if (!s?.url || seenUrls.has(s.url)) continue;
+    seenUrls.add(s.url);
+    dedupedSources.push({ url: s.url, title: s.title || s.url, publisher: s.publisher });
+  }
+}
+
+const polarityLabel = controversy.polarity
+  ? controversy.polarity === 'multi-axis'
+    ? 'multi-axis'
+    : controversy.polarity
+  : 'contested';
+
+const subtitle = linkedThread
+  ? `A ${polarityLabel} controversy in the ${linkedThread.title} thread.`
+  : `A ${polarityLabel} controversy.`;
+
+const positionLetter = (i: number) => String.fromCharCode(65 + i); // A, B, C…
+
+function preview(claim?: string, n = 120): string {
+  if (!claim) return '';
+  return claim.length > n ? getExcerpt(claim, n) : claim;
+}
+
+function displayActor(id: string): { name: string; href: string } {
+  const a = actorMap.get(id);
+  return { name: a?.name || id, href: `/actors/${id}` };
+}
 ---
 
-<Base title={controversy.title} description={controversy.positions?.[0]?.claim || `Controversy: ${controversy.title}`}>
-  <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <!-- Breadcrumb -->
-    <nav class="flex items-center gap-2 text-xs font-mono text-ledger-text-dim mb-6">
-      <a href="/" class="hover:text-ledger-text transition-colors">Home</a>
-      <span>/</span>
-      <a href="/controversies" class="hover:text-ledger-text transition-colors">Controversies</a>
-      <span>/</span>
-      <span class="text-ledger-text-muted">{controversy.title}</span>
-    </nav>
+<Base
+  layout="article"
+  title={controversy.title}
+  description={positions[0]?.claim || `Controversy: ${controversy.title}`}
+>
+  <ArticleShell
+    title={controversy.title}
+    subtitle={subtitle}
+    breadcrumb={[
+      { label: 'Main page', href: '/' },
+      { label: 'Controversies', href: '/controversies' },
+      { label: controversy.title },
+    ]}
+    lastModified={controversy.last_updated}
+    sourcePath={`content/controversies/${controversy.slug}.md`}
+  >
+    <Fragment slot="infobox">
+      <Infobox title="Controversy metadata" wide>
+        <dl>
+          {controversy.status && (
+            <>
+              <dt>Status</dt>
+              <dd>{controversy.status}</dd>
+            </>
+          )}
+          {controversy.polarity && (
+            <>
+              <dt>Polarity</dt>
+              <dd>{controversy.polarity}</dd>
+            </>
+          )}
+          <dt>Positions</dt>
+          <dd><span class="mono">{positions.length}</span></dd>
+          {linkedThread && (
+            <>
+              <dt>Thread</dt>
+              <dd><a href={`/threads/${linkedThread.slug}`}>{linkedThread.title}</a></dd>
+            </>
+          )}
+          {controversy.last_updated && (
+            <>
+              <dt>Last argued</dt>
+              <dd><time class="mono" datetime={controversy.last_updated}>{controversy.last_updated}</time></dd>
+            </>
+          )}
+          <dt>ID</dt>
+          <dd><span class="mono">{controversy.id}</span></dd>
+        </dl>
+      </Infobox>
+    </Fragment>
 
-    <!-- Header -->
-    <div class="mb-8">
-      <div class="flex items-center gap-3 mb-3">
-        {controversy.status && (
-          <span class={`px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-sm border ${
-            controversy.status === 'active'
-              ? 'text-amber-400 bg-amber-400/10 border-amber-400/20'
-              : controversy.status === 'resolved'
-                ? 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20'
-                : 'text-ledger-text-dim bg-ledger-surface border-ledger-border'
-          }`}>
-            {controversy.status}
-          </span>
-        )}
-        {controversy.polarity && (
-          <span class="text-xs font-mono text-ledger-text-dim">
-            {controversy.polarity} polarity
-          </span>
-        )}
-      </div>
-
-      <h1 class="font-display text-display-sm font-normal text-white mb-5 leading-[1.05]" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">{controversy.title}</h1>
-
-      {linkedThread && (
-        <p class="text-sm text-ledger-text-muted">
-          Part of thread: <a href={`/threads/${linkedThread.slug}`} class="text-category-policy hover:underline">{linkedThread.title}</a>
-        </p>
-      )}
-    </div>
-
-    <!-- Positions -->
-    {controversy.positions && controversy.positions.length > 0 && (
-      <section class="mb-12 pt-6 border-t border-ledger-border">
-        <p class="label-eyebrow mb-2">§ Positions</p>
-        <h2 class="font-display text-2xl sm:text-3xl font-normal text-white mb-6 tracking-display-tight" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
-          Documented Positions
-        </h2>
-        <div class="space-y-4">
-          {controversy.positions.map((position, i) => (
-            <div class="p-5 rounded-md border border-ledger-border bg-ledger-surface/50">
-              <div class="flex items-start justify-between gap-4 mb-3">
-                <h3 class="font-display italic text-lg sm:text-xl font-medium text-white leading-snug" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">"{position.claim}"</h3>
-                {position.confidence && (
-                  <span class={`flex-shrink-0 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-sm border ${
-                    confidenceColors[position.confidence] || confidenceColors.medium
-                  }`}>
-                    {position.confidence}
-                  </span>
-                )}
-              </div>
-              {position.proponents && position.proponents.length > 0 && (
-                <div class="flex flex-wrap gap-2 mb-3">
-                  <span class="text-xs text-ledger-text-dim">Proponents:</span>
-                  {position.proponents.map((p: string) => (
-                    <span class="text-xs font-mono text-ledger-text-muted bg-ledger-surface px-2 py-0.5 rounded border border-ledger-border">
-                      {p}
-                    </span>
-                  ))}
-                </div>
-              )}
-              {position.sources && position.sources.length > 0 && (
-                <div class="space-y-1.5 mt-3">
-                  {position.sources.map((source: any) => (
-                    <a
-                      href={source.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="block text-xs text-category-policy hover:underline"
-                    >
-                      {source.title || source.url}
-                    </a>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </section>
-    )}
-
-    <!-- Content -->
     {controversy.content.trim() && (
-      <div class="prose max-w-none" set:html={controversy.htmlContent} />
+      <div set:html={controversy.htmlContent} />
     )}
 
-    {controversy.last_updated && (
-      <p class="text-xs font-mono text-ledger-text-dim mt-8 pt-4 border-t border-ledger-border">
-        Last updated: {new Date(controversy.last_updated).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-      </p>
+    {positions.length > 0 && positions.map((position, i) => (
+      <Fragment>
+        {i > 0 && <hr class="wiki-hr" />}
+        <section class="position" id={`position-${positionLetter(i).toLowerCase()}`}>
+          <h2>
+            <span class="position__label">Position {positionLetter(i)}:</span>{' '}
+            <em class="position__claim">{position.claim}</em>
+          </h2>
+
+          {position.confidence && (
+            <p class="position__badge">
+              <ConfidenceBadge level={position.confidence as any} />
+            </p>
+          )}
+
+          {position.proponents && position.proponents.length > 0 && (
+            <p class="position__proponents">
+              <span class="position__meta-label">Proponents:</span>{' '}
+              {position.proponents.map((id: string, j: number) => {
+                const { name, href } = displayActor(id);
+                return (
+                  <Fragment>
+                    {j > 0 && <span class="position__sep" aria-hidden="true">, </span>}
+                    <a class="position__proponent" href={href}>{name}</a>
+                  </Fragment>
+                );
+              })}
+            </p>
+          )}
+
+          {position.sources && position.sources.length > 0 && (
+            <>
+              <h3>Sources</h3>
+              <ol class="position__sources">
+                {position.sources.map((s: any) => (
+                  <li>
+                    <a href={s.url} target="_blank" rel="noopener noreferrer">{s.title || s.url}</a>
+                    {s.publisher && <span class="position__pub"> — {s.publisher}</span>}
+                  </li>
+                ))}
+              </ol>
+            </>
+          )}
+        </section>
+      </Fragment>
+    ))}
+
+    {dedupedSources.length > 0 && (
+      <Fragment slot="references">
+        <ol>
+          {dedupedSources.map((s) => (
+            <li>
+              <a href={s.url} target="_blank" rel="noopener noreferrer">{s.title}</a>
+              {s.publisher && <> — {s.publisher}</>}
+            </li>
+          ))}
+        </ol>
+      </Fragment>
     )}
-  </article>
+
+    {siblings.length > 0 && (
+      <Fragment slot="seeAlso">
+        <ul>
+          {siblings.map((s) => (
+            <li><a href={`/controversies/${s.slug}`}>{s.title}</a></li>
+          ))}
+          {linkedThread && (
+            <li><a href={`/threads/${linkedThread.slug}`}>{linkedThread.title} (thread)</a></li>
+          )}
+        </ul>
+      </Fragment>
+    )}
+  </ArticleShell>
+
+  <Fragment slot="leftRail">
+    <RailSection title="Navigate">
+      <ul class="rail-list rail-list--plain">
+        <li><a href="/">Main page</a></li>
+        <li><a href="/controversies">All controversies</a></li>
+        <li><a href="/threads">Threads</a></li>
+        <li><a href="/actors">Actors</a></li>
+        <li><a href="/about">About</a></li>
+      </ul>
+    </RailSection>
+
+    {linkedThread && (
+      <RailSection title="Thread">
+        <p class="rail-thread">
+          <a href={`/threads/${linkedThread.slug}`} class="rail-thread__title font-display">{linkedThread.title}</a>
+        </p>
+        {linkedThread.core_question && (
+          <p class="rail-thread__q">{linkedThread.core_question}</p>
+        )}
+      </RailSection>
+    )}
+
+    {siblings.length > 0 && (
+      <RailSection title="Also in this thread">
+        <ul class="rail-list rail-list--plain">
+          {siblings.map((s) => (
+            <li><a href={`/controversies/${s.slug}`}>{s.title}</a></li>
+          ))}
+        </ul>
+      </RailSection>
+    )}
+  </Fragment>
+
+  <Fragment slot="rightRail">
+    {positions.length > 0 && (
+      <RailSection title="Positions at a glance">
+        <ol class="rail-positions">
+          {positions.map((p, i) => (
+            <li>
+              <a href={`#position-${positionLetter(i).toLowerCase()}`}>
+                <span class="rail-positions__label">Position {positionLetter(i)}</span>
+                <span class="rail-positions__claim">{preview(p.claim, 100)}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </RailSection>
+    )}
+  </Fragment>
 </Base>
+
+<style>
+  .position { scroll-margin-top: 20px; }
+  .position__label {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 36, 'SOFT' 0, 'WONK' 0;
+    font-style: normal; color: var(--color-ink-dim);
+  }
+  .position__claim { font-family: var(--font-serif); font-style: italic; color: var(--color-ink); font-weight: 500; }
+  .position__badge { margin: 6px 0 0; }
+  .position__proponents { margin: 10px 0 0; font-size: 0.9375rem; }
+  .position__meta-label {
+    font-family: var(--font-sans); font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--color-ink-muted); margin-right: 2px;
+  }
+  .position__proponent { font-family: var(--font-mono); font-size: 12.5px; color: var(--color-wiki-link); }
+  .position__proponent:hover { text-decoration: underline; }
+  .position__sep { color: var(--color-ink-faint); font-family: var(--font-mono); font-size: 12.5px; }
+  .position__sources { padding-left: 1.5rem; margin: 0.5rem 0 1rem; }
+  .position__sources li { margin-bottom: 4px; font-family: var(--font-serif); font-size: 0.9375rem; line-height: 1.55; }
+  .position__sources a {
+    color: var(--color-wiki-link); text-decoration: underline;
+    text-decoration-color: rgba(6, 69, 173, 0.35);
+  }
+  .position__sources a:hover { text-decoration-color: var(--color-wiki-link); }
+  .position__pub { color: var(--color-ink-mid); font-size: 0.875rem; }
+
+  :global(.rail-positions) { list-style: none; padding: 0; margin: 0; }
+  :global(.rail-positions > li) { padding: 6px 0; border-bottom: 1px dotted var(--color-rule); }
+  :global(.rail-positions > li:last-child) { border-bottom: none; }
+  :global(.rail-positions a) { display: block; color: var(--color-ink-mid); }
+  :global(.rail-positions a:hover) { color: var(--color-wiki-link); }
+  :global(.rail-positions__label) {
+    display: block; font-family: var(--font-sans); font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-ink-muted); margin-bottom: 2px;
+  }
+  :global(.rail-positions__claim) {
+    display: block; font-family: var(--font-display);
+    font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;
+    font-style: italic; font-size: 12.5px; line-height: 1.4; color: var(--color-ink-mid);
+  }
+</style>

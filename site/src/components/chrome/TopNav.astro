@@ -1,0 +1,85 @@
+---
+// Primary horizontal nav.
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+function isActive(href: string): boolean {
+  if (href === '/') return currentPath === '/';
+  return currentPath === href || currentPath.startsWith(href + '/');
+}
+
+const items = [
+  { href: '/', label: 'Main page' },
+  { href: '/explore', label: 'Timeline' },
+  { href: '/threads', label: 'Threads' },
+  { href: '/controversies', label: 'Controversies' },
+  { href: '/actors', label: 'Actors' },
+  { href: '/graph', label: 'Graph' },
+  { href: '/about', label: 'About' },
+];
+---
+<nav class="wiki-nav" aria-label="Primary">
+  <div class="wiki-nav__inner">
+    <ul class="wiki-nav__list">
+      {items.map((item) => (
+        <li>
+          <a
+            href={item.href}
+            class="wiki-nav__link"
+            data-active={isActive(item.href)}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</nav>
+
+<style>
+  .wiki-nav {
+    border-bottom: 1px solid var(--color-rule-strong);
+    background: var(--color-page-bg);
+    font-family: var(--font-sans);
+    font-size: 13px;
+  }
+  .wiki-nav__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .wiki-nav__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .wiki-nav__list::-webkit-scrollbar {
+    display: none;
+  }
+  .wiki-nav__link {
+    display: inline-block;
+    padding: 10px 14px;
+    color: var(--color-ink-mid);
+    border-bottom: 2px solid transparent;
+    transition: color 120ms ease, border-color 120ms ease;
+    white-space: nowrap;
+  }
+  .wiki-nav__link:hover {
+    color: var(--color-wiki-link);
+    text-decoration: none;
+  }
+  .wiki-nav__link[data-active="true"] {
+    color: var(--color-ink);
+    font-weight: 600;
+    border-bottom-color: var(--color-ink);
+  }
+  @media (max-width: 780px) {
+    .wiki-nav__inner { padding: 0 8px; }
+    /* Mobile: 14px vertical padding + 13px line-height lifts tap target above 44px. */
+    .wiki-nav__link { padding: 14px 14px; font-size: 12.5px; }
+  }
+</style>

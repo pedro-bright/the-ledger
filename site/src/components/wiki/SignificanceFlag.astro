@@ -1,0 +1,42 @@
+---
+// Significance flag chip — landmark / major / notable.
+// Uppercase mini-label on a tinted background. Editorial, archival tone.
+interface Props {
+  level?: 'landmark' | 'major' | 'notable';
+  /** Optional override label (e.g. for a historical state like "Upgraded from major"). */
+  label?: string;
+  /** Compact mode drops a couple px of padding. */
+  compact?: boolean;
+}
+
+const { level, label, compact = false } = Astro.props;
+
+const defaults = {
+  landmark: 'Landmark',
+  major: 'Major',
+  notable: 'Notable',
+} as const;
+const hints: Record<string, string> = {
+  landmark: 'Fundamentally alters the trajectory.',
+  major: 'Meaningfully shifts the landscape.',
+  notable: 'Worth documenting for the record.',
+};
+const display = level ? (label ?? defaults[level]) : '';
+const ariaLabel = level ? `Significance: ${display}. ${hints[level] || ''}` : undefined;
+---
+{level && (
+  <span
+    class={`flag-chip flag-chip--${level}${compact ? ' flag-chip--compact' : ''}`}
+    aria-label={ariaLabel}
+    title={hints[level]}
+  >
+    {display}
+  </span>
+)}
+
+<style>
+  .flag-chip--compact {
+    padding: 0px 5px 1px;
+    font-size: 9.5px;
+  }
+</style>

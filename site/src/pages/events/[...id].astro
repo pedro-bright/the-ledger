@@ -1,13 +1,16 @@
 ---
 import Base from '../../layouts/Base.astro';
-import ConfidenceBadge, { confidenceHints } from '../../components/ConfidenceBadge';
-import ContestationBadge, { contestationHints } from '../../components/ContestationBadge';
+import ArticleShell from '../../components/wiki/ArticleShell.astro';
+import Infobox from '../../components/wiki/Infobox.astro';
+import RailSection from '../../components/wiki/RailSection.astro';
+import CategoryTag from '../../components/wiki/CategoryTag.astro';
+import SignificanceFlag from '../../components/wiki/SignificanceFlag.astro';
+import ConfidenceBadge from '../../components/ConfidenceBadge';
+import ContestationBadge from '../../components/ContestationBadge';
 import SignificanceHistory from '../../components/SignificanceHistory';
-import { loadEvents, getCategoryColor, loadThreads, loadActors } from '../../lib/content';
-
-function formatSourceType(t: string): string {
-  return t.replace(/_/g, ' ').replace(/-/g, ' ');
-}
+import { loadEvents, loadThreads, loadActors } from '../../lib/content';
+import fs from 'node:fs';
+import path from 'node:path';
 
 export function getStaticPaths() {
   const events = loadEvents();
@@ -18,269 +21,328 @@ export function getStaticPaths() {
 }
 
 const { event } = Astro.props;
-const categoryColor = getCategoryColor(event.category);
+const allEvents = loadEvents();
 const threads = loadThreads();
 const actors = loadActors();
-const allEvents = loadEvents();
-const linkedThreads = threads.filter((t) => event.threads?.includes(t.id));
-
-// Resolve actor names
 const actorMap = new Map(actors.map((a) => [a.id, a]));
+const eventMap = new Map(allEvents.map((e) => [e.id, e]));
+const threadMap = new Map(threads.map((t) => [t.id, t]));
 
-// Resolve related events to titles
-const relatedEvents = (event.related || []).map((relId: string) => {
-  const found = allEvents.find((e) => e.id === relId);
-  return { id: relId, title: found?.title || relId, slug: found?.slug || relId };
-});
+// Linked threads for this event.
+const linkedThreads = (event.threads || []).map((id: string) => threadMap.get(id)).filter(Boolean);
 
-const significanceLabel: Record<string, string> = {
-  landmark: 'Landmark',
-  major: 'Major',
-  notable: 'Notable',
-};
+// Related = union of explicit `related` + events sharing a thread. Dedupe, cap 8.
+const relatedIds = new Set<string>(event.related || []);
+for (const t of linkedThreads) for (const eId of (t?.events || [])) if (eId !== event.id) relatedIds.add(eId);
+const relatedEvents = Array.from(relatedIds)
+  .map((id) => eventMap.get(id)).filter(Boolean)
+  .sort((a, b) => new Date(b!.date).getTime() - new Date(a!.date).getTime())
+  .slice(0, 8) as typeof allEvents;
+
+// Sister events in the same category, capped at 5.
+const sisterEvents = allEvents.filter((e) => e.category === event.category && e.id !== event.id).slice(0, 5);
+
+// Best-effort sourcePath — walk the year dir; if anything fails it's left undefined (cosmetic).
+let sourcePath: string | undefined;
+try {
+  const year = new Date(event.date).getUTCFullYear();
+  const CONTENT_DIR = path.resolve((import.meta as any).env?.CONTENT_DIR || path.join(process.cwd(), '..', 'content'));
+  const match = fs.readdirSync(path.join(CONTENT_DIR, 'events', String(year))).find((f) => f.endsWith(`${event.slug}.md`));
+  if (match) sourcePath = `content/events/${year}/${match}`;
+} catch {}
+
+const formatCategory = (c: string) => c.replace(/-/g, ' ').replace(/\b\w/g, (s) => s.toUpperCase());
+const formatSourceType = (t: string) => t.replace(/_/g, ' ').replace(/-/g, ' ');
+const isPrimary = (t?: string) => !!t && /^primary/.test(t);
+
+const breadcrumb = [
+  { label: 'Main page', href: '/' },
+  { label: 'Timeline', href: '/explore' },
+  { label: formatCategory(event.category), href: `/explore?category=${event.category}` },
+  { label: event.title },
+];
+
+const subtitle = `A ledger entry in the ${formatCategory(event.category).toLowerCase()} archive, dated ${event.date}.`;
+const hasSigHistory = event.significance_history && event.significance_history.length > 1;
+const description = `${event.title} — ${event.date}`;
 ---
 
-<Base title={event.title} description={`${event.title} — ${new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`}>
-  <article class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <div class="lg:grid lg:grid-cols-[1fr_300px] lg:gap-14">
-      <!-- Main content -->
-      <div>
-        <!-- Breadcrumb -->
-        <nav class="flex items-center gap-2 text-xs font-mono text-ledger-text-dim mb-8" aria-label="Breadcrumb">
-          <a href="/" class="hover:text-ledger-text transition-colors">Timeline</a>
-          <span class="text-ledger-border-light">/</span>
-          <a href="/explore" class="hover:text-ledger-text transition-colors">Events</a>
-          <span class="text-ledger-border-light">/</span>
-          <span class="text-ledger-text-muted">{event.id}</span>
-        </nav>
+<Base title={event.title} description={description} layout="article">
+  <!-- LEFT RAIL -->
+  <Fragment slot="leftRail">
+    <RailSection title="Navigate">
+      <ul class="rail-list">
+        <li><a href="/explore">Back to timeline</a></li>
+        <li><a href="/">Main page</a></li>
+        <li><a href={`/explore?category=${event.category}`}>{formatCategory(event.category)}</a></li>
+        <li><a href="/threads">All threads</a></li>
+      </ul>
+    </RailSection>
 
-        <!-- Archival meta strip — editorial dateline -->
-        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-mono text-ledger-text-dim uppercase tracking-wider mb-5 tabular-nums">
-          <time class="text-ledger-text-muted">
-            {new Date(event.date).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            }).toUpperCase()}
-          </time>
-          <span class="text-ledger-border-light">·</span>
-          <span style={`color: ${categoryColor};`}>
-            {event.category.replace('-', ' ')}
-          </span>
-          {event.significance && (
+    {linkedThreads.length > 0 && (
+      <RailSection title="Related threads">
+        <ul class="rail-list">
+          {linkedThreads.map((t: any) => (
+            <li><a href={`/threads/${t.slug}`}>{t.title}</a></li>
+          ))}
+        </ul>
+      </RailSection>
+    )}
+
+    {sisterEvents.length > 0 && (
+      <RailSection title={`${formatCategory(event.category)} · sister entries`}>
+        <ul class="rail-list rail-list--stacked">
+          {sisterEvents.map((e) => (
+            <li class="rail-stack">
+              <a href={`/events/${e.slug}`}>{e.title}</a>
+              <time class="rail-stack__date font-mono" datetime={e.date}>{e.date}</time>
+            </li>
+          ))}
+        </ul>
+      </RailSection>
+    )}
+  </Fragment>
+
+  <!-- RIGHT RAIL -->
+  <Fragment slot="rightRail">
+    {event.actors && event.actors.length > 0 && (
+      <RailSection title="Actors">
+        <ul class="rail-list rail-list--stacked">
+          {event.actors.map((a: any) => {
+            const actor = actorMap.get(a.id);
+            return (
+              <li class="rail-stack">
+                <a href={`/actors/${a.id}`}>{actor?.name || a.id}</a>
+                <span class="rail-stack__meta">
+                  {actor?.type && <span class="rail-stack__type">{actor.type.replace(/-/g, ' ')}</span>}
+                  {a.role && <span class="rail-stack__role">· {a.role}</span>}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      </RailSection>
+    )}
+
+    <RailSection title="Epistemic key" id="epistemic-key">
+      <dl class="epistemic-key">
+        <dt class="epistemic-key__term epistemic-key__term--landmark">Landmark</dt>
+        <dd>Fundamentally alters the trajectory. Future textbooks will cover it. 2–5 per year.</dd>
+        <dt class="epistemic-key__term epistemic-key__term--major">Major</dt>
+        <dd>Meaningfully shifts the landscape. 2–4 per month.</dd>
+        <dt class="epistemic-key__term epistemic-key__term--notable">Notable</dt>
+        <dd>Worth documenting for the record. Significance can be upgraded later.</dd>
+        <dt class="epistemic-key__term">Confidence</dt>
+        <dd>High = primary sources corroborate. Medium = credible secondary only. Low = provisional. Disputed = credible sources disagree.</dd>
+        <dt class="epistemic-key__term">Contestation</dt>
+        <dd>Uncontested = no formal challenge. Contested = at least one challenge filed. Superseded = replaced by a later entry. Unresolved = dispute still open.</dd>
+      </dl>
+    </RailSection>
+  </Fragment>
+
+  <!-- ARTICLE BODY -->
+  <ArticleShell
+    title={event.title}
+    subtitle={subtitle}
+    breadcrumb={breadcrumb}
+    lastModified={event.date}
+    sourcePath={sourcePath}
+  >
+    <Fragment slot="infobox">
+      <Infobox title="Entry metadata">
+        <dl>
+          <dt>Date</dt>
+          <dd><time class="mono" datetime={event.date}>{event.date}</time></dd>
+          <dt>Category</dt>
+          <dd><a href={`/explore?category=${event.category}`}><CategoryTag category={event.category} /></a></dd>
+          {event.significance && <><dt>Significance</dt><dd><SignificanceFlag level={event.significance} /></dd></>}
+          {event.confidence && event.confidence !== 'high' && <><dt>Confidence</dt><dd><ConfidenceBadge level={event.confidence} /></dd></>}
+          {event.contestation?.status && <><dt>Contestation</dt><dd><ContestationBadge status={event.contestation.status} /></dd></>}
+          {event.state && <><dt>State</dt><dd class="mono">{event.state}</dd></>}
+          {event.actors && event.actors.length > 0 && (
             <>
-              <span class="text-ledger-border-light">·</span>
-              <span class={
-                event.significance === 'landmark'
-                  ? 'text-amber-400'
-                  : event.significance === 'major'
-                    ? 'text-sky-300'
-                    : 'text-ledger-text-dim'
-              }>
-                {significanceLabel[event.significance] || event.significance}
-              </span>
+              <dt>Actors</dt>
+              <dd>
+                <ul>
+                  {event.actors.map((a: any) => {
+                    const actor = actorMap.get(a.id);
+                    return (
+                      <li>
+                        <a href={`/actors/${a.id}`}>{actor?.name || a.id}</a>
+                        {a.role && <span class="infobox-role"> — {a.role}</span>}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </dd>
             </>
           )}
-        </div>
+          {event.regions && event.regions.length > 0 && <><dt>Regions</dt><dd>{event.regions.join(', ')}</dd></>}
+          {event.tags && event.tags.length > 0 && <><dt>Tags</dt><dd class="mono">{event.tags.join(', ')}</dd></>}
+          {linkedThreads.length > 0 && (
+            <>
+              <dt>Threads</dt>
+              <dd><ul>{linkedThreads.map((t: any) => <li><a href={`/threads/${t.slug}`}>{t.title}</a></li>)}</ul></dd>
+            </>
+          )}
+          <dt>ID</dt>
+          <dd><span class="mono">{event.id}</span></dd>
+        </dl>
+      </Infobox>
+    </Fragment>
 
-        <!-- Title -->
-        <h1
-          class="font-display text-display-sm font-normal text-white mb-5 border-l-[3px] pl-4 leading-[1.1]"
-          style={`border-color: ${categoryColor}; font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;`}
-        >
-          {event.title}
-        </h1>
+    <!-- Rendered markdown body -->
+    <Fragment set:html={event.htmlContent} />
 
-        <!-- Epistemic badges + inline glossary strip. Only renders when non-default values exist. -->
-        {((event.confidence && event.confidence !== 'high') || event.contestation?.status) && (
-          <div class="mb-8 p-4 rounded-md border border-ledger-border-light/40 bg-ledger-surface/40">
-            <div class="flex flex-wrap gap-2 mb-3">
-              <ConfidenceBadge level={event.confidence} />
-              {event.contestation?.status && (
-                <ContestationBadge status={event.contestation.status} />
-              )}
-            </div>
-            <dl class="grid sm:grid-cols-2 gap-x-6 gap-y-1 text-xs text-ledger-text-muted leading-relaxed">
-              {event.confidence && event.confidence !== 'high' && confidenceHints[event.confidence] && (
-                <div>
-                  <dt class="inline font-mono uppercase tracking-wider text-ledger-text-dim text-[10px]">{event.confidence}:</dt>
-                  <dd class="inline ml-1">{confidenceHints[event.confidence]}</dd>
-                </div>
-              )}
-              {event.contestation?.status && contestationHints[event.contestation.status] && (
-                <div>
-                  <dt class="inline font-mono uppercase tracking-wider text-ledger-text-dim text-[10px]">{event.contestation.status}:</dt>
-                  <dd class="inline ml-1">{contestationHints[event.contestation.status]}</dd>
-                </div>
-              )}
-            </dl>
-          </div>
-        )}
+    {/* Mobile-only epistemic key — right rail is hidden below 780px. */}
+    <details class="mobile-epistemic-key" aria-label="Epistemic key">
+      <summary>§ How to read the metadata</summary>
+      <dl>
+        <dt>Landmark</dt>
+        <dd>Fundamentally alters the trajectory; 2–5 per year.</dd>
+        <dt>Major</dt>
+        <dd>Meaningfully shifts the landscape; 2–4 per month.</dd>
+        <dt>Notable</dt>
+        <dd>Worth documenting; significance can be upgraded later.</dd>
+        <dt>Confidence</dt>
+        <dd>High = primary sources corroborate. Medium = credible secondary only. Low = provisional. Disputed = credible sources disagree.</dd>
+        <dt>Contestation</dt>
+        <dd>Uncontested = no formal challenge. Contested = at least one challenge open. Superseded = replaced by a later entry. Unresolved = dispute still open.</dd>
+      </dl>
+    </details>
 
-        <!-- Thread links (cross-navigation) -->
-        {linkedThreads.length > 0 && (
-          <div class="flex flex-wrap items-center gap-2 mb-6">
-            <span class="text-xs font-mono text-ledger-text-dim">Part of:</span>
-            {linkedThreads.map((thread) => (
-              <a
-                href={`/threads/${thread.slug}`}
-                class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-category-policy bg-category-policy/10 rounded-sm border border-category-policy/20 hover:bg-category-policy/20 transition-colors"
-              >
-                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-3.03l4.5-4.5a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
-                </svg>
-                {thread.title}
+    {hasSigHistory && (
+      <section class="wiki-section">
+        <h2 class="wiki-article__h2">Significance history</h2>
+        <SignificanceHistory history={event.significance_history} />
+      </section>
+    )}
+
+    <!-- References -->
+    {event.sources && event.sources.length > 0 && (
+      <Fragment slot="references">
+        <ol>
+          {event.sources.map((source: any) => (
+            <li>
+              <a href={source.url} target="_blank" rel="noopener noreferrer">
+                {source.title || source.url}
               </a>
-            ))}
-          </div>
-        )}
-
-        <!-- Content -->
-        <div class="prose max-w-none" set:html={event.htmlContent} />
-
-        <!-- Significance history -->
-        {event.significance_history && event.significance_history.length > 1 && (
-          <div class="mt-8 pt-8 border-t border-ledger-border">
-            <SignificanceHistory history={event.significance_history} />
-          </div>
-        )}
-
-        <!-- Tags as styled pills -->
-        {event.tags && event.tags.length > 0 && (
-          <div class="mt-8 pt-8 border-t border-ledger-border">
-            <h3 class="text-xs font-mono uppercase tracking-wider text-ledger-text-dim mb-3">
-              Tags
-            </h3>
-            <div class="flex flex-wrap gap-2">
-              {event.tags.map((tag: string) => (
-                <span class="px-2.5 py-1 text-xs font-mono text-ledger-text-muted bg-ledger-surface rounded-sm border border-ledger-border hover:border-ledger-border-light transition-colors">
-                  #{tag}
+              {source.publisher && <span class="ref-meta">, {source.publisher}</span>}
+              {source.date && <span class="ref-date font-mono"> ({source.date})</span>}
+              {source.type && (
+                <span class={`flag-chip ref-type${isPrimary(source.type) ? ' ref-type--primary' : ''}`}>
+                  {formatSourceType(source.type)}
                 </span>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-
-      <!-- Sidebar -->
-      <aside class="mt-8 lg:mt-0">
-        <div class="sticky top-20 space-y-6">
-          <!-- Sources -->
-          {event.sources && event.sources.length > 0 && (
-            <div class="p-4 rounded-md border border-ledger-border bg-ledger-surface/30">
-              <h3 class="text-xs font-mono uppercase tracking-wider text-ledger-text-dim mb-3">
-                Sources ({event.sources.length})
-              </h3>
-              <div class="space-y-3">
-                {event.sources.map((source: any) => (
-                  <div class="text-sm">
-                    <a
-                      href={source.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="text-category-policy hover:underline line-clamp-2"
-                    >
-                      {source.title || source.url}
-                    </a>
-                    <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-1">
-                      {source.publisher && (
-                        <span class="text-xs text-ledger-text-muted">{source.publisher}</span>
-                      )}
-                      {source.type && (
-                        <span class="text-[10px] font-mono uppercase tracking-wider text-ledger-text-dim px-1.5 py-0.5 bg-ledger-surface rounded-sm border border-ledger-border">
-                          {formatSourceType(source.type)}
-                        </span>
-                      )}
-                      {source.archive_url && (
-                        <a
-                          href={source.archive_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          class="inline-flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider text-ledger-text-muted hover:text-category-policy transition-colors px-1.5 py-0.5 border border-ledger-border rounded-sm"
-                          title="Archived copy on the Wayback Machine"
-                        >
-                          <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          archive
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <!-- Actors as styled pills -->
-          {event.actors && event.actors.length > 0 && (
-            <div class="p-4 rounded-md border border-ledger-border bg-ledger-surface/30">
-              <h3 class="text-xs font-mono uppercase tracking-wider text-ledger-text-dim mb-3">
-                Actors
-              </h3>
-              <div class="space-y-2">
-                {event.actors.map((actor: any) => {
-                  const actorData = actorMap.get(actor.id);
-                  const displayName = actorData?.name || actor.id;
-                  return (
-                    <div class="flex items-center justify-between gap-2">
-                      <a
-                        href={`/actors/${actor.id}`}
-                        class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono text-ledger-text bg-ledger-surface rounded-sm border border-ledger-border hover:border-ledger-border-light hover:text-white transition-colors"
-                      >
-                        {displayName}
-                      </a>
-                      <span class="text-[10px] text-ledger-text-dim capitalize">{actor.role}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          <!-- Related events as clickable links -->
-          {relatedEvents.length > 0 && (
-            <div class="p-4 rounded-md border border-ledger-border bg-ledger-surface/30">
-              <h3 class="text-xs font-mono uppercase tracking-wider text-ledger-text-dim mb-3">
-                Related Events
-              </h3>
-              <div class="space-y-1.5">
-                {relatedEvents.map((rel) => (
-                  <a
-                    href={`/events/${rel.slug}`}
-                    class="block text-sm text-ledger-text-muted hover:text-category-policy transition-colors py-1"
-                  >
-                    {rel.title}
+              )}
+              {source.archive_url && (
+                <>
+                  {' '}
+                  <a href={source.archive_url} target="_blank" rel="noopener noreferrer" class="ref-archive">
+                    archived copy
                   </a>
-                ))}
-              </div>
-            </div>
-          )}
+                </>
+              )}
+            </li>
+          ))}
+        </ol>
+      </Fragment>
+    )}
 
-          <!-- Metadata -->
-          {(event.state || event.regions) && (
-            <div class="p-4 rounded-md border border-ledger-border bg-ledger-surface/30">
-              <h3 class="text-xs font-mono uppercase tracking-wider text-ledger-text-dim mb-3">
-                Metadata
-              </h3>
-              <dl class="space-y-2 text-sm">
-                {event.state && (
-                  <div class="flex justify-between">
-                    <dt class="text-ledger-text-dim">State</dt>
-                    <dd class="font-mono text-xs capitalize text-ledger-text-muted">{event.state}</dd>
-                  </div>
-                )}
-                {event.regions && (
-                  <div class="flex justify-between">
-                    <dt class="text-ledger-text-dim">Regions</dt>
-                    <dd class="font-mono text-xs text-ledger-text-muted">{event.regions.join(', ')}</dd>
-                  </div>
-                )}
-              </dl>
-            </div>
-          )}
-        </div>
-      </aside>
-    </div>
-  </article>
+    <!-- See also -->
+    {relatedEvents.length > 0 && (
+      <Fragment slot="seeAlso">
+        <ul>
+          {relatedEvents.map((e) => (
+            <li>
+              <a href={`/events/${e.slug}`}>{e.title}</a>
+              <time class="see-also__date font-mono" datetime={e.date}> — {e.date}</time>
+            </li>
+          ))}
+        </ul>
+      </Fragment>
+    )}
+  </ArticleShell>
 </Base>
+
+<style>
+  .wiki-section { margin-top: 2rem; }
+  .rail-list--stacked > li { display: block; }
+  .rail-stack { padding: 5px 0; line-height: 1.4; }
+  .rail-stack__date,
+  .rail-stack__meta { display: block; font-size: 11px; color: var(--color-ink-faint); margin-top: 1px; }
+  .rail-stack__type { text-transform: capitalize; }
+  .rail-stack__role { margin-left: 3px; }
+  .infobox-role { color: var(--color-ink-faint); font-size: 11px; }
+
+  /* Mobile-only epistemic key — the right rail is hidden below 780px,
+     so we duplicate the definitions at the end of the article body. */
+  .mobile-epistemic-key {
+    display: none;
+    margin: 24px 0 0;
+    padding: 14px 16px 16px;
+    background: var(--color-wiki-surface);
+    border: 1px solid var(--color-rule-strong);
+    border-radius: 2px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--color-ink-mid);
+  }
+  .mobile-epistemic-key > summary {
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+    padding: 2px 0;
+  }
+  .mobile-epistemic-key > summary:hover { color: var(--color-wiki-link); }
+  .mobile-epistemic-key[open] > summary { margin-bottom: 10px; }
+  .mobile-epistemic-key dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 6px 14px;
+  }
+  .mobile-epistemic-key dt {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-ink-muted);
+    margin: 0;
+  }
+  .mobile-epistemic-key dd {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 13px;
+    color: var(--color-ink-mid);
+    line-height: 1.45;
+  }
+  @media (max-width: 780px) {
+    .mobile-epistemic-key { display: block; }
+  }
+
+  .epistemic-key { display: grid; grid-template-columns: 1fr; gap: 2px 0; margin: 0; }
+  .epistemic-key dt {
+    margin-top: 6px; font-family: var(--font-sans); font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-ink-muted);
+  }
+  .epistemic-key dt:first-child { margin-top: 0; }
+  .epistemic-key__term--landmark { color: #7A5A00; }
+  .epistemic-key__term--major { color: #0A4D82; }
+  .epistemic-key__term--notable { color: #5C564D; }
+  .epistemic-key dd { margin: 2px 0 0; font-size: 12.5px; color: var(--color-ink-mid); line-height: 1.45; }
+
+  .ref-meta { color: var(--color-ink-mid); }
+  .ref-date { font-size: 12px; color: var(--color-ink-faint); }
+  .ref-type { margin-left: 6px; text-transform: lowercase; }
+  .ref-type--primary { background: #DBECF9; color: #0A4D82; }
+  .ref-archive {
+    font-family: var(--font-sans); font-size: 11.5px; color: var(--color-ink-faint);
+    text-decoration: underline dotted;
+  }
+  .ref-archive:hover { color: var(--color-wiki-link); }
+  .see-also__date { color: var(--color-ink-faint); font-size: 12px; font-style: normal; }
+</style>

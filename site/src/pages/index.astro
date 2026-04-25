@@ -1,7 +1,19 @@
 ---
 import Base from '../layouts/Base.astro';
-import Timeline from '../components/Timeline';
-import { loadEvents, loadThreads, loadControversies, loadActors, getCategories, getExcerpt, getCategoryColor, buildThreadEventMap } from '../lib/content';
+import FeaturedBox from '../components/wiki/FeaturedBox.astro';
+import EventRow from '../components/wiki/EventRow.astro';
+import RailSection from '../components/wiki/RailSection.astro';
+import CategoryTag from '../components/wiki/CategoryTag.astro';
+import SignificanceFlag from '../components/wiki/SignificanceFlag.astro';
+import {
+  loadEvents,
+  loadThreads,
+  loadControversies,
+  loadActors,
+  getCategories,
+  getExcerpt,
+  buildThreadEventMap,
+} from '../lib/content';
 
 const events = loadEvents();
 const threads = loadThreads();
@@ -10,319 +22,536 @@ const actors = loadActors();
 const categories = getCategories();
 const threadEventMap = buildThreadEventMap(events);
 
-// Stats
-const eventCount = events.length;
-const threadCount = threads.length;
-const controversyCount = controversies.length;
-const actorCount = actors.length;
-
-// Latest 8 events for compact list
-const latestEvents = events.slice(0, 8);
-
-// Prepare all events for the React timeline component (used in timeline section)
-const timelineEvents = events.map((e) => ({
-  id: e.id,
-  title: e.title,
-  date: e.date,
-  category: e.category,
-  significance: e.significance,
-  confidence: e.confidence,
-  contestation: e.contestation,
-  summary: getExcerpt(e.content),
-  slug: e.slug,
-}));
-
-// Build thread card data, sorted for editorial prominence (active + most-documented first).
-const threadCards = threads.map((thread) => {
-  const threadEvents = threadEventMap.get(thread.id) || [];
-  const actorIds = new Set<string>();
-  for (const evt of threadEvents) {
-    if (evt.actors) {
-      for (const a of evt.actors) {
-        actorIds.add(a.id);
-      }
-    }
-  }
-  const actorNames = Array.from(actorIds).slice(0, 5);
-  return {
-    ...thread,
-    eventCount: thread.events?.length || threadEvents.length,
-    actorNames,
-    excerpt: thread.core_question || getExcerpt(thread.content, 160),
-  };
+// ─── Dates ────────────────────────────────────────────────────
+// Build the "today" label and ISO from local-time fields so the visible label
+// and the <time datetime> attribute can never disagree across UTC offsets.
+const today = new Date();
+const todayIso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+const todayMonthDay = todayIso.slice(5, 10); // MM-DD
+const todayLabel = today.toLocaleDateString('en-US', {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
 });
 
-const featured = threadCards
+// ─── Today's featured entry ───────────────────────────────────
+const landmarkEvents = events.filter((e) => e.significance === 'landmark');
+const featured = landmarkEvents[0] || events[0];
+const featuredExcerpt = featured ? getExcerpt(featured.content, 320) : '';
+// Parse ISO date as a local-date (not UTC midnight) so the visible label
+// can't drift off-by-one in negative-offset timezones.
+function formatLocalIsoDate(iso: string, options: Intl.DateTimeFormatOptions): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
+  if (!m) return iso;
+  const [, y, mo, d] = m;
+  return new Date(Number(y), Number(mo) - 1, Number(d)).toLocaleDateString('en-US', options);
+}
+const featuredDateLabel = featured
+  ? formatLocalIsoDate(featured.date, { month: 'short', day: 'numeric', year: 'numeric' })
+  : '';
+
+// ─── On this day (historical matches, excluding current year) ─
+const onThisDay = events
+  .filter((e) => {
+    const md = e.date.slice(5, 10);
+    const year = e.date.slice(0, 4);
+    return md === todayMonthDay && year !== todayIso.slice(0, 4);
+  })
+  .slice(0, 5);
+
+// ─── Recent entries ───────────────────────────────────────────
+const recentEvents = events.slice(0, 10);
+
+// ─── Ongoing threads ──────────────────────────────────────────
+const threadSummaries = threads.map((t) => {
+  const list = threadEventMap.get(t.id) || [];
+  return {
+    ...t,
+    eventCount: t.events?.length || list.length,
+  };
+});
+const activeThreads = threadSummaries
   .filter((t) => t.status === 'active')
   .sort((a, b) => b.eventCount - a.eventCount);
-const leadThread = featured[0];
-const supportingThreads = featured.slice(1, 5);
+const ongoingThreads = activeThreads.slice(0, 4);
+
+// ─── Right-rail picks ─────────────────────────────────────────
+const featuredThread = activeThreads.find((t) => t.curator) || activeThreads[0];
+const activeControversies = controversies
+  .filter((c) => c.status === 'active')
+  .slice(0, 3);
+
+// ─── Category counts for left rail ────────────────────────────
+const categoryCounts = new Map<string, number>();
+for (const e of events) {
+  categoryCounts.set(e.category, (categoryCounts.get(e.category) || 0) + 1);
+}
+
+// ─── Random entry (picked at build time) ──────────────────────
+const randomEvent = events[Math.floor(Math.random() * events.length)];
+
+// ─── Stats line ───────────────────────────────────────────────
+const stats = {
+  entries: events.length,
+  threads: threads.length,
+  controversies: controversies.length,
+  actors: actors.length,
+};
 ---
 
-<Base>
-  <!-- Hero -->
-  <section class="border-b border-ledger-border">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
-      <div class="max-w-3xl">
-        <p class="label-eyebrow mb-5">An epistemic ledger · est. 2026</p>
-        <h1 class="font-display text-display-lg font-normal text-white mb-6" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
-          Track the real history of&nbsp;AI.
-        </h1>
-        <p class="font-display italic text-xl sm:text-2xl text-ledger-text-muted leading-snug max-w-2xl mb-6" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
-          Events, debates, and turning points — organized for understanding, not doomscrolling.
-        </p>
-
-        <!-- Stats row -->
-        <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm font-mono text-ledger-text-dim mb-8 tabular-nums">
-          <span>{eventCount} events</span>
-          <span class="text-ledger-border-light">·</span>
-          <span>{threadCount} threads</span>
-          <span class="text-ledger-border-light">·</span>
-          <span>{controversyCount} controversies</span>
-          <span class="text-ledger-border-light">·</span>
-          <span>{actorCount} actors</span>
-        </div>
-
-        <!-- CTAs -->
-        <div class="flex flex-wrap items-center gap-3">
-          <a
-            href="/threads"
-            class="px-5 py-2.5 text-sm font-medium text-white bg-category-policy rounded-md hover:bg-category-policy/80 transition-colors"
-          >
-            Explore Threads
-          </a>
-          <a
-            href="#timeline"
-            class="px-5 py-2.5 text-sm font-medium text-ledger-text-muted hover:text-white border border-ledger-border rounded-md hover:border-ledger-border-light transition-colors"
-          >
-            Browse Timeline
-          </a>
-        </div>
-      </div>
-    </div>
+<Base layout="index" description="An open-source, sourced chronicle of AI history — events, threads, controversies, and the revisions that reinterpret them. Curated by Terry Tang.">
+  <!-- 1. Intro block -->
+  <section class="intro">
+    <p class="label-eyebrow">§ The Ledger</p>
+    <h1 class="intro__title font-display">A durable historical record of AI.</h1>
+    <p class="intro__lede">
+      An open-source ledger of AI history: events, threads, controversies, and the revisions that reinterpret them. Every claim is sourced and contestable.
+    </p>
+    <p class="intro__curator">
+      <span class="intro__curator-label">Curator's note.</span>
+      This ledger treats AI as history in the making, not a running news cycle. Every entry is sourced, dated, and contestable; where the record changes, the history stays visible. <span class="intro__curator-sig">— Terry Tang</span>
+    </p>
+    <p class="intro__stats font-mono">
+      <span>{stats.entries} entries</span>
+      <span class="sep">·</span>
+      <span>{stats.threads} threads</span>
+      <span class="sep">·</span>
+      <span>{stats.controversies} controversies</span>
+      <span class="sep">·</span>
+      <span>{stats.actors} actors</span>
+      <span class="sep">·</span>
+      <span>updated <time datetime={todayIso}>{todayLabel}</time></span>
+    </p>
   </section>
 
-  <!-- Featured Threads — lead + supporting row -->
-  <section class="border-b border-ledger-border">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-      <div class="flex items-end justify-between mb-10">
-        <div>
-          <p class="label-eyebrow mb-3">§ Threads</p>
-          <h2 class="font-display text-3xl sm:text-4xl font-normal text-white tracking-display-tight" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">Narrative Arcs</h2>
-          <p class="font-display italic text-ledger-text-muted mt-2" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">Connecting events across time.</p>
-        </div>
-        <a href="/threads" class="text-sm font-mono text-category-policy hover:underline hidden sm:block self-end">
-          view all ({threadCount}) →
-        </a>
-      </div>
+  <!-- 2. Today's featured entry -->
+  {featured && (
+    <FeaturedBox title="Today's featured entry" date={featuredDateLabel} dateIso={featured.date} meta="§ Editor's pick">
+      <h3><a href={`/events/${featured.slug}`}>{featured.title}</a></h3>
+      <p>{featuredExcerpt}</p>
+      <p class="featured-meta">
+        <CategoryTag category={featured.category} />
+        {featured.significance && <SignificanceFlag level={featured.significance} />}
+        <time class="featured-date font-mono" datetime={featured.date}>{featured.date}</time>
+      </p>
+      <a class="read-more" href={`/events/${featured.slug}`}>Continue reading →</a>
+    </FeaturedBox>
+  )}
 
-      <!-- Curator's note + lead thread: editorial first-read recommendation -->
-      {leadThread && (
-        <article class="mb-12 pb-12 border-b border-ledger-border">
-          <!-- Curator's note — makes Terry's voice visible and frames the lead as "start here" -->
-          <div class="mb-6 flex items-start gap-4">
-            <span class="hidden sm:block mt-1.5 w-6 h-px bg-category-policy/60" aria-hidden="true" />
-            <div>
-              <p class="label-eyebrow mb-2">§ Start here · from the curator</p>
-              <p class="font-display italic text-base sm:text-lg text-ledger-text-muted leading-snug max-w-[58ch]" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
-                New to the ledger? This is the thread I'd read first — it threads together the most decisions, actors, and arguments of the moment. —&nbsp;<a href="/about" class="text-ledger-text hover:text-white border-b border-ledger-border-light hover:border-white transition-colors">Terry</a>
-              </p>
-            </div>
-          </div>
+  <!-- 3. On this day -->
+  {onThisDay.length > 0 && (
+    <section class="home-section home-section--compact">
+      <h2 class="home-section__title font-display">On this day</h2>
+      <ul class="wiki-list-dated">
+        {onThisDay.map((e) => (
+          <li>
+            <span class="date"><time datetime={e.date}>{e.date.slice(0, 4)}</time></span>
+            <a href={`/events/${e.slug}`}>{e.title}</a>
+            <CategoryTag category={e.category} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
 
-          <a href={`/threads/${leadThread.slug}`} class="group block">
-            <div class="grid md:grid-cols-[1fr_auto] gap-6 md:gap-10 items-start">
-              <div>
-                <div class="flex items-center gap-2 mb-4">
-                  <span class="label-eyebrow">§ Lead thread</span>
-                  {leadThread.status === 'active' && (
-                    <>
-                      <span class="text-ledger-border-light font-mono text-xs">·</span>
-                      <span class="text-[10px] font-mono uppercase tracking-wider text-emerald-400">active</span>
-                    </>
-                  )}
-                </div>
-                <h3 class="font-display text-3xl sm:text-4xl md:text-5xl font-normal text-white mb-5 tracking-display-tight leading-[1.05] group-hover:text-white transition-colors" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
-                  {leadThread.title}
-                </h3>
-                <p class="font-display italic text-lg sm:text-xl text-ledger-text-muted mb-6 leading-snug max-w-[56ch]" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
-                  "{leadThread.excerpt}"
-                </p>
-                <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-mono text-ledger-text-dim tabular-nums">
-                  {leadThread.started && (
-                    <span>{new Date(leadThread.started).getFullYear()}–present</span>
-                  )}
-                  <span class="text-ledger-border-light">·</span>
-                  <span>{leadThread.eventCount} events</span>
-                  {leadThread.curator && (
-                    <>
-                      <span class="text-ledger-border-light">·</span>
-                      <span>Curated by {leadThread.curator}</span>
-                    </>
-                  )}
-                </div>
-                {leadThread.actorNames.length > 0 && (
-                  <div class="mt-5 flex flex-wrap gap-1.5">
-                    {leadThread.actorNames.map((name) => (
-                      <span class="px-2 py-0.5 text-[11px] font-mono text-ledger-text-muted bg-ledger-surface rounded-sm border border-ledger-border">
-                        {name}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <div class="font-mono text-xs text-category-policy group-hover:underline whitespace-nowrap self-end md:self-start md:pt-2">
-                read thread →
-              </div>
-            </div>
-          </a>
-        </article>
-      )}
-
-      <!-- Supporting threads: 2×2 compact row -->
-      {supportingThreads.length > 0 && (
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
-          {supportingThreads.map((thread) => (
-            <a
-              href={`/threads/${thread.slug}`}
-              class="group block"
-            >
-              <div class="flex items-start gap-2 mb-2">
-                <h3 class="font-display text-xl sm:text-2xl font-medium text-ledger-text group-hover:text-white transition-colors leading-tight" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
-                  {thread.title}
-                </h3>
-              </div>
-              <p class="font-display italic text-sm text-ledger-text-muted mb-3 line-clamp-2 leading-snug" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
-                "{thread.excerpt}"
-              </p>
-              <div class="flex items-center gap-3 text-[11px] font-mono text-ledger-text-dim tabular-nums">
-                {thread.started && (
-                  <span>{new Date(thread.started).getFullYear()}–present</span>
-                )}
-                <span class="text-ledger-border-light">·</span>
-                <span>{thread.eventCount} events</span>
-              </div>
-            </a>
-          ))}
-        </div>
-      )}
-
-      <a href="/threads" class="block text-sm font-mono text-category-policy hover:underline mt-8 sm:hidden">
-        view all threads →
-      </a>
-    </div>
+  <!-- 4. Recent entries -->
+  <section class="home-section">
+    <h2 class="home-section__title font-display">Recent entries</h2>
+    <ul class="home-event-list">
+      {recentEvents.map((e) => (
+        <EventRow event={e} />
+      ))}
+    </ul>
+    <a href="/explore" class="more-link">All entries →</a>
   </section>
 
-  <!-- Latest Events — table-like archival listing -->
-  <section class="border-b border-ledger-border">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div class="flex items-baseline justify-between mb-6">
-        <div>
-          <p class="label-eyebrow mb-2">§ Latest</p>
-          <h2 class="font-display text-2xl sm:text-3xl font-normal text-white tracking-display-tight" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">Recent Entries</h2>
-        </div>
-        <a href="#timeline" class="text-sm font-mono text-category-policy hover:underline">
-          full timeline →
-        </a>
-      </div>
-
-      <div class="divide-y divide-ledger-border/60">
-        {latestEvents.map((event) => {
-          const catColor = getCategoryColor(event.category);
-          return (
-            <a
-              href={`/events/${event.slug}`}
-              class="group flex items-baseline gap-3 sm:gap-5 py-3 hover:bg-ledger-surface/30 -mx-3 px-3 transition-colors rounded-sm"
-            >
-              <time class="flex-shrink-0 text-xs font-mono text-ledger-text-dim w-20 sm:w-24 tabular-nums">
-                {new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}
-              </time>
-              <span
-                class="flex-shrink-0 w-0.5 self-stretch mt-1 mb-1"
-                style={`background-color: ${catColor};`}
-                aria-hidden="true"
-              />
-              <span class="flex-1 text-[15px] text-ledger-text group-hover:text-white transition-colors line-clamp-1">
-                {event.title}
-              </span>
-              <span
-                class="flex-shrink-0 text-[10px] font-mono uppercase tracking-wider hidden sm:inline-block"
-                style={`color: ${catColor};`}
-              >
-                {event.category.replace('-', ' ')}
-              </span>
-              {event.significance && event.significance !== 'notable' && (
-                <span class={`flex-shrink-0 text-[10px] font-mono uppercase tracking-wider hidden sm:inline-block ${
-                  event.significance === 'landmark' ? 'text-amber-400' : 'text-sky-300'
-                }`}>
-                  {event.significance}
-                </span>
+  <!-- 5. Ongoing threads -->
+  {ongoingThreads.length > 0 && (
+    <section class="home-section">
+      <h2 class="home-section__title font-display">Ongoing threads</h2>
+      <dl class="wiki-thread-list">
+        {ongoingThreads.map((t) => (
+          <>
+            <dt>
+              <a href={`/threads/${t.slug}`} class="wiki-thread-list__title font-display">{t.title}</a>
+            </dt>
+            <dd>
+              {t.core_question && (
+                <span class="wiki-thread-list__q">{t.core_question}</span>
               )}
-            </a>
-          );
-        })}
-      </div>
-    </div>
+              <span class="wiki-thread-list__meta font-mono">
+                {t.eventCount} entries
+                {t.curator && <> · curator {t.curator}</>}
+              </span>
+            </dd>
+          </>
+        ))}
+      </dl>
+      <a href="/threads" class="more-link">All threads →</a>
+    </section>
+  )}
+
+  <hr class="wiki-hr" />
+
+  <!-- 7. Contribute -->
+  <section class="home-section home-section--quiet home-contribute">
+    <h2 class="home-section__title font-display">Contribute</h2>
+    <p>
+      The Ledger is open source and improves through careful contribution. Submit a source tip, challenge a claim, or propose a thread — the constitution is in the repo.
+    </p>
+    <ul class="contribute-links">
+      <li>
+        <a
+          href="https://github.com/pedro-bright/the-ledger/issues/new?template=source-tip.yml"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Submit a source tip</a>
+      </li>
+      <li><a href="/about#contribute">Contribution guide</a></li>
+      <li><a href="/about#editorial">Editorial constitution</a></li>
+      <li><a href="/about#evidence">Evidence standards</a></li>
+    </ul>
   </section>
 
-  <!-- Full Timeline -->
-  <section id="timeline" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-    <div class="flex items-baseline justify-between mb-8">
-      <div>
-        <p class="label-eyebrow mb-2">§ Timeline</p>
-        <h2 class="font-display text-2xl sm:text-3xl font-normal text-white tracking-display-tight" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">The Record</h2>
-      </div>
-      <div class="flex items-baseline gap-4 text-xs font-mono text-ledger-text-dim tabular-nums">
-        <a href="/explore" class="text-category-policy hover:underline">search &amp; filter →</a>
-        <span class="hidden sm:inline">{events.length} {events.length === 1 ? 'entry' : 'entries'}</span>
-      </div>
-    </div>
-    <Timeline events={timelineEvents} categories={categories} client:load />
-  </section>
+  <!-- ─── Left rail ─── -->
+  <Fragment slot="leftRail">
+    <RailSection title="Navigate">
+      <ul class="rail-list rail-list--plain">
+        <li><a href="/">Main page</a></li>
+        <li><a href="/explore">Timeline</a></li>
+        <li><a href="/threads">Threads</a></li>
+        <li><a href="/controversies">Controversies</a></li>
+        <li><a href="/actors">Actors</a></li>
+        <li><a href="/graph">Graph</a></li>
+        <li><a href="/about">About</a></li>
+      </ul>
+    </RailSection>
 
-  <!-- Contribute CTA Band — asymmetric pull-quote layout -->
-  <section class="border-t border-ledger-border bg-ledger-surface/30">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-      <div class="grid md:grid-cols-[1.2fr_1fr] gap-10 md:gap-16 items-start">
-        <div>
-          <p class="label-eyebrow mb-3">§ Contribute</p>
-          <h2 class="font-display text-3xl sm:text-4xl font-normal text-white mb-4 tracking-display-tight leading-tight" style="font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;">
-            Spot something missing?
-          </h2>
-          <p class="text-ledger-text-muted mb-6 max-w-[58ch] leading-relaxed">
-            The Ledger is curator-led and open-source. The fastest way to help: drop a source link via a GitHub issue — no schema knowledge required. The curator turns it into a structured event.
-          </p>
-          <div class="flex flex-wrap items-center gap-3">
-            <a
-              href="https://github.com/pedro-bright/the-ledger/issues/new?template=source-tip.yml"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="px-5 py-2.5 text-sm font-medium text-white bg-category-policy rounded-md hover:bg-category-policy/80 transition-colors inline-flex items-center gap-2"
-            >
-              Submit a source tip
+    <RailSection title="Categories">
+      <ul class="rail-list">
+        {categories.map((c) => (
+          <li>
+            <a href={`/explore?category=${c.id}`}>
+              <CategoryTag category={c.id} variant="pip" class="rail-pip" />
+              {c.label}
             </a>
-            <a
-              href="https://github.com/pedro-bright/the-ledger"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="px-5 py-2.5 text-sm font-medium text-ledger-text border border-ledger-border-light rounded-md hover:bg-ledger-surface hover:text-white transition-colors inline-flex items-center gap-2"
-            >
-              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
-              </svg>
-              View on GitHub
-            </a>
-          </div>
-        </div>
-        <aside class="md:pt-10 md:border-l md:border-ledger-border md:pl-12">
-          <blockquote class="font-display italic text-xl sm:text-2xl text-ledger-text-muted leading-snug" style="font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;">
-            "History is written by the present. We write it as it happens — then watch ourselves be wrong."
-          </blockquote>
-          <p class="mt-4 text-xs font-mono text-ledger-text-dim uppercase tracking-wider">
-            — The Ledger's editorial premise
-          </p>
-        </aside>
-      </div>
-    </div>
-  </section>
+            <span class="count">{categoryCounts.get(c.id) || 0}</span>
+          </li>
+        ))}
+      </ul>
+    </RailSection>
+
+    <RailSection title="Tools">
+      <ul class="rail-list rail-list--plain">
+        <li><a href="/feed.xml">RSS feed</a></li>
+        <li>
+          <a href="https://github.com/pedro-bright/the-ledger" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </li>
+        {randomEvent && (
+          <li><a href={`/events/${randomEvent.slug}`}>Random entry</a></li>
+        )}
+      </ul>
+    </RailSection>
+  </Fragment>
+
+  <!-- ─── Right rail ─── -->
+  <Fragment slot="rightRail">
+    {featuredThread && (
+      <RailSection title="Featured thread">
+        <p class="rail-thread">
+          <a href={`/threads/${featuredThread.slug}`} class="rail-thread__title font-display">{featuredThread.title}</a>
+        </p>
+        {featuredThread.core_question && (
+          <p class="rail-thread__q">{featuredThread.core_question}</p>
+        )}
+        <p class="rail-thread__meta font-mono">
+          {featuredThread.eventCount} entries
+          {featuredThread.curator && <> · curator {featuredThread.curator}</>}
+        </p>
+      </RailSection>
+    )}
+
+    {activeControversies.length > 0 && (
+      <RailSection title="Active controversies">
+        <ul class="rail-list rail-list--stacked">
+          {activeControversies.map((c) => (
+            <li>
+              <a href={`/controversies/${c.slug}`}>{c.title}</a>
+              <span class="rail-controversy__meta font-mono">
+                {c.polarity && <>{c.polarity.replace('-', ' ')} · </>}
+                {(c.positions?.length || 0)} positions
+              </span>
+            </li>
+          ))}
+        </ul>
+      </RailSection>
+    )}
+
+    <RailSection title="Epistemic key">
+      <dl class="epistemic-key">
+        <dt><SignificanceFlag level="landmark" /></dt>
+        <dd>Fundamentally alters the trajectory; 2–5 per year.</dd>
+        <dt><SignificanceFlag level="major" /></dt>
+        <dd>Consequential shift in capability, policy, or consensus.</dd>
+        <dt><SignificanceFlag level="notable" /></dt>
+        <dd>Worth recording; contextual or precedent-setting.</dd>
+      </dl>
+    </RailSection>
+  </Fragment>
 </Base>
+
+<style>
+  /* 1. Intro */
+  .intro {
+    padding-bottom: 20px;
+    margin-bottom: 28px;
+    border-bottom: 1px solid var(--color-rule-strong);
+  }
+  .intro__title {
+    font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;
+    font-size: 2.5rem;
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.018em;
+    color: var(--color-ink-dim);
+    margin: 8px 0 14px;
+    text-wrap: balance;
+  }
+  .intro__lede {
+    font-family: var(--font-display);
+    /* Fraunces body-italic: opsz 14 softens curves at reading size. */
+    font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;
+    font-style: italic;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--color-ink-mid);
+    max-width: 62ch;
+    margin: 0 0 16px;
+  }
+  .intro__curator {
+    font-family: var(--font-serif);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-ink-mid);
+    max-width: 62ch;
+    margin: 4px 0 20px;
+    padding: 8px 0 10px 16px;
+    border-left: 2px solid var(--color-rule-double);
+  }
+  .intro__curator-label {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--color-ink);
+    margin-right: 4px;
+  }
+  .intro__curator-sig {
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    color: var(--color-ink-muted);
+    white-space: nowrap;
+  }
+  .intro__stats {
+    font-size: 0.75rem;
+    color: var(--color-ink-faint);
+    letter-spacing: 0.04em;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .intro__stats .sep { color: var(--color-rule-strong); }
+  @media (max-width: 600px) {
+    .intro__title { font-size: 2rem; }
+    .intro__lede { font-size: 1rem; }
+  }
+
+  /* Section scaffold — default / compact / quiet tiers for rhythm. */
+  .home-section {
+    margin: 0 0 36px;
+  }
+  .home-section--compact {
+    margin-bottom: 28px;
+  }
+  .home-section--quiet {
+    margin-bottom: 20px;
+  }
+  .home-section__title {
+    font-variation-settings: 'opsz' 36, 'SOFT' 0, 'WONK' 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--color-ink-dim);
+    margin: 0 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .home-section--compact .home-section__title {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+  }
+  .home-section--quiet .home-section__title {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--color-ink-mid);
+    border-bottom-color: var(--color-rule);
+    margin-bottom: 8px;
+  }
+
+  /* Featured box body extras */
+  .featured-meta {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-top: 4px;
+  }
+  .featured-date {
+    font-size: 11px;
+    color: var(--color-ink-faint);
+  }
+
+  /* Recent entries list */
+  .home-event-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 10px;
+  }
+
+  /* "More" link — Inter 13px wiki-blue, restrained */
+  .more-link {
+    display: inline-block;
+    margin-top: 10px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--color-wiki-link);
+  }
+  .more-link:hover { text-decoration: underline; }
+
+  /* Ongoing threads dl */
+  .wiki-thread-list {
+    margin: 0;
+  }
+  .wiki-thread-list dt {
+    margin: 10px 0 3px;
+  }
+  .wiki-thread-list dt:first-child { margin-top: 0; }
+  .wiki-thread-list__title {
+    font-variation-settings: 'opsz' 36, 'SOFT' 0, 'WONK' 0;
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--color-wiki-link);
+    line-height: 1.25;
+  }
+  .wiki-thread-list__title:hover { text-decoration: underline; }
+  .wiki-thread-list dd {
+    margin: 0 0 14px;
+    padding-left: 0;
+    font-family: var(--font-serif);
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--color-ink-mid);
+  }
+  .wiki-thread-list__q {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;
+    font-style: italic;
+    color: var(--color-ink-mid);
+  }
+  .wiki-thread-list__meta {
+    display: inline;
+    margin-left: 8px;
+    font-size: 11.5px;
+    color: var(--color-ink-faint);
+    letter-spacing: 0.02em;
+  }
+
+  /* Contribute */
+  .home-contribute p {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-ink);
+    max-width: 62ch;
+    margin: 0 0 10px;
+  }
+  .contribute-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+  }
+  .contribute-links a { color: var(--color-wiki-link); }
+  .contribute-links a:hover { text-decoration: underline; }
+
+  /* Rails: plain (no counts) vs stacked (title + meta on separate line) */
+  :global(.rail-list--plain > li) {
+    justify-content: flex-start;
+  }
+  :global(.rail-list--stacked > li) {
+    display: block;
+    padding: 5px 0;
+  }
+  :global(.rail-controversy__meta) {
+    display: block;
+    margin-top: 2px;
+    font-size: 11px;
+    color: var(--color-ink-faint);
+    letter-spacing: 0.02em;
+    text-transform: lowercase;
+  }
+  :global(.rail-pip) {
+    margin-right: 6px;
+  }
+
+  /* Featured thread rail block */
+  :global(.rail-thread) { margin: 0 0 4px; }
+  :global(.rail-thread__title) {
+    font-variation-settings: 'opsz' 36, 'SOFT' 0, 'WONK' 0;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--color-wiki-link);
+    line-height: 1.25;
+  }
+  :global(.rail-thread__title:hover) { text-decoration: underline; }
+  :global(.rail-thread__q) {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;
+    font-style: italic;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--color-ink-mid);
+    margin: 0 0 6px;
+  }
+  :global(.rail-thread__meta) {
+    font-size: 11px;
+    color: var(--color-ink-faint);
+    letter-spacing: 0.02em;
+    margin: 0;
+  }
+
+  /* Epistemic key dl */
+  :global(.epistemic-key) {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 10px;
+    row-gap: 8px;
+    margin: 0;
+  }
+  :global(.epistemic-key dt) {
+    margin: 0;
+    align-self: start;
+    padding-top: 2px;
+  }
+  :global(.epistemic-key dd) {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: var(--color-ink-mid);
+  }
+</style>

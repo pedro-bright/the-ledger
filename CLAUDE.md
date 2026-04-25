@@ -111,22 +111,24 @@ Secondary: contributors submitting source tips via GitHub. Provenance must be on
 Emotional goals: **confidence** (sourcing is solid), **curiosity** (threads invite further reading), **responsibility** (the reader feels the weight of getting AI history right).
 
 ### Aesthetic Direction
-**Editorial typography meets data journalism.** Stripe Press / Works in Progress rigor (generous whitespace, careful hierarchy, serif-mono interplay) combined with Pudding.cool / Observable information density (timelines, graphs, cross-references).
+**Wikipedia-native editorial chronicle.** Light mode on warm paper (`#FAFAF7`), ink-black text (`#14130F`), Wikipedia-blue links (`#0645AD`). Three-column layout with sticky rails. Stripe Press / Works in Progress rigor combined with Pudding.cool / Observable information density.
 
 Locked in — do not redesign without cause:
-- **Dark mode only.** Background `#0A0A0F`, surface `#111118`, text `#E8E4DF`.
-- **Inter (sans) + JetBrains Mono (mono).** Mono is reserved for metadata: dates, counts, tags, IDs, categories. This contrast is a load-bearing pattern.
-- **Category colors** are tokens, not decoration: policy=indigo, models=amber, research=emerald, industry=violet, safety=red, culture=pink, open-source=cyan. Always paired with text; never color-only.
-- **Primary accent** is `category-policy` indigo (#6366F1) for links, CTAs, focus rings.
-- **Significance scale**: landmark=amber, major=sky, notable=dim neutral. `text-sky-400` on a tinted background (`bg-sky-400/10`), `text-sky-300` for inline uppercase labels on the bg itself — the lighter shade compensates for the missing background tint so legibility stays even. Don't collapse these to one value without re-checking contrast.
-- All tokens live in `site/tailwind.config.mjs` under `ledger.*` and `category.*`.
+- **Light mode, warm paper.** `page-bg` #FAFAF7, `ink` #14130F, `wiki-link` #0645AD, `wiki-surface` #F0EDE4, `rule` #E8E4DA. A dark-mode toggle is a deferred follow-up; the site must stay readable as its first commitment.
+- **Four-font system.** Fraunces (display, via `font-variation-settings` opsz 14/36/72/144, loaded as a variable font), Source Serif 4 (body reading, variable), Inter (UI chrome, nav, metadata labels), JetBrains Mono (dates, IDs, counts, tabular-nums). Each font has one clear role — don't collapse them. Fonts load via `@fontsource-variable` / `@fontsource` in `Base.astro`.
+- **Semantic tokens** live in `site/tailwind.config.mjs`: `page-bg`, `ink.{DEFAULT,dim,mid,muted,faint,soft}`, `rule.{DEFAULT,strong,double,utility}`, `wiki.{link,link-visited,link-hover,surface,surface-strong}`, `flag.{landmark,major,notable}-{bg,text}`, `status.{active,dormant}`. Legacy `ledger.*` aliases are remapped light for back-compat and will be removed in a follow-up cleanup.
+- **Category colors** are tokens, not decoration: policy=indigo-700, models=amber-700, research=emerald-700, industry=violet-700, safety=red-700, culture=pink-700, open-source=cyan-700. All AA-contrast on page-bg. Always paired with text; never color-only.
+- **Significance scale**: Landmark (`#FDF2C5`/`#7A5A00`), Major (`#DBECF9`/`#0A4D82`), Notable (`#EDEAE3`/`#5C564D`). Use `<SignificanceFlag level="..." />`.
+- **Component vocabulary** in `site/src/components/wiki/`: Infobox, ArticleShell, FeaturedBox, EventRow, RailSection, PageHeader, SignificanceFlag, CategoryTag. Every detail and index page uses these; don't invent parallel patterns.
+- **Chrome stack** in `site/src/components/chrome/` and `Base.astro`: UtilBar (namespace tabs + account strip), Masthead (brand mark + title + tagline + search), TopNav (primary nav), SiteFooter (credit + license + secondary nav + colophon). Base.astro exposes `layout: 'article'|'index'|'full'` + named slots `leftRail` / `rightRail`.
 
-Push toward: longer line lengths and more generous leading on bodies; subtle fade-in/slide-up animation only (no parallax, no scroll-hijacking); monospace metadata strips, thin 1px borders, understated hover states; dense-but-legible list layouts over card-heavy grids where scanning matters.
+Push toward: longer line lengths (68ch) and generous leading on bodies; subtle fade-in animation only (no parallax, no scroll-hijacking); monospace metadata strips, thin 1px borders, understated hover states; dense-but-legible list layouts (EventRow) over card-heavy grids; Wikipedia-style floated infobox on article pages.
 
 Anti-references — reject changes that make the site resemble any of these:
 - **SaaS landing pages** — gradient heroes, product mocks, "Trusted by" logo walls, emoji value props.
 - **Crypto / AI startup sites** — neon glows, animated gradients, glassmorphism, generated orbs.
 - **Generic AI dashboards** — chatbot bubbles, sparkle icons, "Ask anything" inputs, "Powered by GPT" badges.
+- **The previous dark-mode iteration** — deliberately rejected (April 2026) as "cool-looking but not easy to read." Readability over aesthetic is the deeper principle.
 
 ### Design Principles
 1. **Evidence over polish.** Every claim-bearing element (event, thread, controversy) should feel sourced and inspectable. Provenance is a first-class UI concern.
