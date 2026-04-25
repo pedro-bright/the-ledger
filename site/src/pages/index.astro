@@ -23,8 +23,10 @@ const categories = getCategories();
 const threadEventMap = buildThreadEventMap(events);
 
 // ─── Dates ────────────────────────────────────────────────────
+// Build the "today" label and ISO from local-time fields so the visible label
+// and the <time datetime> attribute can never disagree across UTC offsets.
 const today = new Date();
-const todayIso = today.toISOString().slice(0, 10);
+const todayIso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 const todayMonthDay = todayIso.slice(5, 10); // MM-DD
 const todayLabel = today.toLocaleDateString('en-US', {
   month: 'long',
@@ -36,12 +38,16 @@ const todayLabel = today.toLocaleDateString('en-US', {
 const landmarkEvents = events.filter((e) => e.significance === 'landmark');
 const featured = landmarkEvents[0] || events[0];
 const featuredExcerpt = featured ? getExcerpt(featured.content, 320) : '';
+// Parse ISO date as a local-date (not UTC midnight) so the visible label
+// can't drift off-by-one in negative-offset timezones.
+function formatLocalIsoDate(iso: string, options: Intl.DateTimeFormatOptions): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
+  if (!m) return iso;
+  const [, y, mo, d] = m;
+  return new Date(Number(y), Number(mo) - 1, Number(d)).toLocaleDateString('en-US', options);
+}
 const featuredDateLabel = featured
-  ? new Date(featured.date).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    })
+  ? formatLocalIsoDate(featured.date, { month: 'short', day: 'numeric', year: 'numeric' })
   : '';
 
 // ─── On this day (historical matches, excluding current year) ─
@@ -120,7 +126,7 @@ const stats = {
 
   <!-- 2. Today's featured entry -->
   {featured && (
-    <FeaturedBox title="Today's featured entry" date={featuredDateLabel} meta="§ Editor's pick">
+    <FeaturedBox title="Today's featured entry" date={featuredDateLabel} dateIso={featured.date} meta="§ Editor's pick">
       <h3><a href={`/events/${featured.slug}`}>{featured.title}</a></h3>
       <p>{featuredExcerpt}</p>
       <p class="featured-meta">

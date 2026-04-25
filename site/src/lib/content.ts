@@ -124,6 +124,33 @@ function parseYamlFile(filePath: string): Record<string, any> {
   return yaml.load(raw) as Record<string, any>;
 }
 
+/**
+ * Coerce a frontmatter date value to a YYYY-MM-DD string.
+ *
+ * YAML auto-parses unquoted ISO dates (`date: 2026-04-19`) to Date objects,
+ * and `Date.prototype.toString()` returns the long form
+ * ("Sun Apr 19 2026 00:00:00 GMT+0000 (Coordinated Universal Time)") —
+ * which then leaks into every `<time>{event.date}</time>` consumer. Normalize
+ * here so the rest of the codebase can trust dates are clean ISO strings.
+ */
+function isoDate(value: unknown): string {
+  if (value == null) return '';
+  if (value instanceof Date) {
+    if (Number.isNaN(value.getTime())) return '';
+    return value.toISOString().slice(0, 10);
+  }
+  if (typeof value === 'string') {
+    // Already YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss — keep just the date portion.
+    const trimmed = value.trim();
+    if (/^\d{4}-\d{2}-\d{2}/.test(trimmed)) return trimmed.slice(0, 10);
+    // Anything else (e.g., a weekday-format string) — try to reparse.
+    const d = new Date(trimmed);
+    if (!Number.isNaN(d.getTime())) return d.toISOString().slice(0, 10);
+    return trimmed;
+  }
+  return String(value);
+}
+
 // ─── Title formatting ─────────────────────────────────────────
 
 const CONTROVERSY_TITLES: Record<string, string> = {
@@ -163,8 +190,8 @@ export function loadEvents(): EventData[] {
         events.push({
           id: data.id || file.replace('.md', ''),
           title: data.title || 'Untitled Event',
-          date: data.date?.toString() || '',
-          end_date: data.end_date?.toString(),
+          date: isoDate(data.date),
+          end_date: data.end_date ? isoDate(data.end_date) : undefined,
           category: data.category || 'uncategorized',
           significance: data.significance,
           confidence: data.confidence,
@@ -209,12 +236,12 @@ export function loadThreads(): ThreadData[] {
         id: data.id || file.replace('.md', ''),
         title: data.title || 'Untitled Thread',
         status: data.status,
-        started: data.started?.toString(),
+        started: data.started ? isoDate(data.started) : undefined,
         core_question: data.core_question,
         curator: data.curator,
         curator_scope: data.curator_scope,
         contestation: data.contestation,
-        last_updated: data.last_updated?.toString(),
+        last_updated: data.last_updated ? isoDate(data.last_updated) : undefined,
         events: data.events,
         controversies: data.controversies,
         content,
@@ -244,7 +271,7 @@ export function loadControversies(): ControversyData[] {
         thread: data.thread,
         status: data.status,
         polarity: data.polarity,
-        last_updated: data.last_updated?.toString(),
+        last_updated: data.last_updated ? isoDate(data.last_updated) : undefined,
         positions: data.positions,
         content,
         htmlContent,

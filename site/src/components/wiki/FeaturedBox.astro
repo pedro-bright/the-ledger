@@ -3,19 +3,22 @@
 // Header strip with title + date; body holds lead paragraph + link.
 interface Props {
   title: string;
+  /** Human-readable label for the date — e.g. "Mar 30, 2026". */
   date?: string;
+  /** Machine-readable ISO date for the <time datetime> attribute. */
+  dateIso?: string;
   /** Secondary label shown at right of the header, e.g. "§ Editor's pick". */
   meta?: string;
 }
 
-const { title, date, meta } = Astro.props;
+const { title, date, dateIso, meta } = Astro.props;
 ---
 <section class="wiki-box wiki-box--featured" aria-labelledby="featured-title">
   <header class="wiki-box__head">
     <h2 id="featured-title" class="wiki-box__title">{title}</h2>
     {(date || meta) && (
       <span class="wiki-box__meta">
-        {date && <time class="wiki-box__date" datetime={date}>{date}</time>}
+        {date && <time class="wiki-box__date" datetime={dateIso || date}>{date}</time>}
         {meta && <span class="wiki-box__sub">{meta}</span>}
       </span>
     )}
