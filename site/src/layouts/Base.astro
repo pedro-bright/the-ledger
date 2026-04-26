@@ -16,6 +16,7 @@ import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/500.css';
 
 import SEO from '../components/SEO.astro';
+import PostHog from '../components/posthog.astro';
 import UtilBar from '../components/chrome/UtilBar.astro';
 import Masthead from '../components/chrome/Masthead.astro';
 import TopNav from '../components/chrome/TopNav.astro';
@@ -55,6 +56,7 @@ const hasRightRail = Astro.slots.has('rightRail');
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title="The Ledger" href="/feed.xml" />
     <SEO title={pageTitle} description={description} image={image} type={type} />
+    <PostHog />
   </head>
   <body class="min-h-screen flex flex-col bg-page-bg text-ink">
     <a href="#main" class="skip-link">Skip to main content</a>

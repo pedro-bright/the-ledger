@@ -242,6 +242,21 @@ function displayActor(id: string): { name: string; href: string } {
   </Fragment>
 </Base>
 
+<script is:inline define:vars={{ controversyId: controversy.id, controversyTitle: controversy.title }}>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Track external source link clicks in controversy references and position source lists
+    document.querySelectorAll('.wiki-article__references a[target="_blank"], .position__sources a[target="_blank"]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        window.posthog?.capture('controversy_source_clicked', {
+          controversy_id: controversyId,
+          controversy_title: controversyTitle,
+          source_title: el.textContent?.trim(),
+        });
+      });
+    });
+  });
+</script>
+
 <style>
   .position { scroll-margin-top: 20px; }
   .position__label {

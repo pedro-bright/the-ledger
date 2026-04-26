@@ -156,6 +156,15 @@ export default function Explorer({ events, categories }: Props) {
     return () => clearTimeout(t);
   }, [hasHydrated, search, activeCategories, activeSignificance, selectedYear, sortOption]);
 
+  // Track search queries with 500ms debounce — fires after the user stops typing.
+  useEffect(() => {
+    if (!hasHydrated || !search) return;
+    const t = setTimeout(() => {
+      (window as any).posthog?.capture('explorer_searched', { query: search, result_count: filtered.length });
+    }, 500);
+    return () => clearTimeout(t);
+  }, [hasHydrated, search]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const availableYears = useMemo(() => {
     const years = new Set<number>();
     for (const e of events) {
@@ -299,7 +308,14 @@ export default function Explorer({ events, categories }: Props) {
               <button
                 key={cat.id}
                 type="button"
-                onClick={() => toggle(setActiveCategories, cat.id)}
+                onClick={() => {
+                  toggle(setActiveCategories, cat.id);
+                  (window as any).posthog?.capture('explorer_filter_applied', {
+                    filter_type: 'category',
+                    filter_value: cat.id,
+                    action: isActive ? 'removed' : 'added',
+                  });
+                }}
                 aria-pressed={isActive}
                 className={`${chipBase} ${isActive ? chipActive : chipResting}`}
               >
@@ -323,7 +339,14 @@ export default function Explorer({ events, categories }: Props) {
               <button
                 key={level}
                 type="button"
-                onClick={() => toggle(setActiveSignificance, level)}
+                onClick={() => {
+                  toggle(setActiveSignificance, level);
+                  (window as any).posthog?.capture('explorer_filter_applied', {
+                    filter_type: 'significance',
+                    filter_value: level,
+                    action: isActive ? 'removed' : 'added',
+                  });
+                }}
                 aria-pressed={isActive}
                 aria-label={`Filter by ${SIGNIFICANCE_LABEL[level]} significance`}
                 className={`${chipBase} ${isActive ? chipActive : chipResting}`}
@@ -378,7 +401,14 @@ export default function Explorer({ events, categories }: Props) {
                       <button
                         key={year}
                         type="button"
-                        onClick={() => setSelectedYear(isActive ? null : year)}
+                        onClick={() => {
+                          setSelectedYear(isActive ? null : year);
+                          (window as any).posthog?.capture('explorer_filter_applied', {
+                            filter_type: 'year',
+                            filter_value: year,
+                            action: isActive ? 'removed' : 'added',
+                          });
+                        }}
                         aria-pressed={isActive}
                         className={`${chipBase} font-mono tabular-nums ${isActive ? chipActive : chipResting}`}
                       >

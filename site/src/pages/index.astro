@@ -270,6 +270,41 @@ const stats = {
     </RailSection>
   </Fragment>
 
+  <!-- PostHog: home-page action tracking -->
+  <script is:inline define:vars={{ featuredSlug: featured?.slug, featuredTitle: featured?.title }}>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Featured entry clicks (title + "Continue reading" link)
+      if (featuredSlug) {
+        document.querySelectorAll('a[href="/events/' + featuredSlug + '"]').forEach(function (el) {
+          el.addEventListener('click', function () {
+            window.posthog?.capture('featured_entry_clicked', {
+              event_slug: featuredSlug,
+              event_title: featuredTitle,
+            });
+          });
+        });
+      }
+
+      // Contribute section link clicks
+      document.querySelectorAll('.contribute-links a').forEach(function (el) {
+        el.addEventListener('click', function () {
+          window.posthog?.capture('contribute_link_clicked', {
+            link_text: el.textContent?.trim(),
+            link_href: el.getAttribute('href'),
+          });
+        });
+      });
+
+      // RSS feed link click
+      var rssFeedLink = document.querySelector('a[href="/feed.xml"]');
+      if (rssFeedLink) {
+        rssFeedLink.addEventListener('click', function () {
+          window.posthog?.capture('rss_feed_clicked');
+        });
+      }
+    });
+  </script>
+
   <!-- ─── Right rail ─── -->
   <Fragment slot="rightRail">
     {featuredThread && (

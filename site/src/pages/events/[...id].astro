@@ -264,6 +264,32 @@ const description = `${event.title} — ${event.date}`;
   </ArticleShell>
 </Base>
 
+<script is:inline define:vars={{ eventId: event.id, eventTitle: event.title, eventCategory: event.category }}>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Track source reference link clicks
+    document.querySelectorAll('.wiki-article__references a[target="_blank"]:not(.ref-archive)').forEach(function (el) {
+      el.addEventListener('click', function () {
+        window.posthog?.capture('source_link_clicked', {
+          event_id: eventId,
+          event_title: eventTitle,
+          event_category: eventCategory,
+          source_title: el.textContent?.trim(),
+        });
+      });
+    });
+
+    // Track archive copy link clicks
+    document.querySelectorAll('a.ref-archive').forEach(function (el) {
+      el.addEventListener('click', function () {
+        window.posthog?.capture('archive_link_clicked', {
+          event_id: eventId,
+          event_title: eventTitle,
+        });
+      });
+    });
+  });
+</script>
+
 <style>
   .wiki-section { margin-top: 2rem; }
   .rail-list--stacked > li { display: block; }

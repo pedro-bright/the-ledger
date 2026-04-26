@@ -90,6 +90,11 @@ export default function Graph({ data }: Props) {
       node.type === 'thread' ? `/threads/${node.id}` :
       node.type === 'controversy' ? `/controversies/${node.id}` :
       `/actors/${node.id}`;
+    (window as any).posthog?.capture('graph_node_clicked', {
+      node_type: node.type,
+      node_id: node.id,
+      node_title: node.title,
+    });
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.button === 1) {
       window.open(route, '_blank', 'noopener,noreferrer');
     } else {
@@ -127,7 +132,13 @@ export default function Graph({ data }: Props) {
             <button
               key={type}
               type="button"
-              onClick={() => toggleType(type)}
+              onClick={() => {
+                toggleType(type);
+                (window as any).posthog?.capture('graph_type_toggled', {
+                  node_type: type,
+                  action: isHidden ? 'shown' : 'hidden',
+                });
+              }}
               aria-pressed={!isHidden}
               aria-label={`${isHidden ? 'Show' : 'Hide'} ${TYPE_LABELS[type].toLowerCase()}`}
               className={`${base} ${isHidden ? hiddenCls : visible}`}
