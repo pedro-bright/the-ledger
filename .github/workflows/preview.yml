@@ -52,6 +52,9 @@ jobs:
 
       - name: Build site
         working-directory: site
+        env:
+          PUBLIC_POSTHOG_PROJECT_TOKEN: ${{ secrets.PUBLIC_POSTHOG_PROJECT_TOKEN }}
+          PUBLIC_POSTHOG_HOST: ${{ secrets.PUBLIC_POSTHOG_HOST }}
         run: npm run build
 
       - name: Install Vercel CLI
