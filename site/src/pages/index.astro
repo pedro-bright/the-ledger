@@ -35,16 +35,18 @@ const todayLabel = today.toLocaleDateString('en-US', {
 });
 
 // ─── Today's featured entry ───────────────────────────────────
-// Rotate daily through landmarks (and fall back to majors, then to any
-// event) so the front page actually changes day-to-day. The index is a
-// deterministic function of today's calendar date — same entry for every
-// reader on the same UTC day, then advances at midnight UTC.
-const landmarkEvents = events.filter((e) => e.significance === 'landmark');
-const majorEvents = events.filter((e) => e.significance === 'major');
-const featuredPool =
-  landmarkEvents.length > 0 ? landmarkEvents :
-  majorEvents.length > 0 ? majorEvents :
-  events;
+// Pool = the N most-recent landmark+major events (loadEvents pre-sorts
+// newest-first), so the date stamp under "Today's featured entry" feels
+// current instead of pulling an 8-month-old landmark out of the all-time
+// rotation. We still rotate deterministically by daysSinceEpoch within
+// the pool — same entry for every reader on the same UTC day, advances
+// at midnight UTC. Fall back to all events only if no significant ones
+// exist (effectively never, but keeps the front page renderable).
+const RECENT_FEATURED_POOL_SIZE = 12;
+const recentSignificant = events
+  .filter((e) => e.significance === 'landmark' || e.significance === 'major')
+  .slice(0, RECENT_FEATURED_POOL_SIZE);
+const featuredPool = recentSignificant.length > 0 ? recentSignificant : events;
 const daysSinceEpoch = Math.floor(
   Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) / 86_400_000,
 );
