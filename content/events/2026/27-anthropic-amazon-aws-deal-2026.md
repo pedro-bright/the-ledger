@@ -40,7 +40,7 @@ revision:
   created: 2026-04-24
   last_reviewed: 2026-04-24
   draft_assistance: ai-assisted
-  final_author: pedro-bright
+  final_author: terry-tang
 ---
 
 ## Summary
