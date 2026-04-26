@@ -347,7 +347,12 @@ const stats = {
     font-size: 0.9375rem;
     line-height: 1.6;
     color: var(--color-ink-mid);
-    max-width: 62ch;
+    /* Source Serif 4's '0' is wider than Fraunces italic's, so 62ch in
+       this block resolves to a visibly shorter pixel width than the lede's
+       62ch above and reads as if line breaks were premature. 86ch here
+       targets the same rendered line length as the lede (62ch in Fraunces
+       italic ≈ 86ch in Source Serif 4 at this font-size). */
+    max-width: 86ch;
     margin: 4px 0 20px;
     padding: 8px 0 10px 16px;
     border-left: 2px solid var(--color-rule-double);
