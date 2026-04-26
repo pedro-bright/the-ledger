@@ -108,7 +108,7 @@ If the site ever feels reasonable instead of alive, we've lost.
 
 ## About
 
-Curated by [Terry Tang](https://github.com/terrytangyin) under the [Editorial Constitution](editorial/constitution.md). All editorial decisions, source selections, and significance ratings follow its principles.
+Curated by [Terry Tang](https://terrytang.dev) under the [Editorial Constitution](editorial/constitution.md). All editorial decisions, source selections, and significance ratings follow its principles.
 
 The Ledger is **curator-led** at launch. The four-tier contribution model (see [CONTRIBUTING.md](CONTRIBUTING.md)) is real but, in practice, only Tier 0 (issue-based source tips) and Tier 1 (curator-normalized events) are active. Tier 2 (trusted contributors) and Tier 3 (editorial board) are roadmap — they activate as the project finds collaborators who want to commit to its standards.
 
