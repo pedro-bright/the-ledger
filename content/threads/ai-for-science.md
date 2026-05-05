@@ -9,7 +9,7 @@ curator_scope: initial-synthesis
 contestation:
   status: uncontested
   challenge_window: open
-last_updated: 2026-04-19
+last_updated: 2026-05-05
 events:
   - arc-institute-evo-2-dna-foundation-model
   - ecmwf-aifs-operational
@@ -21,6 +21,7 @@ events:
   - rfdiffusion-antibody-design-nature
   - alphaproof-nature-paper
   - rfdiffusion2-enzyme-design-nature
+  - openai-o1-er-diagnosis-study
 ---
 
 ## Canonical Synthesis
