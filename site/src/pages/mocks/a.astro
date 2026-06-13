@@ -1,0 +1,784 @@
+---
+import MockShell from '../../layouts/MockShell.astro';
+import { loadEvents, loadThreads, loadControversies, getCategories, getExcerpt } from '../../lib/content';
+
+const events = loadEvents();
+const threads = loadThreads();
+const controversies = loadControversies();
+const categories = getCategories();
+
+const featuredEvent = events[0];
+const recentEvents = events.slice(0, 10);
+const featuredThread = threads.find((t) => t.core_question) || threads[0];
+const activeThreads = threads.slice(0, 4);
+
+const categoryCounts = new Map<string, number>();
+for (const ev of events) {
+  categoryCounts.set(ev.category, (categoryCounts.get(ev.category) || 0) + 1);
+}
+
+function fmtLong(d: string) {
+  return new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+function fmtShort(d: string) {
+  return new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+const featuredExcerpt = getExcerpt(featuredEvent.content, 360);
+---
+
+<MockShell title="Wikipedia-native" letter="A">
+  <div class="wiki">
+    <!-- utility strip -->
+    <div class="wiki-utilbar">
+      <div class="wiki-utilbar__inner">
+        <ul class="wiki-utilbar__tabs">
+          <li class="is-active"><a href="#main">Main Page</a></li>
+          <li><a href="#">Discussion</a></li>
+          <li><a href="#">History</a></li>
+          <li><a href="#">Edit</a></li>
+        </ul>
+        <ul class="wiki-utilbar__accounts">
+          <li><a href="#">Contribute</a></li>
+          <li><a href="#">RSS</a></li>
+          <li><a href="#">Log in</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- masthead -->
+    <header class="wiki-masthead">
+      <div class="wiki-masthead__inner">
+        <a class="wiki-brand" href="/mocks/a">
+          <span class="wiki-brand__mark">L</span>
+          <div class="wiki-brand__text">
+            <h1 class="wiki-brand__title">The Ledger</h1>
+            <p class="wiki-brand__tag">The open chronicle of the AI era</p>
+          </div>
+        </a>
+        <div class="wiki-search">
+          <label class="sr-only" for="wiki-search-input">Search the Ledger</label>
+          <input id="wiki-search-input" type="search" placeholder={`Search ${events.length} entries, ${threads.length} threads, ${controversies.length} controversies…`} />
+        </div>
+      </div>
+      <nav class="wiki-nav" aria-label="Primary">
+        <a href="#" class="is-active">Main Page</a>
+        <a href="#">All entries</a>
+        <a href="#">Threads</a>
+        <a href="#">Controversies</a>
+        <a href="#">Actors</a>
+        <a href="#">Timeline</a>
+        <a href="#">Random</a>
+        <a href="#">About</a>
+      </nav>
+    </header>
+
+    <!-- layout: [left rail | main | right rail] -->
+    <div class="wiki-body">
+      <!-- LEFT RAIL -->
+      <aside class="wiki-rail wiki-rail--left" aria-label="Navigation">
+        <section class="wiki-rail__block">
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="#featured">Featured entry</a></li>
+            <li><a href="#on-this-day">On this day</a></li>
+            <li><a href="#recent">Recent entries</a></li>
+            <li><a href="#threads">Ongoing threads</a></li>
+            <li><a href="#sample">Sample article</a></li>
+          </ul>
+        </section>
+
+        <section class="wiki-rail__block">
+          <h4>Categories</h4>
+          <ul>
+            {categories.map((c) => (
+              <li>
+                <a href="#">{c.label}</a>
+                <span class="wiki-rail__count">{categoryCounts.get(c.id) || 0}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section class="wiki-rail__block">
+          <h4>Tools</h4>
+          <ul>
+            <li><a href="#">What links here</a></li>
+            <li><a href="#">Graph view</a></li>
+            <li><a href="#">Cite this page</a></li>
+            <li><a href="#">Printable version</a></li>
+          </ul>
+        </section>
+
+        <section class="wiki-rail__block">
+          <h4>Contribute</h4>
+          <ul>
+            <li><a href="#">Submit a source</a></li>
+            <li><a href="#">Challenge a claim</a></li>
+            <li><a href="#">Editorial policies</a></li>
+          </ul>
+        </section>
+      </aside>
+
+      <!-- MAIN -->
+      <main class="wiki-main" id="main">
+        <div class="wiki-intro">
+          <h1 class="wiki-intro__title">The Ledger</h1>
+          <p class="wiki-intro__sub">
+            An immutable, contestable chronicle of the AI era. <strong>{events.length}</strong> events,
+            <strong>{threads.length}</strong> threads, <strong>{controversies.length}</strong> controversies,
+            maintained by Terry Tang and community contributors under CC-BY-SA-4.0.
+          </p>
+        </div>
+
+        <!-- Featured entry box -->
+        <section class="wiki-box wiki-box--featured" id="featured">
+          <header class="wiki-box__head">
+            <h2>Today's featured entry</h2>
+            <span class="wiki-box__meta">{fmtLong(featuredEvent.date)}</span>
+          </header>
+          <div class="wiki-box__body">
+            <h3 class="wiki-box__title">{featuredEvent.title}</h3>
+            <p class="wiki-box__lead">{featuredExcerpt}</p>
+            <p class="wiki-box__more"><a href="#sample">(Full article below ↓)</a></p>
+          </div>
+        </section>
+
+        <!-- On this day -->
+        <section class="wiki-section" id="on-this-day">
+          <h2>On this day</h2>
+          <p class="wiki-muted">Entries from the ledger, published near today across years.</p>
+          <ul class="wiki-list wiki-list--dated">
+            {recentEvents.slice(0, 5).map((e) => (
+              <li>
+                <span class="wiki-list__date">{fmtShort(e.date)}</span>
+                — <a href="#">{e.title}</a>
+                {e.significance === 'landmark' && <span class="wiki-flag wiki-flag--landmark">landmark</span>}
+                {e.significance === 'major' && <span class="wiki-flag wiki-flag--major">major</span>}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <!-- Recent entries -->
+        <section class="wiki-section" id="recent">
+          <h2>Recent entries</h2>
+          <ul class="wiki-list wiki-list--dated">
+            {recentEvents.map((e) => (
+              <li>
+                <span class="wiki-list__date">{fmtShort(e.date)}</span>
+                — <a href="#">{e.title}</a>
+                <span class="wiki-list__cat">({e.category})</span>
+              </li>
+            ))}
+          </ul>
+          <p class="wiki-seemore"><a href="#">All {events.length} entries →</a></p>
+        </section>
+
+        <!-- Ongoing threads -->
+        <section class="wiki-section" id="threads">
+          <h2>Ongoing threads</h2>
+          <p class="wiki-muted">Long-running questions with named curators. Threads gather events that speak to a single unresolved inquiry.</p>
+          <dl class="wiki-thread-list">
+            {activeThreads.map((t) => (
+              <Fragment>
+                <dt><a href="#">{t.title}</a></dt>
+                <dd>
+                  {t.core_question && <em>{t.core_question}</em>}
+                  <br />
+                  <span class="wiki-muted-inline">
+                    {t.events?.length || 0} events
+                    {t.curator && <Fragment> · curated by {t.curator}</Fragment>}
+                    {t.status && <Fragment> · <span class={`wiki-status wiki-status--${t.status}`}>{t.status}</span></Fragment>}
+                  </span>
+                </dd>
+              </Fragment>
+            ))}
+          </dl>
+        </section>
+
+        <hr class="wiki-hr" />
+
+        <!-- SAMPLE ARTICLE -->
+        <article class="wiki-article" id="sample">
+          <div class="wiki-article__head">
+            <p class="wiki-crumbs">
+              <a href="#">Home</a> » <a href="#">Events</a> » <a href="#">{new Date(featuredEvent.date).getFullYear()}</a> » <strong>{featuredEvent.title}</strong>
+            </p>
+            <h1>{featuredEvent.title}</h1>
+            <p class="wiki-article__sub"><em>From the Ledger, the open chronicle of the AI era.</em></p>
+          </div>
+
+          <aside class="wiki-infobox">
+            <header class="wiki-infobox__head">
+              <h3>{featuredEvent.title}</h3>
+            </header>
+            <dl>
+              <dt>Date</dt>
+              <dd>{fmtLong(featuredEvent.date)}</dd>
+              <dt>Category</dt>
+              <dd><a href="#">{featuredEvent.category}</a></dd>
+              {featuredEvent.significance && (
+                <Fragment>
+                  <dt>Significance</dt>
+                  <dd>{featuredEvent.significance}</dd>
+                </Fragment>
+              )}
+              {featuredEvent.confidence && (
+                <Fragment>
+                  <dt>Confidence</dt>
+                  <dd>{featuredEvent.confidence}</dd>
+                </Fragment>
+              )}
+              {featuredEvent.contestation?.status && (
+                <Fragment>
+                  <dt>Contestation</dt>
+                  <dd>{featuredEvent.contestation.status}</dd>
+                </Fragment>
+              )}
+              {featuredEvent.actors && featuredEvent.actors.length > 0 && (
+                <Fragment>
+                  <dt>Actors</dt>
+                  <dd>
+                    <ul>
+                      {featuredEvent.actors.slice(0, 5).map((a) => (
+                        <li><a href="#">{a.id}</a> <span class="wiki-muted-inline">({a.role})</span></li>
+                      ))}
+                    </ul>
+                  </dd>
+                </Fragment>
+              )}
+              {featuredEvent.threads && featuredEvent.threads.length > 0 && (
+                <Fragment>
+                  <dt>Threads</dt>
+                  <dd>
+                    <ul>
+                      {featuredEvent.threads.map((t) => (
+                        <li><a href="#">{t}</a></li>
+                      ))}
+                    </ul>
+                  </dd>
+                </Fragment>
+              )}
+            </dl>
+          </aside>
+
+          <div class="wiki-prose" set:html={featuredEvent.htmlContent} />
+
+          <h2 class="wiki-h2">References</h2>
+          <ol class="wiki-refs">
+            {(featuredEvent.sources || []).map((s) => (
+              <li>
+                <a href={s.url} target="_blank" rel="noopener">{s.title}</a>
+                {s.publisher && <Fragment>. <em>{s.publisher}</em></Fragment>}
+                {s.date && <Fragment>, {fmtShort(s.date)}</Fragment>}.
+                {s.archive_url && <Fragment> [<a href={s.archive_url} target="_blank" rel="noopener">archived</a>]</Fragment>}
+              </li>
+            ))}
+          </ol>
+
+          <h2 class="wiki-h2">See also</h2>
+          <ul class="wiki-list">
+            {featuredEvent.threads?.map((t) => (
+              <li><a href="#">Thread: <em>{t}</em></a></li>
+            ))}
+            {featuredEvent.related?.slice(0, 3).map((r) => (
+              <li><a href="#">{r}</a></li>
+            ))}
+            <li><a href="#">Category: {featuredEvent.category}</a></li>
+          </ul>
+
+          <p class="wiki-lastmod">
+            Last modified: {fmtLong(featuredEvent.date)}. Entries are immutable; corrections appear as revisions
+            on the version history tab.
+          </p>
+        </article>
+      </main>
+
+      <!-- RIGHT RAIL -->
+      <aside class="wiki-rail wiki-rail--right" aria-label="Metadata">
+        <section class="wiki-rail__block">
+          <h4>Featured thread</h4>
+          <p class="wiki-rail__thread-title"><a href="#">{featuredThread.title}</a></p>
+          {featuredThread.core_question && <p class="wiki-rail__thread-q"><em>{featuredThread.core_question}</em></p>}
+          <p class="wiki-rail__muted">
+            {featuredThread.events?.length || 0} events
+            {featuredThread.curator && <Fragment> · {featuredThread.curator}</Fragment>}
+          </p>
+        </section>
+
+        <section class="wiki-rail__block">
+          <h4>Active controversies</h4>
+          <ul>
+            {controversies.slice(0, 3).map((c) => (
+              <li><a href="#">{c.title}</a></li>
+            ))}
+          </ul>
+        </section>
+
+        <section class="wiki-rail__block wiki-rail__epistemic">
+          <h4>Epistemic key</h4>
+          <dl>
+            <dt><span class="wiki-flag wiki-flag--landmark">landmark</span></dt>
+            <dd>Future textbooks will cover it.</dd>
+            <dt><span class="wiki-flag wiki-flag--major">major</span></dt>
+            <dd>Shifts the landscape meaningfully.</dd>
+            <dt><span class="wiki-flag wiki-flag--notable">notable</span></dt>
+            <dd>Worth documenting for the record.</dd>
+          </dl>
+        </section>
+      </aside>
+    </div>
+
+    <footer class="wiki-footer">
+      <p>
+        <strong>The Ledger.</strong> Content released under CC-BY-SA-4.0. Curated framework and editorial
+        voice by Terry Tang. Contributions accepted via GitHub pull request or source submission.
+      </p>
+      <ul class="wiki-footer__links">
+        <li><a href="#">Editorial constitution</a></li>
+        <li><a href="#">Style guide</a></li>
+        <li><a href="#">Evidence standards</a></li>
+        <li><a href="#">AI assistance policy</a></li>
+        <li><a href="#">Colophon</a></li>
+        <li><a href="https://github.com/terrytangyin/the-ledger">GitHub</a></li>
+        <li><a href="#">Atom feed</a></li>
+      </ul>
+      <p class="wiki-footer__rev">
+        Mock A · Wikipedia-native · Compare: <a href="/mocks/b">B</a> · <a href="/mocks/c">C</a> · <a href="/mocks/d">D</a>
+      </p>
+    </footer>
+  </div>
+
+  <style>
+    .wiki {
+      background: #FAFAF7;
+      color: #14130F;
+      font-family: 'Source Serif 4', 'Charter', Georgia, serif;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .wiki-utilbar {
+      background: #F0EDE4;
+      border-bottom: 1px solid #D9D3C5;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+    }
+    .wiki-utilbar__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 36px;
+    }
+    .wiki-utilbar__tabs, .wiki-utilbar__accounts {
+      display: flex; gap: 0; list-style: none; margin: 0; padding: 0;
+    }
+    .wiki-utilbar__tabs li {
+      padding: 8px 14px; border-right: 1px solid #E3DECF; color: #5C564D;
+    }
+    .wiki-utilbar__tabs li.is-active {
+      background: #FAFAF7; color: #14130F; margin-bottom: -1px; font-weight: 600;
+    }
+    .wiki-utilbar__accounts li { padding: 8px 12px; color: #5C564D; }
+    .wiki-utilbar a { text-decoration: none; color: inherit; }
+    .wiki-utilbar a:hover { color: #0645AD; }
+
+    .wiki-masthead { border-bottom: 1px solid #D9D3C5; }
+    .wiki-masthead__inner {
+      max-width: 1280px; margin: 0 auto;
+      padding: 28px 24px 20px;
+      display: flex; justify-content: space-between; align-items: center; gap: 40px;
+    }
+    .wiki-brand {
+      display: flex; align-items: center; gap: 16px;
+      text-decoration: none; color: inherit;
+    }
+    .wiki-brand__mark {
+      width: 56px; height: 56px;
+      border: 1.5px solid #14130F;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144;
+      font-weight: 500; font-size: 32px; color: #14130F;
+    }
+    .wiki-brand__title {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144;
+      font-weight: 500; font-size: 2rem; line-height: 1;
+      letter-spacing: -0.012em;
+      margin: 0 0 4px;
+    }
+    .wiki-brand__tag {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px; letter-spacing: 0.04em;
+      color: #5C564D; margin: 0; font-style: italic;
+    }
+    .wiki-search { flex: 0 1 380px; }
+    .wiki-search input {
+      width: 100%; padding: 9px 12px;
+      border: 1px solid #B8AE95; border-radius: 2px;
+      background: #FFFFFF;
+      font-family: 'Inter', sans-serif; font-size: 13px; color: #14130F;
+    }
+    .wiki-search input:focus {
+      outline: 2px solid #0645AD; outline-offset: 0; border-color: #0645AD;
+    }
+    .wiki-nav {
+      max-width: 1280px; margin: 0 auto; padding: 0 24px;
+      display: flex; gap: 0;
+      font-family: 'Inter', sans-serif; font-size: 13px;
+      border-top: 1px solid #E8E4DA;
+    }
+    .wiki-nav a {
+      padding: 10px 14px; text-decoration: none; color: #3C3731;
+      border-bottom: 2px solid transparent;
+      transition: color 120ms ease, border-color 120ms ease;
+    }
+    .wiki-nav a:hover { color: #0645AD; }
+    .wiki-nav a.is-active {
+      color: #14130F; font-weight: 600; border-bottom-color: #14130F;
+    }
+
+    .wiki-body {
+      max-width: 1280px; margin: 0 auto;
+      padding: 28px 24px 48px;
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr) 280px;
+      gap: 36px; align-items: start;
+    }
+    @media (max-width: 1100px) {
+      .wiki-body { grid-template-columns: 200px minmax(0, 1fr); }
+      .wiki-rail--right { display: none; }
+    }
+    @media (max-width: 780px) {
+      .wiki-body { grid-template-columns: 1fr; }
+      .wiki-rail--left { display: none; }
+    }
+
+    .wiki-rail {
+      position: sticky; top: 20px;
+      font-family: 'Inter', sans-serif; font-size: 13px;
+    }
+    .wiki-rail__block {
+      margin-bottom: 28px; padding-bottom: 20px;
+      border-bottom: 1px solid #E8E4DA;
+    }
+    .wiki-rail__block:last-child { border-bottom: 0; }
+    .wiki-rail h4 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 36;
+      font-weight: 600; font-size: 15px; color: #14130F;
+      margin: 0 0 10px;
+    }
+    .wiki-rail ul { list-style: none; padding: 0; margin: 0; }
+    .wiki-rail li {
+      padding: 4px 0;
+      display: flex; justify-content: space-between; align-items: baseline;
+    }
+    .wiki-rail a { color: #0645AD; text-decoration: none; }
+    .wiki-rail a:hover { text-decoration: underline; }
+    .wiki-rail__count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: #7A7368;
+    }
+    .wiki-rail__thread-title {
+      margin: 0 0 6px;
+      font-family: 'Source Serif 4', serif;
+      font-size: 14px; line-height: 1.3;
+    }
+    .wiki-rail__thread-q {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 14;
+      font-style: italic; font-size: 13px; line-height: 1.45;
+      color: #3C3731; margin: 0 0 8px;
+    }
+    .wiki-rail__muted { color: #7A7368; font-size: 12px; margin: 0; }
+    .wiki-rail__epistemic dl {
+      margin: 0;
+      display: grid; grid-template-columns: auto 1fr;
+      gap: 8px 10px; font-size: 12px;
+    }
+    .wiki-rail__epistemic dt { padding-top: 3px; }
+    .wiki-rail__epistemic dd { margin: 0; color: #3C3731; line-height: 1.4; }
+
+    .wiki-main { min-width: 0; }
+    .wiki-intro {
+      padding-bottom: 20px; border-bottom: 1px solid #D9D3C5;
+      margin-bottom: 28px;
+    }
+    .wiki-intro__title {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144;
+      font-weight: 400; font-size: 2.5rem; line-height: 1;
+      letter-spacing: -0.015em; margin: 0 0 12px;
+      color: #0F0E0C;
+    }
+    .wiki-intro__sub {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 14;
+      font-style: italic; font-size: 17px; line-height: 1.45;
+      color: #3C3731; margin: 0; max-width: 62ch;
+    }
+
+    .wiki-box {
+      margin-bottom: 32px;
+      border: 1px solid #D9D3C5; background: #FFFFFF;
+      border-radius: 2px;
+    }
+    .wiki-box__head {
+      padding: 10px 18px;
+      background: #F0EDE4; border-bottom: 1px solid #D9D3C5;
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-family: 'Inter', sans-serif;
+    }
+    .wiki-box__head h2 {
+      margin: 0;
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 36;
+      font-size: 17px; font-weight: 600; color: #14130F;
+    }
+    .wiki-box__meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: #7A7368;
+    }
+    .wiki-box__body { padding: 18px; }
+    .wiki-box__title {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 72;
+      font-weight: 500; font-size: 22px; line-height: 1.2;
+      margin: 0 0 10px; color: #0F0E0C;
+    }
+    .wiki-box__lead { margin: 0 0 10px; color: #2B2620; }
+    .wiki-box__more { margin: 0; font-size: 14px; }
+    .wiki-box__more a { color: #0645AD; text-decoration: none; }
+    .wiki-box__more a:hover { text-decoration: underline; }
+
+    .wiki-section { margin-bottom: 36px; }
+    .wiki-section h2 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 36;
+      font-weight: 500; font-size: 26px; line-height: 1.15;
+      margin: 0 0 8px; padding-bottom: 4px;
+      border-bottom: 1px solid #E8E4DA;
+      color: #0F0E0C;
+    }
+    .wiki-muted {
+      color: #5C564D; font-style: italic; font-size: 15px;
+      margin: 0 0 12px;
+    }
+    .wiki-muted-inline { color: #5C564D; }
+
+    .wiki-list { list-style: disc; padding-left: 22px; margin: 0; }
+    .wiki-list li { margin-bottom: 4px; color: #2B2620; }
+    .wiki-list--dated { list-style: none; padding-left: 0; }
+    .wiki-list--dated li { padding: 3px 0; font-size: 15px; }
+    .wiki-list__date {
+      display: inline-block; width: 110px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; color: #7A7368;
+      letter-spacing: 0.02em;
+    }
+    .wiki-list__cat {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: #7A7368;
+      margin-left: 6px;
+    }
+    .wiki-list a { color: #0645AD; text-decoration: none; }
+    .wiki-list a:hover { text-decoration: underline; }
+    .wiki-seemore {
+      margin: 12px 0 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+    }
+    .wiki-seemore a { color: #0645AD; text-decoration: none; }
+    .wiki-seemore a:hover { text-decoration: underline; }
+
+    .wiki-flag {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 1px 6px;
+      font-family: 'Inter', sans-serif;
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      border-radius: 2px; vertical-align: middle;
+    }
+    .wiki-flag--landmark { background: #FDF2C5; color: #7A5A00; }
+    .wiki-flag--major { background: #DBECF9; color: #0A4D82; }
+    .wiki-flag--notable { background: #EDEAE3; color: #5C564D; }
+
+    .wiki-status {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+    }
+    .wiki-status--active { color: #0A7C32; }
+    .wiki-status--dormant { color: #7A7368; }
+
+    .wiki-thread-list { margin: 0; }
+    .wiki-thread-list dt {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 36;
+      font-weight: 500; font-size: 18px;
+      margin: 12px 0 2px;
+    }
+    .wiki-thread-list dt a { color: #0645AD; text-decoration: none; }
+    .wiki-thread-list dt a:hover { text-decoration: underline; }
+    .wiki-thread-list dd {
+      margin: 0 0 12px; font-size: 15px; color: #3C3731;
+      padding-left: 0;
+    }
+    .wiki-thread-list dd em {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 14;
+      color: #14130F;
+    }
+
+    .wiki-hr { margin: 40px 0; border: 0; border-top: 2px double #C9C0AE; }
+
+    .wiki-article { position: relative; }
+    .wiki-article__head { margin-bottom: 20px; }
+    .wiki-crumbs {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px; color: #7A7368; margin: 0 0 12px;
+    }
+    .wiki-crumbs a { color: #0645AD; text-decoration: none; }
+    .wiki-crumbs a:hover { text-decoration: underline; }
+    .wiki-article__head h1 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144;
+      font-weight: 500; font-size: 2.25rem; line-height: 1.1;
+      letter-spacing: -0.012em; margin: 0 0 6px; color: #0F0E0C;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #C9C0AE;
+    }
+    .wiki-article__sub {
+      font-family: 'Source Serif 4', serif;
+      font-style: italic; color: #5C564D;
+      font-size: 14px; margin: 0;
+    }
+
+    .wiki-infobox {
+      float: right; width: 280px; margin: 0 0 16px 24px;
+      background: #F0EDE4; border: 1px solid #D9D3C5;
+      border-radius: 2px;
+      font-family: 'Inter', sans-serif; font-size: 12.5px;
+    }
+    .wiki-infobox__head {
+      padding: 8px 12px;
+      background: #E8E2D0; border-bottom: 1px solid #D9D3C5;
+    }
+    .wiki-infobox__head h3 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 72;
+      font-weight: 600; font-size: 14px; line-height: 1.2;
+      margin: 0; color: #14130F;
+    }
+    .wiki-infobox dl {
+      margin: 0; padding: 10px 12px;
+      display: grid; grid-template-columns: 100px 1fr;
+      gap: 6px 10px;
+    }
+    .wiki-infobox dt {
+      font-weight: 600; color: #5C564D;
+      font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.04em;
+      padding-top: 2px;
+    }
+    .wiki-infobox dd { margin: 0; color: #14130F; }
+    .wiki-infobox dd ul { list-style: none; padding: 0; margin: 0; }
+    .wiki-infobox dd li { padding: 1px 0; }
+    .wiki-infobox a { color: #0645AD; text-decoration: none; }
+    .wiki-infobox a:hover { text-decoration: underline; }
+    @media (max-width: 720px) {
+      .wiki-infobox { float: none; width: 100%; margin: 0 0 16px; }
+    }
+
+    .wiki-prose {
+      font-family: 'Source Serif 4', serif;
+      font-size: 16px; line-height: 1.7;
+      color: #14130F; max-width: 68ch;
+    }
+    .wiki-prose h2 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 36;
+      font-weight: 500; font-size: 22px; line-height: 1.2;
+      margin: 28px 0 10px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #E8E4DA;
+      clear: right;
+    }
+    .wiki-prose h3 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 36;
+      font-weight: 500; font-size: 18px;
+      margin: 20px 0 6px;
+    }
+    .wiki-prose p { margin: 0 0 14px; }
+    .wiki-prose a { color: #0645AD; text-decoration: none; }
+    .wiki-prose a:hover { text-decoration: underline; }
+    .wiki-prose ul, .wiki-prose ol { padding-left: 26px; margin: 0 0 14px; }
+    .wiki-prose li { margin-bottom: 4px; }
+    .wiki-prose blockquote {
+      margin: 14px 0; padding: 4px 16px;
+      border-left: 3px solid #B8AE95;
+      color: #3C3731; font-style: italic;
+    }
+    .wiki-prose code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      background: #F0EDE4; padding: 1px 4px; border-radius: 2px;
+    }
+    .wiki-h2 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 36;
+      font-weight: 500; font-size: 22px; line-height: 1.2;
+      margin: 28px 0 10px; padding-bottom: 4px;
+      border-bottom: 1px solid #E8E4DA; clear: right;
+    }
+
+    .wiki-refs {
+      padding-left: 22px;
+      font-size: 14px; font-family: 'Source Serif 4', serif;
+      color: #2B2620; line-height: 1.55;
+    }
+    .wiki-refs li { margin-bottom: 6px; }
+    .wiki-refs a { color: #0645AD; text-decoration: none; }
+    .wiki-refs a:hover { text-decoration: underline; }
+
+    .wiki-lastmod {
+      margin-top: 32px; padding-top: 10px;
+      border-top: 1px solid #E8E4DA;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px; color: #7A7368; font-style: italic;
+    }
+
+    .wiki-footer {
+      max-width: 1280px; margin: 0 auto; padding: 24px;
+      border-top: 1px solid #D9D3C5;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px; color: #5C564D;
+    }
+    .wiki-footer p { margin: 0 0 10px; line-height: 1.5; max-width: 80ch; }
+    .wiki-footer__links {
+      list-style: none; padding: 0; margin: 0 0 10px;
+      display: flex; flex-wrap: wrap; gap: 16px;
+    }
+    .wiki-footer__links a { color: #0645AD; text-decoration: none; }
+    .wiki-footer__links a:hover { text-decoration: underline; }
+    .wiki-footer__rev {
+      color: #7A7368;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+    .wiki-footer__rev a { color: #0645AD; text-decoration: none; }
+
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+  </style>
+</MockShell>

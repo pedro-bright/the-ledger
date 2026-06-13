@@ -1,0 +1,285 @@
+---
+import { loadEvents, loadThreads, loadControversies, loadActors } from '../../lib/content';
+
+const events = loadEvents();
+const threads = loadThreads();
+const controversies = loadControversies();
+const actors = loadActors();
+
+const mocks = [
+  {
+    letter: 'A',
+    slug: 'a',
+    name: 'Wikipedia-native',
+    tag: 'reference work',
+    description:
+      'Three-column article layout with a left contents rail, right metadata infobox, and dense inline cross-references. Serif body; sans chrome; wiki-blue links. The canonical anchor — built to look up, built to cite.',
+    palette: ['#FAFAF7', '#14130F', '#0645AD', '#E8E4DA'],
+    refs: ['Wikipedia', 'Britannica', 'Our World in Data articles'],
+    tradeoff: 'Institutional. Low personality. Easy to underrate until you need it.',
+  },
+  {
+    letter: 'B',
+    slug: 'b',
+    name: 'Printed Chronicle',
+    tag: 'bound almanac',
+    description:
+      'Cream paper with warm ink, Fraunces throughout, drop caps, small caps, roman-numeral volume lines, marginal notes. Single generous measure. The curator\'s voice is foregrounded; entries feel bound, not piped in.',
+    palette: ['#F4EFE5', '#1C1916', '#732B24', '#C9C0AE'],
+    refs: ['Stripe Press', 'London Review of Books', 'Cabinet magazine'],
+    tradeoff: 'Precious. Risk of nostalgia. Harder to feel current.',
+  },
+  {
+    letter: 'C',
+    slug: 'c',
+    name: 'Newspaper of Record',
+    tag: 'paper of record',
+    description:
+      'Masthead + dateline, three-column hero, rules between sections, section flags in red, datelined ledes. Serif body, condensed sans heads. Authority by convention — the visual grammar of reliable reporting for 150 years.',
+    palette: ['#FAFAF8', '#111111', '#B00020', '#222222'],
+    refs: ['NYT', 'FT', 'Reuters Graphics'],
+    tradeoff: 'Tilts "news of the day" not archive. Volume indexing feels bolted on.',
+  },
+  {
+    letter: 'D',
+    slug: 'd',
+    name: 'Research Archive',
+    tag: 'primary-source database',
+    description:
+      'White background, Inter body, JetBrains Mono for every piece of metadata. Events as a sortable table you live inside. Event titles in Fraunces so papers-as-papers read right. No hero, no cards, no color decoration.',
+    palette: ['#FFFFFF', '#0A0A0A', '#0645AD', '#E5E5E5'],
+    refs: ['arXiv', 'OpenReview', 'ACL Anthology', 'Our World in Data (data pages)'],
+    tradeoff: 'Austere. Cold on first impression. Newcomers may not know where to start.',
+  },
+];
+
+const stats = {
+  events: events.length,
+  threads: threads.length,
+  controversies: controversies.length,
+  actors: actors.length,
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Design mock explorations · The Ledger</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+  </head>
+  <body>
+    <main class="hub">
+      <header class="hub__head">
+        <p class="hub__kicker">Design exploration</p>
+        <h1 class="hub__title">Four directions for a redesign.</h1>
+        <p class="hub__dek">
+          The current site is dark-mode-only and reads like a product page. These four mocks
+          explore a lighter, content-first alternative — a chronicle of the AI era rather than
+          a platform. Each is rendered with the actual ledger content
+          ({stats.events} events, {stats.threads} threads, {stats.controversies} controversies,
+          {stats.actors} actors) so you can judge from real weight, not lorem ipsum.
+        </p>
+      </header>
+
+      <section class="hub__cards" aria-label="Design mocks">
+        {mocks.map((m) => (
+          <a class="card" href={`/mocks/${m.slug}`}>
+            <div class="card__palette" aria-hidden="true">
+              {m.palette.map((c) => (
+                <span class="card__swatch" style={`background:${c}`} />
+              ))}
+            </div>
+            <div class="card__head">
+              <span class="card__letter">{m.letter}</span>
+              <div>
+                <h2 class="card__name">{m.name}</h2>
+                <p class="card__tag">{m.tag}</p>
+              </div>
+            </div>
+            <p class="card__desc">{m.description}</p>
+            <dl class="card__meta">
+              <dt>References</dt>
+              <dd>{m.refs.join(' · ')}</dd>
+              <dt>Tradeoff</dt>
+              <dd>{m.tradeoff}</dd>
+            </dl>
+            <span class="card__cta">View mock {m.letter} →</span>
+          </a>
+        ))}
+      </section>
+
+      <footer class="hub__foot">
+        <p>
+          Each mock is wired to real content. Use the A/B/C/D switcher in the top-right of
+          any mock to move between directions without losing your place.
+        </p>
+        <p>
+          <a href="/">← Back to the live site</a>
+        </p>
+      </footer>
+    </main>
+
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: #F7F5F0;
+        color: #1A1715;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: inherit; }
+
+      .hub {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: clamp(48px, 7vw, 96px) clamp(20px, 4vw, 56px) 96px;
+      }
+      .hub__head {
+        max-width: 720px;
+        margin-bottom: 64px;
+      }
+      .hub__kicker {
+        font: 500 11px/1 'JetBrains Mono', ui-monospace, monospace;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #7A7368;
+        margin: 0 0 20px;
+      }
+      .hub__title {
+        font-family: 'Fraunces', Georgia, serif;
+        font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;
+        font-weight: 500;
+        font-size: clamp(2.5rem, 1.6rem + 3vw, 4rem);
+        line-height: 1.04;
+        letter-spacing: -0.022em;
+        color: #0F0E0C;
+        margin: 0 0 24px;
+      }
+      .hub__dek {
+        font-family: 'Fraunces', Georgia, serif;
+        font-variation-settings: 'opsz' 14, 'SOFT' 50, 'WONK' 0;
+        font-style: italic;
+        font-weight: 400;
+        font-size: 1.25rem;
+        line-height: 1.55;
+        color: #3C3731;
+      }
+
+      .hub__cards {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+      @media (max-width: 780px) {
+        .hub__cards { grid-template-columns: 1fr; }
+      }
+
+      .card {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        padding: 28px;
+        background: #FFFFFF;
+        border: 1px solid #E5E0D5;
+        border-radius: 3px;
+        text-decoration: none;
+        transition: border-color 160ms ease, transform 160ms ease;
+      }
+      .card:hover {
+        border-color: #9C8F7A;
+        transform: translateY(-1px);
+      }
+      .card__palette {
+        display: flex;
+        height: 10px;
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .card__swatch { flex: 1; }
+
+      .card__head {
+        display: flex;
+        align-items: flex-start;
+        gap: 18px;
+      }
+      .card__letter {
+        font-family: 'Fraunces', serif;
+        font-variation-settings: 'opsz' 144;
+        font-weight: 500;
+        font-size: 3.25rem;
+        line-height: 1;
+        color: #1A1715;
+        flex-shrink: 0;
+      }
+      .card__name {
+        font-family: 'Fraunces', serif;
+        font-variation-settings: 'opsz' 72;
+        font-weight: 600;
+        font-size: 1.5rem;
+        line-height: 1.1;
+        margin: 8px 0 4px;
+        color: #0F0E0C;
+      }
+      .card__tag {
+        font: 500 10px/1 'JetBrains Mono', monospace;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #7A7368;
+        margin: 0;
+      }
+      .card__desc {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: #3C3731;
+        margin: 0;
+      }
+      .card__meta {
+        margin: 0;
+        padding: 16px 0 0;
+        border-top: 1px solid #EDE8DE;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 8px 16px;
+        font-size: 0.8125rem;
+      }
+      .card__meta dt {
+        font: 500 10px/1.4 'JetBrains Mono', monospace;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #7A7368;
+        padding-top: 2px;
+      }
+      .card__meta dd {
+        margin: 0;
+        color: #3C3731;
+      }
+      .card__cta {
+        font: 500 13px/1 'Inter', sans-serif;
+        color: #0F0E0C;
+        border-bottom: 1px solid #0F0E0C;
+        padding-bottom: 2px;
+        align-self: flex-start;
+        margin-top: 4px;
+      }
+
+      .hub__foot {
+        margin-top: 64px;
+        padding-top: 32px;
+        border-top: 1px solid #E5E0D5;
+        font-size: 0.9rem;
+        color: #5C564D;
+        max-width: 560px;
+      }
+      .hub__foot p { margin: 0 0 12px; line-height: 1.55; }
+      .hub__foot a { color: #0F0E0C; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    </style>
+  </body>
+</html>
