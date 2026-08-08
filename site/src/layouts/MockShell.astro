@@ -1,0 +1,104 @@
+---
+interface Props {
+  title: string;
+  letter: 'A' | 'B' | 'C' | 'D';
+}
+const { title, letter } = Astro.props;
+const mocks = [
+  { letter: 'A', slug: 'a' },
+  { letter: 'B', slug: 'b' },
+  { letter: 'C', slug: 'c' },
+  { letter: 'D', slug: 'd' },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>{title} · Mock {letter}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&display=swap"
+    />
+  </head>
+  <body>
+    <div class="mock-chrome" role="navigation" aria-label="Mock switcher">
+      <a href="/mocks/" class="mock-chrome__back">← Mocks</a>
+      <span class="mock-chrome__label">Mock {letter}</span>
+      <div class="mock-chrome__switch">
+        {mocks.map((m) => (
+          <a
+            href={`/mocks/${m.slug}`}
+            class:list={['mock-chrome__switch-link', m.letter === letter && 'is-active']}
+            aria-current={m.letter === letter ? 'page' : undefined}
+          >{m.letter}</a>
+        ))}
+      </div>
+      <a href="/" class="mock-chrome__back">Live site →</a>
+    </div>
+    <slot />
+    <style is:global>
+      *, *::before, *::after { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        padding: 0;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+        font-kerning: normal;
+      }
+      img { display: block; max-width: 100%; height: auto; }
+      a { color: inherit; }
+      button { font: inherit; cursor: pointer; }
+
+      .mock-chrome {
+        position: fixed;
+        top: 12px;
+        right: 12px;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 10px;
+        background: rgba(14, 14, 16, 0.92);
+        color: #eee;
+        font: 500 10px/1 'JetBrains Mono', ui-monospace, monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        border-radius: 4px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        backdrop-filter: blur(10px);
+      }
+      .mock-chrome a { color: #ccc; text-decoration: none; transition: color 120ms ease; }
+      .mock-chrome a:hover { color: #fff; }
+      .mock-chrome__label { color: #888; }
+      .mock-chrome__switch {
+        display: flex;
+        gap: 4px;
+        padding: 0 8px;
+        border-left: 1px solid rgba(255, 255, 255, 0.16);
+        border-right: 1px solid rgba(255, 255, 255, 0.16);
+      }
+      .mock-chrome__switch-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 3px;
+        font-size: 10px;
+        letter-spacing: 0;
+      }
+      .mock-chrome__switch-link:hover { background: rgba(255, 255, 255, 0.08); }
+      .mock-chrome__switch-link.is-active { background: #fff; color: #000; }
+
+      @media (max-width: 600px) {
+        .mock-chrome { top: auto; bottom: 12px; right: 12px; }
+      }
+    </style>
+  </body>
+</html>
