@@ -47,7 +47,7 @@ the-ledger/
       styles/            # global.css
     tailwind.config.mjs  # Tailwind config with custom theme
     astro.config.mjs     # Astro + React + Tailwind integrations
-  .github/workflows/     # CI: validate.yml, deploy.yml, stale-sources.yml
+  .github/workflows/     # CI: validate.yml, e2e.yml, preview.yml, deploy.yml, stale-sources.yml
 ```
 
 ## Stack
@@ -145,7 +145,10 @@ Anti-references — reject changes that make the site resemble any of these:
 ## Deployment
 
 - **Live:** https://the-ledger.net
-- **CI:** Push/PR to `main` triggers `validate.yml` (schema validation + graph build). Push to `main` also triggers `deploy.yml` (build site + deploy to Vercel).
+- **CI:** Push/PR to `main` triggers `validate.yml` (schema validation + graph build).
+  Every PR and every push to `main` also runs `e2e.yml`: validate, graph and feed build, site build, `npm run test:parity`, `npm run test:no-dark-leaks`, and Playwright in `site/`.
+  Every PR gets a Vercel preview deploy (`preview.yml`).
+  Push to `main` also triggers `deploy.yml` (build site + deploy to Vercel).
 - **Stale sources:** Weekly cron checks for broken source URLs.
 - **Branch protection:** PRs required for `main`, reviews enforced.
 
