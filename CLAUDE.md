@@ -25,10 +25,10 @@ npm run preview          # Preview production build
 ```
 the-ledger/
   content/               # All content lives here (source of truth)
-    events/              # 59 events in year subdirs (2023/, 2024/, 2025/, 2026/)
-    threads/             # 4 narrative threads (.md with YAML frontmatter)
-    controversies/       # 5 multi-axis controversies (.md with YAML frontmatter)
-    actors/              # 20 actors (.yml files)
+    events/              # Events in year subdirs (2023/, 2024/, ...)
+    threads/             # Narrative threads (.md with YAML frontmatter)
+    controversies/       # Multi-axis controversies (.md with YAML frontmatter)
+    actors/              # Actors (.yml files)
     challenges/          # Formal challenges to claims
     memos/               # Editorial memos
     perspectives/        # Perspective essays
@@ -55,7 +55,6 @@ the-ledger/
 - **Site:** Astro 5 + React 19 + Tailwind 3, static output
 - **Content:** Markdown with YAML frontmatter (events, threads, controversies) + plain YAML (actors)
 - **Tooling:** TypeScript scripts via tsx, schema validation via ajv
-- **Fonts:** Inter (sans), JetBrains Mono (mono)
 - **License:** CC-BY-SA-4.0
 
 ## Content Schema
@@ -154,7 +153,7 @@ Anti-references — reject changes that make the site resemble any of these:
 
 - Event files are numbered (`01-`, `02-`, ...) within year directories for ordering.
 - The 72-hour rule: events can't be published until 72 hours after initial reporting.
-- AI-assisted drafts must be marked with `draft_assistance: ai-assisted` in frontmatter.
+- AI-assisted drafts must set `draft_assistance: ai-assisted` under `revision:` in frontmatter (`revision.draft_assistance`; the event schema rejects a top-level key).
 - Commit messages: `Add event: ...`, `thread/...`, `editorial/...`, `fix/...`.
 - Branch naming: `event/slug`, `thread/slug-update`, `editorial/change`, `fix/description`.
 - Content loader (`site/src/lib/content.ts`) resolves content dir relative to `site/` via `path.join(process.cwd(), '..', 'content')`.
