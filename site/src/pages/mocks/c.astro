@@ -1,0 +1,1002 @@
+---
+import MockShell from '../../layouts/MockShell.astro';
+import { loadEvents, loadThreads, loadControversies, getExcerpt, getCategories } from '../../lib/content';
+
+const events = loadEvents();
+const threads = loadThreads();
+const controversies = loadControversies();
+const categories = getCategories();
+
+const featuredEvent = events[0];
+const leadEvent = events.find((e) => e.significance === 'landmark') || events[0];
+const secondaryEvents = events.filter((e) => e.id !== leadEvent.id).slice(0, 2);
+const policyEvents = events.filter((e) => e.category === 'policy').slice(0, 3);
+const modelsEvents = events.filter((e) => e.category === 'models').slice(0, 3);
+const safetyEvents = events.filter((e) => e.category === 'safety').slice(0, 3);
+const featuredThread = threads.find((t) => t.core_question) || threads[0];
+
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const today = new Date();
+const dateline = `${WEEKDAYS[today.getDay()]}, ${MONTHS[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
+
+function fmtDateline(d: string) {
+  const dt = new Date(d);
+  return `${MONTHS[dt.getMonth()].toUpperCase().slice(0, 3)}. ${dt.getDate()}`;
+}
+function fmtLong(d: string) {
+  return new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+// Pull out a "city" for the dateline from the first actor or generic
+function actorsCity(e: typeof leadEvent) {
+  if (e.actors && e.actors.length > 0) {
+    const a = e.actors[0].id;
+    if (a.includes('openai')) return 'SAN FRANCISCO';
+    if (a.includes('google') || a.includes('deepmind')) return 'MOUNTAIN VIEW';
+    if (a.includes('anthropic')) return 'SAN FRANCISCO';
+    if (a.includes('meta')) return 'MENLO PARK';
+    if (a.includes('microsoft')) return 'REDMOND';
+    if (a.includes('eu') || a.includes('european')) return 'BRUSSELS';
+    if (a.includes('china') || a.includes('beijing')) return 'BEIJING';
+    if (a.includes('uk-')) return 'LONDON';
+    if (a.includes('us-') || a.includes('white-house') || a.includes('congress')) return 'WASHINGTON';
+  }
+  return 'THE LEDGER';
+}
+
+const leadExcerpt = getExcerpt(leadEvent.content, 420);
+---
+
+<MockShell title="Newspaper of Record" letter="C">
+  <div class="news">
+    <!-- Top utility strip -->
+    <div class="news-topstrip">
+      <div class="news-topstrip__inner">
+        <div class="news-topstrip__left">
+          <a href="#">Today's paper</a>
+          <span>·</span>
+          <a href="#">Weather: clear</a>
+          <span>·</span>
+          <span class="news-topstrip__day">{dateline}</span>
+        </div>
+        <div class="news-topstrip__right">
+          <a href="#">RSS</a>
+          <a href="#">Archive</a>
+          <a href="#">Subscribe</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Masthead -->
+    <header class="news-masthead">
+      <div class="news-masthead__flag news-masthead__flag--left">
+        <p class="news-flag-label">"Immutable · Contestable · Sourced"</p>
+        <p class="news-flag-sub">The working record of artificial intelligence</p>
+      </div>
+      <h1 class="news-masthead__title">The AI Ledger</h1>
+      <div class="news-masthead__flag news-masthead__flag--right">
+        <p class="news-flag-label">Vol. IV · No. 128</p>
+        <p class="news-flag-sub">New York & San Francisco · $0.00</p>
+      </div>
+    </header>
+
+    <!-- Section nav + dateline strip -->
+    <nav class="news-sectionnav" aria-label="Sections">
+      <a href="#" class="is-active">Front Page</a>
+      <a href="#">Policy</a>
+      <a href="#">Models</a>
+      <a href="#">Research</a>
+      <a href="#">Industry</a>
+      <a href="#">Safety</a>
+      <a href="#">Culture</a>
+      <a href="#">Editorial</a>
+      <a href="#">Archive</a>
+    </nav>
+
+    <div class="news-datestrip">
+      <span class="news-datestrip__day">{dateline.toUpperCase()}</span>
+      <span class="news-datestrip__edition">LATE EDITION · {events.length} entries on file · {threads.length} open threads</span>
+    </div>
+
+    <!-- HERO: 3-column front page -->
+    <main class="news-front">
+      <!-- Lead story (col 1-2) -->
+      <article class="news-lead">
+        <div class="news-flag news-flag--lead">Entry of the Week</div>
+        <h2 class="news-lead__head">{leadEvent.title}</h2>
+        <p class="news-lead__deck">
+          The ledger rates this entry <em>{leadEvent.significance || 'notable'}</em> with {leadEvent.confidence || 'high'} confidence.
+          {leadEvent.contestation?.status && <Fragment> Contestation: <strong>{leadEvent.contestation.status}</strong>.</Fragment>}
+        </p>
+        <p class="news-byline">
+          <span class="news-byline__city">{actorsCity(leadEvent)} —</span>
+          <span class="news-byline__date">{fmtLong(leadEvent.date)}</span>
+        </p>
+        <p class="news-lead__body news-lead__body--dropcap">
+          {leadExcerpt}
+        </p>
+        <p class="news-lead__continued">
+          <a href="#full-article">Continued on Page A4 ↓</a>
+        </p>
+      </article>
+
+      <!-- Two decks (col 3) -->
+      <aside class="news-deck">
+        {secondaryEvents.map((e) => (
+          <article class="news-deck__item">
+            <p class="news-deck__flag">{e.category.toUpperCase()}</p>
+            <h3 class="news-deck__head"><a href="#">{e.title}</a></h3>
+            <p class="news-deck__byline">
+              {actorsCity(e)} · <span class="news-deck__date">{fmtLong(e.date)}</span>
+            </p>
+            <p class="news-deck__body">{getExcerpt(e.content, 160)}</p>
+            <p class="news-deck__more"><a href="#">Full entry →</a></p>
+          </article>
+        ))}
+      </aside>
+    </main>
+
+    <!-- Section A: Policy -->
+    <section class="news-section">
+      <div class="news-section__flag">
+        <span class="news-section__letter">A</span>
+        <h2 class="news-section__title">Policy</h2>
+        <span class="news-section__count">{policyEvents.length} entries on file this issue</span>
+      </div>
+      <div class="news-section__grid">
+        {policyEvents.map((e) => (
+          <article class="news-story">
+            <p class="news-story__date">{fmtDateline(e.date)}</p>
+            <h3 class="news-story__head"><a href="#">{e.title}</a></h3>
+            <p class="news-story__body">{getExcerpt(e.content, 140)}</p>
+            <p class="news-story__foot">
+              {e.significance === 'landmark' && <span class="news-sig news-sig--landmark">LANDMARK</span>}
+              {e.significance === 'major' && <span class="news-sig news-sig--major">MAJOR</span>}
+              {e.sources && <span class="news-story__src">{e.sources.length} src</span>}
+            </p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- Section B: Models -->
+    <section class="news-section">
+      <div class="news-section__flag">
+        <span class="news-section__letter">B</span>
+        <h2 class="news-section__title">Models</h2>
+        <span class="news-section__count">{modelsEvents.length} entries on file this issue</span>
+      </div>
+      <div class="news-section__grid">
+        {modelsEvents.map((e) => (
+          <article class="news-story">
+            <p class="news-story__date">{fmtDateline(e.date)}</p>
+            <h3 class="news-story__head"><a href="#">{e.title}</a></h3>
+            <p class="news-story__body">{getExcerpt(e.content, 140)}</p>
+            <p class="news-story__foot">
+              {e.significance === 'landmark' && <span class="news-sig news-sig--landmark">LANDMARK</span>}
+              {e.significance === 'major' && <span class="news-sig news-sig--major">MAJOR</span>}
+              {e.sources && <span class="news-story__src">{e.sources.length} src</span>}
+            </p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- Section C: Safety -->
+    <section class="news-section">
+      <div class="news-section__flag">
+        <span class="news-section__letter">C</span>
+        <h2 class="news-section__title">Safety</h2>
+        <span class="news-section__count">{safetyEvents.length} entries on file this issue</span>
+      </div>
+      <div class="news-section__grid">
+        {safetyEvents.map((e) => (
+          <article class="news-story">
+            <p class="news-story__date">{fmtDateline(e.date)}</p>
+            <h3 class="news-story__head"><a href="#">{e.title}</a></h3>
+            <p class="news-story__body">{getExcerpt(e.content, 140)}</p>
+            <p class="news-story__foot">
+              {e.significance === 'landmark' && <span class="news-sig news-sig--landmark">LANDMARK</span>}
+              {e.significance === 'major' && <span class="news-sig news-sig--major">MAJOR</span>}
+              {e.sources && <span class="news-story__src">{e.sources.length} src</span>}
+            </p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- Full article: lead event rendered long-form -->
+    <section class="news-fullarticle" id="full-article">
+      <div class="news-fullarticle__flag">
+        <span>Continued from Page A1</span>
+      </div>
+      <h2 class="news-fullarticle__head">{leadEvent.title}</h2>
+      <p class="news-fullarticle__deck">{leadExcerpt}</p>
+      <p class="news-byline news-byline--full">
+        <span class="news-byline__city">{actorsCity(leadEvent)} —</span>
+        <span class="news-byline__date">{fmtLong(leadEvent.date)}</span>
+        {leadEvent.actors && leadEvent.actors.length > 0 && (
+          <Fragment>
+            <span class="news-byline__sep"> · </span>
+            Actors: {leadEvent.actors.slice(0, 4).map((a, i) => (
+              <Fragment>{i > 0 && ', '}<strong>{a.id}</strong></Fragment>
+            ))}
+          </Fragment>
+        )}
+      </p>
+
+      <div class="news-fullarticle__body">
+        <div class="news-prose news-prose--dropcap" set:html={leadEvent.htmlContent} />
+
+        <aside class="news-pullquote" aria-hidden="true">
+          {leadEvent.contestation?.status === 'contested' ? (
+            "This entry is contested. The ledger records the disagreement rather than resolving it."
+          ) : (
+            `The ledger rates this event as ${leadEvent.significance || 'notable'}, with ${leadEvent.confidence || 'high'} confidence.`
+          )}
+        </aside>
+      </div>
+
+      <div class="news-sources">
+        <p class="news-sources__head">Sources</p>
+        <ol class="news-sources__list">
+          {(leadEvent.sources || []).map((s) => (
+            <li>
+              <a href={s.url} target="_blank" rel="noopener">{s.title}</a>
+              {s.publisher && <Fragment>. <em>{s.publisher}</em></Fragment>}
+              {s.date && <Fragment>, {fmtLong(s.date)}</Fragment>}.
+              {s.archive_url && <Fragment> [<a href={s.archive_url} target="_blank" rel="noopener">archived</a>]</Fragment>}
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <!-- Editorial page: thread as op-ed -->
+    <section class="news-section news-editorial">
+      <div class="news-section__flag news-section__flag--editorial">
+        <span class="news-section__letter">D</span>
+        <h2 class="news-section__title">Editorial</h2>
+        <span class="news-section__count">Long-form from the ongoing threads</span>
+      </div>
+
+      <article class="news-editorial__article">
+        <p class="news-editorial__kicker">An ongoing thread</p>
+        <h3 class="news-editorial__head">{featuredThread.title}</h3>
+        {featuredThread.core_question && (
+          <p class="news-editorial__deck">{featuredThread.core_question}</p>
+        )}
+        <p class="news-editorial__byline">
+          By <strong>{featuredThread.curator || 'Editorial staff'}</strong>
+          {featuredThread.events && <Fragment> · {featuredThread.events.length} entries followed</Fragment>}
+          {featuredThread.started && <Fragment> · Thread opened {fmtLong(featuredThread.started)}</Fragment>}
+        </p>
+        <div class="news-prose news-prose--editorial" set:html={featuredThread.htmlContent} />
+      </article>
+    </section>
+
+    <!-- Footer masthead -->
+    <footer class="news-footer">
+      <div class="news-footer__rules" aria-hidden="true">
+        <span></span><span></span>
+      </div>
+      <h3 class="news-footer__title">The AI Ledger</h3>
+      <p class="news-footer__tagline">"Immutable, contestable, sourced."</p>
+      <div class="news-footer__grid">
+        <div>
+          <h4>The paper</h4>
+          <ul>
+            <li><a href="#">Editorial constitution</a></li>
+            <li><a href="#">Evidence standards</a></li>
+            <li><a href="#">Style guide</a></li>
+            <li><a href="#">AI assistance policy</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Sections</h4>
+          <ul>
+            {categories.slice(0, 5).map((c) => (
+              <li><a href="#">{c.label}</a></li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h4>Contribute</h4>
+          <ul>
+            <li><a href="#">Submit a source</a></li>
+            <li><a href="#">Challenge a claim</a></li>
+            <li><a href="#">GitHub repository</a></li>
+            <li><a href="#">Atom feed</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Published by</h4>
+          <p class="news-footer__imprint">
+            Terry Tang, with community contributors. Content released under CC-BY-SA-4.0.
+          </p>
+        </div>
+      </div>
+      <p class="news-footer__meta">
+        Mock C · Newspaper of Record direction · Compare
+        <a href="/mocks/a">A</a> · <a href="/mocks/b">B</a> · <a href="/mocks/d">D</a>
+      </p>
+    </footer>
+  </div>
+
+  <style>
+    .news {
+      background: #FAFAF8;
+      color: #111111;
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* top strip */
+    .news-topstrip {
+      background: #0F0F0F;
+      color: #DADADA;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+    }
+    .news-topstrip__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 34px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .news-topstrip__left, .news-topstrip__right {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .news-topstrip__left span { color: #666; }
+    .news-topstrip a {
+      color: #DADADA;
+      text-decoration: none;
+    }
+    .news-topstrip a:hover { color: #fff; }
+    .news-topstrip__day { color: #AAA; }
+
+    /* masthead */
+    .news-masthead {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 24px 12px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 20px;
+      align-items: center;
+      border-bottom: 1px solid #111;
+      text-align: center;
+    }
+    @media (max-width: 760px) {
+      .news-masthead {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .news-masthead__flag { text-align: center !important; }
+    }
+    .news-masthead__flag {
+      font-family: 'Source Serif 4', serif;
+      font-size: 13px;
+      line-height: 1.35;
+      color: #3A3A3A;
+    }
+    .news-masthead__flag--left { text-align: right; }
+    .news-masthead__flag--right { text-align: left; }
+    .news-flag-label {
+      font-weight: 600;
+      font-style: italic;
+      margin: 0 0 2px;
+      color: #111;
+    }
+    .news-flag-sub {
+      color: #555;
+      margin: 0;
+      font-size: 12px;
+    }
+    .news-masthead__title {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;
+      font-weight: 400;
+      font-size: clamp(3rem, 2rem + 5vw, 5.5rem);
+      line-height: 1;
+      letter-spacing: -0.015em;
+      margin: 0;
+      color: #111;
+    }
+
+    /* section nav */
+    .news-sectionnav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0;
+      border-bottom: 3px double #111;
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 14;
+      font-size: 14px;
+    }
+    .news-sectionnav a {
+      padding: 4px 14px;
+      text-decoration: none;
+      color: #111;
+      border-right: 1px solid #D2D0CB;
+      transition: color 120ms ease;
+    }
+    .news-sectionnav a:last-child { border-right: 0; }
+    .news-sectionnav a:hover { color: #B00020; }
+    .news-sectionnav a.is-active {
+      color: #B00020;
+      font-weight: 600;
+      font-style: italic;
+    }
+
+    /* date strip */
+    .news-datestrip {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 8px 24px;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #111;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: #3A3A3A;
+    }
+
+    /* FRONT PAGE */
+    .news-front {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 24px 40px;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 36px;
+      border-bottom: 1px solid #222;
+    }
+    @media (max-width: 860px) {
+      .news-front { grid-template-columns: 1fr; gap: 32px; }
+    }
+
+    .news-lead {
+      border-right: 1px solid #CFCEC9;
+      padding-right: 32px;
+    }
+    @media (max-width: 860px) {
+      .news-lead { border-right: 0; padding-right: 0; }
+    }
+    .news-flag {
+      display: inline-block;
+      background: #B00020;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      margin-bottom: 10px;
+    }
+    .news-lead__head {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144;
+      font-weight: 500;
+      font-size: clamp(2.25rem, 1.8rem + 2vw, 3.5rem);
+      line-height: 1.04;
+      letter-spacing: -0.018em;
+      margin: 0 0 12px;
+      color: #111;
+    }
+    .news-lead__deck {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 14;
+      font-style: italic;
+      font-size: 20px;
+      line-height: 1.4;
+      color: #333;
+      margin: 0 0 14px;
+    }
+    .news-byline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: #555;
+      margin: 0 0 14px;
+      text-transform: uppercase;
+    }
+    .news-byline__city {
+      color: #111;
+      font-weight: 600;
+    }
+    .news-byline__date {
+      font-style: italic;
+    }
+    .news-byline__sep { color: #999; }
+    .news-byline--full {
+      font-size: 12px;
+      color: #3A3A3A;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #D2D0CB;
+      text-transform: none;
+      letter-spacing: 0.04em;
+    }
+
+    .news-lead__body {
+      font-family: 'Source Serif 4', serif;
+      font-size: 17px;
+      line-height: 1.6;
+      column-count: 2;
+      column-gap: 32px;
+      column-rule: 1px solid #E5E3DE;
+      color: #111;
+    }
+    @media (max-width: 600px) {
+      .news-lead__body { column-count: 1; }
+    }
+    .news-lead__body--dropcap::first-letter {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144;
+      font-weight: 500;
+      font-size: 4.2em;
+      float: left;
+      line-height: 0.88;
+      margin: 0.06em 0.08em 0 0;
+      color: #111;
+    }
+
+    .news-lead__continued {
+      margin: 16px 0 0;
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 14px;
+      color: #B00020;
+    }
+    .news-lead__continued a { color: inherit; text-decoration: none; }
+    .news-lead__continued a:hover { text-decoration: underline; }
+
+    /* deck (right column) */
+    .news-deck {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .news-deck__item {
+      padding: 0 0 20px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #D2D0CB;
+    }
+    .news-deck__item:last-child {
+      border-bottom: 0;
+    }
+    .news-deck__flag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      font-weight: 600;
+      color: #B00020;
+      margin: 0 0 6px;
+    }
+    .news-deck__head {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 72;
+      font-weight: 500;
+      font-size: 22px;
+      line-height: 1.15;
+      margin: 0 0 8px;
+    }
+    .news-deck__head a {
+      color: #111;
+      text-decoration: none;
+    }
+    .news-deck__head a:hover { color: #B00020; }
+    .news-deck__byline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      color: #555;
+      margin: 0 0 8px;
+      text-transform: uppercase;
+    }
+    .news-deck__date { font-style: italic; color: #7A7368; }
+    .news-deck__body {
+      font-size: 14px;
+      line-height: 1.55;
+      color: #2A2A2A;
+      margin: 0 0 6px;
+    }
+    .news-deck__more {
+      margin: 0;
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 13px;
+    }
+    .news-deck__more a { color: #B00020; text-decoration: none; }
+    .news-deck__more a:hover { text-decoration: underline; }
+
+    /* section layouts */
+    .news-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 24px;
+      border-bottom: 1px solid #222;
+    }
+    .news-section:last-of-type { border-bottom: 0; }
+    .news-section__flag {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      margin-bottom: 22px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #111;
+    }
+    .news-section__letter {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144;
+      font-weight: 500;
+      font-size: 44px;
+      line-height: 1;
+      color: #B00020;
+    }
+    .news-section__title {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 72;
+      font-weight: 500;
+      font-size: 32px;
+      line-height: 1;
+      color: #111;
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+    .news-section__count {
+      margin-left: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #666;
+      letter-spacing: 0.04em;
+    }
+    .news-section__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+    @media (max-width: 900px) {
+      .news-section__grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .news-section__grid { grid-template-columns: 1fr; }
+    }
+
+    .news-story {
+      border-right: 1px solid #E5E3DE;
+      padding-right: 32px;
+    }
+    .news-story:last-child { border-right: 0; padding-right: 0; }
+    @media (max-width: 900px) {
+      .news-story { border-right: 0; padding-right: 0; padding-bottom: 20px; border-bottom: 1px solid #E5E3DE; }
+      .news-story:last-child { border-bottom: 0; padding-bottom: 0; }
+    }
+    .news-story__date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: #B00020;
+      font-weight: 600;
+      margin: 0 0 6px;
+    }
+    .news-story__head {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 72;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 1.18;
+      margin: 0 0 8px;
+    }
+    .news-story__head a { color: #111; text-decoration: none; }
+    .news-story__head a:hover { color: #B00020; }
+    .news-story__body {
+      font-size: 14px;
+      line-height: 1.55;
+      color: #2A2A2A;
+      margin: 0 0 8px;
+    }
+    .news-story__foot {
+      margin: 0;
+      display: flex; align-items: center; gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: #666;
+      letter-spacing: 0.04em;
+    }
+    .news-sig {
+      padding: 1px 5px;
+      letter-spacing: 0.12em;
+      font-weight: 600;
+    }
+    .news-sig--landmark { background: #FDF2C5; color: #7A5A00; }
+    .news-sig--major { background: #DBECF9; color: #0A4D82; }
+    .news-story__src { color: #7A7368; }
+
+    /* Full article */
+    .news-fullarticle {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 36px 24px;
+      border-bottom: 1px solid #222;
+    }
+    .news-fullarticle__flag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #B00020;
+      margin: 0 0 10px;
+    }
+    .news-fullarticle__head {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144;
+      font-weight: 500;
+      font-size: clamp(2rem, 1.6rem + 2vw, 3rem);
+      line-height: 1.06;
+      letter-spacing: -0.015em;
+      margin: 0 0 14px;
+      color: #111;
+    }
+    .news-fullarticle__deck {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 14;
+      font-style: italic;
+      font-size: 20px;
+      line-height: 1.45;
+      color: #333;
+      margin: 0 0 14px;
+      max-width: 62ch;
+    }
+    .news-fullarticle__body {
+      position: relative;
+    }
+
+    .news-prose {
+      font-family: 'Source Serif 4', serif;
+      font-size: 17px;
+      line-height: 1.7;
+      color: #111;
+      max-width: 62ch;
+    }
+    .news-prose--dropcap > p:first-of-type::first-letter {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144;
+      font-weight: 500;
+      font-size: 4.5em;
+      float: left;
+      line-height: 0.88;
+      margin: 0.06em 0.08em 0 0;
+      color: #111;
+    }
+    .news-prose p { margin: 0 0 16px; }
+    .news-prose h2 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 72;
+      font-weight: 500;
+      font-size: 24px;
+      margin: 28px 0 10px;
+      line-height: 1.15;
+      color: #111;
+    }
+    .news-prose h3 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 36;
+      font-weight: 500;
+      font-size: 19px;
+      margin: 20px 0 8px;
+    }
+    .news-prose a {
+      color: #111;
+      text-decoration: none;
+      border-bottom: 1px solid #B00020;
+    }
+    .news-prose a:hover { color: #B00020; }
+    .news-prose ul, .news-prose ol {
+      padding-left: 24px;
+      margin: 0 0 16px;
+    }
+    .news-prose li { margin-bottom: 6px; }
+
+    .news-pullquote {
+      max-width: 320px;
+      float: right;
+      margin: 10px 0 20px 30px;
+      padding: 16px 20px;
+      border-top: 3px solid #B00020;
+      border-bottom: 1px solid #D2D0CB;
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 36;
+      font-style: italic;
+      font-size: 20px;
+      line-height: 1.35;
+      color: #111;
+    }
+    @media (max-width: 720px) {
+      .news-pullquote { float: none; margin: 20px 0; max-width: 100%; }
+    }
+
+    .news-sources {
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid #D2D0CB;
+    }
+    .news-sources__head {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #B00020;
+      margin: 0 0 10px;
+      font-weight: 600;
+    }
+    .news-sources__list {
+      padding-left: 20px;
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: #2A2A2A;
+    }
+    .news-sources__list li { margin-bottom: 6px; }
+    .news-sources__list a {
+      color: #111;
+      text-decoration: none;
+      border-bottom: 1px solid #B00020;
+    }
+    .news-sources__list a:hover { color: #B00020; }
+
+    /* Editorial */
+    .news-editorial {
+      background: #F4F2EC;
+    }
+    .news-section__flag--editorial .news-section__letter { color: #111; }
+    .news-editorial__article {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .news-editorial__kicker {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #B00020;
+      margin: 0 0 10px;
+      font-weight: 600;
+    }
+    .news-editorial__head {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144;
+      font-weight: 500;
+      font-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);
+      line-height: 1.1;
+      margin: 0 0 12px;
+    }
+    .news-editorial__deck {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 14;
+      font-style: italic;
+      font-size: 20px;
+      line-height: 1.45;
+      color: #333;
+      margin: 0 0 10px;
+      border-left: 3px solid #B00020;
+      padding-left: 16px;
+    }
+    .news-editorial__byline {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 14;
+      font-size: 14px;
+      color: #555;
+      margin: 0 0 20px;
+    }
+    .news-prose--editorial {
+      font-family: 'Source Serif 4', serif;
+      font-size: 17px;
+      line-height: 1.7;
+      color: #111;
+    }
+
+    /* footer */
+    .news-footer {
+      max-width: 1200px;
+      margin: 36px auto 0;
+      padding: 36px 24px 48px;
+      border-top: 4px double #111;
+      text-align: center;
+    }
+    .news-footer__rules {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin: 0 auto 16px;
+      max-width: 520px;
+    }
+    .news-footer__rules span {
+      height: 2px;
+      background: #111;
+      display: block;
+    }
+    .news-footer__rules span + span {
+      height: 1px;
+    }
+    .news-footer__title {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144;
+      font-weight: 500;
+      font-size: 2.5rem;
+      line-height: 1;
+      margin: 0 0 4px;
+      color: #111;
+    }
+    .news-footer__tagline {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 14px;
+      color: #555;
+      margin: 0 0 32px;
+    }
+    .news-footer__grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      text-align: left;
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid #D2D0CB;
+    }
+    @media (max-width: 720px) {
+      .news-footer__grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .news-footer__grid h4 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #B00020;
+      margin: 0 0 10px;
+      font-weight: 600;
+    }
+    .news-footer__grid ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+    .news-footer__grid a {
+      color: #111;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+    }
+    .news-footer__grid a:hover { border-bottom-color: #B00020; }
+    .news-footer__imprint {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.55;
+      margin: 0;
+    }
+    .news-footer__meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      color: #666;
+      margin: 0;
+    }
+    .news-footer__meta a { color: #B00020; text-decoration: none; margin: 0 3px; }
+    .news-footer__meta a:hover { text-decoration: underline; }
+  </style>
+</MockShell>
