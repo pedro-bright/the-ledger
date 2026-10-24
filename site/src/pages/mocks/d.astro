@@ -1,0 +1,1108 @@
+---
+import MockShell from '../../layouts/MockShell.astro';
+import { loadEvents, loadThreads, loadControversies, loadActors, getCategories, getExcerpt } from '../../lib/content';
+
+const events = loadEvents();
+const threads = loadThreads();
+const controversies = loadControversies();
+const actors = loadActors();
+const categories = getCategories();
+
+const featuredEvent = events[0];
+const featuredThread = threads.find((t) => t.core_question) || threads[0];
+const tableEvents = events.slice(0, 20);
+
+// Counts for filter bar
+const bySignificance = {
+  landmark: events.filter((e) => e.significance === 'landmark').length,
+  major: events.filter((e) => e.significance === 'major').length,
+  notable: events.filter((e) => e.significance === 'notable').length,
+};
+const byCategory = new Map<string, number>();
+for (const e of events) byCategory.set(e.category, (byCategory.get(e.category) || 0) + 1);
+const byYear = new Map<number, number>();
+for (const e of events) {
+  const y = new Date(e.date).getFullYear();
+  byYear.set(y, (byYear.get(y) || 0) + 1);
+}
+const years = [...byYear.entries()].sort((a, b) => b[0] - a[0]);
+
+function fmtISO(d: unknown): string {
+  if (!d) return '';
+  try { return new Date(d as string | number | Date).toISOString().slice(0, 10); }
+  catch { return String(d).slice(0, 10); }
+}
+
+const today = new Date();
+const lastUpdated = `${today.getUTCFullYear()}-${String(today.getUTCMonth() + 1).padStart(2, '0')}-${String(today.getUTCDate()).padStart(2, '0')}`;
+---
+
+<MockShell title="Research Archive" letter="D">
+  <div class="arc">
+    <!-- Header -->
+    <header class="arc-head">
+      <div class="arc-head__inner">
+        <a class="arc-head__brand" href="/mocks/d">
+          <span class="arc-head__mark">[L]</span>
+          <span class="arc-head__name">the ledger</span>
+          <span class="arc-head__sub">an archive of AI history</span>
+        </a>
+        <nav class="arc-head__nav">
+          <a href="#" class="is-active">events</a>
+          <a href="#threads">threads</a>
+          <a href="#actors">actors</a>
+          <a href="#controversies">controversies</a>
+          <a href="#">about</a>
+          <a href="#">submit</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Stats strip -->
+    <div class="arc-stats">
+      <div class="arc-stats__inner">
+        <dl class="arc-stats__list">
+          <div><dt>events</dt><dd>{events.length}</dd></div>
+          <div><dt>threads</dt><dd>{threads.length}</dd></div>
+          <div><dt>controversies</dt><dd>{controversies.length}</dd></div>
+          <div><dt>actors</dt><dd>{actors.length}</dd></div>
+          <div><dt>last updated</dt><dd>{lastUpdated}</dd></div>
+          <div><dt>license</dt><dd>CC-BY-SA-4.0</dd></div>
+          <div><dt>curator</dt><dd>Terry Tang</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <!-- Main -->
+    <main class="arc-main">
+      <div class="arc-main__inner">
+        <!-- Intro -->
+        <section class="arc-intro">
+          <h1 class="arc-intro__title">Events · sortable index</h1>
+          <p class="arc-intro__dek">
+            {events.length} entries on file. Each row records a dated event, its epistemic metadata,
+            and sources. Click any row to expand its full text. Every claim is citable; every source
+            is archived. Browse by year, category, or significance using the filters below, or search.
+          </p>
+        </section>
+
+        <!-- Filter bar -->
+        <section class="arc-filter" aria-label="Filters">
+          <div class="arc-filter__row">
+            <label class="arc-filter__label" for="arc-search">search</label>
+            <input id="arc-search" type="search" placeholder="title, actor, or tag…" class="arc-filter__input" />
+            <button type="button" class="arc-filter__reset">reset</button>
+          </div>
+          <div class="arc-filter__chips">
+            <div class="arc-chip-group">
+              <span class="arc-chip-group__label">year</span>
+              <button type="button" class="arc-chip is-active">all</button>
+              {years.map(([y, n]) => (
+                <button type="button" class="arc-chip">{y} <span class="arc-chip__count">{n}</span></button>
+              ))}
+            </div>
+            <div class="arc-chip-group">
+              <span class="arc-chip-group__label">category</span>
+              <button type="button" class="arc-chip is-active">all</button>
+              {categories.map((c) => (
+                <button type="button" class="arc-chip">{c.label} <span class="arc-chip__count">{byCategory.get(c.id) || 0}</span></button>
+              ))}
+            </div>
+            <div class="arc-chip-group">
+              <span class="arc-chip-group__label">significance</span>
+              <button type="button" class="arc-chip is-active">all</button>
+              <button type="button" class="arc-chip">landmark <span class="arc-chip__count">{bySignificance.landmark}</span></button>
+              <button type="button" class="arc-chip">major <span class="arc-chip__count">{bySignificance.major}</span></button>
+              <button type="button" class="arc-chip">notable <span class="arc-chip__count">{bySignificance.notable}</span></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Table -->
+        <section class="arc-table-wrap">
+          <table class="arc-table">
+            <thead>
+              <tr>
+                <th scope="col" class="arc-th arc-th--sortable">date ↓</th>
+                <th scope="col" class="arc-th">id</th>
+                <th scope="col" class="arc-th">title</th>
+                <th scope="col" class="arc-th">cat</th>
+                <th scope="col" class="arc-th">sig</th>
+                <th scope="col" class="arc-th">conf</th>
+                <th scope="col" class="arc-th arc-th--num">src</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tableEvents.map((e, i) => (
+                <tr class={i === 0 ? 'is-expanded' : ''}>
+                  <td class="arc-td arc-td--mono">{fmtISO(e.date)}</td>
+                  <td class="arc-td arc-td--mono arc-td--muted">{e.id}</td>
+                  <td class="arc-td arc-td--title">
+                    <a href="#">{e.title}</a>
+                    {e.tags && e.tags.length > 0 && (
+                      <div class="arc-td__tags">
+                        {e.tags.slice(0, 4).map((t) => (
+                          <span class="arc-tag">{t}</span>
+                        ))}
+                      </div>
+                    )}
+                  </td>
+                  <td class="arc-td arc-td--mono">{e.category}</td>
+                  <td class="arc-td arc-td--mono">
+                    {e.significance && (
+                      <span class={`arc-sig arc-sig--${e.significance}`}>{e.significance}</span>
+                    )}
+                  </td>
+                  <td class="arc-td arc-td--mono arc-td--muted">{e.confidence || '—'}</td>
+                  <td class="arc-td arc-td--mono arc-td--num">{e.sources?.length || 0}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p class="arc-table__foot">
+            Showing 20 of {events.length} · <a href="#">Load more rows →</a>
+          </p>
+        </section>
+
+        <!-- Expanded event view -->
+        <section class="arc-entry">
+          <div class="arc-entry__head">
+            <p class="arc-entry__kicker">
+              <span>entry</span>
+              <span class="arc-entry__id">{featuredEvent.id}</span>
+              <span>·</span>
+              <span>{fmtISO(featuredEvent.date)}</span>
+              <span>·</span>
+              <span>{featuredEvent.category}</span>
+              {featuredEvent.significance && (
+                <Fragment>
+                  <span>·</span>
+                  <span class={`arc-sig arc-sig--${featuredEvent.significance}`}>{featuredEvent.significance}</span>
+                </Fragment>
+              )}
+            </p>
+            <h2 class="arc-entry__title">{featuredEvent.title}</h2>
+            {featuredEvent.actors && featuredEvent.actors.length > 0 && (
+              <p class="arc-entry__actors">
+                {featuredEvent.actors.slice(0, 6).map((a, i) => (
+                  <Fragment>
+                    {i > 0 && ', '}
+                    <a href="#" class="arc-entry__actor">
+                      <span class="arc-entry__actor-name">{a.id}</span>
+                      <span class="arc-entry__actor-role"> [{a.role}]</span>
+                    </a>
+                  </Fragment>
+                ))}
+              </p>
+            )}
+          </div>
+
+          <div class="arc-entry__grid">
+            <!-- metadata column -->
+            <aside class="arc-entry__meta">
+              <dl>
+                <dt>date</dt><dd>{fmtISO(featuredEvent.date)}</dd>
+                <dt>category</dt><dd>{featuredEvent.category}</dd>
+                {featuredEvent.significance && <Fragment><dt>significance</dt><dd>{featuredEvent.significance}</dd></Fragment>}
+                {featuredEvent.confidence && <Fragment><dt>confidence</dt><dd>{featuredEvent.confidence}</dd></Fragment>}
+                {featuredEvent.contestation?.status && <Fragment><dt>contestation</dt><dd>{featuredEvent.contestation.status}</dd></Fragment>}
+                {featuredEvent.contestation?.challenge_window && <Fragment><dt>challenge</dt><dd>{featuredEvent.contestation.challenge_window}</dd></Fragment>}
+                <dt>sources</dt><dd>{featuredEvent.sources?.length || 0}</dd>
+                {featuredEvent.threads && featuredEvent.threads.length > 0 && (
+                  <Fragment>
+                    <dt>threads</dt>
+                    <dd>{featuredEvent.threads.map((t, i) => (<Fragment>{i > 0 && ', '}<a href="#">{t}</a></Fragment>))}</dd>
+                  </Fragment>
+                )}
+                {featuredEvent.tags && featuredEvent.tags.length > 0 && (
+                  <Fragment>
+                    <dt>tags</dt>
+                    <dd>{featuredEvent.tags.join(', ')}</dd>
+                  </Fragment>
+                )}
+              </dl>
+            </aside>
+
+            <!-- body -->
+            <div class="arc-entry__body">
+              <div class="arc-prose" set:html={featuredEvent.htmlContent} />
+
+              <h3 class="arc-entry__refs-head">references</h3>
+              <ol class="arc-refs">
+                {(featuredEvent.sources || []).map((s) => (
+                  <li>
+                    <span class="arc-refs__type">[{s.type || 'source'}]</span>
+                    <a href={s.url} target="_blank" rel="noopener">{s.title}</a>
+                    {s.publisher && <Fragment>. <span class="arc-refs__pub">{s.publisher}</span></Fragment>}
+                    {s.date && <Fragment>. <span class="arc-refs__date">{fmtISO(s.date)}</span></Fragment>}.
+                    {s.archive_url && <Fragment> <a href={s.archive_url} target="_blank" rel="noopener" class="arc-refs__archive">[archived]</a></Fragment>}
+                  </li>
+                ))}
+              </ol>
+
+              <p class="arc-entry__cite">
+                <strong>cite as:</strong>
+                <code>theledger.net/events/{featuredEvent.id}</code>
+                <span>—</span>
+                The Ledger, accessed {lastUpdated}. Entry is immutable; corrections appear as revisions.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Threads -->
+        <section class="arc-threads" id="threads">
+          <h2 class="arc-h2">Threads</h2>
+          <p class="arc-h2-dek">Long-running questions with named curators. Threads gather events into argument-shaped collections.</p>
+
+          <table class="arc-table">
+            <thead>
+              <tr>
+                <th class="arc-th">id</th>
+                <th class="arc-th">title</th>
+                <th class="arc-th">core question</th>
+                <th class="arc-th">curator</th>
+                <th class="arc-th arc-th--num">events</th>
+                <th class="arc-th">status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {threads.map((t) => (
+                <tr>
+                  <td class="arc-td arc-td--mono arc-td--muted">{t.id}</td>
+                  <td class="arc-td arc-td--title"><a href="#">{t.title}</a></td>
+                  <td class="arc-td arc-td--q"><em>{t.core_question || '—'}</em></td>
+                  <td class="arc-td arc-td--mono">{t.curator || '—'}</td>
+                  <td class="arc-td arc-td--mono arc-td--num">{t.events?.length || 0}</td>
+                  <td class="arc-td arc-td--mono">
+                    <span class={`arc-status arc-status--${t.status || 'dormant'}`}>{t.status || '—'}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <!-- one thread expanded -->
+          <div class="arc-thread-expanded">
+            <p class="arc-entry__kicker">
+              <span>thread</span>
+              <span class="arc-entry__id">{featuredThread.id}</span>
+              <span>·</span>
+              <span>{featuredThread.status || 'active'}</span>
+              {featuredThread.curator && <Fragment><span>·</span><span>curated by {featuredThread.curator}</span></Fragment>}
+            </p>
+            <h3 class="arc-thread-expanded__title">{featuredThread.title}</h3>
+            {featuredThread.core_question && (
+              <p class="arc-thread-expanded__q"><em>{featuredThread.core_question}</em></p>
+            )}
+            <div class="arc-prose arc-prose--thread" set:html={featuredThread.htmlContent} />
+          </div>
+        </section>
+
+        <!-- Controversies -->
+        <section class="arc-controversies" id="controversies">
+          <h2 class="arc-h2">Controversies</h2>
+          <p class="arc-h2-dek">Questions the record does not resolve. Positions are kept as positions.</p>
+          <ul class="arc-cont">
+            {controversies.map((c) => (
+              <li class="arc-cont__item">
+                <div class="arc-cont__head">
+                  <h3 class="arc-cont__title"><a href="#">{c.title}</a></h3>
+                  <span class="arc-cont__meta arc-td--mono">
+                    {c.polarity} · {c.positions?.length || 0} positions
+                  </span>
+                </div>
+                {c.positions && c.positions.length >= 2 && (
+                  <div class="arc-cont__positions">
+                    {c.positions.slice(0, 2).map((p, i) => (
+                      <div class="arc-cont__pos">
+                        <p class="arc-cont__pos-label">[{String.fromCharCode(65 + i)}]</p>
+                        <p class="arc-cont__pos-claim">{p.claim}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <!-- Actors index -->
+        <section class="arc-actors" id="actors">
+          <h2 class="arc-h2">Actors</h2>
+          <p class="arc-h2-dek">Companies, labs, governments, and individuals referenced in the record.</p>
+          <ul class="arc-actor-grid">
+            {actors.slice(0, 20).map((a) => (
+              <li>
+                <a href="#" class="arc-actor">
+                  <span class="arc-actor__type">[{a.type}]</span>
+                  <span class="arc-actor__name">{a.name}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p class="arc-seemore"><a href="#">All {actors.length} actors →</a></p>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="arc-footer">
+      <div class="arc-footer__inner">
+        <div class="arc-footer__col">
+          <h4>the ledger</h4>
+          <p>
+            An immutable, contestable chronicle of artificial intelligence history.
+            Maintained by Terry Tang. Content released under CC-BY-SA-4.0.
+          </p>
+        </div>
+        <div class="arc-footer__col">
+          <h4>browse</h4>
+          <ul>
+            <li><a href="#">events (by date)</a></li>
+            <li><a href="#">threads</a></li>
+            <li><a href="#">controversies</a></li>
+            <li><a href="#">actors</a></li>
+            <li><a href="#">timeline</a></li>
+            <li><a href="#">graph</a></li>
+          </ul>
+        </div>
+        <div class="arc-footer__col">
+          <h4>contribute</h4>
+          <ul>
+            <li><a href="#">submit a source</a></li>
+            <li><a href="#">challenge a claim</a></li>
+            <li><a href="#">github repository</a></li>
+          </ul>
+        </div>
+        <div class="arc-footer__col">
+          <h4>policies</h4>
+          <ul>
+            <li><a href="#">editorial constitution</a></li>
+            <li><a href="#">evidence standards</a></li>
+            <li><a href="#">AI assistance policy</a></li>
+            <li><a href="#">style guide</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="arc-footer__meta">
+        <span>Mock D · Research Archive direction · Compare <a href="/mocks/a">A</a> · <a href="/mocks/b">B</a> · <a href="/mocks/c">C</a></span>
+      </div>
+    </footer>
+  </div>
+
+  <style>
+    .arc {
+      background: #FFFFFF;
+      color: #0A0A0A;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: 14px;
+      line-height: 1.55;
+      min-height: 100vh;
+    }
+
+    .arc a { color: #1E40AF; text-decoration: none; }
+    .arc a:hover { text-decoration: underline; }
+
+    /* header */
+    .arc-head {
+      background: #FFFFFF;
+      border-bottom: 1px solid #0A0A0A;
+    }
+    .arc-head__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .arc-head__brand {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 8px;
+      color: #0A0A0A;
+      text-decoration: none;
+    }
+    .arc-head__mark {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #737373;
+    }
+    .arc-head__name {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 72;
+      font-weight: 500;
+      font-size: 20px;
+      color: #0A0A0A;
+      letter-spacing: -0.01em;
+    }
+    .arc-head__sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: #737373;
+      font-style: italic;
+    }
+    .arc-head__nav {
+      display: flex;
+      gap: 2px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+    }
+    .arc-head__nav a {
+      color: #0A0A0A;
+      padding: 4px 10px;
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+    }
+    .arc-head__nav a:hover {
+      color: #1E40AF;
+      text-decoration: none;
+    }
+    .arc-head__nav a.is-active {
+      border-bottom-color: #0A0A0A;
+    }
+
+    /* stats */
+    .arc-stats {
+      background: #FAFAFA;
+      border-bottom: 1px solid #E5E5E5;
+    }
+    .arc-stats__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 10px 24px;
+      overflow-x: auto;
+    }
+    .arc-stats__list {
+      margin: 0;
+      display: flex;
+      gap: 32px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+    .arc-stats__list > div {
+      display: flex;
+      gap: 6px;
+      align-items: baseline;
+    }
+    .arc-stats__list dt {
+      color: #737373;
+      text-transform: lowercase;
+      letter-spacing: 0.04em;
+    }
+    .arc-stats__list dd {
+      margin: 0;
+      color: #0A0A0A;
+      font-weight: 500;
+    }
+
+    /* main */
+    .arc-main__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 36px 24px;
+    }
+
+    /* intro */
+    .arc-intro { margin-bottom: 28px; max-width: 780px; }
+    .arc-intro__title {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144;
+      font-weight: 500;
+      font-size: 2rem;
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+      margin: 0 0 8px;
+      color: #0A0A0A;
+    }
+    .arc-intro__dek {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #404040;
+      margin: 0;
+      max-width: 62ch;
+    }
+
+    /* filter */
+    .arc-filter {
+      border: 1px solid #E5E5E5;
+      padding: 14px;
+      margin-bottom: 20px;
+      background: #FAFAFA;
+    }
+    .arc-filter__row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .arc-filter__label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: #737373;
+      text-transform: lowercase;
+      width: 60px;
+    }
+    .arc-filter__input {
+      flex: 1;
+      padding: 6px 10px;
+      border: 1px solid #D4D4D4;
+      background: #FFFFFF;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: #0A0A0A;
+      border-radius: 2px;
+    }
+    .arc-filter__input:focus {
+      outline: 2px solid #1E40AF;
+      outline-offset: -1px;
+      border-color: #1E40AF;
+    }
+    .arc-filter__reset {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 5px 10px;
+      background: transparent;
+      border: 1px solid #D4D4D4;
+      border-radius: 2px;
+      color: #737373;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+    }
+    .arc-filter__reset:hover { color: #0A0A0A; border-color: #0A0A0A; }
+
+    .arc-filter__chips {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .arc-chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+    .arc-chip-group__label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: #737373;
+      text-transform: lowercase;
+      width: 60px;
+      flex-shrink: 0;
+    }
+    .arc-chip {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 3px 8px;
+      background: #FFFFFF;
+      border: 1px solid #D4D4D4;
+      border-radius: 2px;
+      color: #404040;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+    }
+    .arc-chip:hover {
+      border-color: #0A0A0A;
+      color: #0A0A0A;
+    }
+    .arc-chip.is-active {
+      background: #0A0A0A;
+      color: #FFFFFF;
+      border-color: #0A0A0A;
+    }
+    .arc-chip__count {
+      color: #A3A3A3;
+      margin-left: 4px;
+    }
+    .arc-chip.is-active .arc-chip__count { color: #A3A3A3; }
+
+    /* table */
+    .arc-table-wrap {
+      border: 1px solid #E5E5E5;
+      overflow-x: auto;
+      margin-bottom: 40px;
+    }
+    .arc-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .arc-table thead {
+      background: #F5F5F5;
+      border-bottom: 1px solid #0A0A0A;
+    }
+    .arc-th {
+      text-align: left;
+      padding: 9px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: #0A0A0A;
+      font-weight: 600;
+      text-transform: lowercase;
+      border-right: 1px solid #E5E5E5;
+      white-space: nowrap;
+    }
+    .arc-th:last-child { border-right: 0; }
+    .arc-th--sortable { cursor: pointer; color: #1E40AF; }
+    .arc-th--num { text-align: right; }
+    .arc-table tbody tr {
+      border-bottom: 1px solid #EEEEEE;
+      transition: background 100ms ease;
+    }
+    .arc-table tbody tr:hover { background: #FAFAFA; }
+    .arc-table tbody tr.is-expanded {
+      background: #F0F4FA;
+    }
+    .arc-td {
+      padding: 9px 12px;
+      vertical-align: top;
+      border-right: 1px solid #F5F5F5;
+    }
+    .arc-td:last-child { border-right: 0; }
+    .arc-td--mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      letter-spacing: 0.02em;
+    }
+    .arc-td--muted { color: #737373; }
+    .arc-td--title {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 24;
+      font-size: 15px;
+      line-height: 1.3;
+    }
+    .arc-td--title a {
+      color: #0A0A0A;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+    }
+    .arc-td--title a:hover {
+      color: #1E40AF;
+      border-bottom-color: #1E40AF;
+    }
+    .arc-td--num { text-align: right; color: #737373; }
+    .arc-td--q {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 14;
+      font-style: italic;
+      color: #0A0A0A;
+      font-size: 13.5px;
+      max-width: 300px;
+    }
+    .arc-td__tags {
+      display: flex; gap: 4px; flex-wrap: wrap;
+      margin-top: 4px;
+    }
+    .arc-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.02em;
+      color: #737373;
+      background: #F5F5F5;
+      padding: 1px 5px;
+      border-radius: 1px;
+    }
+    .arc-sig {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      padding: 1px 5px;
+      border: 1px solid currentColor;
+      border-radius: 1px;
+    }
+    .arc-sig--landmark { color: #7A5A00; background: #FEFBEF; }
+    .arc-sig--major { color: #0A4D82; background: #EFF6FC; }
+    .arc-sig--notable { color: #525252; background: #FAFAFA; }
+    .arc-status {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+    }
+    .arc-status--active { color: #166534; }
+    .arc-status--dormant { color: #737373; }
+
+    .arc-table__foot {
+      margin: 12px 0 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #737373;
+      text-align: center;
+    }
+    .arc-table__foot a { color: #1E40AF; }
+
+    /* entry expanded */
+    .arc-entry {
+      margin-bottom: 52px;
+      padding: 28px;
+      border: 1px solid #E5E5E5;
+      border-left: 3px solid #0A0A0A;
+      background: #FFFFFF;
+    }
+    .arc-entry__head { margin-bottom: 20px; }
+    .arc-entry__kicker {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: #737373;
+      margin: 0 0 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .arc-entry__id { color: #0A0A0A; font-weight: 600; }
+    .arc-entry__title {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144;
+      font-weight: 500;
+      font-size: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+      line-height: 1.15;
+      letter-spacing: -0.012em;
+      margin: 0 0 8px;
+      color: #0A0A0A;
+    }
+    .arc-entry__actors {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #404040;
+      margin: 0;
+    }
+    .arc-entry__actor { color: #1E40AF; }
+    .arc-entry__actor-role { color: #737373; }
+
+    .arc-entry__grid {
+      display: grid;
+      grid-template-columns: 200px minmax(0, 1fr);
+      gap: 32px;
+      align-items: start;
+    }
+    @media (max-width: 780px) {
+      .arc-entry__grid { grid-template-columns: 1fr; gap: 20px; }
+    }
+    .arc-entry__meta dl {
+      margin: 0;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 6px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+    .arc-entry__meta dt {
+      color: #737373;
+      text-transform: lowercase;
+      letter-spacing: 0.04em;
+    }
+    .arc-entry__meta dd {
+      margin: 0;
+      color: #0A0A0A;
+    }
+    .arc-entry__meta dd a { color: #1E40AF; }
+
+    /* prose */
+    .arc-prose {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      color: #0A0A0A;
+      max-width: 68ch;
+    }
+    .arc-prose h2 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 72;
+      font-weight: 500;
+      font-size: 20px;
+      margin: 26px 0 10px;
+      line-height: 1.15;
+    }
+    .arc-prose h3 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 36;
+      font-weight: 500;
+      font-size: 17px;
+      margin: 22px 0 8px;
+    }
+    .arc-prose p { margin: 0 0 14px; }
+    .arc-prose a {
+      color: #1E40AF;
+      text-decoration: none;
+      border-bottom: 1px solid #1E40AF;
+    }
+    .arc-prose a:hover {
+      background: #EFF6FC;
+    }
+    .arc-prose ul, .arc-prose ol {
+      padding-left: 22px;
+      margin: 0 0 14px;
+    }
+    .arc-prose li { margin-bottom: 4px; }
+    .arc-prose blockquote {
+      margin: 14px 0;
+      padding: 8px 16px;
+      border-left: 3px solid #E5E5E5;
+      background: #FAFAFA;
+      color: #404040;
+      font-style: italic;
+    }
+    .arc-prose code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      background: #F5F5F5;
+      padding: 1px 4px;
+      border-radius: 1px;
+    }
+    .arc-prose--thread { max-width: 72ch; }
+
+    /* refs */
+    .arc-entry__refs-head,
+    .arc-h2 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 72;
+      font-weight: 500;
+      font-size: 20px;
+      margin: 28px 0 10px;
+      line-height: 1.15;
+    }
+    .arc-refs {
+      padding-left: 20px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      line-height: 1.55;
+      color: #262626;
+    }
+    .arc-refs li { margin-bottom: 6px; }
+    .arc-refs__type {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: #737373;
+      margin-right: 4px;
+      text-transform: lowercase;
+    }
+    .arc-refs__pub { color: #404040; }
+    .arc-refs__date { font-family: 'JetBrains Mono', monospace; color: #737373; font-size: 12px; }
+    .arc-refs__archive {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #737373 !important;
+      border-bottom: 0 !important;
+    }
+
+    .arc-entry__cite {
+      margin: 20px 0 0;
+      padding: 10px 12px;
+      background: #F5F5F5;
+      border-left: 2px solid #737373;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      line-height: 1.55;
+      color: #404040;
+    }
+    .arc-entry__cite strong { color: #0A0A0A; margin-right: 6px; }
+    .arc-entry__cite code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: #FFFFFF;
+      padding: 1px 5px;
+      border: 1px solid #E5E5E5;
+      color: #1E40AF;
+      margin-right: 6px;
+    }
+
+    /* threads */
+    .arc-threads { margin-bottom: 52px; }
+    .arc-h2-dek {
+      font-size: 14px;
+      color: #525252;
+      margin: 0 0 18px;
+      max-width: 62ch;
+    }
+    .arc-thread-expanded {
+      margin-top: 28px;
+      padding: 24px;
+      border: 1px solid #E5E5E5;
+      border-left: 3px solid #0A0A0A;
+      background: #FFFFFF;
+    }
+    .arc-thread-expanded__title {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144;
+      font-weight: 500;
+      font-size: 1.75rem;
+      line-height: 1.15;
+      letter-spacing: -0.012em;
+      margin: 0 0 8px;
+      color: #0A0A0A;
+    }
+    .arc-thread-expanded__q {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 14;
+      font-style: italic;
+      font-size: 17px;
+      line-height: 1.45;
+      color: #262626;
+      margin: 0 0 20px;
+      padding-left: 16px;
+      border-left: 2px solid #1E40AF;
+    }
+
+    /* controversies */
+    .arc-controversies { margin-bottom: 52px; }
+    .arc-cont {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 16px;
+    }
+    .arc-cont__item {
+      padding: 18px;
+      border: 1px solid #E5E5E5;
+      background: #FFFFFF;
+    }
+    .arc-cont__head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed #E5E5E5;
+    }
+    .arc-cont__title {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 72;
+      font-weight: 500;
+      font-size: 18px;
+      margin: 0;
+      line-height: 1.2;
+    }
+    .arc-cont__title a { color: #0A0A0A; text-decoration: none; }
+    .arc-cont__title a:hover { color: #1E40AF; }
+    .arc-cont__meta { color: #737373; font-size: 11px; }
+    .arc-cont__positions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 640px) {
+      .arc-cont__positions { grid-template-columns: 1fr; }
+    }
+    .arc-cont__pos {
+      padding: 10px 12px;
+      background: #FAFAFA;
+      border: 1px solid #E5E5E5;
+      border-radius: 1px;
+    }
+    .arc-cont__pos-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: #1E40AF;
+      letter-spacing: 0.08em;
+      margin: 0 0 4px;
+      font-weight: 600;
+    }
+    .arc-cont__pos-claim {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #262626;
+      margin: 0;
+    }
+
+    /* actors */
+    .arc-actors { margin-bottom: 52px; }
+    .arc-actor-grid {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 6px;
+    }
+    .arc-actor {
+      display: flex;
+      gap: 8px;
+      padding: 6px 10px;
+      border: 1px solid #E5E5E5;
+      background: #FFFFFF;
+      font-size: 13px;
+      color: #0A0A0A;
+      text-decoration: none;
+      border-radius: 1px;
+      transition: border-color 120ms ease;
+    }
+    .arc-actor:hover { border-color: #0A0A0A; text-decoration: none; }
+    .arc-actor__type {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: #737373;
+      flex-shrink: 0;
+    }
+    .arc-actor__name { color: #0A0A0A; }
+
+    .arc-seemore {
+      margin: 16px 0 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      text-align: center;
+    }
+    .arc-seemore a { color: #1E40AF; }
+
+    /* footer */
+    .arc-footer {
+      margin-top: 28px;
+      border-top: 1px solid #0A0A0A;
+      background: #FAFAFA;
+    }
+    .arc-footer__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 32px 24px;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 32px;
+    }
+    @media (max-width: 720px) {
+      .arc-footer__inner { grid-template-columns: 1fr 1fr; }
+    }
+    .arc-footer__col h4 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: lowercase;
+      color: #737373;
+      margin: 0 0 10px;
+      font-weight: 600;
+    }
+    .arc-footer__col p {
+      font-size: 13px;
+      color: #404040;
+      line-height: 1.6;
+      margin: 0;
+    }
+    .arc-footer__col ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.9;
+    }
+    .arc-footer__meta {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 14px 24px;
+      border-top: 1px solid #E5E5E5;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #737373;
+      letter-spacing: 0.04em;
+    }
+    .arc-footer__meta a { color: #1E40AF; margin: 0 3px; }
+  </style>
+</MockShell>
