@@ -5,7 +5,7 @@ import http from "node:http";
 import os from "node:os";
 import path from "node:path";
 import { test } from "node:test";
-import { checkUrl, extractUrls, groupLinks, formatReport } from "./check-links.js";
+import { checkUrl, extractUrls, groupLinks, formatReport, suspiciousRedirect, writeReports } from "./check-links.js";
 
 async function withServer(
   handler: http.RequestListener,
@@ -98,8 +98,9 @@ test("deduplicates requests while reporting every occurrence and redirect destin
     url, occurrences: grouped.get(url)!, status: 404, ok: false,
     finalUrl: "https://example.com/missing",
   }]);
-  assert.match(report, /^## Broken Links Report/);
-  assert.match(report, /Found 1 broken link\(s\)/);
+  assert.match(report, /^## Source Link Report/);
+  assert.match(report, /Found 1 broken link\(s\) and 0 suspicious redirect\(s\)/);
+  assert.match(report, /^- Broken `404`: 1$/m);
   for (const link of links) assert.ok(report.includes(`${link.file} (${link.field})`));
   assert.ok(report.includes("Final URL: [https://example.com/missing]"));
 });
@@ -118,5 +119,93 @@ test("retains the failing redirect destination on a transport error", async () =
     assert.equal(result.finalUrl, "https://missing.example/article");
   } finally {
     globalThis.fetch = original;
+  }
+});
+
+test("flags redirects to a site root, another registrable domain, or a login or paywall path", () => {
+  const cases: Array<[string, string, string | undefined]> = [
+    ["https://deepmind.google/models/project-mariner/", "https://deepmind.google/", "site root"],
+    ["https://example.com/news/article", "https://www.example.com/en-us/", "site root"],
+    ["https://smythos.com/ai-agents/grok", "https://github.com/someone/repo", "different domain"],
+    ["https://news.example.co.uk/story", "https://other.co.uk/story", "different domain"],
+    ["https://www.example.com/story", "https://www.example.com/account/login?next=/story", "login or paywall path"],
+    ["https://www.example.com/story", "https://www.example.com/subscribe/", "login or paywall path"],
+    ["http://example.com/story", "https://www.example.com/story/", undefined],
+    ["https://blog.example.co.uk/story", "https://www.example.co.uk/2024/story", undefined],
+    ["https://example.org", "https://www.example.org/", undefined],
+    ["https://example.com/story", "https://example.com/story", undefined],
+  ];
+  for (const [url, finalUrl, reason] of cases) {
+    assert.equal(suspiciousRedirect(url, finalUrl), reason, `${url} -> ${finalUrl}`);
+  }
+});
+
+test("keeps a redirect to the homepage healthy but marks it suspicious", async () => {
+  await withServer((req, res) => {
+    if (req.url === "/models/project-mariner/") res.writeHead(301, { Location: "/" }).end();
+    else res.end("home");
+  }, async (base) => {
+    const result = await checkUrl(`${base}/models/project-mariner/`);
+    assert.equal(result.ok, true);
+    assert.equal(result.status, 200);
+    assert.equal(result.finalUrl, `${base}/`);
+    assert.equal(result.suspicious, "site root");
+  });
+});
+
+test("keeps report files for suspicious redirects and removes them when every link is clean", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ledger-report-"));
+  const report = path.join(dir, "broken-links-report.md");
+  const summary = path.join(dir, "broken-links-summary.md");
+  const occurrence = { url: "https://example.com/article", file: "events/a.md", field: "sources[0].url" };
+  try {
+    assert.equal(writeReports([{
+      url: occurrence.url, occurrences: [occurrence], status: 200, ok: true,
+      finalUrl: "https://example.com/", suspicious: "site root",
+    }], dir), true);
+    for (const file of [report, summary]) {
+      const text = fs.readFileSync(file, "utf-8");
+      assert.match(text, /Found 0 broken link\(s\) and 1 suspicious redirect\(s\)/);
+      assert.match(text, /^- Suspicious redirect \(site root\): 1$/m);
+      assert.match(text, /^## Suspicious Redirects$/m);
+      assert.ok(text.includes("events/a.md (sources[0].url)"));
+    }
+
+    assert.equal(writeReports([{
+      url: occurrence.url, occurrences: [occurrence], status: 200, ok: true, finalUrl: "https://example.com/article/",
+    }], dir), false);
+    assert.equal(fs.existsSync(report), false);
+    assert.equal(fs.existsSync(summary), false);
+  } finally {
+    fs.rmSync(dir, { recursive: true });
+  }
+});
+
+test("summarizes large reports well under GitHub's issue body limit", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ledger-summary-"));
+  const long = "x".repeat(250);
+  const results = Array.from({ length: 600 }, (_, i) => {
+    const url = `https://example${i % 50}.com/${long}/${i}`;
+    const occurrences = [0, 1].map((n) => ({ url, file: `events/2026/${i}-${long.slice(0, 40)}.md`, field: `sources[${n}].url` }));
+    if (i < 400) return { url, occurrences, status: i % 2 ? 404 : 200, ok: false, finalUrl: `${url}/moved`, ...(i % 2 ? {} : { issue: "UNPINNED_ARCHIVE" }) };
+    return { url, occurrences, status: 200, ok: true, finalUrl: "https://github.com/", suspicious: "different domain" };
+  });
+  try {
+    assert.equal(writeReports(results, dir), true);
+    const full = fs.readFileSync(path.join(dir, "broken-links-report.md"), "utf-8");
+    const summary = fs.readFileSync(path.join(dir, "broken-links-summary.md"), "utf-8");
+    assert.ok(full.length > 65536);
+    assert.ok(summary.length < 40000, `summary is ${summary.length} characters`);
+    assert.match(summary, /^- Broken `404`: 200$/m);
+    assert.match(summary, /^- Broken `UNPINNED_ARCHIVE`: 200$/m);
+    assert.match(summary, /^- Suspicious redirect \(different domain\): 200$/m);
+    assert.match(summary, /^- Redirects: 600$/m);
+    for (const [title, more] of [["Broken Links", 790], ["Suspicious Redirects", 390], ["Redirects", 1190]] as const) {
+      const section = summary.split(`## ${title}\n\n`)[1].split("\n\n")[0].split("\n");
+      assert.equal(section.length, 11, title);
+      assert.equal(section.at(-1), `- ...and ${more} more`);
+    }
+  } finally {
+    fs.rmSync(dir, { recursive: true });
   }
 });

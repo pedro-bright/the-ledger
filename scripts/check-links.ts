@@ -1,7 +1,9 @@
 #!/usr/bin/env tsx
 /**
  * Check source URLs with GET, preserving occurrences and redirect destinations.
- * The weekly stale-sources job reads broken-links-report.md on a nonzero exit.
+ * Exits nonzero on broken links. Broken links and suspicious redirects keep
+ * broken-links-report.md (full) and broken-links-summary.md, which the weekly
+ * stale-sources job uploads and posts.
  */
 
 import fs from "node:fs";
@@ -16,6 +18,9 @@ const CONCURRENCY = 2;
 const HOST_DELAY_MS = 1000;
 const TIMEOUT_MS = 15000;
 const MAX_REDIRECTS = 20;
+const SUMMARY_ENTRIES = 10;
+const REPORT_FILE = "broken-links-report.md";
+const SUMMARY_FILE = "broken-links-summary.md";
 
 interface LinkOccurrence {
   url: string;
@@ -28,6 +33,7 @@ interface UrlResult {
   ok: boolean;
   finalUrl: string;
   issue?: string;
+  suspicious?: string;
 }
 
 interface LinkResult extends UrlResult {
@@ -94,6 +100,29 @@ function unpinnedArchive(url: string): boolean {
     !/^\/web\/\d{14}(?:[a-z_]+)?\/https?:\/\//i.test(parsed.pathname);
 }
 
+function registrableDomain(hostname: string): string {
+  if (/^[\d.]+$|:/.test(hostname)) return hostname;
+  const labels = hostname.replace(/\.$/, "").split(".");
+  const secondLevel = labels.length > 2 && labels.at(-1)!.length === 2 &&
+    /^(?:ac|co|com|edu|gov|net|org)$/.test(labels.at(-2)!);
+  return labels.slice(secondLevel ? -3 : -2).join(".");
+}
+
+const isRoot = (url: URL) =>
+  /^\/(?:(?:index|default|home)(?:\.[a-z]+)?|[a-z]{2}(?:[-_][a-z]{2})?)?\/?$/i.test(url.pathname);
+
+export function suspiciousRedirect(url: string, finalUrl: string): string | undefined {
+  if (finalUrl === url) return undefined;
+  const from = new URL(url);
+  const to = new URL(finalUrl);
+  if (/\/(?:log-?in|sign-?in|sign_in|auth|sso|subscribe|subscriptions?|paywall)(?:\/|\.[a-z]+)?$/i.test(to.pathname)) {
+    return "login or paywall path";
+  }
+  if (isRoot(to) && !isRoot(from)) return "site root";
+  if (registrableDomain(to.hostname) !== registrableDomain(from.hostname)) return "different domain";
+  return undefined;
+}
+
 export async function checkUrl(url: string): Promise<UrlResult> {
   let finalUrl = url;
   let unpinned = false;
@@ -115,11 +144,13 @@ export async function checkUrl(url: string): Promise<UrlResult> {
         finalUrl = new URL(location, finalUrl).href;
         continue;
       }
+      const suspicious = suspiciousRedirect(url, finalUrl);
       return {
         status: response.status,
         ok: response.ok && !unpinned,
         finalUrl,
         ...(unpinned ? { issue: "UNPINNED_ARCHIVE" } : {}),
+        ...(suspicious ? { suspicious } : {}),
       };
     }
     throw new Error("Redirect limit exceeded");
@@ -140,23 +171,51 @@ export function groupLinks(links: LinkOccurrence[]): Map<string, LinkOccurrence[
   return grouped;
 }
 
-export function formatReport(results: LinkResult[]): string {
+export function formatReport(results: LinkResult[], limit = Infinity): string {
   const broken = results.filter((r) => !r.ok);
+  const suspicious = results.filter((r) => r.ok && r.suspicious);
+  const redirects = results.filter((r) => r.finalUrl !== r.url);
   const detail = (link: LinkResult) =>
     `Status: \`${link.status}\`${link.issue ? ` (${link.issue})` : ""}` +
+    (link.suspicious ? ` (suspicious redirect: ${link.suspicious})` : "") +
     (link.finalUrl !== link.url ? ` - Final URL: [${link.finalUrl}](${link.finalUrl})` : "");
-  const entries = (links: LinkResult[]) => links.flatMap((link) =>
-    link.occurrences.map((occurrence) =>
-      `- **${occurrence.file} (${occurrence.field})**: [${link.url}](${link.url}) - ${detail(link)}`,
-    ),
-  );
-  const redirects = results.filter((r) => r.finalUrl !== r.url);
+  const section = (title: string, links: LinkResult[]) => {
+    const entries = links.flatMap((link) =>
+      link.occurrences.map((occurrence) =>
+        `- **${occurrence.file} (${occurrence.field})**: [${link.url}](${link.url}) - ${detail(link)}`,
+      ),
+    );
+    if (entries.length === 0) return [];
+    const more = entries.length - limit;
+    return ["", `## ${title}`, "", ...entries.slice(0, limit), ...(more > 0 ? [`- ...and ${more} more`] : [])];
+  };
+  const counts = new Map<string, number>();
+  const count = (type: string) => counts.set(type, (counts.get(type) ?? 0) + 1);
+  for (const link of broken) count(`Broken \`${link.issue ?? link.status}\``);
+  for (const link of suspicious) count(`Suspicious redirect (${link.suspicious})`);
+  if (redirects.length) counts.set("Redirects", redirects.length);
   return [
-    "## Broken Links Report", "",
-    `Found ${broken.length} broken link(s) on ${new Date().toISOString().slice(0, 10)}:`, "",
-    ...entries(broken),
-    ...(redirects.length ? ["", "## Redirects", "", ...entries(redirects)] : []),
+    "## Source Link Report", "",
+    `Found ${broken.length} broken link(s) and ${suspicious.length} suspicious redirect(s) ` +
+      `among ${results.length} URL(s) on ${new Date().toISOString().slice(0, 10)}:`, "",
+    ...Array.from(counts, ([type, n]) => `- ${type}: ${n}`),
+    ...section("Broken Links", broken),
+    ...section("Suspicious Redirects", suspicious),
+    ...section("Redirects", redirects),
   ].join("\n");
+}
+
+export function writeReports(results: LinkResult[], dir = ROOT): boolean {
+  const reportPath = path.join(dir, REPORT_FILE);
+  const summaryPath = path.join(dir, SUMMARY_FILE);
+  if (!results.some((r) => !r.ok || r.suspicious)) {
+    fs.rmSync(reportPath, { force: true });
+    fs.rmSync(summaryPath, { force: true });
+    return false;
+  }
+  fs.writeFileSync(reportPath, formatReport(results), "utf-8");
+  fs.writeFileSync(summaryPath, formatReport(results, SUMMARY_ENTRIES), "utf-8");
+  return true;
 }
 
 async function main() {
@@ -176,26 +235,19 @@ async function main() {
   console.log("\n");
 
   for (const result of results.filter((r) => r.finalUrl !== r.url)) {
-    console.log(`  Redirect: ${result.url} -> ${result.finalUrl} (Status: ${result.status})`);
+    const label = result.suspicious ? `Suspicious redirect (${result.suspicious})` : "Redirect";
+    console.log(`  ${label}: ${result.url} -> ${result.finalUrl} (Status: ${result.status})`);
   }
   const broken = results.filter((r) => !r.ok);
-  const reportPath = path.join(ROOT, "broken-links-report.md");
-  if (broken.length === 0) {
-    fs.rmSync(reportPath, { force: true });
-    console.log("All links are valid.\n");
-    return;
-  }
-
-  console.log(`Found ${broken.length} broken link(s):\n`);
+  if (broken.length) console.log(`Found ${broken.length} broken link(s):\n`);
   for (const link of broken) {
     for (const occurrence of link.occurrences) console.log(`  ${occurrence.file} (${occurrence.field})`);
     console.log(`    -> ${link.url}`);
     console.log(`    -> Final URL: ${link.finalUrl}`);
     console.log(`    -> Status: ${link.status}${link.issue ? ` (${link.issue})` : ""}\n`);
   }
-  fs.writeFileSync(reportPath, formatReport(results), "utf-8");
-  console.log("Report written to broken-links-report.md\n");
-  process.exitCode = 1;
+  console.log(writeReports(results) ? `Report written to ${REPORT_FILE} and ${SUMMARY_FILE}\n` : "All links are valid.\n");
+  if (broken.length) process.exitCode = 1;
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

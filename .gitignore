@@ -10,6 +10,7 @@ graph.json
 feed.xml
 rss.xml
 broken-links-report.md
+broken-links-summary.md
 .vercel
 
 # Playwright
