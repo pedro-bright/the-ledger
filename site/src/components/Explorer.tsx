@@ -340,7 +340,7 @@ export default function Explorer({ events, categories }: Props) {
                 key={level}
                 type="button"
                 onClick={() => {
-                  toggle(setActiveSignificance, level);
+                  toggle<string>(setActiveSignificance, level);
                   (window as any).posthog?.capture('explorer_filter_applied', {
                     filter_type: 'significance',
                     filter_value: level,
