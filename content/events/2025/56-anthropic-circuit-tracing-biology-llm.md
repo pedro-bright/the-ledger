@@ -12,30 +12,45 @@ tags: [interpretability, mechanistic-interpretability, circuit-tracing, attribut
 threads: [frontier-safety-policies]
 sources:
   - url: https://transformer-circuits.pub/2025/attribution-graphs/methods.html
-    title: "Attribution Graphs: Methods"
+    title: 'Attribution Graphs: Methods'
     type: primary_document
     publisher: Transformer Circuits Thread
-    date: 2025-03-27
+    date: '2025-03-27'
   - url: https://transformer-circuits.pub/2025/attribution-graphs/biology.html
-    title: "On the Biology of a Large Language Model"
+    title: On the Biology of a Large Language Model
     type: primary_document
     publisher: Transformer Circuits Thread
-    date: 2025-03-27
+    date: '2025-03-27'
   - url: https://www.anthropic.com/research/tracing-thoughts-language-model
-    title: "Tracing the Thoughts of a Large Language Model"
+    title: Tracing the Thoughts of a Large Language Model
     type: official
     publisher: Anthropic
-    date: 2025-03-27
+    date: '2025-03-27'
   - url: https://www.anthropic.com/research/open-source-circuit-tracing
-    title: "Open-Source Circuit Tracing Tools"
-    type: official
+    title: Open-sourcing circuit tracing tools
+    type: primary_document
     publisher: Anthropic
-    date: 2025-03-27
+    date: '2025-05-29'
+    accessed: '2026-10-26'
+    archive_url: https://web.archive.org/web/20261011231801/https://www.anthropic.com/research/open-source-circuit-tracing
+revision:
+  draft_assistance: ai-assisted
 ---
 
 ## Summary
 
-Anthropic released two substantial papers — a methods paper on attribution graphs and a companion "biology" paper analyzing Claude 3.5 Haiku — alongside open-source circuit tracing tooling integrated with Neuronpedia, marking the most detailed public anatomy of a commercial frontier model's internal computation to date.
+Anthropic published its attribution-graph methods paper and companion study of Claude 3.5 Haiku on March 27, 2025.
+The open-source circuit-tracing library and Neuronpedia interface followed on May 29, a separate release that enabled researchers to generate and explore attribution graphs on supported open-weight models.
+
+## Editorial correction (2026-10-26)
+
+The March 27 papers and May 29 tooling announcement are distinct publications.
+The tooling citation's original March 27 publication date is corrected to May 29.
+The original body's simultaneous-tool-release wording is preserved below as the earlier assertion.
+
+[Revision record with the prior summary and metadata](https://github.com/pedro-bright/the-ledger/blob/main/content/revisions/sr-anthropic-circuit-tracing-biology-llm-20261026.md).
+
+The original narrative below is preserved as published; use the revised summary and this note for the corrected account.
 
 ## What Happened
 

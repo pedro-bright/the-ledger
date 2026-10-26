@@ -13,18 +13,34 @@ tags: [reasoning, benchmarks, frontier-models, lmarena]
 threads: [scaling-laws-debate]
 sources:
   - url: https://blog.google/innovation-and-ai/models-and-research/google-deepmind/gemini-model-thinking-updates-march-2025/
-    title: "Gemini 2.5: Our newest Gemini model with thinking"
-    type: official
-    date: 2025-03-25
+    title: 'Gemini 2.5: Our most intelligent AI model'
+    type: primary_document
+    date: '2025-03-25'
+    publisher: Google
+    accessed: '2026-10-26'
+    archive_url: https://web.archive.org/web/20261015010938/https://blog.google/innovation-and-ai/models-and-research/google-deepmind/gemini-model-thinking-updates-march-2025/
   - url: https://www.rdworldonline.com/googles-gemini-2-5-pro-model-tops-lmarena-by-40-points-outperforms-competitors-in-scientific-reasoning/
-    title: "Google's Gemini 2.5 Pro model tops LMArena by close to 40 points"
+    title: Google's Gemini 2.5 Pro model tops LMArena by close to 40 points
     type: secondary_reporting
-    date: 2025-03-25
+    date: '2025-03-25'
+revision:
+  draft_assistance: ai-assisted
 ---
 
 ## Summary
 
-Google DeepMind released Gemini 2.5 Pro Experimental on March 25, 2025, marking the first Gemini model with integrated chain-of-thought reasoning — a capability Google calls "thinking." The release immediately claimed the top position on LMArena by a margin of roughly 40 Elo points over competitors including Grok-3 and GPT-4.5.
+Google DeepMind released Gemini 2.5 Pro Experimental on March 25, 2025 as the first release in its Gemini 2.5 family.
+Google described it as a thinking model and reported leading benchmark and LMArena results.
+It followed the earlier Gemini 2.0 Flash Thinking, so it was not the first Gemini thinking model.
+
+## Editorial correction (2026-10-26)
+
+The same March 25 primary announcement identifies Gemini 2.0 Flash Thinking as Google's earlier thinking model.
+The first-Gemini implication is removed; being the first 2.5 release is distinct from originating thinking across the Gemini family.
+
+[Revision record with the prior summary and metadata](https://github.com/pedro-bright/the-ledger/blob/main/content/revisions/sr-google-gemini-2-5-pro-experimental-20261026.md).
+
+The original narrative below is preserved as published; use the revised summary and this note for the corrected account.
 
 ## What Happened
 

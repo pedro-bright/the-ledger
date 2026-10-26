@@ -1,6 +1,6 @@
 ---
 id: mistral-large-release
-title: "Mistral AI Releases Mistral Large and Closes $415M Series A"
+title: Mistral AI Releases Mistral Large
 date: 2024-02-26
 category: models
 significance: notable
@@ -13,16 +13,39 @@ tags: [european-ai, frontier-model, fundraising, commercial-model]
 threads: [open-vs-closed-weights]
 sources:
   - url: https://mistral.ai/news/mistral-large/
-    title: "Mistral Large"
-    type: primary
+    title: Au Large
+    type: primary_document
+    publisher: Mistral AI
+    date: '2024-02-26'
+    accessed: '2026-10-26'
+    archive_url: https://web.archive.org/web/20261005155553/https://mistral.ai/news/mistral-large/
   - url: https://mistral.ai/news/la-plateforme/
-    title: "Au Large"
+    title: Au Large
     type: primary
+  - url: https://www.lw.com/en/news/2023/12/latham-advises-general-catalyst-on-mistral-ai-series-a-funding-round
+    title: Latham Advises General Catalyst on Mistral AI’s EUR385 Million Series A Funding Round
+    type: primary_document
+    publisher: Latham & Watkins
+    date: '2023-12-11'
+    accessed: '2026-10-26'
+    archive_url: https://web.archive.org/web/20250513043246/https://www.lw.com/en/news/2023/12/latham-advises-general-catalyst-on-mistral-ai-series-a-funding-round
+revision:
+  draft_assistance: ai-assisted
 ---
 
 ## Summary
 
-Mistral AI released Mistral Large, its first proprietary (non-open-weight) model, alongside the announcement of a $415 million Series A round at a $2 billion valuation. The shift from fully open to partially proprietary models marked a strategic pivot that surprised and disappointed some open-source advocates.
+Mistral AI released Mistral Large on February 26, 2024 through La Plateforme and Microsoft Azure.
+Its Series A was a separate financing event: Latham & Watkins announced the EUR385 million round at a EUR2 billion post-money valuation on December 11, 2023.
+
+## Editorial correction (2026-10-26)
+
+The model announcement supports February 26, 2024, but the financing participant's announcement places the Series A in December 2023.
+The event title and summary no longer combine the model launch and funding close as simultaneous news.
+
+[Revision record with the prior summary and metadata](https://github.com/pedro-bright/the-ledger/blob/main/content/revisions/sr-mistral-large-release-20261026.md).
+
+The original narrative below is preserved as published; use the revised summary and this note for the corrected account.
 
 ## What Happened
 

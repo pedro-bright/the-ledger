@@ -1,6 +1,6 @@
 ---
 id: claude-3-5-sonnet-new-haiku
-title: "Anthropic Releases Updated Claude 3.5 Sonnet and Claude 3.5 Haiku with Computer Use"
+title: Anthropic Releases Updated Sonnet and Computer Use Beta, Announces Haiku
 date: 2024-10-22
 category: models
 significance: major
@@ -13,16 +13,33 @@ tags: [computer-use, agentic-ai, tool-use, frontier-model]
 threads: [scaling-laws-debate]
 sources:
   - url: https://www.anthropic.com/news/3-5-models-and-computer-use
-    title: "Introducing computer use, a new Claude 3.5 Sonnet, and Claude 3.5 Haiku"
-    type: primary
+    title: Introducing computer use, a new Claude 3.5 Sonnet, and Claude 3.5 Haiku
+    type: primary_document
+    publisher: Anthropic
+    date: '2024-10-22'
+    accessed: '2026-10-26'
+    archive_url: https://web.archive.org/web/20261016182144/https://www.anthropic.com/news/3-5-models-and-computer-use
   - url: https://www.theverge.com/2024/10/22/24277152/anthropic-claude-computer-use-ai-agent
-    title: "Anthropic's latest AI can use your computer the way you do"
+    title: Anthropic's latest AI can use your computer the way you do
     type: secondary
+revision:
+  draft_assistance: ai-assisted
 ---
 
 ## Summary
 
-Anthropic released an upgraded Claude 3.5 Sonnet alongside Claude 3.5 Haiku, with the headline feature being a public beta of "computer use" — the ability for Claude to directly control a computer by viewing the screen, moving the cursor, clicking, and typing. This represented the first major commercial deployment of an AI model that could autonomously operate a computer interface.
+Anthropic released an upgraded Claude 3.5 Sonnet and a public beta of computer use on October 22, 2024.
+It also announced Claude 3.5 Haiku, which the announcement said would be released later that month.
+The computer-use beta was offered through the upgraded Sonnet rather than as an immediately available Haiku capability.
+
+## Editorial correction (2026-10-26)
+
+The October 22 announcement distinguishes immediate Sonnet/computer-use beta access from a future Haiku release.
+Its planned Haiku date is recorded as a plan, not evidence that availability actually occurred that day.
+
+[Revision record with the prior summary and metadata](https://github.com/pedro-bright/the-ledger/blob/main/content/revisions/sr-claude-3-5-sonnet-new-haiku-20261026.md).
+
+The original narrative below is preserved as published; use the revised summary and this note for the corrected account.
 
 ## What Happened
 

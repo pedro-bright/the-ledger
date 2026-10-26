@@ -1,6 +1,6 @@
 ---
 id: claude-3-opus-release
-title: "Anthropic Releases Claude 3 Model Family"
+title: Anthropic Announces Claude 3 Family and Releases Opus and Sonnet
 date: 2024-03-04
 category: models
 significance: landmark
@@ -13,16 +13,41 @@ tags: [large-language-model, frontier-model, multimodal, model-family]
 threads: [scaling-laws-debate, open-vs-closed-weights]
 sources:
   - url: https://www.anthropic.com/news/claude-3-family
-    title: "Introducing the next generation of Claude"
-    type: primary
+    title: Introducing the next generation of Claude
+    type: primary_document
+    publisher: Anthropic
+    date: '2024-03-04'
+    accessed: '2026-10-26'
+    archive_url: https://web.archive.org/web/20261022214738/https://www.anthropic.com/news/claude-3-family
   - url: https://www-cdn.anthropic.com/de8ba9b01c9ab7cbabf5c33b80b7bbc618857627/Model_Card_Claude_3.pdf
-    title: "The Claude 3 Model Family: Opus, Sonnet, and Haiku"
+    title: 'The Claude 3 Model Family: Opus, Sonnet, and Haiku'
     type: primary
+  - url: https://www.anthropic.com/news/claude-3-haiku
+    title: 'Claude 3 Haiku: our fastest model yet'
+    type: primary_document
+    publisher: Anthropic
+    date: '2024-03-13'
+    accessed: '2026-10-26'
+    archive_url: https://web.archive.org/web/20261012091321/https://www.anthropic.com/news/claude-3-haiku
+revision:
+  draft_assistance: ai-assisted
 ---
 
 ## Summary
 
-Anthropic released the Claude 3 model family — Opus, Sonnet, and Haiku — with Opus claiming to surpass GPT-4 on multiple benchmarks, establishing Anthropic as a genuine peer to OpenAI in frontier model capability. The three-tier naming convention and pricing strategy set a new industry template.
+Anthropic announced the Claude 3 family on March 4, 2024 and made Opus and Sonnet available that day.
+Haiku was announced as forthcoming and became available on March 13.
+Anthropic reported that Opus surpassed competing models on several evaluations.
+
+## Editorial correction (2026-10-26)
+
+The March 4 family announcement explicitly separates available Opus/Sonnet models from forthcoming Haiku.
+The March 13 Haiku announcement establishes its later release.
+The original body's simultaneous-launch assertion is retained as the historical assertion, not the current account.
+
+[Revision record with the prior summary and metadata](https://github.com/pedro-bright/the-ledger/blob/main/content/revisions/sr-claude-3-opus-release-20261026.md).
+
+The original narrative below is preserved as published; use the revised summary and this note for the corrected account.
 
 ## What Happened
 
