@@ -39,7 +39,7 @@ const TYPE_LABELS: Record<string, string> = {
 
 export default function Graph({ data }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const fgRef = useRef<any>();
+  const fgRef = useRef<any>(undefined);
   const [size, setSize] = useState({ width: 800, height: 600 });
   const [hidden, setHidden] = useState<Set<string>>(new Set());
   const [reducedMotion, setReducedMotion] = useState(false);
