@@ -12,7 +12,7 @@ regions: [US]
 tags: [regulation, safety, executive-order, governance]
 threads: [ai-military-ethics, scaling-laws-debate]
 sources:
-  - url: https://www.whitehouse.gov/briefing-room/presidential-actions/2023/10/30/executive-order-on-the-safe-secure-and-trustworthy-development-and-use-of-artificial-intelligence/
+  - url: https://bidenwhitehouse.archives.gov/briefing-room/presidential-actions/2023/10/30/executive-order-on-the-safe-secure-and-trustworthy-development-and-use-of-artificial-intelligence/
     title: "Executive Order on the Safe, Secure, and Trustworthy Development and Use of Artificial Intelligence"
     type: official
   - url: https://www.nytimes.com/2023/10/30/us/politics/biden-ai-regulation.html

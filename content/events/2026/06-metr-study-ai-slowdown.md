@@ -12,7 +12,7 @@ sources:
     title: "Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity"
     type: primary_document
     date: 2025-07-10
-    archive_url: https://web.archive.org/web/2025/https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/
+    archive_url: https://web.archive.org/web/20251231201631/https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/
   - url: https://arxiv.org/abs/2507.09089
     title: "METR RCT Paper: AI Tools and Developer Productivity"
     type: primary_document

@@ -27,6 +27,9 @@ jobs:
       - name: Run validation
         run: npm run validate
 
+      - name: Test source checker
+        run: npm run test:links
+
       - name: Build relationship graph
         run: npm run build-graph
 
