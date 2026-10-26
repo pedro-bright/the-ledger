@@ -187,7 +187,7 @@ export function formatReport(results: LinkResult[], limit = Infinity): string {
     );
     if (entries.length === 0) return [];
     const more = entries.length - limit;
-    return ["", `## ${title}`, "", ...entries.slice(0, limit), ...(more > 0 ? [`- ...and ${more} more`] : [])];
+    return ["", `## ${title}`, "", ...entries.slice(0, limit), ...(more > 0 ? [`- ...and ${more} more occurrence(s)`] : [])];
   };
   const counts = new Map<string, number>();
   const count = (type: string) => counts.set(type, (counts.get(type) ?? 0) + 1);

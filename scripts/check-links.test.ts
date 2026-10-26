@@ -203,7 +203,7 @@ test("summarizes large reports well under GitHub's issue body limit", () => {
     for (const [title, more] of [["Broken Links", 790], ["Suspicious Redirects", 390], ["Redirects", 1190]] as const) {
       const section = summary.split(`## ${title}\n\n`)[1].split("\n\n")[0].split("\n");
       assert.equal(section.length, 11, title);
-      assert.equal(section.at(-1), `- ...and ${more} more`);
+      assert.equal(section.at(-1), `- ...and ${more} more occurrence(s)`);
     }
   } finally {
     fs.rmSync(dir, { recursive: true });
