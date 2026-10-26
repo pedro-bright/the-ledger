@@ -11,6 +11,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import matter from "gray-matter";
 import yaml from "js-yaml";
+import { getDomain } from "tldts";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CONTENT_DIR = path.join(ROOT, "content");
@@ -19,6 +20,10 @@ const HOST_DELAY_MS = 1000;
 const TIMEOUT_MS = 15000;
 const MAX_REDIRECTS = 20;
 const SUMMARY_ENTRIES = 10;
+// GitHub rejects issue and comment bodies over 65,536 characters. Leave room for
+// the workflow's heading and artifact link.
+const SUMMARY_MAX_CHARS = 60000;
+const SUMMARY_LINE_CHARS = 1000;
 const REPORT_FILE = "broken-links-report.md";
 const SUMMARY_FILE = "broken-links-summary.md";
 
@@ -100,13 +105,9 @@ function unpinnedArchive(url: string): boolean {
     !/^\/web\/\d{14}(?:[a-z_]+)?\/https?:\/\//i.test(parsed.pathname);
 }
 
-function registrableDomain(hostname: string): string {
-  if (/^[\d.]+$|:/.test(hostname)) return hostname;
-  const labels = hostname.replace(/\.$/, "").split(".");
-  const secondLevel = labels.length > 2 && labels.at(-1)!.length === 2 &&
-    /^(?:ac|co|com|edu|gov|net|org)$/.test(labels.at(-2)!);
-  return labels.slice(secondLevel ? -3 : -2).join(".");
-}
+// Private suffixes keep hosted sites apart, so alice.github.io and bob.github.io differ.
+const registrableDomain = (hostname: string) =>
+  getDomain(hostname, { allowPrivateDomains: true }) ?? hostname;
 
 const isRoot = (url: URL) =>
   /^\/(?:(?:index|default|home)(?:\.[a-z]+)?|[a-z]{2}(?:[-_][a-z]{2})?)?\/?$/i.test(url.pathname);
@@ -171,7 +172,26 @@ export function groupLinks(links: LinkOccurrence[]): Map<string, LinkOccurrence[
   return grouped;
 }
 
-export function formatReport(results: LinkResult[], limit = Infinity): string {
+// Keep whole lines while they fit, clipping any single overlong line.
+function fitLines(lines: string[], maxChars: number): string {
+  const notice = "_Summary truncated to fit GitHub's size limit. See the full report._";
+  const kept: string[] = [];
+  let length = 0;
+  for (const line of lines) {
+    const clipped = line.length > SUMMARY_LINE_CHARS ? `${line.slice(0, SUMMARY_LINE_CHARS - 1)}…` : line;
+    if (length + clipped.length + notice.length + 2 > maxChars) return [...kept, "", notice].join("\n");
+    kept.push(clipped);
+    length += clipped.length + 1;
+  }
+  return kept.join("\n");
+}
+
+// A finite entry limit produces the posted summary, which also gets a hard character budget.
+export function formatReport(
+  results: LinkResult[],
+  limit = Infinity,
+  maxChars = Number.isFinite(limit) ? SUMMARY_MAX_CHARS : Infinity,
+): string {
   const broken = results.filter((r) => !r.ok);
   const suspicious = results.filter((r) => r.ok && r.suspicious);
   const redirects = results.filter((r) => r.finalUrl !== r.url);
@@ -194,7 +214,7 @@ export function formatReport(results: LinkResult[], limit = Infinity): string {
   for (const link of broken) count(`Broken \`${link.issue ?? link.status}\``);
   for (const link of suspicious) count(`Suspicious redirect (${link.suspicious})`);
   if (redirects.length) counts.set("Redirects", redirects.length);
-  return [
+  const lines = [
     "## Source Link Report", "",
     `Found ${broken.length} broken link(s) and ${suspicious.length} suspicious redirect(s) ` +
       `among ${results.length} URL(s) on ${new Date().toISOString().slice(0, 10)}:`, "",
@@ -202,7 +222,8 @@ export function formatReport(results: LinkResult[], limit = Infinity): string {
     ...section("Broken Links", broken),
     ...section("Suspicious Redirects", suspicious),
     ...section("Redirects", redirects),
-  ].join("\n");
+  ];
+  return Number.isFinite(maxChars) ? fitLines(lines, maxChars) : lines.join("\n");
 }
 
 export function writeReports(results: LinkResult[], dir = ROOT): boolean {

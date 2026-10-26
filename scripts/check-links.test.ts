@@ -128,10 +128,13 @@ test("flags redirects to a site root, another registrable domain, or a login or 
     ["https://example.com/news/article", "https://www.example.com/en-us/", "site root"],
     ["https://smythos.com/ai-agents/grok", "https://github.com/someone/repo", "different domain"],
     ["https://news.example.co.uk/story", "https://other.co.uk/story", "different domain"],
+    ["https://one.com.au/article", "https://two.com.au/article", "different domain"],
+    ["https://alice.github.io/article", "https://bob.github.io/article", "different domain"],
     ["https://www.example.com/story", "https://www.example.com/account/login?next=/story", "login or paywall path"],
     ["https://www.example.com/story", "https://www.example.com/subscribe/", "login or paywall path"],
     ["http://example.com/story", "https://www.example.com/story/", undefined],
     ["https://blog.example.co.uk/story", "https://www.example.co.uk/2024/story", undefined],
+    ["http://alice.github.io/article", "https://alice.github.io/article/", undefined],
     ["https://example.org", "https://www.example.org/", undefined],
     ["https://example.com/story", "https://example.com/story", undefined],
   ];
@@ -205,6 +208,40 @@ test("summarizes large reports well under GitHub's issue body limit", () => {
       assert.equal(section.length, 11, title);
       assert.equal(section.at(-1), `- ...and ${more} more occurrence(s)`);
     }
+  } finally {
+    fs.rmSync(dir, { recursive: true });
+  }
+});
+
+test("bounds the posted summary by characters while the full report keeps every detail", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ledger-budget-"));
+  const url = `https://example.com/${"a".repeat(40000)}`;
+  const occurrence = { url, file: "events/example.md", field: "sources[0].url" };
+  const longUrl = [{ url, occurrences: [occurrence], status: 404, ok: false, finalUrl: url }];
+  const manyTypes = Array.from({ length: 1500 }, (_, i) => {
+    const link = `https://example${i}.com/article`;
+    return {
+      url: link, occurrences: [{ url: link, file: `events/${i}.md`, field: "sources[0].url" }],
+      status: `getaddrinfo ENOTFOUND example${i}.com ${"x".repeat(40)}`, ok: false, finalUrl: link,
+    };
+  });
+  try {
+    const summary = formatReport(longUrl, 10);
+    assert.ok(summary.length <= 60000, `summary is ${summary.length} characters`);
+    assert.ok(summary.includes("events/example.md (sources[0].url)"));
+    assert.ok(summary.split("\n").every((line) => line.length <= 1000));
+
+    assert.equal(writeReports(manyTypes, dir), true);
+    const full = fs.readFileSync(path.join(dir, "broken-links-report.md"), "utf-8");
+    const posted = fs.readFileSync(path.join(dir, "broken-links-summary.md"), "utf-8");
+    assert.ok(full.length > 65536);
+    assert.ok(full.includes("events/1499.md (sources[0].url)"));
+    assert.ok(posted.length <= 60000, `summary is ${posted.length} characters`);
+    assert.match(posted, /^## Source Link Report$/m);
+    assert.match(posted, /^_Summary truncated to fit GitHub's size limit\. See the full report\._$/m);
+
+    writeReports(longUrl, dir);
+    assert.ok(fs.readFileSync(path.join(dir, "broken-links-report.md"), "utf-8").includes(url));
   } finally {
     fs.rmSync(dir, { recursive: true });
   }
