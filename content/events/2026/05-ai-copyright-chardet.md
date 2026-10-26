@@ -16,7 +16,7 @@ sources:
     title: "AI And The Ship of Theseus (Armin Ronacher)"
     type: commentary
     date: 2026-03-05
-    archive_url: https://web.archive.org/web/2026/https://lucumr.pocoo.org/2026/3/5/theseus/
+    archive_url: https://web.archive.org/web/20260909181032/https://lucumr.pocoo.org/2026/3/5/theseus/
   - url: https://news.ycombinator.com/item?id=47263048
     title: "HN Discussion: AI and the Ship of Theseus (180+ points, 189 comments)"
     type: commentary

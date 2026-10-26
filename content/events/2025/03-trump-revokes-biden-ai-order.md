@@ -12,7 +12,7 @@ regions: [US]
 tags: [regulation, deregulation, executive-order, policy-reversal]
 threads: [ai-military-ethics, scaling-laws-debate]
 sources:
-  - url: https://www.whitehouse.gov/presidential-actions/initial-rescissions-of-harmful-executive-orders-and-actions/
+  - url: https://www.whitehouse.gov/presidential-actions/2025/01/initial-rescissions-of-harmful-executive-orders-and-actions/
     title: "Initial Rescissions of Harmful Executive Orders and Actions"
     type: official
   - url: https://www.reuters.com/technology/artificial-intelligence/trump-revoke-biden-executive-order-ai-safety-2025-01-20/

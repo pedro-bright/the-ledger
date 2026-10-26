@@ -14,7 +14,7 @@ regions: [US]
 tags: [military-ai, acceptable-use-policy, policy-change]
 threads: [ai-military-ethics]
 sources:
-  - url: https://theintercept.com/2024/01/12/open-ai-military-ban-removed/
+  - url: https://theintercept.com/2024/01/12/open-ai-military-ban-chatgpt/
     title: "OpenAI Quietly Deletes Ban on Using ChatGPT for Military and Warfare"
     type: secondary
   - url: https://openai.com/policies/usage-policies

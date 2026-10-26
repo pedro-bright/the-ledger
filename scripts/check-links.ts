@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
- * check-links.ts — HTTP HEAD all source URLs in content files, report broken links.
- * Rate-limited to avoid hammering servers.
+ * Check source URLs with GET, preserving occurrences and redirect destinations.
+ * The weekly stale-sources job reads broken-links-report.md on a nonzero exit.
  */
 
 import fs from "node:fs";
@@ -10,20 +10,29 @@ import { fileURLToPath } from "node:url";
 import matter from "gray-matter";
 import yaml from "js-yaml";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, "..");
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CONTENT_DIR = path.join(ROOT, "content");
-
-// Rate limiting: max concurrent requests + delay between batches
-const CONCURRENCY = 3;
-const DELAY_MS = 500;
+const CONCURRENCY = 2;
+const HOST_DELAY_MS = 1000;
 const TIMEOUT_MS = 15000;
+const MAX_REDIRECTS = 20;
 
-interface LinkResult {
+interface LinkOccurrence {
   url: string;
   file: string;
+  field: string;
+}
+
+interface UrlResult {
   status: number | string;
   ok: boolean;
+  finalUrl: string;
+  issue?: string;
+}
+
+interface LinkResult extends UrlResult {
+  url: string;
+  occurrences: LinkOccurrence[];
 }
 
 function walkDir(dir: string): string[] {
@@ -31,182 +40,164 @@ function walkDir(dir: string): string[] {
   if (!fs.existsSync(dir)) return results;
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const fullPath = path.join(dir, entry.name);
-    if (entry.isDirectory()) {
-      results.push(...walkDir(fullPath));
-    } else if (
-      entry.name !== ".gitkeep" &&
-      (entry.name.endsWith(".md") || entry.name.endsWith(".yml") || entry.name.endsWith(".yaml"))
-    ) {
-      results.push(fullPath);
-    }
+    if (entry.isDirectory()) results.push(...walkDir(fullPath));
+    else if (/\.(md|ya?ml)$/.test(entry.name)) results.push(fullPath);
   }
   return results;
 }
 
-function extractUrls(filePath: string): Array<{ url: string; file: string }> {
-  const ext = path.extname(filePath);
+export function extractUrls(filePath: string): LinkOccurrence[] {
   const raw = fs.readFileSync(filePath, "utf-8");
-  const relativePath = path.relative(CONTENT_DIR, filePath);
-  const urls: Array<{ url: string; file: string }> = [];
+  const data = /\.ya?ml$/.test(filePath) ? yaml.load(raw) : matter(raw).data;
+  const file = path.relative(CONTENT_DIR, filePath);
+  const urls: LinkOccurrence[] = [];
 
-  let data: Record<string, unknown>;
-  if (ext === ".yml" || ext === ".yaml") {
-    data = (yaml.load(raw) as Record<string, unknown>) ?? {};
-  } else {
-    data = matter(raw).data;
-  }
-
-  // Recursively extract URLs from data
-  function extract(obj: unknown) {
-    if (typeof obj === "string" && obj.startsWith("http")) {
-      urls.push({ url: obj, file: relativePath });
-    } else if (Array.isArray(obj)) {
-      for (const item of obj) extract(item);
+  function extract(obj: unknown, field: string) {
+    if (Array.isArray(obj)) {
+      obj.forEach((item, i) => extract(item, `${field}[${i}]`));
     } else if (obj && typeof obj === "object") {
-      for (const val of Object.values(obj as Record<string, unknown>)) {
-        extract(val);
+      for (const [key, value] of Object.entries(obj)) {
+        const location = field ? `${field}.${key}` : key;
+        if (["url", "archive_url", "website"].includes(key) && typeof value === "string" && /^https?:\/\//.test(value)) {
+          urls.push({ url: value, file, field: location });
+        } else {
+          extract(value, location);
+        }
       }
     }
   }
 
-  // Extract from sources array specifically
-  const sources = data.sources as Array<Record<string, unknown>> | undefined;
-  if (sources) {
-    for (const source of sources) {
-      if (source.url) urls.push({ url: String(source.url), file: relativePath });
-      if (source.archive_url) urls.push({ url: String(source.archive_url), file: relativePath });
-    }
-  }
-
-  // Also check website field (actors)
-  if (data.website && typeof data.website === "string") {
-    urls.push({ url: data.website, file: relativePath });
-  }
-
+  extract(data, "");
   return urls;
 }
 
-async function checkUrl(url: string): Promise<{ status: number | string; ok: boolean }> {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
+// Serialize request starts per hostname, including each redirect hop.
+const hostQueues = new Map<string, Promise<void>>();
+const lastStarts = new Map<string, number>();
+async function waitForHost(url: string): Promise<void> {
+  const host = new URL(url).hostname;
+  const turn = (hostQueues.get(host) ?? Promise.resolve()).then(async () => {
+    const last = lastStarts.get(host);
+    if (last !== undefined) {
+      const delay = HOST_DELAY_MS - (performance.now() - last);
+      if (delay > 0) await new Promise((resolve) => setTimeout(resolve, delay));
+    }
+    lastStarts.set(host, performance.now());
+  });
+  hostQueues.set(host, turn);
+  await turn;
+}
 
+function unpinnedArchive(url: string): boolean {
+  const parsed = new URL(url);
+  return parsed.hostname === "web.archive.org" &&
+    !/^\/web\/\d{14}(?:[a-z_]+)?\/https?:\/\//i.test(parsed.pathname);
+}
+
+export async function checkUrl(url: string): Promise<UrlResult> {
+  let finalUrl = url;
+  let unpinned = false;
   try {
-    const response = await fetch(url, {
-      method: "HEAD",
-      signal: controller.signal,
-      redirect: "follow",
-      headers: {
-        "User-Agent": "The-Ledger-Link-Checker/1.0",
-      },
-    });
-    clearTimeout(timeout);
-
-    // Some sites block HEAD, try GET if 405
-    if (response.status === 405) {
-      const getResponse = await fetch(url, {
+    for (let hop = 0; hop <= MAX_REDIRECTS; hop++) {
+      unpinned ||= unpinnedArchive(finalUrl);
+      await waitForHost(finalUrl);
+      const response = await fetch(finalUrl, {
         method: "GET",
         signal: AbortSignal.timeout(TIMEOUT_MS),
-        redirect: "follow",
-        headers: {
-          "User-Agent": "The-Ledger-Link-Checker/1.0",
-        },
+        redirect: "manual",
+        headers: { "User-Agent": "The-Ledger-Link-Checker/1.0" },
       });
-      return { status: getResponse.status, ok: getResponse.ok };
+      // GET checks the article endpoint; do not download entire PDFs or videos.
+      await response.body?.cancel();
+      const location = response.headers.get("location");
+      if ([301, 302, 303, 307, 308].includes(response.status) && location) {
+        if (hop === MAX_REDIRECTS) return { status: "TOO_MANY_REDIRECTS", ok: false, finalUrl };
+        finalUrl = new URL(location, finalUrl).href;
+        continue;
+      }
+      return {
+        status: response.status,
+        ok: response.ok && !unpinned,
+        finalUrl,
+        ...(unpinned ? { issue: "UNPINNED_ARCHIVE" } : {}),
+      };
     }
-
-    return { status: response.status, ok: response.ok };
-  } catch (e) {
-    clearTimeout(timeout);
-    const msg = e instanceof Error ? e.message : String(e);
-    if (msg.includes("abort")) return { status: "TIMEOUT", ok: false };
-    return { status: msg.slice(0, 60), ok: false };
+    throw new Error("Redirect limit exceeded");
+  } catch (error) {
+    const timeout = error instanceof Error && ["AbortError", "TimeoutError"].includes(error.name);
+    const message = error instanceof Error ? error.message : String(error);
+    return { status: timeout ? "TIMEOUT" : message.slice(0, 60), ok: false, finalUrl };
   }
 }
 
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+export function groupLinks(links: LinkOccurrence[]): Map<string, LinkOccurrence[]> {
+  const grouped = new Map<string, LinkOccurrence[]>();
+  for (const link of links) {
+    const occurrences = grouped.get(link.url) ?? [];
+    occurrences.push(link);
+    grouped.set(link.url, occurrences);
+  }
+  return grouped;
+}
+
+export function formatReport(results: LinkResult[]): string {
+  const broken = results.filter((r) => !r.ok);
+  const detail = (link: LinkResult) =>
+    `Status: \`${link.status}\`${link.issue ? ` (${link.issue})` : ""}` +
+    (link.finalUrl !== link.url ? ` - Final URL: [${link.finalUrl}](${link.finalUrl})` : "");
+  const entries = (links: LinkResult[]) => links.flatMap((link) =>
+    link.occurrences.map((occurrence) =>
+      `- **${occurrence.file} (${occurrence.field})**: [${link.url}](${link.url}) - ${detail(link)}`,
+    ),
+  );
+  const redirects = results.filter((r) => r.finalUrl !== r.url);
+  return [
+    "## Broken Links Report", "",
+    `Found ${broken.length} broken link(s) on ${new Date().toISOString().slice(0, 10)}:`, "",
+    ...entries(broken),
+    ...(redirects.length ? ["", "## Redirects", "", ...entries(redirects)] : []),
+  ].join("\n");
 }
 
 async function main() {
-  console.log("🔗 The Ledger — Checking source links...\n");
-
-  const files = walkDir(CONTENT_DIR);
-  const allLinks: Array<{ url: string; file: string }> = [];
-
-  for (const f of files) {
-    allLinks.push(...extractUrls(f));
-  }
-
-  // Deduplicate by URL (keep first occurrence for reporting)
-  const seen = new Map<string, { url: string; file: string }>();
-  for (const link of allLinks) {
-    if (!seen.has(link.url)) {
-      seen.set(link.url, link);
-    }
-  }
-
-  const uniqueLinks = Array.from(seen.values());
+  console.log("The Ledger - Checking source links...\n");
+  const grouped = groupLinks(walkDir(CONTENT_DIR).flatMap(extractUrls));
+  const uniqueLinks = Array.from(grouped.entries());
   console.log(`Found ${uniqueLinks.length} unique URLs to check.\n`);
-
-  if (uniqueLinks.length === 0) {
-    console.log("✅ No URLs found to check.");
-    process.exit(0);
-  }
-
   const results: LinkResult[] = [];
 
-  // Process in batches
   for (let i = 0; i < uniqueLinks.length; i += CONCURRENCY) {
-    const batch = uniqueLinks.slice(i, i + CONCURRENCY);
-    const batchResults = await Promise.all(
-      batch.map(async (link) => {
-        const { status, ok } = await checkUrl(link.url);
-        return { url: link.url, file: link.file, status, ok };
-      })
-    );
-    results.push(...batchResults);
-
-    // Progress
-    const checked = Math.min(i + CONCURRENCY, uniqueLinks.length);
-    process.stdout.write(`\r  Checked ${checked}/${uniqueLinks.length} URLs...`);
-
-    if (i + CONCURRENCY < uniqueLinks.length) {
-      await sleep(DELAY_MS);
-    }
+    const batch = await Promise.all(uniqueLinks.slice(i, i + CONCURRENCY).map(async ([url, occurrences]) => ({
+      url, occurrences, ...await checkUrl(url),
+    })));
+    results.push(...batch);
+    process.stdout.write(`\r  Checked ${results.length}/${uniqueLinks.length} URLs...`);
   }
-
   console.log("\n");
 
+  for (const result of results.filter((r) => r.finalUrl !== r.url)) {
+    console.log(`  Redirect: ${result.url} -> ${result.finalUrl} (Status: ${result.status})`);
+  }
   const broken = results.filter((r) => !r.ok);
-
-  if (broken.length === 0) {
-    console.log("✅ All links are valid.\n");
-    process.exit(0);
-  }
-
-  console.log(`❌ Found ${broken.length} broken link(s):\n`);
-  for (const link of broken) {
-    console.log(`  ${link.file}`);
-    console.log(`    → ${link.url}`);
-    console.log(`    → Status: ${link.status}\n`);
-  }
-
-  // Output markdown for GitHub issue creation
-  const issueBody = [
-    "## Broken Links Report",
-    "",
-    `Found ${broken.length} broken link(s) on ${new Date().toISOString().slice(0, 10)}:`,
-    "",
-    ...broken.map(
-      (l) => `- **${l.file}**: [${l.url}](${l.url}) — Status: \`${l.status}\``
-    ),
-  ].join("\n");
-
   const reportPath = path.join(ROOT, "broken-links-report.md");
-  fs.writeFileSync(reportPath, issueBody, "utf-8");
-  console.log(`📄 Report written to broken-links-report.md\n`);
+  if (broken.length === 0) {
+    fs.rmSync(reportPath, { force: true });
+    console.log("All links are valid.\n");
+    return;
+  }
 
-  process.exit(1);
+  console.log(`Found ${broken.length} broken link(s):\n`);
+  for (const link of broken) {
+    for (const occurrence of link.occurrences) console.log(`  ${occurrence.file} (${occurrence.field})`);
+    console.log(`    -> ${link.url}`);
+    console.log(`    -> Final URL: ${link.finalUrl}`);
+    console.log(`    -> Status: ${link.status}${link.issue ? ` (${link.issue})` : ""}\n`);
+  }
+  fs.writeFileSync(reportPath, formatReport(results), "utf-8");
+  console.log("Report written to broken-links-report.md\n");
+  process.exitCode = 1;
 }
 
-main();
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main();
+}
