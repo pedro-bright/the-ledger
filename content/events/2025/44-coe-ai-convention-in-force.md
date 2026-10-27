@@ -1,6 +1,6 @@
 ---
 id: coe-ai-convention-in-force
-title: Council of Europe AI Convention Entry into Force (Challenged)
+title: Council of Europe AI Convention Entry into Force
 date: 2025-11-01
 category: policy
 significance: landmark
@@ -32,7 +32,7 @@ sources:
     title: 'CETS 225: signatures and ratifications'
     type: primary_document
     publisher: Council of Europe
-    accessed: '2026-10-26'
+    accessed: '2026-09-12'
     archive_url: https://web.archive.org/web/20260422133913/https://www.coe.int/en/web/conventions/full-list;?module=signatures-by-treaty&treatynum=225
 state: challenged
 contestation:
@@ -45,16 +45,17 @@ revision:
 ## Summary
 
 The claim that the Council of Europe's AI Framework Convention entered into force on November 1, 2025 is under challenge.
-The inspected evidence does not establish that date or the asserted UK, French, and Norwegian ratifications.
+A source audit's September 12, 2026 reading of the Treaty Office chart found no entry-into-force date, and the inspected evidence does not establish the asserted UK, French, and Norwegian ratifications.
 The date retained in this entry identifies the original assertion and must not be read as a verified entry-into-force date.
 
 ## Editorial challenge (2026-10-26)
 
 The Treaty Office's indexed treaty details specify five ratifications, including at least three Council of Europe member states, as the entry-into-force condition.
-The live signature chart could not be inspected: the text fetch required JavaScript and the browser was blocked by Cloudflare.
+The contradicting record is the dated reading of the Treaty Office chart for CETS 225 in the source audit that produced the 22 approved editorial findings: as read on September 12, 2026, the chart "has no entry-into-force date and specifies five ratifications including three member states."
+This is the audit's September 12, 2026 reading; a fresh check of the chart could not be made for this review because the text fetch required JavaScript and the browser was blocked by Cloudflare.
 The official Framework Convention page confirms opening for signature on September 5, 2024, which is distinct from entry into force.
-This review does not infer a current treaty status or alternative entry date from an inaccessible chart.
-A dated depositary record is required to resolve the claimed November 2025 event, country ratifications, and signature counts.
+This review does not infer the treaty's status after September 12, 2026 or an alternative entry date.
+A directly inspected, dated depositary record is required to resolve the claimed November 2025 event, country ratifications, and signature counts.
 
 [Revision record with the prior summary and metadata](https://github.com/pedro-bright/the-ledger/blob/main/content/revisions/sr-coe-ai-convention-in-force-20261026.md).
 [Open challenge](https://github.com/pedro-bright/the-ledger/blob/main/content/challenges/cc-coe-ai-convention-in-force-20261026.md).

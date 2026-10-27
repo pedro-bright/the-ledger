@@ -1,6 +1,6 @@
 ---
 id: deepseek-r1-distill-impact
-title: DeepSeek R1 Distillation Adoption (Date Challenged)
+title: DeepSeek R1 Distillation Adoption
 date: 2026-01-15
 category: open-source
 significance: major
