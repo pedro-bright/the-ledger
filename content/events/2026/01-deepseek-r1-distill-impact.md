@@ -22,7 +22,7 @@ sources:
     publisher: DeepSeek-AI
     date: '2025-01-22'
     accessed: '2026-10-26'
-    archive_url: https://arxiv.org/abs/2501.12948v1
+    archive_url: https://web.archive.org/web/20261026162442/https://arxiv.org/abs/2501.12948v1
 state: challenged
 contestation:
   status: unresolved

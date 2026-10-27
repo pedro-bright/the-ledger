@@ -49,10 +49,8 @@ publisher: arXiv
 date: "2025-07-21"
 accessed: "2026-10-26"
 author: Yichen Huang and Lin F. Yang
-archive_url: https://arxiv.org/abs/2507.15855v1
+archive_url: https://web.archive.org/web/20260204181559/https://arxiv.org/abs/2507.15855v1
 ```
-
-The versioned paper or commit permalink is the preserved copy for this citation.
 
 ## Original metadata
 

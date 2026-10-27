@@ -6,9 +6,10 @@ prior_version: >-
   The terminal-native coding agent — capable of reading entire codebases, making multi-file edits, running tests, and committing changes through natural language — became the first coding agent to reach meaningful commercial scale, hitting $1 billion in ARR by November 2025.
 new_version: |-
   Anthropic made Claude Code generally available on May 22, 2025 alongside Claude 4, following its February research preview.
-  The terminal-based coding agent also offered native VS Code and JetBrains integrations and support for background tasks through GitHub Actions at general availability.
+  Alongside the terminal-based agent's general availability, Anthropic released beta extensions for VS Code and JetBrains and a beta GitHub integration that supports background tasks through GitHub Actions.
 reason: >-
-  The May 22 primary announcement explicitly includes native VS Code and JetBrains integrations.
+  The May 22 primary announcement includes VS Code and JetBrains integrations, which its Claude Code section describes as new beta extensions.
+  The same announcement released Claude Code on GitHub in beta, with background tasks through GitHub Actions.
   Terminal-based interaction did not mean that Claude Code made no attempt to integrate with IDEs.
   The original body's claim to that effect is preserved as the earlier assertion and is superseded by this correction.
 changed_claim_ids:
@@ -19,7 +20,8 @@ created_at: "2026-10-26"
 
 ## Scope
 
-The May 22 primary announcement explicitly includes native VS Code and JetBrains integrations.
+The May 22 primary announcement includes VS Code and JetBrains integrations, which its Claude Code section describes as new beta extensions.
+The same announcement released Claude Code on GitHub in beta, with background tasks through GitHub Actions.
 Terminal-based interaction did not mean that Claude Code made no attempt to integrate with IDEs.
 The original body's claim to that effect is preserved as the earlier assertion and is superseded by this correction.
 

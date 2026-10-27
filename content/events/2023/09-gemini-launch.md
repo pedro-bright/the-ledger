@@ -14,15 +14,6 @@ regions: [US]
 tags: [multimodal, large-language-model, frontier-model, natively-multimodal]
 threads: [scaling-laws-debate]
 sources:
-  - url: https://blog.google/technology/ai/google-gemini-ai/
-    title: 'Introducing Gemini: our largest and most capable AI model'
-    type: primary
-  - url: https://arxiv.org/abs/2312.11805
-    title: 'Gemini: A Family of Highly Capable Multimodal Models'
-    type: primary
-  - url: https://www.nytimes.com/2023/12/06/technology/google-ai-gemini.html
-    title: Google Announces Gemini, Its Most Powerful AI Model
-    type: secondary
   - url: https://blog.google/innovation-and-ai/technology/ai/google-gemini-ai/
     title: 'Introducing Gemini: our largest and most capable AI model'
     type: primary_document
@@ -30,6 +21,12 @@ sources:
     date: '2023-12-06'
     accessed: '2026-10-26'
     archive_url: https://web.archive.org/web/20261016013712/https://blog.google/innovation-and-ai/technology/ai/google-gemini-ai/
+  - url: https://arxiv.org/abs/2312.11805
+    title: 'Gemini: A Family of Highly Capable Multimodal Models'
+    type: primary
+  - url: https://www.nytimes.com/2023/12/06/technology/google-ai-gemini.html
+    title: Google Announces Gemini, Its Most Powerful AI Model
+    type: secondary
 revision:
   draft_assistance: ai-assisted
 ---

@@ -47,7 +47,14 @@ sources:
     publisher: Roll Call Factba.se
     date: '2025-08-11'
     accessed: '2026-10-26'
-    archive_url: https://www.presidency.ucsb.edu/documents/the-presidents-news-conference-1272
+    archive_url: https://web.archive.org/web/20260810215513/https://rollcall.com/factbase/trump/transcript/donald-trump-press-conference-law-enforcement-washington-dc-august-11-2025/
+  - url: https://www.presidency.ucsb.edu/documents/the-presidents-news-conference-1272
+    title: The President's News Conference (August 11, 2025)
+    type: primary_document
+    publisher: The American Presidency Project
+    date: '2025-08-11'
+    accessed: '2026-10-26'
+    archive_url: https://web.archive.org/web/20260711232507/https://www.presidency.ucsb.edu/documents/the-presidents-news-conference-1272
 end_date: '2025-08-11'
 revision:
   draft_assistance: ai-assisted

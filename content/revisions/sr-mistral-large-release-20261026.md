@@ -44,11 +44,11 @@ accessed: "2026-10-26"
 archive_url: https://web.archive.org/web/20261005155553/https://mistral.ai/news/mistral-large/
 ```
 
-[Latham Advises General Catalyst on Mistral AI's EUR385 Million Series A Funding Round](https://www.lw.com/en/news/2023/12/latham-advises-general-catalyst-on-mistral-ai-series-a-funding-round).
+[Latham Advises General Catalyst on Mistral AI’s EUR385 Million Series A Funding Round](https://www.lw.com/en/news/2023/12/latham-advises-general-catalyst-on-mistral-ai-series-a-funding-round).
 
 ```yaml
 url: https://www.lw.com/en/news/2023/12/latham-advises-general-catalyst-on-mistral-ai-series-a-funding-round
-title: Latham Advises General Catalyst on Mistral AI's EUR385 Million Series A Funding Round
+title: Latham Advises General Catalyst on Mistral AI’s EUR385 Million Series A Funding Round
 type: primary_document
 publisher: Latham & Watkins
 date: "2023-12-11"

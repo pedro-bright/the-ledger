@@ -47,11 +47,11 @@ accessed: "2026-10-26"
 archive_url: https://web.archive.org/web/20261024154051/https://ai.google.dev/gemma/docs/core/model_card_3
 ```
 
-[Gemma explained: What's new in Gemma 3](https://developers.googleblog.com/gemma-explained-whats-new-in-gemma-3/).
+[Gemma explained: What’s new in Gemma 3](https://developers.googleblog.com/gemma-explained-whats-new-in-gemma-3/).
 
 ```yaml
 url: https://developers.googleblog.com/gemma-explained-whats-new-in-gemma-3/
-title: "Gemma explained: What's new in Gemma 3"
+title: "Gemma explained: What’s new in Gemma 3"
 type: primary_document
 publisher: Google
 accessed: "2026-10-26"

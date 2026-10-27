@@ -24,7 +24,7 @@ sources:
     publisher: DeepSeek
     date: '2024-12-26'
     accessed: '2026-10-26'
-    archive_url: https://github.com/deepseek-ai/DeepSeek-V3/commit/4c2fdb8f55e049553b9f4f1a3241f86d739c8cf8
+    archive_url: https://web.archive.org/web/20260805070954/https://github.com/deepseek-ai/DeepSeek-V3/commit/4c2fdb8f55e049553b9f4f1a3241f86d739c8cf8
   - url: https://arxiv.org/abs/2412.19437v1
     title: DeepSeek-V3 Technical Report (v1)
     type: primary_document
@@ -37,7 +37,6 @@ sources:
     type: primary_document
     publisher: DeepSeek
     accessed: '2026-10-26'
-    archive_url: https://github.com/deepseek-ai/DeepSeek-V3/blob/e2c15caf041dc0809f616349fa145e56ac2b72aa/README.md
 revision:
   draft_assistance: ai-assisted
 ---

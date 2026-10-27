@@ -24,16 +24,12 @@ sources:
     title: Council of Europe Treaty Office — CETS 225 Signatures and Ratifications
     type: official
     publisher: Council of Europe
+    accessed: '2026-09-12'
+    archive_url: https://web.archive.org/web/20260422133913/https://www.coe.int/en/web/conventions/full-list;?module=signatures-by-treaty&treatynum=225
   - url: https://www.europarl.europa.eu/doceo/document/A-10-2026-0007_EN.html
     title: European Parliament Report A10-0007/2026 — Recommendation on the Framework Convention on AI
     type: primary_document
     publisher: European Parliament
-  - url: https://www.coe.int/en/web/conventions/full-list%3B?module=signatures-by-treaty&treatynum=225
-    title: 'CETS 225: signatures and ratifications'
-    type: primary_document
-    publisher: Council of Europe
-    accessed: '2026-09-12'
-    archive_url: https://web.archive.org/web/20260422133913/https://www.coe.int/en/web/conventions/full-list;?module=signatures-by-treaty&treatynum=225
 state: challenged
 contestation:
   status: unresolved
@@ -50,9 +46,10 @@ The date retained in this entry identifies the original assertion and must not b
 
 ## Editorial challenge (2026-10-26)
 
-The Treaty Office's indexed treaty details specify five ratifications, including at least three Council of Europe member states, as the entry-into-force condition.
-The contradicting record is the dated reading of the Treaty Office chart for CETS 225 in the source audit that produced the 22 approved editorial findings: as read on September 12, 2026, the chart "has no entry-into-force date and specifies five ratifications including three member states."
-This is the audit's September 12, 2026 reading; a fresh check of the chart could not be made for this review because the text fetch required JavaScript and the browser was blocked by Cloudflare.
+The source audit that produced the 22 approved editorial findings recorded this reading of the Treaty Office chart for CETS 225 on September 12, 2026: the chart "has no entry-into-force date and specifies five ratifications including three member states."
+That dated reading is the contradicting record for the claimed November 1, 2025 entry into force.
+The chart could not be checked again for this review: the text fetch required JavaScript and the browser was blocked by Cloudflare.
+Separately, the Treaty Office's indexed treaty details specify five ratifications, including at least three Council of Europe member states, as the entry-into-force condition.
 The official Framework Convention page confirms opening for signature on September 5, 2024, which is distinct from entry into force.
 This review does not infer the treaty's status after September 12, 2026 or an alternative entry date.
 A directly inspected, dated depositary record is required to resolve the claimed November 2025 event, country ratifications, and signature counts.

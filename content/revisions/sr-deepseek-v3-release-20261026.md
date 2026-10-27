@@ -44,10 +44,8 @@ type: primary_document
 publisher: DeepSeek
 date: "2024-12-26"
 accessed: "2026-10-26"
-archive_url: https://github.com/deepseek-ai/DeepSeek-V3/commit/4c2fdb8f55e049553b9f4f1a3241f86d739c8cf8
+archive_url: https://web.archive.org/web/20260805070954/https://github.com/deepseek-ai/DeepSeek-V3/commit/4c2fdb8f55e049553b9f4f1a3241f86d739c8cf8
 ```
-
-The versioned paper or commit permalink is the preserved copy for this citation.
 
 [DeepSeek-V3 Technical Report (v1)](https://arxiv.org/abs/2412.19437v1).
 
@@ -69,10 +67,9 @@ title: "DeepSeek-V3 release README: code and model licenses"
 type: primary_document
 publisher: DeepSeek
 accessed: "2026-10-26"
-archive_url: https://github.com/deepseek-ai/DeepSeek-V3/blob/e2c15caf041dc0809f616349fa145e56ac2b72aa/README.md
 ```
 
-The versioned paper or commit permalink is the preserved copy for this citation.
+No Wayback capture of this pinned README was available on October 26, 2026; its commit-pinned permalink is the stable copy for this citation.
 
 ## Original metadata
 
