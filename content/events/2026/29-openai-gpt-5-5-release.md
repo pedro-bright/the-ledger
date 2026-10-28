@@ -66,7 +66,7 @@ OpenAI announced GPT-5.5 on April 23, 2026, with API availability added on April
 Its announced 1M-token API context was not OpenAI's first million-token offering: GPT-4.1 had supported up to 1M tokens in the API since April 14, 2025.
 GPT-5.3-Codex, mentioned in the original chronology, was released on February 5, 2026.
 
-## Editorial correction (2026-10-26)
+## Editorial correction, October&nbsp;26,&nbsp;2026
 
 The million-token first claim is contradicted by GPT-4.1's primary announcement.
 The source for GPT-5.3-Codex establishes February 5, not March 2026.

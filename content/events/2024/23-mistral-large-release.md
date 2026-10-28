@@ -40,7 +40,7 @@ revision:
 Mistral AI released Mistral Large on February 26, 2024 through La Plateforme and Microsoft Azure.
 Its Series A was a separate financing event: Latham & Watkins announced the EUR385 million round at a EUR2 billion post-money valuation on December 11, 2023.
 
-## Editorial correction (2026-10-26)
+## Editorial correction, October&nbsp;26,&nbsp;2026
 
 The model announcement supports February 26, 2024, but the financing participant's announcement places the Series A in December 2023.
 The event title and summary no longer combine the model launch and funding close as simultaneous news.

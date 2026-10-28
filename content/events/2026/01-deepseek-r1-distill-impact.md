@@ -39,7 +39,7 @@ The claim of a distinct DeepSeek-R1 distillation adoption event on January 15, 2
 DeepSeek's January 2025 report documents six distilled models, but the listed evidence does not establish the asserted early-2026 community adoption wave or its precise date.
 The original date remains an identifier for the challenged assertion, not a verified milestone.
 
-## Editorial challenge (2026-10-26)
+## Editorial challenge, October&nbsp;26,&nbsp;2026
 
 The arXiv publication metadata is corrected from January 20 to January 22, 2025.
 The versioned R1 report describes DeepSeek's own six distilled Qwen/Llama-based models.

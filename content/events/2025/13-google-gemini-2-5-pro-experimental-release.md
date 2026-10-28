@@ -35,7 +35,7 @@ Google DeepMind released Gemini 2.5 Pro Experimental on March 25, 2025 as the fi
 Google described it as a thinking model and reported leading benchmark and LMArena results.
 It followed the earlier Gemini 2.0 Flash Thinking, so it was not the first Gemini thinking model.
 
-## Editorial correction (2026-10-26)
+## Editorial correction, October&nbsp;26,&nbsp;2026
 
 The same March 25 primary announcement identifies Gemini 2.0 Flash Thinking as Google's earlier thinking model.
 The first-Gemini implication is removed; being the first 2.5 release is distinct from originating thinking across the Gemini family.

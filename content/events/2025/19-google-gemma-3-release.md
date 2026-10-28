@@ -44,7 +44,7 @@ Google DeepMind released Gemma 3 on March 12, 2025 in 1B, 4B, 12B, and 27B sizes
 The 1B model accepted text only and had a 32K-token context window; the 4B, 12B, and 27B models accepted text and images with 128K context.
 The release used Google's Gemma terms rather than Apache 2.0 or MIT.
 
-## Editorial correction (2026-10-26)
+## Editorial correction, October&nbsp;26,&nbsp;2026
 
 The model card assigns 128K context to 4B/12B/27B and 32K to 1B, while Google's developer explanation identifies 1B as text-only.
 The original summary and body incorrectly generalized vision and 128K context to every launch variant.

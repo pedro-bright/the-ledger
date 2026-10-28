@@ -33,7 +33,7 @@ revision:
 OpenAI released o3-mini on January 31, 2025, with configurable low, medium, and high reasoning effort.
 This entry concerns o3-mini; the full o3 release on April 16, 2025 is recorded separately.
 
-## Editorial correction (2026-10-26)
+## Editorial correction, October&nbsp;26,&nbsp;2026
 
 The January 31 primary post announces o3-mini, not the simultaneous release of o3 and o3-mini.
 The title is narrowed while the historical event ID is retained to preserve existing links and thread references.

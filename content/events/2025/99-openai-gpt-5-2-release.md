@@ -36,7 +36,7 @@ revision:
 OpenAI announced GPT-5.2 on December 11, 2025, with Instant, Thinking, and Pro variants.
 The models became available in the API that day, while rollout in ChatGPT began with paid plans.
 
-## Editorial correction (2026-10-26)
+## Editorial correction, October&nbsp;26,&nbsp;2026
 
 The announcement establishes December 11, 2025, rather than February 1, 2026.
 The event is relocated to the 2025 directory while retaining its ID and public event URL.

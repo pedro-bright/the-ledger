@@ -46,7 +46,7 @@ The claim that the Council of Europe's AI Framework Convention entered into forc
 A source audit's September 12, 2026 reading of the Treaty Office chart found no entry-into-force date, and the inspected evidence does not establish the asserted UK, French, and Norwegian ratifications.
 The date retained in this entry identifies the original assertion and must not be read as a verified entry-into-force date.
 
-## Editorial challenge (2026-10-26)
+## Editorial challenge, October&nbsp;26,&nbsp;2026
 
 The source audit that produced the 22 approved editorial findings recorded this reading of the Treaty Office chart for CETS 225 on September 12, 2026: the chart "has no entry-into-force date and specifies five ratifications including three member states."
 That dated reading is the contradicting record for the claimed November 1, 2025 entry into force.

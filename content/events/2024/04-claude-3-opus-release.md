@@ -41,7 +41,7 @@ Anthropic announced the Claude 3 family on March 4, 2024 and made Opus and Sonne
 Haiku was announced as forthcoming and became available on March 13.
 Anthropic reported that Opus surpassed competing models on several evaluations.
 
-## Editorial correction (2026-10-26)
+## Editorial correction, October&nbsp;26,&nbsp;2026
 
 The March 4 family announcement explicitly separates available Opus/Sonnet models from forthcoming Haiku.
 The March 13 Haiku announcement establishes its later release.

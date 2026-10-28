@@ -39,7 +39,7 @@ Google DeepMind announced the Gemini model family on December 6, 2023 and began 
 The announcement scheduled developer and enterprise API access through Google AI Studio and Vertex AI for December 13.
 Immediate Bard availability did not establish same-day API access.
 
-## Editorial correction (2026-10-26)
+## Editorial correction, October&nbsp;26,&nbsp;2026
 
 The December 6 primary announcement explicitly dates developer API access to December 13.
 The original body combined Bard and API availability; the corrected summary distinguishes the product rollout from the announced API schedule.

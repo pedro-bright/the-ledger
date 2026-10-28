@@ -50,7 +50,7 @@ On February 26, 2026, Dario Amodei said Anthropic would not remove restrictions 
 He also said Claude was already extensively deployed for military and intelligence uses.
 On February 27, Anthropic responded to Pete Hegseth's announced direction to designate the company as a supply-chain risk; the dispute concerned those two exceptions, rather than a blanket refusal to provide Claude for military use.
 
-## Editorial correction (2026-10-26)
+## Editorial correction, October&nbsp;26,&nbsp;2026
 
 New contemporaneous primary statements dated February 26 and 27 support a narrower, attributed account of the dispute.
 The event date changes from the unsupported February 28 to February 26, with February 27 as its end date.

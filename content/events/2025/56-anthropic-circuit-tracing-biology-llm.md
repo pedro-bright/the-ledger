@@ -44,7 +44,7 @@ revision:
 Anthropic published its attribution-graph methods paper and companion study of Claude 3.5 Haiku on March 27, 2025.
 The open-source circuit-tracing library and Neuronpedia interface followed on May 29, a separate release that enabled researchers to generate and explore attribution graphs on supported open-weight models.
 
-## Editorial correction (2026-10-26)
+## Editorial correction, October&nbsp;26,&nbsp;2026
 
 The March 27 papers and May 29 tooling announcement are distinct publications.
 The tooling citation's original March 27 publication date is corrected to May 29.

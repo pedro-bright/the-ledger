@@ -36,7 +36,7 @@ Google made Gemini 2.0 Flash generally available through the Gemini API in AI St
 The family had been introduced in December 2024 with an experimental Flash release, and the updated Flash had reached the Gemini app the week before API general availability.
 February's announcement also introduced experimental Gemini 2.0 Pro and a Flash-Lite preview.
 
-## Editorial correction (2026-10-26)
+## Editorial correction, October&nbsp;26,&nbsp;2026
 
 The original citation documents the December 11, 2024 introduction rather than the February 5 rollout.
 The February 5 primary announcement is added and the title/summary specify API general availability, distinguishing the earlier experimental and app releases.

@@ -37,7 +37,7 @@ Mistral AI released Mistral 7B on September 27, 2023.
 Mistral reported that the 7.3B-parameter model outperformed Llama 2 13B on its benchmark suite and compared favorably with Llama 1 34B on many benchmarks.
 The 34B baseline was from the first Llama generation; Llama 2 34B had not been released.
 
-## Editorial correction (2026-10-26)
+## Editorial correction, October&nbsp;26,&nbsp;2026
 
 The primary announcement explicitly identifies Llama 1 34B and explains why it did not use Llama 2 34B.
 The original body's comparison with an unreleased Llama 2 34B variant is corrected in the canonical summary.

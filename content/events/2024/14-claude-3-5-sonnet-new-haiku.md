@@ -34,7 +34,7 @@ Anthropic released an upgraded Claude 3.5 Sonnet and a public beta of computer u
 It also announced Claude 3.5 Haiku, which the announcement said would be released later that month.
 The computer-use beta was offered through the upgraded Sonnet rather than as an immediately available Haiku capability.
 
-## Editorial correction (2026-10-26)
+## Editorial correction, October&nbsp;26,&nbsp;2026
 
 The October 22 announcement distinguishes immediate Sonnet/computer-use beta access from a future Haiku release.
 Its planned Haiku date is recorded as a plan, not evidence that availability actually occurred that day.

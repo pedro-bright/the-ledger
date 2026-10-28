@@ -39,7 +39,7 @@ revision:
 OpenAI released GPT-5 on August 7, 2025, introducing a unified system that routed between a fast model and a deeper reasoning model.
 The launch brought GPT-5 to ChatGPT, including the free tier, and introduced GPT-5 pro for subscribers to the Pro plan.
 
-## Editorial correction (2026-10-26)
+## Editorial correction, October&nbsp;26,&nbsp;2026
 
 The primary announcement is dated August 7, 2025; April 14, 2025 was the GPT-4.1 API launch.
 The original April date is corrected in the event metadata.

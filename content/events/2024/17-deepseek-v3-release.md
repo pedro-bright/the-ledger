@@ -49,7 +49,7 @@ DeepSeek released DeepSeek-V3 on December 26, 2024, a 671B-parameter mixture-of-
 DeepSeek reported $5.576 million in compute costs for the official training run, including pre-training, context extension, and post-training, at an assumed $2 per H800 GPU-hour; this excluded prior research and ablation experiments.
 The code used the MIT license, while the model weights were governed by a separate DeepSeek Model License that allowed commercial use.
 
-## Editorial correction (2026-10-26)
+## Editorial correction, October&nbsp;26,&nbsp;2026
 
 DeepSeek's preserved release commit is dated December 26, 2024 at 11:01:57 UTC; the original December 25 date has no documented timezone basis in this record.
 The technical report's Table 1 distinguishes $5.328 million for pre-training from $5.576 million for the full official training run, excluding prior research and ablations.

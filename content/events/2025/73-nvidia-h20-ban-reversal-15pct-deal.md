@@ -68,7 +68,7 @@ On July 14, 2025, NVIDIA said it was applying to resume H20 sales to China and h
 Separately, on August 11, Trump publicly described a negotiated 15% share of revenue from H20 sales; NPR also reported a corresponding AMD arrangement.
 The July licensing announcement did not disclose that revenue condition or establish that deliveries had resumed.
 
-## Editorial correction (2026-10-26)
+## Editorial correction, October&nbsp;26,&nbsp;2026
 
 The original July 15 date and combined title backdated an August disclosure.
 NVIDIA's primary announcement is dated July 14 and concerns license assurances and applications.

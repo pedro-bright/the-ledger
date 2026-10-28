@@ -34,7 +34,7 @@ OpenAI announced GPT-4o on May 13, 2024 and demonstrated its low-latency voice a
 Text and image capabilities began rolling out in ChatGPT, including the free tier, and developers received text-and-vision API access.
 The new Voice Mode was scheduled for a later alpha for ChatGPT Plus, while new audio/video API capabilities were planned for a limited group of trusted partners.
 
-## Editorial correction (2026-10-26)
+## Editorial correction, October&nbsp;26,&nbsp;2026
 
 The primary announcement separates demonstrated capabilities from launch-day access.
 It places the new Voice Mode alpha and limited-partner audio/video API rollout in the coming weeks.

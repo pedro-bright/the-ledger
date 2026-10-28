@@ -37,7 +37,7 @@ revision:
 Mistral AI released Mistral Small 3, a 24B-parameter language model, under Apache 2.0 on January 30, 2025.
 Apache 2.0 permits commercial use, modification, and redistribution subject to its conditions, including preservation of relevant notices; it does not provide a blanket exemption from attribution requirements.
 
-## Editorial correction (2026-10-26)
+## Editorial correction, October&nbsp;26,&nbsp;2026
 
 Apache 2.0 section 4 requires a copy of the license for recipients, notices of modified files, retention of relevant source notices, and applicable NOTICE attribution in redistributed derivative works.
 The original body's unconditional no-attribution wording is withdrawn.

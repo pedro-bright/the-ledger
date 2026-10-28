@@ -38,7 +38,7 @@ revision:
 Anthropic made Claude Code generally available on May 22, 2025 alongside Claude 4, following its February research preview.
 Alongside the terminal-based agent's general availability, Anthropic released beta extensions for VS Code and JetBrains and a beta GitHub integration that supports background tasks through GitHub Actions.
 
-## Editorial correction (2026-10-26)
+## Editorial correction, October&nbsp;26,&nbsp;2026
 
 The May 22 primary announcement includes VS Code and JetBrains integrations, which its Claude Code section describes as new beta extensions.
 The same announcement released Claude Code on GitHub in beta, with background tasks through GitHub Actions.

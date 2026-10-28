@@ -29,7 +29,7 @@ Google DeepMind reported on July 21, 2025 that an advanced Gemini Deep Think sys
 Its official account is separate from arXiv 2507.15855, a paper by Yichen Huang and Lin F. Yang about a verification-and-refinement approach using Gemini 2.5 Pro.
 That paper is not the technical report of DeepMind's competition run.
 
-## Editorial correction (2026-10-26)
+## Editorial correction, October&nbsp;26,&nbsp;2026
 
 The cited arXiv identifier was assigned an incorrect title and attribution.
 Version 1, submitted July 21, is titled Gemini 2.5 Pro Capable of Winning Gold at IMO 2025 and names Yichen Huang and Lin F. Yang.
