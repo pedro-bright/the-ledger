@@ -535,6 +535,7 @@
   .graph-fallback__date {
     font-size: 11px;
     color: var(--color-ink-faint);
+    white-space: nowrap;
   }
 
   /* -------- Prose: long-form rendered markdown. -------- */
