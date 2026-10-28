@@ -1,7 +1,7 @@
 ---
 id: deepseek-v3-release
 title: "DeepSeek Releases DeepSeek-V3, High-Performance Open-Weight Model"
-date: 2024-12-25
+date: '2024-12-26'
 category: open-source
 significance: major
 confidence: high
@@ -13,16 +13,51 @@ tags: [open-weights, chinese-ai, efficiency, mixture-of-experts, cost-efficiency
 threads: [open-vs-closed-weights, scaling-laws-debate]
 sources:
   - url: https://github.com/deepseek-ai/DeepSeek-V3
-    title: "DeepSeek-V3 GitHub Repository"
+    title: DeepSeek-V3 GitHub Repository
     type: primary
   - url: https://arxiv.org/abs/2412.19437
-    title: "DeepSeek-V3 Technical Report"
+    title: DeepSeek-V3 Technical Report
     type: primary
+  - url: https://github.com/deepseek-ai/DeepSeek-V3/commit/4c2fdb8f55e049553b9f4f1a3241f86d739c8cf8
+    title: Release DeepSeek-V3 (release commit, December 26, 2024)
+    type: primary_document
+    publisher: DeepSeek
+    date: '2024-12-26'
+    accessed: '2026-10-26'
+    archive_url: https://web.archive.org/web/20260805070954/https://github.com/deepseek-ai/DeepSeek-V3/commit/4c2fdb8f55e049553b9f4f1a3241f86d739c8cf8
+  - url: https://arxiv.org/abs/2412.19437v1
+    title: DeepSeek-V3 Technical Report (v1)
+    type: primary_document
+    publisher: DeepSeek-AI
+    date: '2024-12-27'
+    accessed: '2026-10-26'
+    archive_url: https://web.archive.org/web/20260923214756/https://arxiv.org/abs/2412.19437v1
+  - url: https://github.com/deepseek-ai/DeepSeek-V3/blob/e2c15caf041dc0809f616349fa145e56ac2b72aa/README.md
+    title: 'DeepSeek-V3 release README: code and model licenses'
+    type: primary_document
+    publisher: DeepSeek
+    accessed: '2026-10-26'
+revision:
+  last_reviewed: 2026-10-26
+  draft_assistance: ai-assisted
+  final_author: terry-tang
 ---
 
 ## Summary
 
-Chinese AI lab DeepSeek released DeepSeek-V3, a 671-billion parameter Mixture-of-Experts model trained for approximately $5.6 million that performed competitively with GPT-4o and Claude 3.5 Sonnet. The release challenged Western assumptions about the compute requirements for frontier AI development and the effectiveness of US export controls on advanced AI chips.
+DeepSeek released DeepSeek-V3 on December 26, 2024, a 671B-parameter mixture-of-experts model with 37B parameters activated per token.
+DeepSeek reported $5.576 million in compute costs for the official training run, including pre-training, context extension, and post-training, at an assumed $2 per H800 GPU-hour; this excluded prior research and ablation experiments.
+The code used the MIT license, while the model weights were governed by a separate DeepSeek Model License that allowed commercial use.
+
+## Editorial correction, October&nbsp;26,&nbsp;2026
+
+DeepSeek's preserved release commit is dated December 26, 2024 at 11:01:57 UTC; the original December 25 date has no documented timezone basis in this record.
+The technical report's Table 1 distinguishes $5.328 million for pre-training from $5.576 million for the full official training run, excluding prior research and ablations.
+The release README distinguishes MIT-licensed code from separately licensed weights; the original body's MIT-derivative/fully-open characterization should not be relied on.
+
+[Revision record with the prior summary and metadata](https://github.com/pedro-bright/the-ledger/blob/main/content/revisions/sr-deepseek-v3-release-20261026.md).
+
+The original narrative below is preserved as published; use the revised summary and this note for the corrected account.
 
 ## What Happened
 

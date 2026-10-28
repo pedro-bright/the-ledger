@@ -1,7 +1,7 @@
 ---
 id: openai-gpt-5-release
 title: "OpenAI Releases GPT-5 as Unified Flagship Model"
-date: 2025-04-14
+date: '2025-08-07'
 category: models
 significance: landmark
 confidence: high
@@ -15,13 +15,39 @@ tags: [frontier-model, unified-model, agentic-ai, reasoning]
 threads: [scaling-laws-debate]
 sources:
   - url: https://openai.com/index/introducing-gpt-5/
-    title: "Introducing GPT-5"
-    type: primary
+    title: Introducing GPT-5
+    type: primary_document
+    publisher: OpenAI
+    date: '2025-08-07'
+    accessed: '2026-10-26'
+    archive_url: https://web.archive.org/web/20261017062930/https://openai.com/index/introducing-gpt-5/
+  - url: https://openai.com/index/gpt-4-1/
+    title: Introducing GPT-4.1 in the API
+    type: primary_document
+    publisher: OpenAI
+    date: '2025-04-14'
+    accessed: '2026-10-26'
+    archive_url: https://web.archive.org/web/20261016135154/https://openai.com/index/gpt-4-1/
+revision:
+  last_reviewed: 2026-10-26
+  draft_assistance: ai-assisted
+  final_author: terry-tang
 ---
 
 ## Summary
 
-OpenAI released GPT-5, unifying its previously separate model lines (GPT-4o for general use and o-series for reasoning) into a single model with integrated reasoning capabilities. The release represented OpenAI's attempt to simplify its product line while maintaining frontier performance across all capability dimensions.
+OpenAI released GPT-5 on August 7, 2025, introducing a unified system that routed between a fast model and a deeper reasoning model.
+The launch brought GPT-5 to ChatGPT, including the free tier, and introduced GPT-5 pro for subscribers to the Pro plan.
+
+## Editorial correction, October&nbsp;26,&nbsp;2026
+
+The primary announcement is dated August 7, 2025; April 14, 2025 was the GPT-4.1 API launch.
+The original April date is corrected in the event metadata.
+The original body below retains the mistaken date and single-model description; the announcement describes a routed system, rather than a completed merger into one model.
+
+[Revision record with the prior summary and metadata](https://github.com/pedro-bright/the-ledger/blob/main/content/revisions/sr-openai-gpt-5-release-20261026.md).
+
+The original narrative below is preserved as published; use the revised summary and this note for the corrected account.
 
 ## What Happened
 

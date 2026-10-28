@@ -1,10 +1,10 @@
 ---
 id: coe-ai-convention-in-force
-title: "Council of Europe AI Convention Enters Force"
+title: Council of Europe AI Convention Entry into Force
 date: 2025-11-01
 category: policy
 significance: landmark
-confidence: high
+confidence: disputed
 actors:
   - id: council-of-europe
     role: subject
@@ -17,22 +17,49 @@ tags: [council-of-europe, cets-225, international-treaty, binding-law, human-rig
 threads: [ai-governance-evolution]
 sources:
   - url: https://www.coe.int/en/web/artificial-intelligence/the-framework-convention-on-artificial-intelligence
-    title: "Framework Convention on Artificial Intelligence (CETS 225)"
+    title: Framework Convention on Artificial Intelligence (CETS 225)
     type: official
     publisher: Council of Europe
   - url: https://www.coe.int/en/web/Conventions/full-list/?module=signatures-by-treaty&treatynum=225
-    title: "Council of Europe Treaty Office — CETS 225 Signatures and Ratifications"
+    title: Council of Europe Treaty Office — CETS 225 Signatures and Ratifications
     type: official
     publisher: Council of Europe
+    accessed: '2026-09-12'
+    archive_url: https://web.archive.org/web/20260422133913/https://www.coe.int/en/web/conventions/full-list;?module=signatures-by-treaty&treatynum=225
   - url: https://www.europarl.europa.eu/doceo/document/A-10-2026-0007_EN.html
-    title: "European Parliament Report A10-0007/2026 — Recommendation on the Framework Convention on AI"
+    title: European Parliament Report A10-0007/2026 — Recommendation on the Framework Convention on AI
     type: primary_document
     publisher: European Parliament
+state: challenged
+contestation:
+  status: unresolved
+  last_challenged: '2026-10-26'
+revision:
+  last_reviewed: 2026-10-26
+  draft_assistance: ai-assisted
+  final_author: terry-tang
 ---
 
 ## Summary
 
-On November 1, 2025, the Council of Europe's Framework Convention on Artificial Intelligence (CETS 225) entered into force following ratification by the United Kingdom, France, and Norway — the first binding international treaty on AI. The Convention covers the entire AI lifecycle, applies to both public and private actors, and is open to non-Council of Europe states including the United States, Canada, Japan, and Israel. It establishes human rights, democracy, and rule of law as the governing principles against which AI systems must be assessed.
+The claim that the Council of Europe's AI Framework Convention entered into force on November 1, 2025 is under challenge.
+A source audit's September 12, 2026 reading of the Treaty Office chart found no entry-into-force date, and the inspected evidence does not establish the asserted UK, French, and Norwegian ratifications.
+The date retained in this entry identifies the original assertion and must not be read as a verified entry-into-force date.
+
+## Editorial challenge, October&nbsp;26,&nbsp;2026
+
+The source audit that produced the 22 approved editorial findings recorded this reading of the Treaty Office chart for CETS 225 on September 12, 2026: the chart "has no entry-into-force date and specifies five ratifications including three member states."
+That dated reading is the contradicting record for the claimed November 1, 2025 entry into force.
+The chart could not be checked again for this review: the text fetch required JavaScript and the browser was blocked by Cloudflare.
+Separately, the Treaty Office's indexed treaty details specify five ratifications, including at least three Council of Europe member states, as the entry-into-force condition.
+The official Framework Convention page confirms opening for signature on September 5, 2024, which is distinct from entry into force.
+This review does not infer the treaty's status after September 12, 2026 or an alternative entry date.
+A directly inspected, dated depositary record is required to resolve the claimed November 2025 event, country ratifications, and signature counts.
+
+[Revision record with the prior summary and metadata](https://github.com/pedro-bright/the-ledger/blob/main/content/revisions/sr-coe-ai-convention-in-force-20261026.md).
+[Open challenge](https://github.com/pedro-bright/the-ledger/blob/main/content/challenges/cc-coe-ai-convention-in-force-20261026.md).
+
+The original narrative below is preserved as published; use the revised summary and this note for the corrected account.
 
 ## What Happened
 

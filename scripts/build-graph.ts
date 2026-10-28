@@ -71,6 +71,10 @@ function parseFile(filePath: string): Record<string, unknown> {
   return matter(raw).data;
 }
 
+function isoDate(value: unknown): string {
+  return value instanceof Date ? value.toISOString().slice(0, 10) : String(value);
+}
+
 function getContentType(relativePath: string): string | null {
   const dir = relativePath.split(path.sep)[0];
   const mapping: Record<string, string> = {
@@ -110,7 +114,7 @@ function main() {
       title: (data.title as string) ?? (data.name as string) ?? id,
     };
 
-    if (data.date) node.date = String(data.date);
+    if (data.date) node.date = isoDate(data.date);
     if (data.category) node.category = String(data.category);
     if (data.significance) node.significance = String(data.significance);
     if (data.state) node.state = String(data.state);

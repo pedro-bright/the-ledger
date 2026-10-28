@@ -13,18 +13,39 @@ tags: [open-weights, small-models, function-calling, local-deployment]
 threads: [open-vs-closed-weights]
 sources:
   - url: https://mistral.ai/news/mistral-small-3
-    title: "Mistral Small 3"
+    title: Mistral Small 3
     type: official
-    date: 2025-01-30
+    date: '2025-01-30'
   - url: https://huggingface.co/mistralai/Mistral-Small-24B-Instruct-2501
-    title: "Mistral-Small-24B-Instruct-2501 Model Card"
+    title: Mistral-Small-24B-Instruct-2501 Model Card
     type: primary_document
-    date: 2025-01-30
+    date: '2025-01-30'
+  - url: https://www.apache.org/licenses/LICENSE-2.0
+    title: 'Apache License, Version 2.0 (section 4: Redistribution)'
+    type: primary_document
+    publisher: Apache Software Foundation
+    accessed: '2026-10-26'
+    archive_url: https://web.archive.org/web/20261019140747/https://www.apache.org/licenses/LICENSE-2.0
+revision:
+  last_reviewed: 2026-10-26
+  draft_assistance: ai-assisted
+  final_author: terry-tang
 ---
 
 ## Summary
 
-Mistral AI released Mistral Small 3, a 24-billion parameter dense language model under the Apache 2.0 license. Scoring above 81% on MMLU with a 32K token context window and native function calling, it was designed to be fast and efficient enough for local deployment while matching mid-tier API models in capability.
+Mistral AI released Mistral Small 3, a 24B-parameter language model, under Apache 2.0 on January 30, 2025.
+Apache 2.0 permits commercial use, modification, and redistribution subject to its conditions, including preservation of relevant notices; it does not provide a blanket exemption from attribution requirements.
+
+## Editorial correction, October&nbsp;26,&nbsp;2026
+
+Apache 2.0 section 4 requires a copy of the license for recipients, notices of modified files, retention of relevant source notices, and applicable NOTICE attribution in redistributed derivative works.
+The original body's unconditional no-attribution wording is withdrawn.
+This describes the license text rather than promising that any particular distribution satisfies it.
+
+[Revision record with the prior summary and metadata](https://github.com/pedro-bright/the-ledger/blob/main/content/revisions/sr-mistral-small-3-release-20261026.md).
+
+The original narrative below is preserved as published; use the revised summary and this note for the corrected account.
 
 ## What Happened
 

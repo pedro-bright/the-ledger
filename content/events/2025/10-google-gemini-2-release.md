@@ -1,6 +1,6 @@
 ---
 id: google-gemini-2-release
-title: "Google Launches Gemini 2.0 with Agentic Capabilities"
+title: Google Makes Gemini 2.0 Flash Generally Available in the API
 date: 2025-02-05
 category: models
 significance: major
@@ -15,13 +15,35 @@ tags: [frontier-model, agentic-ai, multimodal, google]
 threads: [scaling-laws-debate]
 sources:
   - url: https://blog.google/technology/google-deepmind/google-gemini-ai-update-december-2024/
-    title: "Introducing Gemini 2.0: our new AI model for the agentic era"
+    title: 'Introducing Gemini 2.0: our new AI model for the agentic era'
     type: primary
+  - url: https://blog.google/innovation-and-ai/models-and-research/google-deepmind/gemini-model-updates-february-2025/
+    title: Gemini 2.0 is now available to everyone
+    type: primary_document
+    publisher: Google
+    date: '2025-02-05'
+    accessed: '2026-10-26'
+    archive_url: https://web.archive.org/web/20261005052109/https://blog.google/innovation-and-ai/models-and-research/google-deepmind/gemini-model-updates-february-2025/
+revision:
+  last_reviewed: 2026-10-26
+  draft_assistance: ai-assisted
+  final_author: terry-tang
 ---
 
 ## Summary
 
-Google launched Gemini 2.0, positioning it as its flagship model for the "agentic era." The model featured native tool use, code execution, and multimodal output capabilities designed to power autonomous AI agents that could take actions on behalf of users.
+Google made Gemini 2.0 Flash generally available through the Gemini API in AI Studio and Vertex AI on February 5, 2025.
+The family had been introduced in December 2024 with an experimental Flash release, and the updated Flash had reached the Gemini app the week before API general availability.
+February's announcement also introduced experimental Gemini 2.0 Pro and a Flash-Lite preview.
+
+## Editorial correction, October&nbsp;26,&nbsp;2026
+
+The original citation documents the December 11, 2024 introduction rather than the February 5 rollout.
+The February 5 primary announcement is added and the title/summary specify API general availability, distinguishing the earlier experimental and app releases.
+
+[Revision record with the prior summary and metadata](https://github.com/pedro-bright/the-ledger/blob/main/content/revisions/sr-google-gemini-2-release-20261026.md).
+
+The original narrative below is preserved as published; use the revised summary and this note for the corrected account.
 
 ## What Happened
 

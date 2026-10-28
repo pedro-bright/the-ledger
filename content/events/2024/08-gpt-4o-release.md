@@ -13,16 +13,36 @@ tags: [multimodal, real-time-voice, frontier-model, omni-model]
 threads: [scaling-laws-debate]
 sources:
   - url: https://openai.com/index/hello-gpt-4o/
-    title: "Hello GPT-4o"
-    type: primary
+    title: Hello GPT-4o
+    type: primary_document
+    publisher: OpenAI
+    date: '2024-05-13'
+    accessed: '2026-10-26'
+    archive_url: https://web.archive.org/web/20261022155240/https://openai.com/index/hello-gpt-4o/
   - url: https://www.theverge.com/2024/5/13/24155493/openai-gpt-4o-launch-multimodal-model
-    title: "OpenAI launches GPT-4o"
+    title: OpenAI launches GPT-4o
     type: secondary
+revision:
+  last_reviewed: 2026-10-26
+  draft_assistance: ai-assisted
+  final_author: terry-tang
 ---
 
 ## Summary
 
-OpenAI released GPT-4o ("omni"), a natively multimodal model that could process and generate text, audio, and images with dramatically reduced latency, making real-time voice conversation with an AI feel natural for the first time. The model was made available free to all ChatGPT users, marking a significant shift in access strategy.
+OpenAI announced GPT-4o on May 13, 2024 and demonstrated its low-latency voice and multimodal capabilities.
+Text and image capabilities began rolling out in ChatGPT, including the free tier, and developers received text-and-vision API access.
+The new Voice Mode was scheduled for a later alpha for ChatGPT Plus, while new audio/video API capabilities were planned for a limited group of trusted partners.
+
+## Editorial correction, October&nbsp;26,&nbsp;2026
+
+The primary announcement separates demonstrated capabilities from launch-day access.
+It places the new Voice Mode alpha and limited-partner audio/video API rollout in the coming weeks.
+The original broad availability language must not be read as general availability of the demonstrated new voice mode on May 13.
+
+[Revision record with the prior summary and metadata](https://github.com/pedro-bright/the-ledger/blob/main/content/revisions/sr-gpt-4o-release-20261026.md).
+
+The original narrative below is preserved as published; use the revised summary and this note for the corrected account.
 
 ## What Happened
 
