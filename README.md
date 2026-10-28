@@ -87,7 +87,8 @@ the-ledger/
 │   ├── threads/         # Narrative arcs with embedded syntheses
 │   ├── controversies/   # Multi-axis disagreements
 │   ├── actors/          # Actor registry (YAML)
-│   ├── challenges/      # Formal challenges to claims (scaffolded)
+│   ├── challenges/      # Formal challenges to claims
+│   ├── revisions/       # Summary revisions recording prior and corrected summaries
 │   ├── memos/           # Editorial memos (scaffolded)
 │   ├── perspectives/    # Quarterly/thematic essays (scaffolded)
 │   └── syntheses/       # Standalone canonical syntheses (scaffolded; threads currently embed their own)
