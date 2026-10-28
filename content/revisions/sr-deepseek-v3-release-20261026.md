@@ -25,7 +25,7 @@ The technical report's Table 1 distinguishes $5.328 million for pre-training fro
 The release README distinguishes MIT-licensed code from separately licensed weights; the original body's MIT-derivative/fully-open characterization should not be relied on.
 
 This AI-assisted revision was prepared under Terry Tang's approval of the 22 editorial findings.
-It records the correction and its evidence without claiming a new human review of the retained narrative.
+Terry Tang reviewed and approved this correction on 2026-10-26.
 
 ## Event location and identity
 

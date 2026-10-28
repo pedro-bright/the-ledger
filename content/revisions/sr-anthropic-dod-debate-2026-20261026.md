@@ -28,7 +28,7 @@ The original body's blanket military-restriction and Congressional-pressure narr
 These statements record Anthropic's position, not independent adjudication of every allegation or the later legal status of the designation.
 
 This AI-assisted revision was prepared under Terry Tang's approval of the 22 editorial findings.
-It records the correction and its evidence without claiming a new human review of the retained narrative.
+Terry Tang reviewed and approved this correction on 2026-10-26.
 
 ## Event location and identity
 

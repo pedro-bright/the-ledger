@@ -22,7 +22,7 @@ The primary announcement explicitly identifies Llama 1 34B and explains why it d
 The original body's comparison with an unreleased Llama 2 34B variant is corrected in the canonical summary.
 
 This AI-assisted revision was prepared under Terry Tang's approval of the 22 editorial findings.
-It records the correction and its evidence without claiming a new human review of the retained narrative.
+Terry Tang reviewed and approved this correction on 2026-10-26.
 
 ## Event location and identity
 

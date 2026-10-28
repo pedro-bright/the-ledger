@@ -28,7 +28,9 @@ sources:
     title: Google Announces Gemini, Its Most Powerful AI Model
     type: secondary
 revision:
+  last_reviewed: 2026-10-26
   draft_assistance: ai-assisted
+  final_author: terry-tang
 ---
 
 ## Summary

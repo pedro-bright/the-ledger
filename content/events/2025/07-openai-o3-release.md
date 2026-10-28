@@ -23,7 +23,9 @@ sources:
     title: OpenAI's o3-mini is now available to all ChatGPT users
     type: secondary
 revision:
+  last_reviewed: 2026-10-26
   draft_assistance: ai-assisted
+  final_author: terry-tang
 ---
 
 ## Summary

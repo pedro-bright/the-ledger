@@ -23,7 +23,7 @@ The tooling citation's original March 27 publication date is corrected to May 29
 The original body's simultaneous-tool-release wording is preserved below as the earlier assertion.
 
 This AI-assisted revision was prepared under Terry Tang's approval of the 22 editorial findings.
-It records the correction and its evidence without claiming a new human review of the retained narrative.
+Terry Tang reviewed and approved this correction on 2026-10-26.
 
 ## Event location and identity
 

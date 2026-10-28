@@ -26,7 +26,7 @@ The announcement explicitly distinguishes Instant, Thinking, and Pro; the origin
 The old source dates and original metadata are preserved in this revision record; the mutable platform guide is not assigned an invented publication date.
 
 This AI-assisted revision was prepared under Terry Tang's approval of the 22 editorial findings.
-It records the correction and its evidence without claiming a new human review of the retained narrative.
+Terry Tang reviewed and approved this correction on 2026-10-26.
 
 ## Event location and identity
 

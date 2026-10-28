@@ -26,7 +26,7 @@ The original summary and body incorrectly generalized vision and 128K context to
 Later additions to the Gemma family are not backdated to this four-size launch.
 
 This AI-assisted revision was prepared under Terry Tang's approval of the 22 editorial findings.
-It records the correction and its evidence without claiming a new human review of the retained narrative.
+Terry Tang reviewed and approved this correction on 2026-10-26.
 
 ## Event location and identity
 

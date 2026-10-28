@@ -26,7 +26,7 @@ Terminal-based interaction did not mean that Claude Code made no attempt to inte
 The original body's claim to that effect is preserved as the earlier assertion and is superseded by this correction.
 
 This AI-assisted revision was prepared under Terry Tang's approval of the 22 editorial findings.
-It records the correction and its evidence without claiming a new human review of the retained narrative.
+Terry Tang reviewed and approved this correction on 2026-10-26.
 
 ## Event location and identity
 

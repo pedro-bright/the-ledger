@@ -29,7 +29,9 @@ sources:
     accessed: '2026-10-26'
     archive_url: https://web.archive.org/web/20261016135154/https://openai.com/index/gpt-4-1/
 revision:
+  last_reviewed: 2026-10-26
   draft_assistance: ai-assisted
+  final_author: terry-tang
 ---
 
 ## Summary

@@ -22,7 +22,7 @@ The original citation documents the December 11, 2024 introduction rather than t
 The February 5 primary announcement is added and the title/summary specify API general availability, distinguishing the earlier experimental and app releases.
 
 This AI-assisted revision was prepared under Terry Tang's approval of the 22 editorial findings.
-It records the correction and its evidence without claiming a new human review of the retained narrative.
+Terry Tang reviewed and approved this correction on 2026-10-26.
 
 ## Event location and identity
 

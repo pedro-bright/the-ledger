@@ -29,7 +29,7 @@ The misattributed citation is removed from the event's supporting source list an
 The existing official DeepMind announcement remains the source for the competition result.
 
 This AI-assisted revision was prepared under Terry Tang's approval of the 22 editorial findings.
-It records the correction and its evidence without claiming a new human review of the retained narrative.
+Terry Tang reviewed and approved this correction on 2026-10-26.
 
 ## Event location and identity
 

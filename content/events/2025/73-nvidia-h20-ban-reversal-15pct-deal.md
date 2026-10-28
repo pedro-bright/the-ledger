@@ -57,7 +57,9 @@ sources:
     archive_url: https://web.archive.org/web/20260711232507/https://www.presidency.ucsb.edu/documents/the-presidents-news-conference-1272
 end_date: '2025-08-11'
 revision:
+  last_reviewed: 2026-10-26
   draft_assistance: ai-assisted
+  final_author: terry-tang
 ---
 
 ## Summary

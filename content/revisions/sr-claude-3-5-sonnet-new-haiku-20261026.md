@@ -23,7 +23,7 @@ The October 22 announcement distinguishes immediate Sonnet/computer-use beta acc
 Its planned Haiku date is recorded as a plan, not evidence that availability actually occurred that day.
 
 This AI-assisted revision was prepared under Terry Tang's approval of the 22 editorial findings.
-It records the correction and its evidence without claiming a new human review of the retained narrative.
+Terry Tang reviewed and approved this correction on 2026-10-26.
 
 ## Event location and identity
 

@@ -23,7 +23,9 @@ sources:
     title: Anthropic's latest AI can use your computer the way you do
     type: secondary
 revision:
+  last_reviewed: 2026-10-26
   draft_assistance: ai-assisted
+  final_author: terry-tang
 ---
 
 ## Summary

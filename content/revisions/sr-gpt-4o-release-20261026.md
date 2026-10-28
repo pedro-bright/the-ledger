@@ -25,7 +25,7 @@ It places the new Voice Mode alpha and limited-partner audio/video API rollout i
 The original broad availability language must not be read as general availability of the demonstrated new voice mode on May 13.
 
 This AI-assisted revision was prepared under Terry Tang's approval of the 22 editorial findings.
-It records the correction and its evidence without claiming a new human review of the retained narrative.
+Terry Tang reviewed and approved this correction on 2026-10-26.
 
 ## Event location and identity
 

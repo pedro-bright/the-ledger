@@ -30,7 +30,9 @@ sources:
     accessed: '2026-10-26'
     archive_url: https://web.archive.org/web/20261012091321/https://www.anthropic.com/news/claude-3-haiku
 revision:
+  last_reviewed: 2026-10-26
   draft_assistance: ai-assisted
+  final_author: terry-tang
 ---
 
 ## Summary

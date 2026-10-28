@@ -35,7 +35,7 @@ This review does not infer the treaty's status after September 12, 2026 or an al
 A directly inspected, dated depositary record is required to resolve the claimed November 2025 event, country ratifications, and signature counts.
 
 This AI-assisted revision was prepared under Terry Tang's approval of the 22 editorial findings.
-It records the correction and its evidence without claiming a new human review of the retained narrative.
+Terry Tang reviewed and approved this correction on 2026-10-26.
 
 ## Event location and identity
 

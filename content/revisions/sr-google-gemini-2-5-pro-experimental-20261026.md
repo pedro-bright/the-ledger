@@ -22,7 +22,7 @@ The same March 25 primary announcement identifies Gemini 2.0 Flash Thinking as G
 The first-Gemini implication is removed; being the first 2.5 release is distinct from originating thinking across the Gemini family.
 
 This AI-assisted revision was prepared under Terry Tang's approval of the 22 editorial findings.
-It records the correction and its evidence without claiming a new human review of the retained narrative.
+Terry Tang reviewed and approved this correction on 2026-10-26.
 
 ## Event location and identity
 

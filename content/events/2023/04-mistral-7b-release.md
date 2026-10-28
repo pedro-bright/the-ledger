@@ -26,7 +26,9 @@ sources:
     title: Mistral AI makes its first large language model free for everyone
     type: secondary
 revision:
+  last_reviewed: 2026-10-26
   draft_assistance: ai-assisted
+  final_author: terry-tang
 ---
 
 ## Summary

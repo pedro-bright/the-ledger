@@ -28,7 +28,9 @@ sources:
     type: primary_document
     date: '2025-05-22'
 revision:
+  last_reviewed: 2026-10-26
   draft_assistance: ai-assisted
+  final_author: terry-tang
 ---
 
 ## Summary
