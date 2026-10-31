@@ -65,7 +65,9 @@ jobs:
   # Holds the deploy token, so it skips the root and site installs and the build.
   # The Vercel CLI executes a vercel.ts or vercel.js at the root of the directory
   # it deploys, so the built site sits in public/ under a deploy root outside the
-  # checkout, and the job fails if the built site contains Vercel config.
+  # checkout, and the job fails if the built site contains Vercel config. The only
+  # config the CLI gets is the header rules written by the generator in the checkout,
+  # which uses only Node built-ins and reads the built site as data.
   deploy:
     name: Deploy to Vercel
     needs: build
@@ -101,6 +103,9 @@ jobs:
             echo "$found"
             exit 1
           fi
+
+      - name: Generate security headers
+        run: node site/scripts/generate-security-headers.cjs "$RUNNER_TEMP/deploy"
 
       - name: Deploy to Vercel
         working-directory: ${{ runner.temp }}/deploy
