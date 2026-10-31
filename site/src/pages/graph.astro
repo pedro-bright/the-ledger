@@ -227,7 +227,6 @@ for (const edge of graph.edges) {
     color: var(--color-ink);
   }
   .graph-wrap :global(.graph-client[data-gestures='disabled'] canvas) { touch-action: auto !important; }
-  .graph-wrap :global(.graph-client[data-gestures='enabled'] canvas) { touch-action: none !important; }
   @media not all and (any-pointer: coarse) { .graph-wrap :global(.graph-touch-only) { display: none; } }
   .graph-record { margin: 8px 0; font-size: 14px; }
   .graph-record summary { cursor: pointer; }

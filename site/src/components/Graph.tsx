@@ -37,12 +37,19 @@ const TYPE_LABELS: Record<string, string> = {
   actor: 'Actors',
 };
 
+const STATIC_OVERVIEW_QUERY = '(prefers-reduced-motion: reduce), (any-pointer: coarse), (max-width: 639px)';
+
+// Smallest camera scale for the opening overview. Fit graph can go below it to show every record.
+const MIN_OVERVIEW_SCALE = 0.24;
+
 export default function Graph({ data }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const fgRef = useRef<any>(undefined);
   const [size, setSize] = useState<{ width: number; height: number } | null>(null);
   const [hidden, setHidden] = useState<Set<string>>(new Set());
   const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const [staticOverview] = useState(() => window.matchMedia(STATIC_OVERVIEW_QUERY).matches);
+  const [laidOut, setLaidOut] = useState(false);
   const [gesturesEnabled, setGesturesEnabled] = useState(false);
   const graphData = useMemo(() => ({ nodes: data.nodes, links: data.edges }), [data]);
   const isVisible = (node: any) => !hidden.has(node.type);
@@ -197,14 +204,16 @@ export default function Graph({ data }: Props) {
           linkWidth={1}
           onNodeClick={handleNodeClick}
           backgroundColor="#FAFAF7"
-          cooldownTicks={reducedMotion ? 0 : 100}
-          warmupTicks={reducedMotion ? 100 : 0}
-          d3AlphaDecay={0.0228}
+          cooldownTicks={staticOverview || reducedMotion ? 0 : 100}
+          warmupTicks={staticOverview && !laidOut ? 100 : 0}
           onEngineTick={markReady}
           onEngineStop={() => {
-            if (containerRef.current?.closest<HTMLElement>('.graph-wrap')?.dataset.graphState !== 'ready') {
-              fgRef.current?.zoomToFit(0, 30);
+            if (staticOverview && !laidOut) {
+              const graph = fgRef.current;
+              graph.zoomToFit(0, 30);
+              if (graph.zoom() < MIN_OVERVIEW_SCALE) graph.zoom(MIN_OVERVIEW_SCALE, 0);
             }
+            setLaidOut(true);
             markReady();
           }}
           enableNodeDrag={!reducedMotion}

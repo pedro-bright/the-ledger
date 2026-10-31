@@ -33,18 +33,17 @@ async function settledFrame(page: Page) {
   return drawnFrame(page);
 }
 
-// Viewport position of a drawn node that sits in the visible part of the canvas.
+// Scrolls a drawn node into the viewport and returns its viewport position.
 async function visibleNode(page: Page) {
   return page.locator('canvas').first().evaluate((canvas: HTMLCanvasElement, frame) => {
     const { a, d, e, f } = canvas.getContext('2d')!.getTransform();
-    const box = canvas.getBoundingClientRect();
-    const scale = window.devicePixelRatio;
     const inset = 40;
-    const points = frame.map(([x, y]) => ({ x: box.left + (x * a + e) / scale, y: box.top + (y * d + f) / scale }));
-    const node = points.find(({ x, y }) =>
-      x > Math.max(box.left, 0) + inset && x < Math.min(box.right, innerWidth) - inset &&
-      y > Math.max(box.top, 0) + inset && y < Math.min(box.bottom, innerHeight) - 200);
-    return node!;
+    const node = frame
+      .map(([x, y]) => ({ x: (x * a + e) / devicePixelRatio, y: (y * d + f) / devicePixelRatio }))
+      .find(({ x, y }) => x > inset && x < canvas.clientWidth - inset && y > inset && y < canvas.clientHeight - inset)!;
+    window.scrollBy(0, canvas.getBoundingClientRect().top + node.y - 300);
+    const box = canvas.getBoundingClientRect();
+    return { x: box.left + node.x, y: box.top + node.y };
   }, await drawnFrame(page));
 }
 
@@ -90,6 +89,49 @@ for (const reducedMotion of ['reduce', 'no-preference'] as const) {
     expect(await drawnFrame(page)).toEqual(all);
   });
 }
+
+const firstDrawnFrame = (page: Page, count: number) => page.evaluate((length) => (window as any).graphArcs.slice(0, length) as number[][], count);
+
+const staticOverviews = {
+  'a phone': { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true },
+  'a touch tablet': { viewport: { width: 1024, height: 768 }, isMobile: true, hasTouch: true },
+  'a narrow mouse window': { viewport: { width: 500, height: 800 } },
+};
+
+for (const [device, options] of Object.entries(staticOverviews)) {
+  test(`${device} opens on a static overview of every record`, async ({ browser }) => {
+    const context = await browser.newContext({ baseURL: test.info().project.use.baseURL, ...options });
+    const page = await context.newPage();
+    await recordDrawing(page);
+    await page.goto('/graph');
+    const frame = await settledFrame(page);
+    expect(await firstDrawnFrame(page, frame.length)).toEqual(frame);
+    const camera = () => page.locator('canvas').first().evaluate((canvas: HTMLCanvasElement, points) => {
+      const { a, d, e, f } = canvas.getContext('2d')!.getTransform();
+      const outside = points.filter(([x, y]) => {
+        const left = (x * a + e) / devicePixelRatio;
+        const top = (y * d + f) / devicePixelRatio;
+        return left < 0 || left > canvas.clientWidth || top < 0 || top > canvas.clientHeight;
+      });
+      return { scale: a / devicePixelRatio, outside: outside.length };
+    }, frame);
+    const opening = await camera();
+    expect(opening.scale).toBeGreaterThan(0.239);
+    // Records may only start past the edge once the camera has stopped at its minimum scale.
+    if (opening.outside > 0) expect(opening.scale).toBeCloseTo(0.24);
+    await page.getByRole('button', { name: 'Fit graph', exact: true }).click();
+    expect((await camera()).outside).toBe(0);
+    await context.close();
+  });
+}
+
+test('a desktop mouse keeps the settling animation', async ({ page }) => {
+  test.skip(test.info().project.name === 'mobile', 'Narrow viewports open on the static overview');
+  await recordDrawing(page);
+  await page.goto('/graph');
+  const frame = await settledFrame(page);
+  expect(await firstDrawnFrame(page, frame.length)).not.toEqual(frame);
+});
 
 test('fit graph frames only the records left visible by a filter', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -270,8 +312,9 @@ test('touch gestures scroll the page until explicitly enabled, also with reduced
     });
     const mapBefore = await transform();
     const framesBefore = await drawnFrame(page);
+    const node = await visibleNode(page);
     const start = await page.evaluate(() => scrollY);
-    await swipe(await visibleNode(page));
+    await swipe(node);
     await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(start + 40);
     expect(await transform()).toEqual(mapBefore);
     expect(await drawnFrame(page)).toEqual(framesBefore);
@@ -282,10 +325,11 @@ test('touch gestures scroll the page until explicitly enabled, also with reduced
     const disable = page.getByRole('button', { name: 'Disable touch gestures' });
     await expect(disable).toHaveAttribute('aria-pressed', 'true');
     expect(await canvas.evaluate((el) => getComputedStyle(el).touchAction)).toBe('none');
+    const activeNode = await visibleNode(page);
     const pageBefore = await page.evaluate(() => scrollY);
     const image = () => canvas.evaluate((el: HTMLCanvasElement) => el.toDataURL());
     const imageBefore = await image();
-    await swipe(await visibleNode(page));
+    await swipe(activeNode);
     await expect.poll(image).not.toBe(imageBefore);
     expect(await page.evaluate(() => scrollY)).toBe(pageBefore);
     await settledFrame(page);
@@ -294,8 +338,8 @@ test('touch gestures scroll the page until explicitly enabled, also with reduced
     await expect(page.getByRole('button', { name: 'Enable touch gestures' })).toHaveAttribute('aria-pressed', 'false');
     expect(await canvas.evaluate((el) => getComputedStyle(el).touchAction)).toBe('auto');
 
-    const node = await visibleNode(page);
-    await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [node] });
+    const tapped = await visibleNode(page);
+    await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [tapped] });
     await page.waitForTimeout(100);
     await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
     await expect(page).toHaveURL(/\/(events|threads|controversies|actors)\//);
