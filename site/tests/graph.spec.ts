@@ -171,7 +171,7 @@ test('cold hydration reserves the graph and leaves relationships available on fa
   const after = await page.locator('.graph-wrap').boundingBox();
   expect(Math.abs(after!.height - before!.height)).toBeLessThan(2);
   const shifts = await page.evaluate(() => (window as any).graphShifts);
-  expect(shifts.reduce((total, entry) => total + entry.value, 0)).toBeLessThanOrEqual(0.1);
+  expect(shifts.reduce((total: number, entry: { value: number }) => total + entry.value, 0)).toBeLessThanOrEqual(0.1);
 });
 
 test('a failed island offers retry and server-rendered typed connections', async ({ page }) => {
