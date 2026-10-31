@@ -5,7 +5,6 @@ import http from 'node:http';
 import type { AddressInfo } from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { marked } from 'marked';
 import { renderMarkdown } from '../src/lib/markdown';
 
@@ -15,7 +14,7 @@ import { renderMarkdown } from '../src/lib/markdown';
  * what a reader's browser does with them.
  */
 
-const SITE_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const SITE_DIR = path.resolve(__dirname, '..');
 const REPO_ROOT = path.resolve(SITE_DIR, '..');
 
 const BREAKOUT_TITLE = 'PoC title </SCRIPT><SCRIPT>window.__poc_title_breakout=1</SCRIPT> "quoted" & <b>tagged</b>';
