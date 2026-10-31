@@ -47,7 +47,7 @@ function positionCountLabel(n: number): string {
               <h3 class="cx-card__title font-display" style="font-variation-settings:'opsz' 36, 'SOFT' 0, 'WONK' 0;">
                 <a href={`/controversies/${c.slug}`}>{c.title}</a>
               </h3>
-              <p class="cx-card__meta font-mono">
+              <p class="cx-card__meta">
                 {linkedThread && (
                   <>
                     <a href={`/threads/${linkedThread.slug}`}>{linkedThread.title}</a>
@@ -103,7 +103,7 @@ function positionCountLabel(n: number): string {
               <h3 class="cx-card__title font-display" style="font-variation-settings:'opsz' 36, 'SOFT' 0, 'WONK' 0;">
                 <a href={`/controversies/${c.slug}`}>{c.title}</a>
               </h3>
-              <p class="cx-card__meta font-mono">
+              <p class="cx-card__meta">
                 {linkedThread && (
                   <>
                     <a href={`/threads/${linkedThread.slug}`}>{linkedThread.title}</a>
@@ -216,10 +216,10 @@ function positionCountLabel(n: number): string {
   }
   .cx-card__title a:hover { text-decoration: underline; }
   .cx-card__meta {
+    font-family: var(--font-sans);
     font-size: var(--text-meta);
     color: var(--color-ink-faint);
     margin: 0 0 10px;
-    letter-spacing: 0.02em;
     line-height: 1.45;
   }
   .cx-card__meta a { color: var(--color-wiki-link); }

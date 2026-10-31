@@ -75,6 +75,7 @@ function displayActor(id: string): { name: string; href?: string } {
       { label: 'Controversies', href: '/controversies' },
       { label: controversy.title },
     ]}
+    articleText={`${controversy.htmlContent} ${positions.map((position) => position.claim).join(' ')}`}
     lastModified={controversy.last_updated}
     sourcePath={`content/controversies/${controversy.slug}.md`}
   >
@@ -269,25 +270,24 @@ function displayActor(id: string): { name: string; href?: string } {
   }
   .position__claim { font-family: var(--font-serif); font-style: italic; color: var(--color-ink); font-weight: 500; }
   .position__badge { margin: 6px 0 0; }
-  .position__proponents { margin: 10px 0 0; font-size: 0.9375rem; }
+  .position__proponents { margin: 10px 0 0; font-family: var(--font-sans); font-size: var(--text-meta); line-height: 1.45; }
   .position__meta-label {
     font-family: var(--font-sans); font-size: var(--text-label); font-weight: 600;
     text-transform: uppercase; letter-spacing: 0.04em;
     color: var(--color-ink-muted); margin-right: 2px;
     line-height: 1.4;
   }
-  .position__proponent { font-family: var(--font-mono); font-size: var(--text-meta); line-height: 1.45; }
   a.position__proponent { color: var(--color-wiki-link); }
   a.position__proponent:hover { text-decoration: underline; }
-  .position__sep { color: var(--color-ink-faint); font-family: var(--font-mono); font-size: var(--text-meta); line-height: 1.45; }
+  .position__sep { color: var(--color-ink-faint); }
   .position__sources { padding-left: 1.5rem; margin: 0.5rem 0 1rem; }
-  .position__sources li { margin-bottom: 4px; font-family: var(--font-serif); font-size: 0.9375rem; line-height: 1.55; }
+  .position__sources li { margin-bottom: 4px; font-family: var(--font-serif); font-size: 0.875rem; line-height: 1.55; }
   .position__sources a {
     color: var(--color-wiki-link); text-decoration: underline;
     text-decoration-color: rgba(6, 69, 173, 0.35);
   }
   .position__sources a:hover { text-decoration-color: var(--color-wiki-link); }
-  .position__pub { color: var(--color-ink-mid); font-size: 0.875rem; }
+  .position__pub { color: var(--color-ink-mid); }
 
   :global(.rail-positions) { list-style: none; padding: 0; margin: 0; }
   :global(.rail-positions > li) { padding: 6px 0; border-bottom: 1px dotted var(--color-rule); }

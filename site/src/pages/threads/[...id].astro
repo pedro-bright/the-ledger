@@ -144,6 +144,7 @@ const subtitle = thread.core_question ? `— ${thread.core_question}` : undefine
     title={thread.title}
     subtitle={subtitle}
     breadcrumb={breadcrumb}
+    articleText={thread.htmlContent}
     lastModified={thread.last_updated}
     sourcePath={sourcePath}
   >
@@ -248,6 +249,6 @@ const subtitle = thread.core_question ? `— ${thread.core_question}` : undefine
     line-height: 1.4;
   }
   .snapshot dt:first-child { margin-top: 0; }
-  .snapshot dd { margin: 2px 0 0; font-size: var(--text-meta); color: var(--color-ink); line-height: 1.4; }
+  .snapshot dd { margin: 2px 0 0; font-size: var(--text-meta); color: var(--color-ink); line-height: 1.45; }
   .snapshot__date { display: block; font-size: var(--text-meta); color: var(--color-ink-faint); margin-top: 1px; line-height: 1.45; }
 </style>

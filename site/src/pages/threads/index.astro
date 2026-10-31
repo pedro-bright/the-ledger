@@ -100,7 +100,7 @@ const dormant = allEnriched.filter((t) => t.status !== 'active');
                       <p class="threads-table__question">{t.core_question}</p>
                     )}
                   </td>
-                  <td class="threads-table__curator font-mono">{t.curator || '—'}</td>
+                  <td class="threads-table__curator">{t.curator || '—'}</td>
                   <td class="threads-table__count font-mono">{t.eventCount}</td>
                   <td class="threads-table__date font-mono">
                     {t.lastUpdated ? <time datetime={t.lastUpdated}>{t.lastUpdated}</time> : '—'}
@@ -136,7 +136,7 @@ const dormant = allEnriched.filter((t) => t.status !== 'active');
                       <p class="threads-table__question">{t.core_question}</p>
                     )}
                   </td>
-                  <td class="threads-table__curator font-mono">{t.curator || '—'}</td>
+                  <td class="threads-table__curator">{t.curator || '—'}</td>
                   <td class="threads-table__count font-mono">{t.eventCount}</td>
                   <td class="threads-table__date font-mono">
                     {t.lastUpdated ? <time datetime={t.lastUpdated}>{t.lastUpdated}</time> : '—'}
@@ -254,6 +254,7 @@ const dormant = allEnriched.filter((t) => t.status !== 'active');
     max-width: 60ch;
   }
   .threads-table__curator {
+    font-family: var(--font-sans);
     font-size: var(--text-meta);
     color: var(--color-ink-mid);
     line-height: 1.45;

@@ -184,7 +184,7 @@ export default function Graph({ data }: Props) {
                 style={!isHidden ? { borderColor: NODE_COLORS[type] } : undefined}
               >
                 <span>{TYPE_LABELS[type]}</span>
-                <span className="font-mono text-[length:var(--text-meta)] leading-[1.45] tabular-nums text-ink-faint">
+                <span className="font-mono font-normal text-[length:var(--text-meta)] leading-[1.45] tabular-nums text-ink-faint">
                   ({counts[type]})
                 </span>
               </button>
@@ -252,7 +252,7 @@ export default function Graph({ data }: Props) {
       </div>
 
       <p role="status" className="sr-only">{layoutMessage}</p>
-      <p id="graph-help" className="text-[length:var(--text-meta)] leading-[1.45] text-ink-faint font-mono">
+      <p id="graph-help" className="text-[length:var(--text-meta)] leading-[1.45] text-ink-faint font-sans">
         Click a node to open its record. Use the buttons to pan or zoom, or drag with a mouse.
         <span className="graph-touch-only"> Enable touch gestures to drag or pinch; disable them or press Escape to scroll the page.</span>
         {' '}<a href="#graph-relationships">Browse relationships as text.</a>

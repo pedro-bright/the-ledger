@@ -57,7 +57,8 @@ const typeLabel: Record<string, string> = {
 };
 
 const entryCount = actorEvents.length;
-const subtitle = `A ${typeDisplay[actor.type] || 'entity'} referenced in ${entryCount} ledger ${entryCount === 1 ? 'entry' : 'entries'}.`;
+const typeName = typeDisplay[actor.type] || 'entity';
+const subtitle = `${/^[aeiou]/.test(typeName) ? 'An' : 'A'} ${typeName} referenced in ${entryCount} ledger ${entryCount === 1 ? 'entry' : 'entries'}.`;
 
 // Related: same type, excluding self, alphabetical, up to 6
 const related = allActors
@@ -115,7 +116,7 @@ function cleanUrl(url: string): string {
           {actor.aliases && actor.aliases.length > 0 && (
             <>
               <dt>Aliases</dt>
-              <dd><span class="mono">{actor.aliases.join(', ')}</span></dd>
+              <dd>{actor.aliases.join(', ')}</dd>
             </>
           )}
           <dt>Entries</dt>

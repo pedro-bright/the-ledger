@@ -195,7 +195,7 @@ const stats = {
               {t.core_question && (
                 <span class="wiki-thread-list__q">{t.core_question}</span>
               )}
-              <span class="wiki-thread-list__meta font-mono">
+              <span class="wiki-thread-list__meta">
                 {t.eventCount} entries
                 {t.curator && <> · curator {t.curator}</>}
               </span>
@@ -328,7 +328,7 @@ const stats = {
         {featuredThread.core_question && (
           <p class="rail-thread__q">{featuredThread.core_question}</p>
         )}
-        <p class="rail-thread__meta font-mono">
+        <p class="rail-thread__meta">
           {featuredThread.eventCount} entries
           {featuredThread.curator && <> · curator {featuredThread.curator}</>}
         </p>
@@ -341,7 +341,7 @@ const stats = {
           {activeControversies.map((c) => (
             <li>
               <a href={`/controversies/${c.slug}`}>{c.title}</a>
-              <span class="rail-controversy__meta font-mono">
+              <span class="rail-controversy__meta">
                 {c.polarity && <>{c.polarity.replace('-', ' ')} · </>}
                 {(c.positions?.length || 0)} positions
               </span>
@@ -416,7 +416,8 @@ const stats = {
     margin-right: 4px;
   }
   .intro__stats {
-    font-size: 0.75rem;
+    font-size: var(--text-meta);
+    line-height: 1.45;
     color: var(--color-ink-faint);
     letter-spacing: 0.04em;
     margin: 0;
@@ -526,9 +527,9 @@ const stats = {
   .wiki-thread-list__meta {
     display: inline;
     margin-left: 8px;
+    font-family: var(--font-sans);
     font-size: var(--text-meta);
     color: var(--color-ink-faint);
-    letter-spacing: 0.02em;
     line-height: 1.45;
   }
 
@@ -566,9 +567,9 @@ const stats = {
   :global(.rail-controversy__meta) {
     display: block;
     margin-top: 2px;
+    font-family: var(--font-sans);
     font-size: var(--text-meta);
     color: var(--color-ink-faint);
-    letter-spacing: 0.02em;
     text-transform: lowercase;
     line-height: 1.45;
   }
@@ -596,9 +597,9 @@ const stats = {
     margin: 0 0 6px;
   }
   :global(.rail-thread__meta) {
+    font-family: var(--font-sans);
     font-size: var(--text-meta);
     color: var(--color-ink-faint);
-    letter-spacing: 0.02em;
     margin: 0;
     line-height: 1.45;
   }

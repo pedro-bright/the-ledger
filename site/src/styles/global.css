@@ -243,13 +243,6 @@
     letter-spacing: 0.02em;
     line-height: 1.45;
   }
-  .wiki-list-dated .category-tag {
-    font-family: var(--font-mono);
-    font-size: var(--text-meta);
-    color: var(--color-ink-faint);
-    text-transform: lowercase;
-    line-height: 1.45;
-  }
 
   /* -------- Page layout: 3-column grid with sticky rails. -------- */
   .wiki-layout {
@@ -288,14 +281,12 @@
     font-family: var(--font-sans);
     font-size: var(--text-meta);
     color: var(--color-ink-mid);
-    line-height: 1.5;
+    line-height: 1.45;
   }
   /* Left rail = navigation / index. Subtly lighter weight so the article
      body and right-rail metadata read as primary. */
   .wiki-rail[data-side="left"] {
-    font-size: var(--text-meta);
     color: var(--color-ink-muted);
-    line-height: 1.45;
   }
   .wiki-rail[data-side="left"] .rail-list a {
     color: var(--color-wiki-link);
@@ -308,10 +299,6 @@
       grid-template-columns: 200px minmax(0, 1fr) 240px;
       gap: 32px;
     }
-    .wiki-rail {
-      font-size: var(--text-meta);
-    line-height: 1.45;
-  }
     .wiki-layout[data-left-rail="false"][data-right-rail="true"] {
       grid-template-columns: minmax(0, 1fr) 240px;
     }
@@ -473,9 +460,9 @@
   .explorer-row__title:hover { text-decoration: underline; }
   .explorer-row__title:visited { color: var(--color-wiki-link-visited); }
   .explorer-row__category {
+    font-family: var(--font-sans);
     font-size: var(--text-meta);
     text-transform: lowercase;
-    letter-spacing: 0.02em;
     white-space: nowrap;
     line-height: 1.45;
   }
@@ -495,6 +482,10 @@
     }
     .explorer-row__category {
       grid-row: 2;
+    }
+    .explorer-row > .flag-chip {
+      grid-column: 2 / -1;
+      justify-self: start;
     }
   }
 

@@ -640,7 +640,7 @@ function ResultRow({ event }: { event: EventData }) {
         {event.title}
       </a>
       <span
-        className="explorer-row__category font-mono"
+        className="explorer-row__category"
         style={{ color: hex }}
       >
         {displayCategory}

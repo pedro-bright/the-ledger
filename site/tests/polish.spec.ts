@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Locator } from '@playwright/test';
 import { SLUGS } from './_slugs';
 
 const article = `/events/${SLUGS.event}`;
@@ -33,6 +33,32 @@ test('desktop contents occupy the navigation rail', async ({ page }) => {
   await expect(page.locator('.wiki-rail[data-side="left"]').getByRole('navigation', { name: 'On this page' })).toBeVisible();
 });
 
+test('contents appear only on long articles and list only their h2 sections', async ({ page }) => {
+  await page.goto(`/threads/${SLUGS.thread}`);
+  const contents = page.locator('#article-contents');
+  const hrefs = await contents.locator('a').evaluateAll((els) => els.map((el) => el.getAttribute('href')!));
+  expect(hrefs.length).toBeGreaterThanOrEqual(3);
+  for (const href of hrefs) expect(await page.locator(href).evaluate((el) => el.tagName)).toBe('H2');
+  await expect(page.getByRole('heading', { level: 3, name: 'Continued-scaling reading' })).toHaveId('section-continued-scaling-reading');
+  await expect(contents.getByText('Continued-scaling reading')).toHaveCount(0);
+
+  await page.goto('/events/openai-misalignment-reporting-framework-six-reports');
+  await expect(contents).toHaveCount(1);
+  for (const shortOrIndexPage of ['/events/reflection-beam-open-weights', `/controversies/${SLUGS.controversy}`, `/actors/${SLUGS.actor}`]) {
+    await page.goto(shortOrIndexPage);
+    await expect(page.locator('#article-contents')).toHaveCount(0);
+  }
+});
+
+test('repeated section headings get distinct generated anchors', async ({ page }) => {
+  await page.goto(`/controversies/${SLUGS.controversy}`);
+  const ids = await page.getByRole('heading', { level: 3, name: 'Sources', exact: true }).evaluateAll((els) => els.map((el) => el.id));
+  expect(ids.length).toBeGreaterThan(1);
+  expect(ids[0]).toBe('section-sources');
+  expect(ids[1]).toBe('section-sources-2');
+  expect(new Set(ids).size).toBe(ids.length);
+});
+
 test('filter removal is a usable target and retains keyboard focus', async ({ page }) => {
   await page.goto('/explore?category=models&sig=major');
   const remove = page.getByRole('button', { name: 'Remove Models filter', exact: true });
@@ -61,6 +87,59 @@ test('metadata labels and values use consistent readable sizes', async ({ page }
   await page.goto('/actors');
   await expect(page.locator('.actors-row__alias').first()).toHaveCSS('font-size', '13px');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
+test('metadata values, dates, and citations render their type roles', async ({ page }) => {
+  const value = async (locator: Locator) => {
+    await expect(locator).toHaveCSS('font-family', /^Inter/);
+    await expect(locator).toHaveCSS('font-size', '13px');
+    await expect(locator).toHaveCSS('line-height', '18.85px');
+    await expect(locator).toHaveCSS('font-weight', '400');
+  };
+  const code = async (locator: Locator) => {
+    await expect(locator).toHaveCSS('font-family', /^"JetBrains Mono"/);
+    await expect(locator).toHaveCSS('font-size', '13px');
+    await expect(locator).toHaveCSS('line-height', '18.85px');
+    await expect(locator).toHaveCSS('font-weight', '400');
+  };
+  const citation = async (locator: Locator) => {
+    await expect(locator).toHaveCSS('font-family', /^"Source Serif 4/);
+    await expect(locator).toHaveCSS('font-size', '14px');
+    await expect(locator).toHaveCSS('line-height', '21.7px');
+  };
+
+  await page.goto(article);
+  await value(page.locator('.wiki-infobox .category-tag'));
+  await citation(page.locator('.wiki-article__references ol'));
+  await code(page.locator('.wiki-footer__rev'));
+
+  await page.goto('/');
+  await value(page.locator('.featured-meta .category-tag'));
+  await value(page.locator('.wiki-thread-list__meta').first());
+  await value(page.locator('.rail-controversy__meta').first());
+  await code(page.locator('.intro__stats time'));
+
+  await page.goto('/explore');
+  await value(page.locator('.explorer-row__category').first());
+
+  await page.goto('/controversies');
+  await value(page.locator('.cx-card__meta a').first());
+
+  await page.goto(`/controversies/${SLUGS.controversy}`);
+  await value(page.locator('.position__proponent').first());
+  await citation(page.locator('.position__sources li').first());
+
+  await page.goto(`/threads/${SLUGS.thread}`);
+  await value(page.locator('.snapshot dd').first());
+  await value(page.locator('.rail-block__body p').first());
+
+  await page.goto('/threads');
+  await value(page.locator('.threads-table__curator').first());
+  await code(page.locator('.threads-table__count').first());
+
+  await page.goto('/actors/liang-wenfeng');
+  await value(page.locator('.wiki-infobox dt:has-text("Aliases") + dd'));
+  await expect(page.locator('.wiki-infobox dt:has-text("Aliases") + dd')).toContainText('梁文锋');
 });
 
 test('phone titles use reading-sized optical detail and desktop keeps its display role', async ({ browser }) => {

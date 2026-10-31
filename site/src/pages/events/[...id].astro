@@ -148,6 +148,7 @@ const lastReviewed = reviewed && finalAuthor !== 'pedro-bright' && (!created || 
     title={event.title}
     subtitle={subtitle}
     breadcrumb={breadcrumb}
+    articleText={event.htmlContent}
     lastReviewed={lastReviewed}
     sourcePath={sourcePath}
   >
@@ -167,7 +168,7 @@ const lastReviewed = reviewed && finalAuthor !== 'pedro-bright' && (!created || 
           {event.significance && <><dt>Significance</dt><dd><SignificanceFlag level={event.significance} /></dd></>}
           {event.confidence && event.confidence !== 'high' && <><dt>Confidence</dt><dd><ConfidenceBadge level={event.confidence} /></dd></>}
           {event.contestation?.status && <><dt>Contestation</dt><dd><ContestationBadge status={event.contestation.status} /></dd></>}
-          {event.state && <><dt>State</dt><dd class="mono">{event.state}</dd></>}
+          {event.state && <><dt>State</dt><dd>{event.state}</dd></>}
           {event.actors && event.actors.length > 0 && (
             <>
               <dt>Actors</dt>
@@ -304,7 +305,7 @@ const lastReviewed = reviewed && finalAuthor !== 'pedro-bright' && (!created || 
 <style>
   .wiki-section { margin-top: 2rem; }
   .rail-list--stacked > li { display: block; }
-  .rail-stack { padding: 5px 0; line-height: 1.4; }
+  .rail-stack { padding: 5px 0; line-height: 1.45; }
   .rail-stack__date,
   .rail-stack__meta { display: block; font-size: var(--text-meta); color: var(--color-ink-faint); margin-top: 1px; line-height: 1.45; }
   .rail-stack__type { text-transform: capitalize; }

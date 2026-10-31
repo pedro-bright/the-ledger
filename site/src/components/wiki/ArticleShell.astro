@@ -10,6 +10,8 @@ interface Props {
   title: string;
   subtitle?: string;
   breadcrumb?: Array<{ label: string; href?: string }>;
+  /** Written article text, as text or rendered HTML. Pages without it have no contents list. */
+  articleText?: string;
   /** Last modified ISO date — shown in the footer line. */
   lastModified?: string;
   lastReviewed?: string;
@@ -17,18 +19,19 @@ interface Props {
   sourcePath?: string;
 }
 
-const { title, subtitle, breadcrumb = [], lastModified, lastReviewed, sourcePath } = Astro.props;
+const { title, subtitle, breadcrumb = [], articleText = '', lastModified, lastReviewed, sourcePath } = Astro.props;
 const hasMarkers = Astro.slots.has('markers');
 const hasInfobox = Astro.slots.has('infobox');
 const hasLead = Astro.slots.has('lead');
 const hasReferences = Astro.slots.has('references');
 const hasSeeAlso = Astro.slots.has('seeAlso');
 const hasFooter = Astro.slots.has('footer');
-const usedAnchors = new Set(['refs-head', 'see-also-head', 'article-contents']);
+const usedAnchors = new Set<string>();
 const lead = anchorSections(hasLead ? await Astro.slots.render('lead') : '', usedAnchors);
 const body = anchorSections(await Astro.slots.render('default'), usedAnchors);
-const sections = [...lead.sections, ...body.sections];
-const isLong = sections.length >= 4 || `${lead.content}${body.content}`.replace(/<[^>]*>/g, '').length >= 4000;
+const sections = [...lead.sections, ...body.sections].filter(({ level }) => level === 2);
+const articleWords = articleText.replace(/<[^>]*>/g, ' ').trim().split(/\s+/).length;
+const isLong = sections.length >= 3 && articleWords >= 600;
 if (hasReferences) sections.push({ id: 'refs-head', title: 'References', level: 2 });
 if (hasSeeAlso) sections.push({ id: 'see-also-head', title: 'See also', level: 2 });
 ---
@@ -55,13 +58,13 @@ if (hasSeeAlso) sections.push({ id: 'see-also-head', title: 'See also', level: 2
     {hasReferences && <a class="wiki-article__references-link" href="#refs-head">References</a>}
   </header>
 
-  {isLong && sections.length > 1 && (
+  {isLong && (
     <nav id="article-contents" class="article-contents rail-block" aria-label="On this page">
       <details>
         <summary>Contents</summary>
         <ol>
-          {sections.map(({ id, title, level }) => (
-            <li class:list={{ 'article-contents__subsection': level === 3 }}><a href={`#${id}`}>{title}</a></li>
+          {sections.map(({ id, title }) => (
+            <li><a href={`#${id}`}>{title}</a></li>
           ))}
         </ol>
       </details>
@@ -169,7 +172,6 @@ if (hasSeeAlso) sections.push({ id: 'see-also-head', title: 'See also', level: 2
   .article-contents ol { list-style: none; padding: 0; margin: 4px 0 0; }
   .article-contents li { margin: 0; }
   .article-contents a { display: block; padding: 4px 0; }
-  .article-contents__subsection { padding-inline-start: 12px; }
   @media (min-width: 781px) {
     .article-contents ol { max-height: 50vh; overflow-y: auto; }
     .article-contents summary {
