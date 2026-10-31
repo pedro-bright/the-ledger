@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Security policy helpers used by scripts/vercel-output.mjs after Astro builds.
  * The packager carries these headers into Build Output API routes and publishes
