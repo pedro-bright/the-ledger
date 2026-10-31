@@ -1,10 +1,9 @@
-import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { test, expect } from '@playwright/test';
 import { getTransformedRoutes } from '@vercel/routing-utils';
-import yaml from 'js-yaml';
+import { writeBuildOutput } from '../../scripts/vercel-output.mjs';
 import {
   CSP_HEADER,
   buildConfig,
@@ -17,53 +16,27 @@ import {
 import { SLUGS } from './_slugs';
 
 /**
- * Checks the headers the deploy job in deploy.yml generates, by running the job's own
- * steps on the built site. `astro preview` doesn't read the resulting vercel.json, so the
- * browser tests add the policy to each document response themselves.
- *
- * Desktop-chromium only: the policy doesn't vary by viewport.
+ * Packages the actual static build with the Git deployment's Build Output API
+ * mechanism. Astro preview does not apply Vercel routes, so browser tests apply
+ * the emitted document policy to exercise CSP in Chromium.
+ * Desktop only because the policy does not vary by viewport.
  */
-
 const DIST = path.join(process.cwd(), 'dist');
-const REPO = path.join(process.cwd(), '..');
-
 type HeaderRule = { source: string; headers: { key: string; value: string }[] };
 type HeaderRoute = { src: string; headers: Record<string, string> };
+let outputRoot: string | undefined;
 
-type DeployStep = { name: string; run: string; 'working-directory'?: string };
-
-let runnerTemp: string | undefined;
-
-/**
- * Runs the deploy job's steps between downloading the build and deploying it, on a copy of
- * dist/, once per worker. Returns the deploy root.
- */
-function deployRoot(): string {
-  if (!runnerTemp) {
-    runnerTemp = fs.mkdtempSync(path.join(os.tmpdir(), 'ledger-deploy-'));
-    // upload-artifact leaves hidden files out of the artifact by default.
-    fs.cpSync(DIST, path.join(runnerTemp, 'deploy', 'public'), {
-      recursive: true,
-      filter: (source) => !path.basename(source).startsWith('.'),
-    });
-    const workflow = yaml.load(fs.readFileSync(path.join(REPO, '.github/workflows/deploy.yml'), 'utf8')) as {
-      jobs: { deploy: { steps: DeployStep[] } };
-    };
-    const { steps } = workflow.jobs.deploy;
-    const names = steps.map(({ name }) => name);
-    for (const step of steps.slice(names.indexOf('Download built site') + 1, names.indexOf('Deploy to Vercel'))) {
-      execFileSync('bash', ['-e', '-c', step.run], {
-        cwd: step['working-directory']?.replace('${{ runner.temp }}', runnerTemp) ?? REPO,
-        env: { ...process.env, RUNNER_TEMP: runnerTemp },
-        stdio: 'pipe',
-      });
-    }
+function buildOutput(): string {
+  if (!outputRoot) {
+    outputRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'ledger-build-output-'));
+    writeBuildOutput(DIST, outputRoot);
   }
-  return path.join(runnerTemp, 'deploy');
+  return outputRoot;
 }
 
-function headerRules(): HeaderRule[] {
-  return JSON.parse(fs.readFileSync(path.join(deployRoot(), 'vercel.json'), 'utf8')).headers;
+function outputRoutes(): HeaderRoute[] {
+  return JSON.parse(fs.readFileSync(path.join(buildOutput(), 'config.json'), 'utf8')).routes
+    .filter((route: HeaderRoute) => route.headers);
 }
 
 // Compiled by Vercel's routing library, so URLs match the way they do on a deployment.
@@ -74,8 +47,7 @@ function compileRoutes(rules: HeaderRule[]): HeaderRoute[] {
 }
 
 function policyFor(routes: HeaderRoute[], urlPath: string): string {
-  const matching = routes.filter(({ src, headers }) => new RegExp(src).test(urlPath) && CSP_HEADER in headers);
-  return matching[matching.length - 1].headers[CSP_HEADER];
+  return routes.find(({ src, headers }) => new RegExp(src).test(urlPath) && CSP_HEADER in headers)!.headers[CSP_HEADER];
 }
 
 test.describe('security headers', () => {
@@ -84,11 +56,11 @@ test.describe('security headers', () => {
   });
 
   test.afterAll(() => {
-    if (runnerTemp) fs.rmSync(runnerTemp, { recursive: true, force: true });
+    if (outputRoot) fs.rmSync(outputRoot, { recursive: true, force: true });
   });
 
   async function loadWithPolicy(page: import('@playwright/test').Page, urlPath: string) {
-    const policy = policyFor(compileRoutes(headerRules()), urlPath);
+    const policy = policyFor(outputRoutes(), urlPath);
     await page.route('**/*', async (route) => {
       if (!route.request().isNavigationRequest()) return route.continue();
       const response = await route.fetch();
@@ -140,17 +112,17 @@ test.describe('security headers', () => {
   });
 
   test('X-Frame-Options is enforced and each rule sends one policy with frame-ancestors', () => {
-    const rules = headerRules();
-    expect(rules[0].headers.find(({ key }) => key === 'X-Frame-Options')?.value).toBe('DENY');
-    for (const { source, headers } of rules) {
-      const policies = headers.filter(({ key }) => key.toLowerCase().startsWith('content-security-policy'));
-      expect(policies.map(({ key }) => key), source).toEqual([CSP_HEADER]);
-      expect(policies[0].value, source).toContain("frame-ancestors 'none'");
+    const routes = outputRoutes();
+    for (const { src, headers } of routes) {
+      expect(headers['X-Frame-Options'], src).toBe('DENY');
+      const policies = Object.keys(headers).filter((key) => key.toLowerCase().startsWith('content-security-policy'));
+      expect(policies, src).toEqual([CSP_HEADER]);
+      expect(headers[CSP_HEADER], src).toContain("frame-ancestors 'none'");
     }
   });
 
   test('every built page has a policy allowing its inline scripts', () => {
-    const routes = compileRoutes(headerRules());
+    const routes = outputRoutes();
     for (const file of findHtmlFiles(DIST)) {
       // 404.html answers for any path that has no page.
       const urlPath = file.endsWith('index.html')
@@ -223,10 +195,11 @@ test.describe('security headers', () => {
     ]);
   });
 
-  test("the deploy job's steps accept the build and write the CLI's config and security.txt", () => {
-    expect(headerRules()[0].source).toBe('/(.*)');
-    const published = fs.readFileSync(path.join(deployRoot(), 'public', '.well-known', 'security.txt'), 'utf8');
+  test('Git build output publishes security.txt and keeps Vercel config outside static files', () => {
+    const output = buildOutput();
+    expect(JSON.parse(fs.readFileSync(path.join(output, 'config.json'), 'utf8')).version).toBe(3);
+    const published = fs.readFileSync(path.join(output, 'static', '.well-known', 'security.txt'), 'utf8');
     expect(published.split('\n')[0]).toBe(securityTxt().split('\n')[0]);
-    expect(fs.existsSync(path.join(deployRoot(), 'public', 'vercel.json'))).toBe(false);
+    expect(fs.existsSync(path.join(output, 'static', 'vercel.json'))).toBe(false);
   });
 });
