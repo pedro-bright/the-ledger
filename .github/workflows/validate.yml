@@ -35,6 +35,9 @@ jobs:
       - name: Test source checker
         run: npm run test:links
 
+      - name: Test Vercel output and analytics isolation
+        run: npm run test:vercel
+
       - name: Build relationship graph
         run: npm run build-graph
 

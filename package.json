@@ -5,6 +5,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build:vercel": "node scripts/build-vercel.mjs",
+    "test:vercel": "node --test scripts/vercel-output.test.mjs",
     "validate": "tsx scripts/validate.ts",
     "check-links": "tsx scripts/check-links.ts",
     "build-graph": "tsx scripts/build-graph.ts",
