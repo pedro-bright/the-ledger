@@ -29,6 +29,13 @@ The Ledger uses **progressive formalization** — you don't need to master the f
 
 **The 72-hour rule:** Events can't be published until 72 hours after initial reporting. This prevents hot-take history. You can submit immediately; publication will wait.
 
+### Automated Daily Scan
+
+Daily scan entries are drafted and published automatically under the editorial rules: factual claims require sources, publication waits at least 72 hours after initial reporting, significance is limited to `notable`, and entries must pass validation.
+The curator reviews sources and claims after publication and records corrections publicly.
+Anyone can [challenge a published claim](#challenging-existing-content); corrections and challenge resolutions remain part of the public record.
+Contributor submissions follow the review process below.
+
 ---
 
 ### Tier 1: Event Normalization (Editors)
@@ -47,7 +54,9 @@ The Ledger uses **progressive formalization** — you don't need to master the f
 4. Add kernel frontmatter: `id`, `title`, `date`, `category`, `sources`
 5. Submit a PR
 
-**AI assistance:** If you use AI tools to draft content, mark the event with `draft_assistance: ai-assisted` in the frontmatter. This is not a judgment — it's a disclosure. See [editorial/ai-assistance.md](editorial/ai-assistance.md).
+**AI assistance:** If you use AI tools to draft content, set `draft_assistance: ai-assisted` under `revision` in the frontmatter (`revision.draft_assistance`).
+This is a disclosure.
+See [editorial/ai-assistance.md](editorial/ai-assistance.md).
 
 **Quality checklist:**
 - [ ] Summary is self-contained (could be read alone)
@@ -119,6 +128,7 @@ fix/typo-in-claude-3-event
 
 ### Review Process
 
+- **Automated daily scan PRs:** Publication is automatic under the editorial rules above; curator review and corrections follow publication.
 - **Tier 1 PRs:** 1 reviewer required
 - **Tier 2 PRs:** 2 reviewers required
 - **Tier 3 PRs (editorial changes):** Full board review + 30-day RFC

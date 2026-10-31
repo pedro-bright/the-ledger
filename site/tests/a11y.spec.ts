@@ -24,6 +24,7 @@ const ROUTES: Array<{ path: string; label: string }> = [
   { path: '/explore', label: 'explore' },
   { path: '/graph', label: 'graph' },
   { path: '/about', label: 'about' },
+  { path: '/privacy', label: 'privacy' },
 ];
 
 test.describe('a11y (axe)', () => {

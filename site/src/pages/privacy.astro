@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/wiki/PageHeader.astro';
+---
+
+<Base layout="full" title="Privacy" description="How The Ledger uses anonymous product analytics.">
+  <PageHeader eyebrow="§ About the Ledger" title="Privacy" subtitle="What we collect when you read the archive." />
+
+  <article class="prose privacy-prose">
+    <h2>Anonymous product analytics</h2>
+    <p>
+      We use <a href="https://posthog.com/privacy" target="_blank" rel="noopener noreferrer">PostHog</a>
+      to understand how readers use the archive.
+      Analytics includes page views, page paths and referring sites, browser and device information,
+      and actions such as opening sources, choosing filters, and search result counts.
+      We do not create identified reader profiles.
+    </p>
+    <p>
+      We do not send search text or input values, record sessions, or collect heatmaps.
+      Query strings and fragments are removed from URLs in analytics events.
+      Analytics uses memory only, with no analytics cookies, local storage, or session storage.
+      The anonymous identifier resets when a new page loads.
+    </p>
+    <h2>Service providers</h2>
+    <p>
+      PostHog processes the analytics events.
+      Like other network requests, these requests expose your IP address to the provider.
+      The site is hosted by Vercel; hosting requests are separate from product analytics.
+      For a privacy question or correction, <a href="https://github.com/pedro-bright/the-ledger/issues" target="_blank" rel="noopener noreferrer">open an issue</a>.
+    </p>
+  </article>
+</Base>
+
+<style>
+  .privacy-prose {
+    margin: 0 auto;
+  }
+</style>

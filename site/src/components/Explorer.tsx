@@ -156,11 +156,11 @@ export default function Explorer({ events, categories }: Props) {
     return () => clearTimeout(t);
   }, [hasHydrated, search, activeCategories, activeSignificance, selectedYear, sortOption]);
 
-  // Track search queries with 500ms debounce — fires after the user stops typing.
+  // Count search results after typing stops; search text stays in the browser.
   useEffect(() => {
     if (!hasHydrated || !search) return;
     const t = setTimeout(() => {
-      (window as any).posthog?.capture('explorer_searched', { query: search, result_count: filtered.length });
+      (window as any).posthog?.capture('explorer_searched', { result_count: filtered.length });
     }, 500);
     return () => clearTimeout(t);
   }, [hasHydrated, search]); // eslint-disable-line react-hooks/exhaustive-deps

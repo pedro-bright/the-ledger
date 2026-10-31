@@ -57,7 +57,10 @@ Nine non-negotiable principles govern The Ledger:
 2. **Contestability by Default** — Every claim has a challenge window.
 3. **Claims ≠ Facts** — Claims are attributed, dated, and contestable.
 4. **Time Awareness** — Wrongness is a feature. We track belief decay.
-5. **AI Transparency** — AI tools disclosed. Human editors review all content.
+5. **AI Transparency** - AI tools disclosed.
+   Daily scan entries are drafted and published automatically under the editorial rules: sourced claims, the 72-hour rule, `notable` significance only, and validation.
+   The curator reviews sources and claims after publication and records corrections publicly.
+   Anyone can [challenge a claim](CONTRIBUTING.md#challenging-existing-content).
 6. **Source Primacy** — Primary sources over commentary. Archived URLs required.
 7. **Pluralism** — Minority views documented, not deleted.
 8. **Bias Disclosure** — Affiliations with relevant actors must be disclosed.
