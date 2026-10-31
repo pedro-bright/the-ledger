@@ -184,7 +184,7 @@ export default function Graph({ data }: Props) {
                 style={!isHidden ? { borderColor: NODE_COLORS[type] } : undefined}
               >
                 <span>{TYPE_LABELS[type]}</span>
-                <span className="font-mono font-normal text-[length:var(--text-meta)] leading-[1.45] tabular-nums text-ink-faint">
+                <span className="font-mono font-normal tabular-nums text-ink-faint">
                   ({counts[type]})
                 </span>
               </button>

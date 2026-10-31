@@ -400,6 +400,18 @@ test('larger text pushes the layout down instead of overlapping', async ({ page 
   expect((await bounds('#graph-help a')).bottom).toBeLessThanOrEqual((await bounds('#graph-relationships')).top);
 });
 
+test('type toggles show their label and count at one control size', async ({ page }) => {
+  await page.goto('/graph');
+  const parts = page.getByRole('button', { name: 'Hide events', exact: true }).locator('span');
+  await expect(parts).toHaveCount(2);
+  const type = await parts.evaluateAll((spans) => spans.map((span) => {
+    const { fontSize, lineHeight } = getComputedStyle(span);
+    return { fontSize, lineHeight };
+  }));
+  expect(type[0].fontSize).toBe('12px');
+  expect(type[1]).toEqual(type[0]);
+});
+
 test('the help link underlines only its words', async ({ page }) => {
   await page.goto('/graph');
   await expect(page.locator('#graph-help').getByRole('link')).toBeVisible();
