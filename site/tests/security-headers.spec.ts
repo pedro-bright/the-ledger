@@ -135,6 +135,12 @@ test.describe('security headers', () => {
     }
   });
 
+  test('the built site uses far fewer routes than it has pages', () => {
+    const pageCount = findHtmlFiles(DIST).length;
+    expect(pageCount).toBeGreaterThan(100);
+    expect(outputRoutes().length).toBeLessThan(25);
+  });
+
   test('page rules match the URLs a page answers on', () => {
     const matches = (source: string, url: string) => {
       const [route] = compileRoutes([{ source, headers: [{ key: CSP_HEADER, value: 'policy' }] }]);

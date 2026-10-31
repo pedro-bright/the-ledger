@@ -4,13 +4,9 @@ import { buildConfig, inlineScripts, pageSource, scriptHash, securityTxt } from 
 
 export function buildEnvironment(env) {
   const result = { ...env };
-  const analytics = ['PUBLIC_POSTHOG_PROJECT_TOKEN', 'PUBLIC_POSTHOG_HOST'];
-  if (env.VERCEL_ENV === 'production') {
-    for (const key of analytics) {
-      if (!result[key]?.trim()) throw new Error(`Production build requires ${key} in Vercel's Production environment.`);
-    }
-  } else {
-    for (const key of analytics) delete result[key];
+  for (const key of ['PUBLIC_POSTHOG_PROJECT_TOKEN', 'PUBLIC_POSTHOG_HOST']) {
+    if (env.VERCEL_ENV !== 'production') delete result[key];
+    else if (!env[key]?.trim()) console.warn(`Warning: ${key} is not set in Vercel's Production environment, so this build publishes without working analytics.`);
   }
   return result;
 }
@@ -24,12 +20,14 @@ function filesIn(dir, base = dir) {
 
 const escapePattern = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
+const indexPattern = (file) => (file === 'index.html'
+  ? '^/(?:index\\.html)?$'
+  : `^/${escapePattern(file.slice(0, -'/index.html'.length))}(?:/|/index\\.html)?$`);
+
 export function writeBuildOutput(dist, output) {
   const files = filesIn(dist);
-  for (const file of files) {
-    if (/(^|\/)vercel\.(?:json|[cm]?[jt]s)$/.test(file)) {
-      throw new Error(`Refusing to publish Vercel config in static output: ${file}`);
-    }
+  if (files.includes('vercel.json')) {
+    throw new Error('Refusing to publish Vercel config in static output: vercel.json');
   }
   // Reuse the policy generator on the actual HTML after Astro has baked in its
   // environment. No intermediate Vercel config is written into the static tree.
@@ -40,24 +38,30 @@ export function writeBuildOutput(dist, output) {
   const headerValues = (rule) => Object.fromEntries(rule.headers.map(({ key, value }) => [key, value]));
   const globalHeaders = headerValues(siteRule);
   const pageHeaders = new Map(pageRules.map((rule) => [rule.source, headerValues(rule)]));
-  const routes = files.filter((file) => file.endsWith('.html')).sort().map((file) => {
-    const url = file === 'index.html' ? '/' : file.endsWith('/index.html') ? `/${file.slice(0, -11)}` : `/${file}`;
-    const src = file === 'index.html' ? '^/(?:index\\.html)?$'
-      : file.endsWith('/index.html') ? `^${escapePattern(url)}(?:/|/index\\.html)?$` : `^${escapePattern(url)}$`;
-    // Each page is a terminal route with all matching headers merged. This avoids
-    // depending on precedence between overlapping global and page CSP routes.
-    return { src, dest: `/${file}`, headers: { ...globalHeaders, ...pageHeaders.get(pageSource(file)) }, ...(file === '404.html' ? { status: 404 } : {}) };
-  });
-  routes.push(
+  // Pages with their own policy are terminal routes with all matching headers merged,
+  // which avoids depending on precedence between overlapping global and page CSP routes.
+  // Every other page shares the directory-index route, so publishing adds no routes.
+  const terminalPages = [...pages.keys()]
+    .filter((file) => file === 'index.html' || (file.endsWith('/index.html') && pageHeaders.has(pageSource(file))))
+    .sort();
+  const routes = [
+    ...terminalPages.map((file) => ({
+      src: indexPattern(file),
+      dest: `/${file}`,
+      headers: { ...globalHeaders, ...pageHeaders.get(pageSource(file)) },
+      caseSensitive: true,
+    })),
+    { src: '^/404\\.html$', dest: '/404.html', headers: globalHeaders, status: 404 },
     { src: '/.*', headers: globalHeaders, continue: true },
     { handle: 'filesystem' },
+    { src: '^/(.*[^/])/?$', dest: '/$1/index.html', check: true },
     { src: '/.*', dest: '/404.html', status: 404 },
-  );
+  ];
   rmSync(output, { recursive: true, force: true });
   mkdirSync(path.join(output, 'static'), { recursive: true });
   cpSync(dist, path.join(output, 'static'), { recursive: true });
   mkdirSync(path.join(output, 'static', '.well-known'), { recursive: true });
   writeFileSync(path.join(output, 'static', '.well-known', 'security.txt'), securityTxt());
   writeFileSync(path.join(output, 'config.json'), `${JSON.stringify({ version: 3, routes }, null, 2)}\n`);
-  console.log(`Vercel Build Output: ${routes.length - 3} pages with generated security headers.`);
+  console.log(`Vercel Build Output: ${pages.size} pages with generated security headers, ${routes.length} routes.`);
 }

@@ -149,7 +149,7 @@ Anti-references — reject changes that make the site resemble any of these:
   Every PR and every push to `main` also runs `e2e.yml`: validate, graph and feed build, site build, `npm run test:parity`, `npm run test:no-dark-leaks`, and Playwright in `site/`.
   Vercel's Git integration builds branch previews and deploys `main` to production using the root `vercel.json`.
   `npm run build:vercel` generates the graph and feeds, builds Astro, and emits static files with generated security headers through Build Output API v3 in `.vercel/output/`.
-  Production builds require `PUBLIC_POSTHOG_PROJECT_TOKEN` and `PUBLIC_POSTHOG_HOST` in Vercel; non-production builds remove both variables before building Astro.
+  Production builds read `PUBLIC_POSTHOG_PROJECT_TOKEN` and `PUBLIC_POSTHOG_HOST` from Vercel and print a build-log warning if either is missing; non-production builds remove both variables before building Astro.
 - **Stale sources:** Weekly cron checks for broken source URLs.
 - **Branch protection:** PRs required for `main`, reviews enforced.
 

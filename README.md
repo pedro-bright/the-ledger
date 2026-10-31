@@ -89,7 +89,7 @@ The build emits static files, generated security headers with per-page script ha
 Vercel configuration stays outside the published static files.
 
 Set `PUBLIC_POSTHOG_PROJECT_TOKEN` and `PUBLIC_POSTHOG_HOST` in Vercel's Production environment using the existing production analytics settings.
-Production builds fail if either is missing.
+If either is missing, the production build still publishes, without working analytics, and prints a warning in the build log.
 All other builds remove both variables before running Astro, so previews cannot send analytics to the production project.
 GitHub Actions runs content validation and browser checks; Vercel handles deployment.
 
