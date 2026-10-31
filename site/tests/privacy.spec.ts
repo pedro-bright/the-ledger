@@ -136,18 +136,15 @@ test('the real analytics SDK keeps search terms in the browser and honors the pr
     $session_entry_url: `${origin}/explore`,
     $session_entry_referrer: 'https://www.bing.com/search',
     $session_entry_search_engine: 'bing',
+    $session_entry_utm_source: 'newsletter',
+    $session_entry_gclid: 'click-id',
     utm_source: 'newsletter',
     gclid: 'click-id',
     $process_person_profile: false,
   });
-  expect(Object.keys(landingView).filter(key => key.startsWith('$session_entry_')).sort()).toEqual([
-    '$session_entry_host',
-    '$session_entry_pathname',
-    '$session_entry_referrer',
-    '$session_entry_referring_domain',
-    '$session_entry_search_engine',
-    '$session_entry_url',
-  ]);
+  for (const key of ['ph_keyword', 'utm_term', '$session_entry_ph_keyword', '$session_entry_utm_term']) {
+    expect(landingView).not.toHaveProperty(key);
+  }
   expect(named('$pageview').at(-1)?.properties.$referrer).toBe(`${origin}/explore`);
 
   const webVitals = Object.keys(named('$web_vitals')[0].properties);
@@ -175,6 +172,6 @@ test('footer links to the privacy note', async ({ page }) => {
   await page.getByRole('navigation', { name: 'Secondary' }).getByRole('link', { name: 'Privacy' }).click();
   await expect(page).toHaveURL(/\/privacy\/?$/);
   await expect(page.getByRole('heading', { level: 1, name: 'Privacy' })).toBeVisible();
-  await expect(page.locator('main')).toContainText('PostHog receives your IP address with each request');
+  await expect(page.locator('main')).toContainText('PostHog receives your IP address with each request and is set to discard it instead of storing it with the event.');
   await expect(page.locator('main')).toContainText('cookies');
 });

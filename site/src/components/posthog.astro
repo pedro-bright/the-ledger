@@ -13,7 +13,7 @@
     disable_surveys: true,
     before_send: function (event) {
       var properties = event.properties;
-      var keysCarryingSearchTerms = /^(ph_keyword|utm_term|\$web_vitals_.+_event|\$session_entry_(?!(url|host|pathname|referrer|referring_domain|search_engine)$).+)$/;
+      var keysCarryingSearchTerms = /^(ph_keyword|utm_term|\$session_entry_ph_keyword|\$session_entry_utm_term|\$web_vitals_.+_event)$/;
       ['$current_url', '$referrer', '$session_entry_url', '$session_entry_referrer'].forEach(function (key) {
         if (typeof properties[key] === 'string') properties[key] = properties[key].replace(/[?#].*$/, '');
       });
