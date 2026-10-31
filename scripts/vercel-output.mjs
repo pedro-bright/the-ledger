@@ -1,6 +1,6 @@
 import { cpSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { buildConfig, inlineScripts, pageSource, scriptHash, securityTxt } from '../site/scripts/generate-security-headers.cjs';
+import { buildHeaders, inlineScripts, scriptHash, securityTxt } from '../site/scripts/generate-security-headers.cjs';
 
 export function buildEnvironment(env) {
   const result = { ...env };
@@ -11,7 +11,7 @@ export function buildEnvironment(env) {
   return result;
 }
 
-function filesIn(dir, base = dir) {
+export function filesIn(dir, base = dir) {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const file = path.join(dir, entry.name);
     return entry.isDirectory() ? filesIn(file, base) : [path.relative(base, file).split(path.sep).join('/')];
@@ -34,25 +34,20 @@ export function writeBuildOutput(dist, output) {
   const pages = new Map(files.filter((file) => file.endsWith('.html')).map((file) => [
     file, new Set(inlineScripts(readFileSync(path.join(dist, file), 'utf8')).map(scriptHash)),
   ]));
-  const { headers: [siteRule, ...pageRules] } = buildConfig(pages);
-  const headerValues = (rule) => Object.fromEntries(rule.headers.map(({ key, value }) => [key, value]));
-  const globalHeaders = headerValues(siteRule);
-  const pageHeaders = new Map(pageRules.map((rule) => [rule.source, headerValues(rule)]));
+  const { siteHeaders, pageHeaders } = buildHeaders(pages);
   // Pages with their own policy are terminal routes with all matching headers merged,
   // which avoids depending on precedence between overlapping global and page CSP routes.
   // Every other page shares the directory-index route, so publishing adds no routes.
-  const terminalPages = [...pages.keys()]
-    .filter((file) => file === 'index.html' || (file.endsWith('/index.html') && pageHeaders.has(pageSource(file))))
-    .sort();
+  const terminalPages = [...pages.keys()].filter((file) => file === 'index.html' || pageHeaders.has(file)).sort();
   const routes = [
     ...terminalPages.map((file) => ({
       src: indexPattern(file),
       dest: `/${file}`,
-      headers: { ...globalHeaders, ...pageHeaders.get(pageSource(file)) },
+      headers: { ...siteHeaders, ...pageHeaders.get(file) },
       caseSensitive: true,
     })),
-    { src: '^/404\\.html$', dest: '/404.html', headers: globalHeaders, status: 404 },
-    { src: '/.*', headers: globalHeaders, continue: true },
+    { src: '^/404\\.html$', dest: '/404.html', headers: siteHeaders, status: 404 },
+    { src: '/.*', headers: siteHeaders, continue: true },
     { handle: 'filesystem' },
     { src: '^/(.*[^/])/?$', dest: '/$1/index.html', check: true },
     { src: '/.*', dest: '/404.html', status: 404 },

@@ -12,7 +12,6 @@
  */
 
 const { createHash } = require('node:crypto');
-const fs = require('node:fs');
 const path = require('node:path');
 
 const CSP_HEADER = 'Content-Security-Policy-Report-Only';
@@ -48,34 +47,18 @@ function buildPolicy(hashes) {
   ].join('; ');
 }
 
-/** Returns the Vercel `source` matching a page's URLs, for a dist-relative index.html path. */
-function pageSource(file) {
-  const dir = path.posix.dirname(file);
-  if (dir === '.') return '/{index\\.html}?';
-  const escaped = dir.replace(/[.*+?^${}()|[\]\\:]/g, '\\$&');
-  return `/${escaped}(/|/index\\.html)?`;
-}
-
-function findHtmlFiles(dir, base = dir) {
-  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
-    const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) return findHtmlFiles(full, base);
-    return entry.name.endsWith('.html') ? [path.relative(base, full).split(path.sep).join('/')] : [];
-  });
-}
-
 /**
- * Builds the vercel.json config from each page's inline script hashes.
+ * Builds the response headers from each page's inline script hashes.
  *
  * Hashes used on several pages go in one site-wide policy. A hash used on one page goes
  * in a policy for that page only, so scripts that embed per-page data don't add their
- * hashes to every response. Vercel applies matching rules in order and the later value
- * of a header replaces the earlier one.
+ * hashes to every response. Returns the site-wide headers, plus the headers to override
+ * for each dist-relative file that has its own policy.
  *
  * Files not named index.html can't be matched by URL (404.html answers for any missing
  * path), so their hashes are always site-wide.
  */
-function buildConfig(pages) {
+function buildHeaders(pages) {
   const useCount = new Map();
   for (const hashes of pages.values()) {
     for (const hash of hashes) useCount.set(hash, (useCount.get(hash) ?? 0) + 1);
@@ -88,27 +71,22 @@ function buildConfig(pages) {
     }
   }
 
-  const pageRules = [...pages]
-    .filter(([, hashes]) => [...hashes].some((hash) => !shared.has(hash)))
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([file, hashes]) => ({
-      source: pageSource(file),
-      headers: [{ key: CSP_HEADER, value: buildPolicy(new Set([...shared, ...hashes])) }],
-    }));
+  const pageHeaders = new Map(
+    [...pages]
+      .filter(([, hashes]) => [...hashes].some((hash) => !shared.has(hash)))
+      .map(([file, hashes]) => [file, { [CSP_HEADER]: buildPolicy(new Set([...shared, ...hashes])) }]),
+  );
 
-  const siteRule = {
-    source: '/(.*)',
-    headers: [
-      { key: CSP_HEADER, value: buildPolicy(shared) },
-      { key: 'X-Content-Type-Options', value: 'nosniff' },
-      { key: 'X-Frame-Options', value: 'DENY' },
-      { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-      { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=()' },
-      { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains' },
-    ],
+  const siteHeaders = {
+    [CSP_HEADER]: buildPolicy(shared),
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'DENY',
+    'Referrer-Policy': 'strict-origin-when-cross-origin',
+    'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+    'Strict-Transport-Security': 'max-age=63072000; includeSubDomains',
   };
 
-  return { headers: [siteRule, ...pageRules] };
+  return { siteHeaders, pageHeaders };
 }
 
 /** The expiry is a year past the build, so the regular content deploys keep it current. */
@@ -124,4 +102,4 @@ function securityTxt(now = new Date()) {
   ].join('\n');
 }
 
-module.exports = { CSP_HEADER, buildConfig, findHtmlFiles, inlineScripts, pageSource, scriptHash, securityTxt };
+module.exports = { CSP_HEADER, buildHeaders, inlineScripts, scriptHash, securityTxt };

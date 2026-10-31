@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
-import { buildEnvironment, writeBuildOutput } from './vercel-output.mjs';
+import { buildEnvironment, filesIn, writeBuildOutput } from './vercel-output.mjs';
 import { CSP_HEADER, scriptHash } from '../site/scripts/generate-security-headers.cjs';
 
 const ANALYTICS = { PUBLIC_POSTHOG_PROJECT_TOKEN: 'production-project', PUBLIC_POSTHOG_HOST: 'https://us.i.posthog.com' };
@@ -31,9 +31,7 @@ function withBuild(files, check) {
 // Follows the routes in order, as Vercel does. This filesystem phase only finds exact
 // file paths, so a directory URL resolves only if the emitted routes handle it.
 function request({ output, routes }, url) {
-  const published = new Set(readdirSync(path.join(output, 'static'), { recursive: true, withFileTypes: true })
-    .filter((entry) => entry.isFile())
-    .map((entry) => `/${path.relative(path.join(output, 'static'), path.join(entry.parentPath, entry.name)).split(path.sep).join('/')}`));
+  const published = new Set(filesIn(path.join(output, 'static')).map((file) => `/${file}`));
   const headers = {};
   for (const route of routes) {
     if (route.handle === 'filesystem') {
@@ -53,10 +51,11 @@ function request({ output, routes }, url) {
 
 const SHARED = '<script>shared()</script>';
 const SITE = {
-  'index.html': SHARED,
+  'index.html': `${SHARED}<script>home()</script>`,
   'events/example/index.html': SHARED,
   'events/other/index.html': SHARED,
   'explore/index.html': `${SHARED}<script>explore()</script>`,
+  'explore/extra.html': '<script>extra()</script>',
   '404.html': `${SHARED}<script>missing()</script>`,
   'graph.json': '{"nodes":[]}',
   'feed.xml': '<feed/>',
@@ -101,38 +100,66 @@ test('a production build missing an analytics setting warns and continues', () =
   }
 });
 
+const PAGE_ONLY_HASHES = [scriptHash('home()'), scriptHash('explore()')];
+
+function assertSitePolicyOnly(response, url) {
+  assert.equal(response.headers['X-Frame-Options'], 'DENY', url);
+  for (const script of ['shared()', 'missing()', 'extra()']) {
+    assert.ok(response.headers[CSP_HEADER].includes(scriptHash(script)), `${url} ${script}`);
+  }
+  for (const hash of PAGE_ONLY_HASHES) assert.ok(!response.headers[CSP_HEADER].includes(hash), `${url} ${hash}`);
+}
+
 test('pages answer on every URL form with their own policy', () => {
   withBuild(SITE, (build) => {
-    const sharedHash = scriptHash('shared()');
-    const exploreHash = scriptHash('explore()');
-    const expectedPages = {
-      '/index.html': ['/', '/index.html'],
-      '/events/example/index.html': ['/events/example', '/events/example/', '/events/example/index.html'],
-      '/explore/index.html': ['/explore', '/explore/', '/explore/index.html'],
-    };
-    for (const [file, urls] of Object.entries(expectedPages)) {
+    const expectedPages = [
+      { file: '/index.html', urls: ['/', '/index.html'], hash: scriptHash('home()') },
+      { file: '/events/example/index.html', urls: ['/events/example', '/events/example/', '/events/example/index.html'] },
+      { file: '/explore/index.html', urls: ['/explore', '/explore/', '/explore/index.html'], hash: scriptHash('explore()') },
+    ];
+    for (const { file, urls, hash } of expectedPages) {
       for (const url of urls) {
         const response = request(build, url);
         assert.equal(response.status, 200, url);
         assert.equal(response.file, file, url);
         assert.equal(response.headers['X-Frame-Options'], 'DENY', url);
-        assert.ok(response.headers[CSP_HEADER].includes(sharedHash), url);
-        assert.equal(response.headers[CSP_HEADER].includes(exploreHash), file === '/explore/index.html', url);
+        assert.ok(response.headers[CSP_HEADER].includes(scriptHash('shared()')), url);
+        for (const pageOnly of PAGE_ONLY_HASHES) {
+          assert.equal(response.headers[CSP_HEADER].includes(pageOnly), pageOnly === hash, `${url} ${pageOnly}`);
+        }
       }
+    }
+  });
+});
+
+test('a home page with no policy of its own still answers on both URLs', () => {
+  withBuild({ ...SITE, 'index.html': SHARED }, (build) => {
+    for (const url of ['/', '/index.html']) {
+      const response = request(build, url);
+      assert.equal(response.status, 200, url);
+      assert.equal(response.file, '/index.html', url);
+      assert.ok(response.headers[CSP_HEADER].includes(scriptHash('shared()')), url);
     }
   });
 });
 
 test('missing paths and the 404 page itself answer 404 with the site policy', () => {
   withBuild(SITE, (build) => {
-    for (const url of ['/404.html', '/no-such-page', '/no-such-page/', '/events/missing/index.html', '/events', '/vercel.json', '/EXPLORE', '/Events/Example']) {
+    for (const url of ['/404.html', '/no-such-page', '/no-such-page/', '/explore-2', '/events/missing/index.html', '/events', '/vercel.json', '/EXPLORE', '/Events/Example']) {
       const response = request(build, url);
       assert.equal(response.status, 404, url);
       assert.equal(response.file, '/404.html', url);
-      assert.equal(response.headers['X-Frame-Options'], 'DENY', url);
-      assert.ok(response.headers[CSP_HEADER].includes(scriptHash('missing()')), url);
-      assert.ok(!response.headers[CSP_HEADER].includes(scriptHash('explore()')), url);
+      assertSitePolicyOnly(response, url);
     }
+  });
+});
+
+test('an HTML file not named index.html does not take its directory page policy', () => {
+  withBuild(SITE, (build) => {
+    const response = request(build, '/explore/extra.html');
+    assert.equal(response.status, 200);
+    assert.equal(response.file, '/explore/extra.html');
+    assertSitePolicyOnly(response, '/explore/extra.html');
   });
 });
 

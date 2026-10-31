@@ -2,14 +2,11 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { test, expect } from '@playwright/test';
-import { getTransformedRoutes } from '@vercel/routing-utils';
-import { writeBuildOutput } from '../../scripts/vercel-output.mjs';
+import { filesIn, writeBuildOutput } from '../../scripts/vercel-output.mjs';
 import {
   CSP_HEADER,
-  buildConfig,
-  findHtmlFiles,
+  buildHeaders,
   inlineScripts,
-  pageSource,
   scriptHash,
   securityTxt,
 } from '../scripts/generate-security-headers.cjs';
@@ -22,7 +19,6 @@ import { SLUGS } from './_slugs';
  * Desktop only because the policy does not vary by viewport.
  */
 const DIST = path.join(process.cwd(), 'dist');
-type HeaderRule = { source: string; headers: { key: string; value: string }[] };
 type HeaderRoute = { src: string; headers: Record<string, string> };
 let outputRoot: string | undefined;
 
@@ -39,12 +35,7 @@ function outputRoutes(): HeaderRoute[] {
     .filter((route: HeaderRoute) => route.headers);
 }
 
-// Compiled by Vercel's routing library, so URLs match the way they do on a deployment.
-function compileRoutes(rules: HeaderRule[]): HeaderRoute[] {
-  const { routes, error } = getTransformedRoutes({ headers: rules });
-  if (error) throw new Error(error.message);
-  return routes as HeaderRoute[];
-}
+const htmlFiles = () => filesIn(DIST).filter((file: string) => file.endsWith('.html'));
 
 function policyFor(routes: HeaderRoute[], urlPath: string): string {
   return routes.find(({ src, headers }) => new RegExp(src).test(urlPath) && CSP_HEADER in headers)!.headers[CSP_HEADER];
@@ -57,6 +48,7 @@ test.describe('security headers', () => {
 
   test.afterAll(() => {
     if (outputRoot) fs.rmSync(outputRoot, { recursive: true, force: true });
+    outputRoot = undefined;
   });
 
   async function loadWithPolicy(page: import('@playwright/test').Page, urlPath: string) {
@@ -123,38 +115,25 @@ test.describe('security headers', () => {
 
   test('every built page has a policy allowing its inline scripts', () => {
     const routes = outputRoutes();
-    for (const file of findHtmlFiles(DIST)) {
-      // 404.html answers for any path that has no page.
-      const urlPath = file.endsWith('index.html')
-        ? `/${file.slice(0, -'index.html'.length).replace(/\/$/, '')}`
-        : '/no-such-page';
-      const policy = policyFor(routes, urlPath);
-      for (const text of inlineScripts(fs.readFileSync(path.join(DIST, file), 'utf8'))) {
-        expect(policy, `${file} inline script`).toContain(scriptHash(text));
+    for (const file of htmlFiles()) {
+      const dir = path.posix.dirname(file);
+      // 404.html answers directly and for any path that has no page.
+      const urlPaths = path.posix.basename(file) !== 'index.html'
+        ? [`/${file}`, '/no-such-page']
+        : dir === '.'
+          ? ['/', `/${file}`]
+          : [`/${dir}`, `/${dir}/`, `/${file}`];
+      const hashes = inlineScripts(fs.readFileSync(path.join(DIST, file), 'utf8')).map(scriptHash);
+      for (const urlPath of urlPaths) {
+        const policy = policyFor(routes, urlPath);
+        for (const hash of hashes) expect(policy, `${file} inline script at ${urlPath}`).toContain(hash);
       }
     }
   });
 
   test('the built site uses far fewer routes than it has pages', () => {
-    const pageCount = findHtmlFiles(DIST).length;
-    expect(pageCount).toBeGreaterThan(100);
+    expect(htmlFiles().length).toBeGreaterThan(100);
     expect(outputRoutes().length).toBeLessThan(25);
-  });
-
-  test('page rules match the URLs a page answers on', () => {
-    const matches = (source: string, url: string) => {
-      const [route] = compileRoutes([{ source, headers: [{ key: CSP_HEADER, value: 'policy' }] }]);
-      return new RegExp(route.src).test(url);
-    };
-    const home = pageSource('index.html');
-    expect(['/', '/index.html'].every((url) => matches(home, url))).toBe(true);
-    expect(matches(home, '/about')).toBe(false);
-
-    const event = pageSource('events/gpt-4-release/index.html');
-    for (const url of ['/events/gpt-4-release', '/events/gpt-4-release/', '/events/gpt-4-release/index.html']) {
-      expect(matches(event, url)).toBe(true);
-    }
-    expect(matches(event, '/events/gpt-4-release-2')).toBe(false);
   });
 
   test('inlineScripts returns the text of script elements that have any', () => {
@@ -173,22 +152,20 @@ test.describe('security headers', () => {
   });
 
   test('a hash on one page stays out of the site-wide policy', () => {
-    const { headers } = buildConfig(
+    const { siteHeaders, pageHeaders } = buildHeaders(
       new Map([
         ['index.html', new Set(['shared'])],
         ['about/index.html', new Set(['shared', 'about-only'])],
         ['404.html', new Set(['missing-only'])],
       ]),
     );
-    const [site, ...pages] = headers;
-    const value = (rule: HeaderRule) => rule.headers.find(({ key }) => key === CSP_HEADER)!.value;
-    expect(site.source).toBe('/(.*)');
-    expect(value(site)).toContain('shared');
-    expect(value(site)).toContain('missing-only');
-    expect(value(site)).not.toContain('about-only');
-    expect(pages.map(({ source }) => source)).toEqual([pageSource('about/index.html')]);
-    expect(value(pages[0])).toContain('about-only');
-    expect(value(pages[0])).toContain('missing-only');
+    expect(siteHeaders[CSP_HEADER]).toContain('shared');
+    expect(siteHeaders[CSP_HEADER]).toContain('missing-only');
+    expect(siteHeaders[CSP_HEADER]).not.toContain('about-only');
+    expect([...pageHeaders.keys()]).toEqual(['about/index.html']);
+    const aboutPolicy = pageHeaders.get('about/index.html')![CSP_HEADER];
+    expect(aboutPolicy).toContain('about-only');
+    expect(aboutPolicy).toContain('missing-only');
   });
 
   test('security.txt gives the private advisory contact and an expiry a year out', () => {
