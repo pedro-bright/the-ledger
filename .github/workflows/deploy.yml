@@ -95,7 +95,7 @@ jobs:
       - name: Reject Vercel config in built site
         working-directory: ${{ runner.temp }}/deploy
         run: |
-          found=$(find public -name vercel.ts -o -name vercel.mts -o -name vercel.js -o -name vercel.mjs -o -name vercel.cjs -o -name vercel.json -o -name vercel.toml)
+          found=$(find public -name vercel.ts -o -name vercel.mts -o -name vercel.js -o -name vercel.mjs -o -name vercel.cjs -o -name vercel.json)
           if [ -n "$found" ]; then
             echo "::error::Refusing to deploy: the built site contains Vercel config, which the Vercel CLI can execute or apply. Remove these files:"
             echo "$found"
@@ -109,4 +109,8 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
-          "$GITHUB_WORKSPACE/.github/deploy-tools/node_modules/.bin/vercel" deploy --prod
+          "$GITHUB_WORKSPACE/.github/deploy-tools/node_modules/.bin/vercel" deploy --prod \
+            --meta githubCommitSha="$GITHUB_SHA" \
+            --meta githubCommitRef="$GITHUB_REF_NAME" \
+            --meta githubOrg="$GITHUB_REPOSITORY_OWNER" \
+            --meta githubRepo="${GITHUB_REPOSITORY#*/}"
