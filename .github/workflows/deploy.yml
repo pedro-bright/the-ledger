@@ -4,25 +4,28 @@ on:
   push:
     branches: [main]
 
+# Deploys run one at a time so they cannot race. A newer merge replaces any
+# queued run, so the newest commit always deploys last.
 concurrency:
   group: deploy
-  cancel-in-progress: true
+  cancel-in-progress: false
 
-env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+permissions:
+  contents: read
 
 jobs:
-  deploy:
-    name: Build & Deploy to Vercel
+  build:
+    name: Build Site
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
           cache: npm
@@ -44,7 +47,7 @@ jobs:
 
       - name: Install site dependencies
         working-directory: site
-        run: npm install
+        run: npm ci
 
       - name: Build site
         working-directory: site
@@ -53,9 +56,46 @@ jobs:
           PUBLIC_POSTHOG_HOST: ${{ secrets.PUBLIC_POSTHOG_HOST }}
         run: npm run build
 
+      - name: Upload built site
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: production-site
+          path: site/dist
+          retention-days: 1
+          if-no-files-found: error
+
+  # The token lives on a separate runner that never runs repository code. The
+  # Production environment only releases it to jobs running from main.
+  deploy:
+    name: Deploy to Vercel
+    needs: build
+    runs-on: ubuntu-latest
+    environment: Production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+
       - name: Install Vercel CLI
-        run: npm install -g vercel@latest
+        run: npm ci --prefix .github/deploy-tools --ignore-scripts
+
+      - name: Download built site
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: production-site
+          path: site/dist
 
       - name: Deploy to Vercel
         working-directory: site
-        run: vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} dist/
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: ../.github/deploy-tools/node_modules/.bin/vercel deploy --prod dist/
