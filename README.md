@@ -78,7 +78,9 @@ The Ledger uses a progressive contribution model:
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
 
-To report a security problem, use [private vulnerability reporting](https://github.com/pedro-bright/the-ledger/security/advisories/new) instead of a public issue.
+To report a security problem, [open an issue asking for a private channel](https://github.com/pedro-bright/the-ledger/issues/new?title=Request%20for%20a%20private%20security%20contact).
+Issues are public, so leave out any details of the problem.
+GitHub private vulnerability reporting is coming and will replace this route.
 The same contact is published at `/.well-known/security.txt` on the site.
 
 ## Project Structure

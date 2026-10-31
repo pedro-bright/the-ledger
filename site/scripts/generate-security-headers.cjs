@@ -7,8 +7,8 @@
  * dist/. The script hashes are generated because they change whenever an inline script
  * or the PostHog token changes.
  *
- * The policy is report-only for now. To enforce it, rename CSP_HEADER to
- * Content-Security-Policy and move frame-ancestors into buildPolicy.
+ * The policy is report-only for now. To enforce it, change CSP_HEADER to
+ * Content-Security-Policy.
  */
 
 const { createHash } = require('node:crypto');
@@ -20,32 +20,16 @@ const CSP_HEADER = 'Content-Security-Policy-Report-Only';
 const POSTHOG_ORIGINS = 'https://us.i.posthog.com https://us-assets.i.posthog.com';
 const REPO_URL = 'https://github.com/pedro-bright/the-ledger';
 
-// Limits from Vercel's vercel.json schema (https://openapi.vercel.sh/vercel.json).
-const MAX_HEADER_VALUE_LENGTH = 32768;
-const MAX_HEADER_RULES = 2048;
-
-const JS_TYPES = new Set(['', 'module', 'text/javascript', 'application/javascript']);
-
-/** Returns the text of each inline script in the page that a browser would execute. */
+/** Returns the text of each script element in the page that has any. */
 function inlineScripts(html) {
-  // Comments are matched so a commented-out script is skipped. Attribute values are
-  // matched whole because they can contain ">".
-  const tokens = /<!--[\s\S]*?-->|<script\b((?:[^>"']|"[^"]*"|'[^']*')*)>([\s\S]*?)<\/script\b[^>]*>/gi;
-  const scripts = [];
-  for (const [token, attrs, text] of html.matchAll(tokens)) {
-    if (token.startsWith('<!--') || !text) continue;
-    if (/\ssrc\s*=/i.test(attrs)) continue;
-    const type = attrs.match(/\stype\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"']+))/i);
-    const typeValue = (type?.[1] ?? type?.[2] ?? type?.[3] ?? '').trim().toLowerCase();
-    if (JS_TYPES.has(typeValue)) scripts.push(text);
-  }
-  return scripts;
+  // Attribute values are matched whole because they can contain ">".
+  const scripts = /<script\b(?:[^>"']|"[^"]*"|'[^']*')*>([\s\S]*?)<\/script\b[^>]*>/gi;
+  return [...html.matchAll(scripts)].map(([, text]) => text).filter(Boolean);
 }
 
-/** Returns the CSP source for a script. HTML parsers normalize newlines before hashing. */
+/** Returns the CSP source for a script. */
 function scriptHash(text) {
-  const normalized = text.replace(/\r\n?/g, '\n');
-  return `'sha256-${createHash('sha256').update(normalized, 'utf8').digest('base64')}'`;
+  return `'sha256-${createHash('sha256').update(text, 'utf8').digest('base64')}'`;
 }
 
 function buildPolicy(hashes) {
@@ -60,13 +44,14 @@ function buildPolicy(hashes) {
     "object-src 'none'",
     "base-uri 'none'",
     "form-action 'self'",
+    "frame-ancestors 'none'",
   ].join('; ');
 }
 
 /** Returns the Vercel `source` matching a page's URLs, for a dist-relative index.html path. */
 function pageSource(file) {
   const dir = path.posix.dirname(file);
-  if (dir === '.') return '/(index\\.html)?';
+  if (dir === '.') return '/{index\\.html}?';
   const escaped = dir.replace(/[.*+?^${}()|[\]\\:]/g, '\\$&');
   return `/${escaped}(/|/index\\.html)?`;
 }
@@ -115,8 +100,6 @@ function buildConfig(pages) {
     source: '/(.*)',
     headers: [
       { key: CSP_HEADER, value: buildPolicy(shared) },
-      // Browsers ignore frame-ancestors in a report-only policy, so it is enforced on its own.
-      { key: 'Content-Security-Policy', value: "frame-ancestors 'none'" },
       { key: 'X-Content-Type-Options', value: 'nosniff' },
       { key: 'X-Frame-Options', value: 'DENY' },
       { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
@@ -125,18 +108,7 @@ function buildConfig(pages) {
     ],
   };
 
-  const rules = [siteRule, ...pageRules];
-  if (rules.length > MAX_HEADER_RULES) {
-    throw new Error(`${rules.length} header rules; Vercel allows ${MAX_HEADER_RULES}.`);
-  }
-  for (const { source, headers } of rules) {
-    for (const { key, value } of headers) {
-      if (value.length > MAX_HEADER_VALUE_LENGTH) {
-        throw new Error(`${key} for ${source} is ${value.length} characters; Vercel allows ${MAX_HEADER_VALUE_LENGTH}.`);
-      }
-    }
-  }
-  return { headers: rules };
+  return { headers: [siteRule, ...pageRules] };
 }
 
 /** The expiry is a year past the build, so the regular content deploys keep it current. */
@@ -144,10 +116,11 @@ function securityTxt(now = new Date()) {
   const expires = new Date(now);
   expires.setUTCFullYear(expires.getUTCFullYear() + 1);
   return [
-    '# Please report vulnerabilities privately through the first contact.',
-    '# If it is unavailable, open an issue asking for a private channel, without any details.',
-    `Contact: ${REPO_URL}/security/advisories/new`,
+    '# To report a vulnerability, open an issue through the first contact to ask for a private channel.',
+    '# Issues are public, so leave out any details of the problem.',
+    '# The second contact, GitHub private vulnerability reporting, is coming and is not available yet.',
     `Contact: ${REPO_URL}/issues/new?title=Request%20for%20a%20private%20security%20contact`,
+    `Contact: ${REPO_URL}/security/advisories/new`,
     `Expires: ${expires.toISOString().replace(/\.\d+Z$/, 'Z')}`,
     'Canonical: https://www.the-ledger.net/.well-known/security.txt',
     'Preferred-Languages: en',
@@ -172,6 +145,6 @@ function main() {
   console.log(`Security headers: ${pages.size} pages, ${config.headers.length} header rules.`);
 }
 
-module.exports = { CSP_HEADER, buildConfig, inlineScripts, pageSource, scriptHash, securityTxt };
+module.exports = { CSP_HEADER, buildConfig, findHtmlFiles, inlineScripts, pageSource, scriptHash, securityTxt };
 
 if (require.main === module) main();
