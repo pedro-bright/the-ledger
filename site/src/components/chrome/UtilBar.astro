@@ -100,9 +100,9 @@ const isAbout = currentPath === '/about';
     .wiki-utilbar__meta { font-size: 12px; }
   }
   @media (max-width: 480px) {
-    .wiki-utilbar__inner { padding: 0 8px; gap: 4px; min-height: 38px; }
-    .wiki-utilbar__tab { padding: 9px 8px; font-size: 11.5px; }
-    .wiki-utilbar__meta { gap: 6px; font-size: 11.5px; }
+    .wiki-utilbar__inner { padding: 0 8px; gap: 0 4px; min-height: 38px; flex-wrap: wrap; }
+    .wiki-utilbar__tab { padding: 9px 8px; font-size: 11.5px; white-space: nowrap; }
+    .wiki-utilbar__meta { gap: 6px; font-size: 11.5px; min-height: 24px; padding-left: 8px; }
     .wiki-utilbar__meta .wiki-utilbar__sep { display: none; }
   }
 </style>

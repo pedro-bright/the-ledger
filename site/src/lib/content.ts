@@ -38,10 +38,7 @@ export interface Contestation {
 }
 
 export interface Revision {
-  created?: string;
   last_reviewed?: string;
-  draft_assistance?: 'ai-assisted' | 'human-only';
-  final_author?: string;
 }
 
 export interface EventData {
@@ -219,12 +216,9 @@ export function loadEvents(): EventData[] {
           sources: data.sources,
           significance_history: data.significance_history,
           state: data.state,
-          revision: data.revision ? {
-            created: data.revision.created ? isoDate(data.revision.created) : undefined,
-            last_reviewed: data.revision.last_reviewed ? isoDate(data.revision.last_reviewed) : undefined,
-            draft_assistance: data.revision.draft_assistance,
-            final_author: data.revision.final_author,
-          } : undefined,
+          revision: data.revision?.last_reviewed
+            ? { last_reviewed: isoDate(data.revision.last_reviewed) }
+            : undefined,
           content,
           htmlContent,
           slug: data.id || file.replace('.md', ''),

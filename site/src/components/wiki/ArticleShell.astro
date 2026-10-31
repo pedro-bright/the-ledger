@@ -1,6 +1,6 @@
 ---
 // Article-page shell: breadcrumb → title → subtitle → body (with floated infobox) → footer.
-// Page provides `infobox`, default body, `references`, `seeAlso`, `footer` via slots.
+// Page provides `markers`, `infobox`, `lead`, default body, `references`, `seeAlso`, `footer` via slots.
 interface Props {
   title: string;
   subtitle?: string;
@@ -13,6 +13,7 @@ interface Props {
 }
 
 const { title, subtitle, breadcrumb = [], lastModified, lastReviewed, sourcePath } = Astro.props;
+const hasMarkers = Astro.slots.has('markers');
 const hasInfobox = Astro.slots.has('infobox');
 const hasLead = Astro.slots.has('lead');
 const hasReferences = Astro.slots.has('references');
@@ -38,6 +39,7 @@ const hasFooter = Astro.slots.has('footer');
   <header class="wiki-article__header">
     <h1 class="wiki-article__title">{title}</h1>
     {subtitle && <p class="wiki-article__subtitle">{subtitle}</p>}
+    {hasMarkers && <div class="wiki-article__markers"><slot name="markers" /></div>}
   </header>
 
   <div class="wiki-article__body">
@@ -160,6 +162,16 @@ const hasFooter = Astro.slots.has('footer');
     margin: 10px 0 0;
     max-width: 62ch;
   }
+  .wiki-article__markers {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  @media (min-width: 781px) and (scripting: enabled) {
+    .wiki-article__markers { display: none; }
+  }
   /* The prose block is constrained to 68ch on its own; if infobox floats right,
      text wraps naturally around it. No width lockdown here. */
   .wiki-article__body {
@@ -173,6 +185,9 @@ const hasFooter = Astro.slots.has('footer');
   .wiki-article__prose,
   .wiki-article__lead {
     max-width: 68ch;
+  }
+  .wiki-article__lead {
+    margin-bottom: 2rem;
   }
   .wiki-article__metadata {
     float: right;

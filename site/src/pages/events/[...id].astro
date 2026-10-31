@@ -149,6 +149,12 @@ const description = `${event.title} — ${event.date}`;
     lastReviewed={event.revision?.last_reviewed}
     sourcePath={sourcePath}
   >
+    <Fragment slot="markers">
+      <SignificanceFlag level={event.significance} />
+      <ConfidenceBadge level={event.confidence} />
+      {event.contestation?.status !== 'uncontested' && <ContestationBadge status={event.contestation?.status} />}
+    </Fragment>
+
     <Fragment slot="infobox">
       <Infobox title="Entry metadata">
         <dl>

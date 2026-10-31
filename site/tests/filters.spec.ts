@@ -92,6 +92,17 @@ test.describe('search navigation regressions', () => {
     });
   }
 
+  test('actor category links use the canonical parameter and filter', async ({ page }) => {
+    await page.goto('/actors/openai');
+    const link = page.locator('.wiki-rail[data-side="right"] a[href^="/explore?"]').first();
+    await expect(link).toHaveAttribute('href', /^\/explore\?cat=[a-z-]+$/);
+    const href = await link.getAttribute('href');
+    const category = new URLSearchParams(href!.split('?')[1]).get('cat')!;
+    await link.click();
+    await expect(page.getByRole('button', { name: new RegExp(`^${category}$`, 'i') })).toHaveAttribute('aria-pressed', 'true');
+    expect(new URL(page.url()).searchParams.get('cat')).toBe(category);
+  });
+
   test('legacy category links retain their category and normalize the URL', async ({ page }) => {
     await page.goto('/explore?category=policy');
     await expect(page.getByRole('button', { name: /^policy$/i })).toHaveAttribute('aria-pressed', 'true');

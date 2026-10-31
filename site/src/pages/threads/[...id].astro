@@ -146,6 +146,12 @@ const subtitle = thread.core_question ? `— ${thread.core_question}` : undefine
     lastModified={lastUpdatedIso || thread.last_updated}
     sourcePath={sourcePath}
   >
+    {thread.status && (
+      <Fragment slot="markers">
+        <span class={`status-chip status-chip--${thread.status}`}>{thread.status}</span>
+      </Fragment>
+    )}
+
     <Fragment slot="infobox">
       <Infobox title="Thread metadata">
         <dl>

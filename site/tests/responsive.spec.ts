@@ -135,6 +135,90 @@ test.describe('reading layout regressions', () => {
     await expect(metadata.locator('.wiki-infobox')).toBeVisible();
   });
 
+  const MARKERS = [
+    { route: '/events/anthropic-dod-debate-2026', expected: ['Landmark', 'Medium confidence'] },
+    { route: '/events/deepseek-r1-distill-impact', expected: ['Major', 'Low confidence', 'Unresolved'] },
+    { route: `/events/${SLUGS.event}`, expected: ['Landmark'] },
+    { route: `/threads/${SLUGS.thread}`, expected: ['Active'] },
+  ];
+  for (const { route, expected } of MARKERS) {
+    test(`${route} shows its markers at 390x844 with the metadata closed`, async ({ page }) => {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.goto(route);
+      await expect(page.locator('details.wiki-article__metadata')).not.toHaveAttribute('open', '');
+      const markers = page.locator('.wiki-article__header .wiki-article__markers > *');
+      await expect(markers).toHaveText(expected, { ignoreCase: true });
+      for (const marker of await markers.all()) await expect(marker).toBeVisible();
+    });
+  }
+
+  for (const { width, collapsed } of [
+    { width: 780, collapsed: true },
+    { width: 781, collapsed: false },
+    { width: 1440, collapsed: false },
+  ]) {
+    test(`article markers follow the metadata panel at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/events/anthropic-dod-debate-2026');
+      const metadata = page.locator('.wiki-article__metadata');
+      const markers = page.locator('.wiki-article__markers');
+      if (collapsed) {
+        await expect(metadata).not.toHaveAttribute('open', '');
+        await expect(markers).toBeVisible();
+      } else {
+        await expect(metadata).toHaveAttribute('open', '');
+        await expect(markers).toBeHidden();
+      }
+    });
+  }
+
+  test.describe('without JavaScript', () => {
+    test.use({ javaScriptEnabled: false });
+
+    test('desktop articles show their markers while the metadata stays collapsed', async ({ page }) => {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto('/events/anthropic-dod-debate-2026');
+      await expect(page.locator('.wiki-article__metadata')).not.toHaveAttribute('open', '');
+      await expect(page.locator('.wiki-article__markers')).toBeVisible();
+    });
+  });
+
+  for (const route of ['/events/anthropic-dod-debate-2026', '/threads/scaling-laws-debate']) {
+    for (const width of [1024, 1200, 1440]) {
+      test(`${route} keeps section spacing after the lead at ${width}px`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 900 });
+        await page.goto(route);
+        const gap = await page.locator('.wiki-article__lead').evaluate((lead) => {
+          const heading = document.querySelector('.wiki-article__prose > h2')!;
+          return heading.getBoundingClientRect().top - lead.getBoundingClientRect().bottom;
+        });
+        expect(Math.round(gap)).toBeGreaterThanOrEqual(32);
+      });
+    }
+  }
+
+  for (const width of [320, 344, 360, 375, 390]) {
+    for (const route of ['/', '/about', '/explore']) {
+      test(`utility links on ${route} stay on one line inside the viewport at ${width}px`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 844 });
+        await page.goto(route);
+        await page.evaluate(() => document.fonts.ready);
+        const links = await page.locator('.wiki-utilbar a').evaluateAll((anchors) => anchors.map((el) => {
+          const range = document.createRange();
+          range.selectNodeContents(el);
+          const box = el.getBoundingClientRect();
+          return { text: el.textContent, left: box.left, right: box.right, lines: range.getClientRects().length };
+        }));
+        expect(links.length).toBe(6);
+        for (const link of links) {
+          expect(link.left, `${link.text} left edge`).toBeGreaterThanOrEqual(0);
+          expect(link.right, `${link.text} right edge`).toBeLessThanOrEqual(width);
+          expect(link.lines, `${link.text} line count`).toBe(1);
+        }
+      });
+    }
+  }
+
   for (const width of [390, 1024, 1200, 1440]) {
     test(`article prose respects its measure at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
