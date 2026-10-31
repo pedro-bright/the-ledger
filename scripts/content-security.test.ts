@@ -59,6 +59,7 @@ function withSandbox(files: Record<string, string>, run: (sandbox: string) => vo
     fs.cpSync(path.join(ROOT, "scripts"), path.join(sandbox, "scripts"), { recursive: true });
     fs.cpSync(path.join(ROOT, "schema"), path.join(sandbox, "schema"), { recursive: true });
     fs.symlinkSync(path.join(ROOT, "node_modules"), path.join(sandbox, "node_modules"));
+    fs.mkdirSync(path.join(sandbox, "site", "dist"), { recursive: true });
     for (const [relative, body] of Object.entries(files)) {
       const target = path.join(sandbox, "content", relative);
       fs.mkdirSync(path.dirname(target), { recursive: true });
@@ -127,9 +128,20 @@ for (const [name, parse] of [
     });
   }
 
-  test(`${name} parser accepts a file with no frontmatter`, () => {
-    assert.deepEqual(parse("Just a body.\n").data, {});
-  });
+  for (const [label, raw] of [
+    ["an empty file", ""],
+    ["a file with no frontmatter", "Just a body.\n"],
+    ["a file with only a newline", "\n"],
+    ["a file with only a byte order mark", "﻿"],
+  ] as const) {
+    test(`${name} parser reads ${label} the same as gray-matter`, () => {
+      const { data, content } = parse(raw);
+      const expected = matter(raw);
+      assert.deepEqual(data, {});
+      assert.deepEqual(data, expected.data);
+      assert.equal(content, expected.content);
+    });
+  }
 }
 
 test("no command-line tool runs a code frontmatter file", () => {
@@ -144,7 +156,23 @@ test("no command-line tool runs a code frontmatter file", () => {
         assert.equal(status, 1, `${script} should fail:\n${output}`);
         assert.match(output, /Only YAML frontmatter is allowed/);
       }
+      const { status, output } = runScript(sandbox, "test-parity.ts");
+      assert.equal(status, 1, output);
+      assert.match(output, /Malformed \(missing id\) in frontmatter: 1\n\s+content\/events\/2026\/01-rce-poc\.md/);
     });
+  });
+});
+
+test("command-line tools still accept an empty content file", () => {
+  withSandbox({ "events/2026/01-empty.md": "" }, (sandbox) => {
+    for (const script of ["build-graph.ts", "check-links.ts"]) {
+      const { status, output } = runScript(sandbox, script);
+      assert.equal(status, 0, `${script} should pass:\n${output}`);
+    }
+  });
+  withSandbox({ "perspectives/empty.md": "" }, (sandbox) => {
+    const { status, output } = runScript(sandbox, "validate.ts");
+    assert.equal(status, 0, output);
   });
 });
 

@@ -11,6 +11,6 @@ export function parseFrontmatter(raw: string) {
   const file = matter(raw, {
     engines: { javascript: rejectFrontmatterLanguage },
   });
-  if (!/^ya?ml$/i.test(file.language)) rejectFrontmatterLanguage();
+  if (file.language && !/^ya?ml$/i.test(file.language)) rejectFrontmatterLanguage();
   return file;
 }
