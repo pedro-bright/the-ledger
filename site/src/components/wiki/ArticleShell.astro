@@ -7,12 +7,14 @@ interface Props {
   breadcrumb?: Array<{ label: string; href?: string }>;
   /** Last modified ISO date — shown in the footer line. */
   lastModified?: string;
+  lastReviewed?: string;
   /** Source file on GitHub (for "View source" editorial transparency). */
   sourcePath?: string;
 }
 
-const { title, subtitle, breadcrumb = [], lastModified, sourcePath } = Astro.props;
+const { title, subtitle, breadcrumb = [], lastModified, lastReviewed, sourcePath } = Astro.props;
 const hasInfobox = Astro.slots.has('infobox');
+const hasLead = Astro.slots.has('lead');
 const hasReferences = Astro.slots.has('references');
 const hasSeeAlso = Astro.slots.has('seeAlso');
 const hasFooter = Astro.slots.has('footer');
@@ -39,7 +41,13 @@ const hasFooter = Astro.slots.has('footer');
   </header>
 
   <div class="wiki-article__body">
-    {hasInfobox && <slot name="infobox" />}
+    {hasLead && <div class="wiki-article__lead prose"><slot name="lead" /></div>}
+    {hasInfobox && (hasLead ? (
+      <details class="wiki-article__metadata">
+        <summary>Record metadata</summary>
+        <slot name="infobox" />
+      </details>
+    ) : <slot name="infobox" />)}
     <div class="wiki-article__prose prose">
       <slot />
     </div>
@@ -65,8 +73,11 @@ const hasFooter = Astro.slots.has('footer');
     </div>
   )}
 
-  {(lastModified || sourcePath) && (
+  {(lastModified || lastReviewed || sourcePath) && (
     <footer class="wiki-article__lastmod">
+      {lastReviewed && (
+        <span>This record last reviewed <time datetime={lastReviewed}>{lastReviewed}</time>.</span>
+      )}
       {lastModified && (
         <span>This record last modified <time datetime={lastModified}>{lastModified}</time>.</span>
       )}
@@ -83,6 +94,21 @@ const hasFooter = Astro.slots.has('footer');
     </footer>
   )}
 </article>
+
+<script>
+  const desktop = window.matchMedia('(min-width: 781px)');
+  const syncMetadata = () => {
+    document.querySelectorAll<HTMLDetailsElement>('.wiki-article__metadata').forEach((details) => {
+      const body = details.parentElement!;
+      const lead = body.querySelector('.wiki-article__lead')!;
+      if (desktop.matches) body.prepend(details);
+      else lead.after(details);
+      details.open = desktop.matches;
+    });
+  };
+  syncMetadata();
+  desktop.addEventListener('change', syncMetadata);
+</script>
 
 <style>
   .wiki-article {
@@ -144,8 +170,40 @@ const hasFooter = Astro.slots.has('footer');
     display: block;
     clear: both;
   }
-  .wiki-article__prose {
-    max-width: 100%;
+  .wiki-article__prose,
+  .wiki-article__lead {
+    max-width: 68ch;
+  }
+  .wiki-article__metadata {
+    float: right;
+    width: 280px;
+    margin: 4px 0 20px 28px;
+  }
+  .wiki-article__metadata > summary {
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--color-wiki-link);
+    padding: 10px 12px;
+    border: 1px solid var(--color-rule-strong);
+    background: var(--color-wiki-surface);
+  }
+  .wiki-article__metadata :global(.wiki-infobox) {
+    float: none;
+    width: 100%;
+    margin: 0;
+  }
+  @media (max-width: 1200px) {
+    .wiki-article__metadata { width: 240px; margin: 4px 0 18px 24px; }
+  }
+  @media (max-width: 1024px) {
+    .wiki-article__metadata { width: 260px; }
+  }
+  @media (min-width: 781px) {
+    .wiki-article__metadata[open] > summary { display: none; }
+  }
+  @media (max-width: 780px) {
+    .wiki-article__metadata { float: none; width: 100%; margin: 20px 0; }
   }
   .wiki-article__h2 {
     font-family: var(--font-display);
@@ -207,12 +265,13 @@ const hasFooter = Astro.slots.has('footer');
     border-top: 1px solid var(--color-rule);
     font-family: var(--font-sans);
     font-size: 12px;
-    font-style: italic;
     color: var(--color-ink-faint);
   }
   .wiki-article__lastmod a {
     color: var(--color-wiki-link);
-    font-style: normal;
+    text-decoration: underline;
+    text-decoration-color: rgba(6, 69, 173, 0.35);
+    text-underline-offset: 2px;
   }
   .wiki-article__lastmod a:hover { text-decoration: underline; }
 </style>

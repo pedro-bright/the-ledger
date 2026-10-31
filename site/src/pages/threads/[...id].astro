@@ -4,7 +4,7 @@ import ArticleShell from '../../components/wiki/ArticleShell.astro';
 import Infobox from '../../components/wiki/Infobox.astro';
 import RailSection from '../../components/wiki/RailSection.astro';
 import EventRow from '../../components/wiki/EventRow.astro';
-import { loadThreads, loadEvents, loadControversies, buildThreadEventMap } from '../../lib/content';
+import { loadThreads, loadEvents, loadControversies, buildThreadEventMap, splitArticleLead } from '../../lib/content';
 
 export function getStaticPaths() {
   const threads = loadThreads();
@@ -15,6 +15,7 @@ export function getStaticPaths() {
 }
 
 const { thread } = Astro.props;
+const article = splitArticleLead(thread.htmlContent);
 const allEvents = loadEvents();
 const allThreads = loadThreads();
 const allControversies = loadControversies();
@@ -162,8 +163,9 @@ const subtitle = thread.core_question ? `— ${thread.core_question}` : undefine
       </Infobox>
     </Fragment>
 
+    <Fragment slot="lead" set:html={article.lead} />
     <!-- Canonical synthesis (rendered markdown) -->
-    <Fragment set:html={thread.htmlContent} />
+    <Fragment set:html={article.body} />
 
     {linkedEvents.length > 0 && (
       <section class="thread-section">

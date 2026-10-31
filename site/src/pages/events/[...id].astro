@@ -8,7 +8,7 @@ import SignificanceFlag from '../../components/wiki/SignificanceFlag.astro';
 import ConfidenceBadge from '../../components/ConfidenceBadge';
 import ContestationBadge from '../../components/ContestationBadge';
 import SignificanceHistory from '../../components/SignificanceHistory';
-import { loadEvents, loadThreads, loadActors } from '../../lib/content';
+import { loadEvents, loadThreads, loadActors, splitArticleLead } from '../../lib/content';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -21,6 +21,7 @@ export function getStaticPaths() {
 }
 
 const { event } = Astro.props;
+const article = splitArticleLead(event.htmlContent);
 const allEvents = loadEvents();
 const threads = loadThreads();
 const actors = loadActors();
@@ -58,7 +59,7 @@ const isPrimary = (t?: string) => !!t && /^primary/.test(t);
 const breadcrumb = [
   { label: 'Main page', href: '/' },
   { label: 'Timeline', href: '/explore' },
-  { label: formatCategory(event.category), href: `/explore?category=${event.category}` },
+  { label: formatCategory(event.category), href: `/explore?cat=${event.category}` },
   { label: event.title },
 ];
 
@@ -74,7 +75,7 @@ const description = `${event.title} — ${event.date}`;
       <ul class="rail-list">
         <li><a href="/explore">Back to timeline</a></li>
         <li><a href="/">Main page</a></li>
-        <li><a href={`/explore?category=${event.category}`}>{formatCategory(event.category)}</a></li>
+        <li><a href={`/explore?cat=${event.category}`}>{formatCategory(event.category)}</a></li>
         <li><a href="/threads">All threads</a></li>
       </ul>
     </RailSection>
@@ -145,7 +146,7 @@ const description = `${event.title} — ${event.date}`;
     title={event.title}
     subtitle={subtitle}
     breadcrumb={breadcrumb}
-    lastModified={event.date}
+    lastReviewed={event.revision?.last_reviewed}
     sourcePath={sourcePath}
   >
     <Fragment slot="infobox">
@@ -154,7 +155,7 @@ const description = `${event.title} — ${event.date}`;
           <dt>Date</dt>
           <dd><time class="mono" datetime={event.date}>{event.date}</time></dd>
           <dt>Category</dt>
-          <dd><a href={`/explore?category=${event.category}`}><CategoryTag category={event.category} /></a></dd>
+          <dd><a href={`/explore?cat=${event.category}`}><CategoryTag category={event.category} /></a></dd>
           {event.significance && <><dt>Significance</dt><dd><SignificanceFlag level={event.significance} /></dd></>}
           {event.confidence && event.confidence !== 'high' && <><dt>Confidence</dt><dd><ConfidenceBadge level={event.confidence} /></dd></>}
           {event.contestation?.status && <><dt>Contestation</dt><dd><ContestationBadge status={event.contestation.status} /></dd></>}
@@ -191,8 +192,9 @@ const description = `${event.title} — ${event.date}`;
       </Infobox>
     </Fragment>
 
+    <Fragment slot="lead" set:html={article.lead} />
     <!-- Rendered markdown body -->
-    <Fragment set:html={event.htmlContent} />
+    <Fragment set:html={article.body} />
 
     {/* Mobile-only epistemic key — right rail is hidden below 780px. */}
     <details class="mobile-epistemic-key" aria-label="Epistemic key">

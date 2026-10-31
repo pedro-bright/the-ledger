@@ -135,3 +135,22 @@ test.describe('smoke', () => {
     await expect(page.locator('h1')).toContainText('This entry does not exist');
   });
 });
+
+
+test('event provenance distinguishes review dates from event dates', async ({ page }) => {
+  await page.goto('/events/anthropic-dod-debate-2026');
+  const footer = page.locator('.wiki-article__lastmod');
+  await expect(footer).toContainText('This record last reviewed 2026-10-26.');
+  await expect(footer.locator('time')).toHaveAttribute('datetime', '2026-10-26');
+  await expect(page.locator('a[href*="content/revisions/sr-anthropic-dod-debate-2026-20261026.md"]')).toBeVisible();
+  await page.goto(`/events/${SLUGS.event}`);
+  await expect(page.locator('.wiki-article__lastmod')).not.toContainText('last modified');
+});
+
+test('utility links describe their destinations', async ({ page }) => {
+  await page.goto(`/events/${SLUGS.event}`);
+  const utility = page.locator('.wiki-utilbar__tabs');
+  await expect(utility.getByRole('link', { name: 'Home', exact: true })).toHaveAttribute('href', '/');
+  await expect(utility.getByRole('link', { name: 'About', exact: true })).toHaveAttribute('href', '/about');
+  await expect(utility.getByRole('link', { name: 'Repository history', exact: true })).toHaveAttribute('href', 'https://github.com/pedro-bright/the-ledger/commits/main');
+});

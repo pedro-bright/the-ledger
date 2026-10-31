@@ -69,3 +69,49 @@ test.describe('explorer filters', () => {
     await expect(researchChip).toHaveAttribute('aria-pressed', 'true');
   });
 });
+
+
+test.describe('search navigation regressions', () => {
+  test.beforeEach(({}, testInfo) => {
+    test.skip(testInfo.project.name !== 'chromium', 'desktop only');
+  });
+
+  for (const route of ['/', '/events/anthropic-dod-debate-2026']) {
+    test(`category links from ${route} select and filter policy`, async ({ page }) => {
+      await page.goto('/');
+      const policy = page.locator('a[href="/explore?cat=policy"]').first();
+      const expectedCount = Number(await policy.locator('..').locator('.count').textContent());
+      if (route !== '/') await page.goto(route);
+      const link = page.locator('a[href^="/explore?"]').filter({ hasText: /^\s*Policy\s*$/ }).first();
+      await link.click();
+      await expect(page.getByRole('button', { name: /^policy$/i })).toHaveAttribute('aria-pressed', 'true');
+      const categories = page.locator('.explorer-row__category');
+      await expect(categories).toHaveCount(expectedCount);
+      expect((await categories.allTextContents()).every((text) => text.trim() === 'policy')).toBe(true);
+      await expect(page).toHaveURL(/cat=policy/);
+    });
+  }
+
+  test('legacy category links retain their category and normalize the URL', async ({ page }) => {
+    await page.goto('/explore?category=policy');
+    await expect(page.getByRole('button', { name: /^policy$/i })).toHaveAttribute('aria-pressed', 'true');
+    await expect(page).toHaveURL(/cat=policy/);
+    expect(new URL(page.url()).searchParams.has('category')).toBe(false);
+  });
+
+  test('masthead search accurately names its event scope and offers other indexes', async ({ page }) => {
+    await page.goto('/');
+    const search = page.locator('#search-q');
+    await expect(search).toHaveAttribute('placeholder', 'Search events…');
+    await expect(search).toHaveAccessibleName('Search events');
+    await search.fill('The Scaling Laws Debate: Will Bigger Always Mean Better?');
+    await search.press('Enter');
+    await expect(page.locator('#explorer-search')).toHaveValue('The Scaling Laws Debate: Will Bigger Always Mean Better?');
+    const recovery = page.getByRole('navigation', { name: 'Other indexes' });
+    for (const label of ['Threads', 'Controversies', 'Actors']) {
+      await expect(recovery.getByRole('link', { name: label, exact: true })).toBeVisible();
+    }
+    await recovery.getByRole('link', { name: 'Threads', exact: true }).click();
+    await expect(page.locator('.threads-table')).toBeVisible();
+  });
+});
