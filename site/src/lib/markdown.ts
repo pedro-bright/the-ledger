@@ -1,5 +1,6 @@
 import matter from 'gray-matter';
 import { Marked } from 'marked';
+import { parseFragment, serialize, type DefaultTreeAdapterTypes } from 'parse5';
 
 const rejectFrontmatterLanguage = () => {
   throw new Error('Only YAML frontmatter is allowed.');
@@ -61,23 +62,27 @@ export function renderMarkdown(markdown: string): string {
   return contentMarked.parse(markdown, { async: false }) as string;
 }
 
-/** Anchor rendered article sections, including headings supplied by Astro slots. */
+/** Anchor actual heading nodes; markup-like text in attributes must remain inert. */
 export function anchorSections(html: string, used: Set<string>) {
+  const fragment = parseFragment(html);
   const sections: Array<{ id: string; title: string; level: number }> = [];
-  const entities: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
-  const content = html.replace(/<h([23])(\s[^>]*)?>([\s\S]*?)<\/h\1>/g, (_heading, level, attrs = '', inner) => {
-    const title = inner.replace(/<[^>]*>/g, '').replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos|nbsp);/gi, (entity: string, name: string) => {
-      if (!name.startsWith('#')) return entities[name.toLowerCase()] ?? entity;
-      const point = name[1].toLowerCase() === 'x' ? parseInt(name.slice(2), 16) : Number(name.slice(1));
-      return point > 0 && point <= 0x10ffff ? String.fromCodePoint(point) : entity;
-    }).trim();
-    const base = `section-${title.normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '') || 'heading'}`;
-    let id = base;
-    let suffix = 2;
-    while (used.has(id)) id = `${base}-${suffix++}`;
-    used.add(id);
-    sections.push({ id, title, level: Number(level) });
-    return `<h${level}${attrs} id="${id}">${inner}</h${level}>`;
-  });
-  return { content, sections };
+  const text = (node: DefaultTreeAdapterTypes.Node): string => {
+    if ('value' in node) return node.value;
+    return 'childNodes' in node ? node.childNodes.map(text).join('') : '';
+  };
+  const visit = (node: DefaultTreeAdapterTypes.Node) => {
+    if ('tagName' in node && (node.tagName === 'h2' || node.tagName === 'h3')) {
+      const title = text(node).trim();
+      const base = `section-${title.normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '') || 'heading'}`;
+      let id = base;
+      let suffix = 2;
+      while (used.has(id)) id = `${base}-${suffix++}`;
+      used.add(id);
+      node.attrs = [...node.attrs.filter((attr) => attr.name !== 'id'), { name: 'id', value: id }];
+      sections.push({ id, title, level: Number(node.tagName[1]) });
+    }
+    if ('childNodes' in node) node.childNodes.forEach(visit);
+  };
+  visit(fragment);
+  return { content: serialize(fragment), sections };
 }
