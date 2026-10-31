@@ -105,7 +105,7 @@ This captures the spirit of 5.2's "surface tension" without forcing fake dissent
 
 4. **Time Awareness** — All interpretation is timestamped. Wrongness is a feature, not a bug. We track belief decay, not errors.
 
-5. **AI Transparency** — AI tools used for research assistance and draft structuring are disclosed globally (at `/methodology/ai-assistance`). All factual claims, confidence assessments, and interpretations are reviewed and approved by a named human editor.
+5. **AI Transparency** - AI tools used for research assistance and draft structuring are disclosed globally (at `/methodology/ai-assistance`). All factual claims, confidence assessments, and interpretations are reviewed and approved by a named human editor, except automatic daily scan entries, which may not be read individually by a human (see `editorial/ai-assistance.md`).
 
 6. **Source Primacy** — Primary sources over commentary. Archived URLs mandatory for primary sources. Sources typed as primary / secondary / commentary / official.
 
@@ -636,7 +636,7 @@ Three views over the same data, serving different needs:
 | Search | Pagefind (static) | No infrastructure, works offline |
 | CI | GitHub Actions | Schema validation, link checking, archive verification |
 | Hosting | Vercel or Netlify | Free tier, auto-deploy on merge |
-| Analytics | Plausible | Privacy-respecting |
+| Analytics | PostHog | Product analytics held in memory only; search terms stay in the browser |
 | Feed | RSS/Atom | Auto-generated from events |
 | License | CC BY-SA 4.0 | Open, attribution required |
 
@@ -691,7 +691,7 @@ Three views over the same data, serving different needs:
 | **Editor burnout** | Single-curator threads. AI assists on research, not judgment. Progressive tiers distribute work. |
 | **Legal exposure** | Tight sourcing. Claims attributed, not asserted. State machine makes event lifecycle explicit. |
 | **US-centric bias** | `regions` field. Actively recruit non-US contributors. Editorial dashboard tracks geographic coverage gaps. |
-| **AI hallucinations in drafts** | Global AI assistance disclosure. Human editor reviews all factual claims. Labeled clearly. |
+| **AI hallucinations in drafts** | Global AI assistance disclosure. Human editors review contributor drafts. Automatic daily scan entries may not be read individually, so the curator corrects errors when they are found or challenged. Labeled clearly. |
 | **Completeness anxiety** | Framed as curating for depth, not coverage. "This project grows by reinterpretation depth, not event count." |
 | **Contributor quality collapse** | Tiered contribution model. Low barrier (Tier 0 issue forms) but editorial gate (Tier 1-2). |
 

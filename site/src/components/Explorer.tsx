@@ -249,7 +249,7 @@ export default function Explorer({ events, categories }: Props) {
           The ledger is being built.
         </p>
         <p className="font-serif text-base text-ink-mid leading-relaxed mb-5">
-          Entries appear here as they pass editorial review. Check back shortly, or propose a source tip to help seed the record.
+          Entries appear here once they are published. Check back shortly, or propose a source tip to help seed the record.
         </p>
         <a
           href="https://github.com/pedro-bright/the-ledger/issues/new?template=source-tip.yml"
@@ -293,7 +293,7 @@ export default function Explorer({ events, categories }: Props) {
               aria-label="Search events by title, summary, or tag"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-[10px] bg-page-bg border border-[var(--color-control-border)] text-base min-[781px]:text-sm text-ink placeholder:text-ink-faint font-sans rounded-sm min-h-[40px]"
+              className="ph-no-capture w-full pl-9 pr-3 py-[10px] bg-page-bg border border-[var(--color-control-border)] text-base min-[781px]:text-sm text-ink placeholder:text-ink-faint font-sans rounded-sm min-h-[40px]"
             />
           </div>
         </div>
@@ -458,7 +458,7 @@ export default function Explorer({ events, categories }: Props) {
             <div className="flex flex-wrap items-baseline gap-2">
               <span className="label-eyebrow mr-1">Active</span>
               {search && (
-                <ActiveChip label={`"${search}"`} onRemove={() => setSearch('')} />
+                <ActiveChip className="ph-no-capture" label={`"${search}"`} onRemove={() => setSearch('')} />
               )}
               {Array.from(activeCategories).map((cat) => (
                 <ActiveChip
@@ -589,14 +589,16 @@ function ActiveChip({
   label,
   onRemove,
   color,
+  className = '',
 }: {
   label: string;
   onRemove: () => void;
   color?: string;
+  className?: string;
 }) {
   return (
     <span
-      className="inline-flex items-center gap-1 px-2 py-0.5 text-[11px] font-sans font-medium rounded-sm border border-rule-strong bg-wiki-surface-strong text-ink"
+      className={`${className} inline-flex items-center gap-1 px-2 py-0.5 text-[11px] font-sans font-medium rounded-sm border border-rule-strong bg-wiki-surface-strong text-ink`}
       style={color ? { color } : undefined}
     >
       <span>{label}</span>

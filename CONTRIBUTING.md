@@ -32,7 +32,8 @@ The Ledger uses **progressive formalization** — you don't need to master the f
 ### Automated Daily Scan
 
 Daily scan entries are drafted and published automatically under the editorial rules: factual claims require sources, publication waits at least 72 hours after initial reporting, significance is limited to `notable`, and entries must pass validation.
-The curator reviews sources and claims after publication and records corrections publicly.
+These entries may not be read individually by a human before or after publication.
+The curator is accountable for them and corrects errors when they are found or challenged, in public, through the existing correction and challenge process.
 Anyone can [challenge a published claim](#challenging-existing-content); corrections and challenge resolutions remain part of the public record.
 Contributor submissions follow the review process below.
 
@@ -128,7 +129,7 @@ fix/typo-in-claude-3-event
 
 ### Review Process
 
-- **Automated daily scan PRs:** Publication is automatic under the editorial rules above; curator review and corrections follow publication.
+- **Automated daily scan PRs:** Publication is automatic under the editorial rules above, with no reviewer sign-off; errors are corrected when they are found or challenged.
 - **Tier 1 PRs:** 1 reviewer required
 - **Tier 2 PRs:** 2 reviewers required
 - **Tier 3 PRs (editorial changes):** Full board review + 30-day RFC

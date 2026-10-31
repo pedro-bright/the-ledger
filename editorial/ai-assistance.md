@@ -36,10 +36,13 @@ AI tools may generate initial drafts of:
 
 AI tools do not:
 
-- Make final editorial judgments about significance, confidence, or contestation status
 - Approve or reject challenges, retrospectives, or canon changes
-- Make final decisions about which interpretations are included or excluded
 - Set editorial policy or modify the constitution
+
+Outside the automatic daily scan described below, AI tools also do not:
+
+- Make final editorial judgments about significance, confidence, or contestation status
+- Make final decisions about which interpretations are included or excluded
 - Replace human judgment on any matter where judgment is required
 
 ## Automatic Publishing and Human Review
@@ -52,7 +55,9 @@ Daily scan entries are drafted and published automatically under the editorial r
 4. **Validation:** Entries must pass schema and cross-reference validation before publication.
 5. **AI disclosure:** AI-assisted entries set `draft_assistance: ai-assisted` under `revision` in the frontmatter (`revision.draft_assistance`).
 
-The curator, Terry Tang, is responsible for the published entries and reviews their sources and claims after publication.
+An AI tool selects the events, writes the entries, and sets their `confidence` and `significance` within these rules.
+These entries may not be read individually by a human before or after publication, which makes them the documented exception to the human approval in principle 5 of the [editorial constitution](constitution.md).
+The curator, Terry Tang, is accountable for them and corrects errors when they are found or challenged, in public, through the existing correction and challenge process.
 Corrections are recorded publicly through revisions and git history.
 Contributor submissions continue to require editorial review before publication, as described in [the contribution guide](../CONTRIBUTING.md#review-process).
 
@@ -62,7 +67,7 @@ Challenges, corrections, and their resolutions remain part of the public record.
 ## Why This Matters
 
 The Ledger tracks what we know, how we know it, and how our understanding changes.
-Automatic publication can introduce errors before the curator has reviewed an entry.
+Automatic publication can put errors on the record that no human has caught.
 Disclosing that process and preserving corrections lets readers assess the record and challenge it.
 
 AI-assisted research and drafting do not remove the curator's responsibility for judgment, context, and accuracy.

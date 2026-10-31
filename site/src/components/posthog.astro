@@ -8,35 +8,18 @@
     api_host: apiHost || '',
     defaults: '2026-01-30',
     persistence: 'memory',
-    disable_persistence: true,
-    person_profiles: 'never',
-    autocapture: false,
-    capture_pageview: true,
     disable_session_recording: true,
     capture_heatmaps: false,
-    enable_heatmaps: false,
-    capture_dead_clicks: false,
-    rageclick: false,
-    capture_performance: false,
-    capture_exceptions: false,
     disable_surveys: true,
-    save_referrer: false,
-    save_campaign_params: false,
     before_send: function (event) {
-      // Search text can also appear in SDK URL and nested attribution properties.
-      function redact(properties) {
-        Object.keys(properties).forEach(function (key) {
-          var value = properties[key];
-          if (key === 'query' || key === '$search_keyword' || key === '$initial_search_keyword') {
-            delete properties[key];
-          } else if (typeof value === 'string' && /^https?:\/\//i.test(value)) {
-            properties[key] = value.replace(/[?#].*$/, '');
-          } else if (value && typeof value === 'object') {
-            redact(value);
-          }
-        });
-      }
-      redact(event.properties);
+      var properties = event.properties;
+      var keysCarryingSearchTerms = /^(ph_keyword|utm_term|\$web_vitals_.+_event|\$session_entry_(?!(url|host|pathname|referrer|referring_domain|search_engine)$).+)$/;
+      ['$current_url', '$referrer', '$session_entry_url', '$session_entry_referrer'].forEach(function (key) {
+        if (typeof properties[key] === 'string') properties[key] = properties[key].replace(/[?#].*$/, '');
+      });
+      Object.keys(properties).forEach(function (key) {
+        if (keysCarryingSearchTerms.test(key)) delete properties[key];
+      });
       return event;
     }
   })

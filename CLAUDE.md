@@ -150,7 +150,8 @@ Anti-references — reject changes that make the site resemble any of these:
   Every non-draft PR also runs `preview.yml`, which only builds the site as a check and deploys nothing.
   Push to `main` also triggers `deploy.yml` (build site + deploy to Vercel).
 - **Stale sources:** Weekly cron checks for broken source URLs.
-- **Branch protection:** PRs required for `main`, reviews enforced.
+- **Branch protection:** `main` requires a PR, one review, and the schema validation check for non-admins.
+  Admins can bypass these, and the automated daily scan merges with `gh pr merge --admin` once its PR checks pass.
 
 ## Key Conventions
 

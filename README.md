@@ -58,9 +58,10 @@ Nine non-negotiable principles govern The Ledger:
 3. **Claims ≠ Facts** — Claims are attributed, dated, and contestable.
 4. **Time Awareness** — Wrongness is a feature. We track belief decay.
 5. **AI Transparency** - AI tools disclosed.
-   Daily scan entries are drafted and published automatically under the editorial rules: sourced claims, the 72-hour rule, `notable` significance only, and validation.
-   The curator reviews sources and claims after publication and records corrections publicly.
-   Anyone can [challenge a claim](CONTRIBUTING.md#challenging-existing-content).
+   A named human editor reviews and approves all factual claims, confidence assessments, and interpretations.
+   Automatic daily scan entries are the documented exception, described in [`editorial/ai-assistance.md`](editorial/ai-assistance.md).
+   They are drafted and published automatically under the editorial rules and may not be read individually by a human before or after publication.
+   The curator is accountable for them and corrects errors when they are found or challenged, in public, through the existing correction and [challenge process](CONTRIBUTING.md#challenging-existing-content).
 6. **Source Primacy** — Primary sources over commentary. Archived URLs required.
 7. **Pluralism** — Minority views documented, not deleted.
 8. **Bias Disclosure** — Affiliations with relevant actors must be disclosed.
