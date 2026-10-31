@@ -36,6 +36,10 @@ export interface Contestation {
   last_challenged?: string;
 }
 
+export interface Revision {
+  last_reviewed?: string;
+}
+
 export interface EventData {
   id: string;
   title: string;
@@ -53,6 +57,7 @@ export interface EventData {
   sources?: Source[];
   significance_history?: SignificanceEntry[];
   state?: string;
+  revision?: Revision;
   content: string;
   htmlContent: string;
   slug: string;
@@ -150,6 +155,13 @@ function isoDate(value: unknown): string {
   return String(value);
 }
 
+/** Separate the opening section so canonical prose can precede metadata. */
+export function splitArticleLead(html: string): { lead: string; body: string } {
+  const headings = [...html.matchAll(/<h2(?:\s[^>]*)?>/g)];
+  const end = headings[1]?.index ?? html.length;
+  return { lead: html.slice(0, end), body: html.slice(end) };
+}
+
 // ─── Title formatting ─────────────────────────────────────────
 
 const CONTROVERSY_TITLES: Record<string, string> = {
@@ -203,6 +215,9 @@ export function loadEvents(): EventData[] {
           sources: data.sources,
           significance_history: data.significance_history,
           state: data.state,
+          revision: data.revision?.last_reviewed
+            ? { last_reviewed: isoDate(data.revision.last_reviewed) }
+            : undefined,
           content,
           htmlContent,
           slug: data.id || file.replace('.md', ''),

@@ -202,7 +202,7 @@ function cleanUrl(url: string): string {
         <ul class="rail-list">
           {topCategories.map(([cat, n]) => (
             <li>
-              <a href={`/explore?category=${cat}`}>{cat.replace('-', ' ')}</a>
+              <a href={`/explore?cat=${cat}`}>{cat.replace('-', ' ')}</a>
               <span class="count">{n}</span>
             </li>
           ))}

@@ -32,6 +32,7 @@
     --color-ink-faint: #645E51;
     --color-rule: #E8E4DA;
     --color-rule-strong: #D9D3C5;
+    --color-control-border: var(--color-ink-faint);
     --color-rule-double: #C9C0AE;
     --color-wiki-link: #0645AD;
     --color-wiki-link-visited: #0B0080;
@@ -40,6 +41,7 @@
   }
 
   html {
+    font-synthesis: none;
     font-kerning: normal;
     font-feature-settings: 'kern', 'liga', 'calt';
     text-rendering: optimizeLegibility;
@@ -307,7 +309,7 @@
     }
   }
   @media (max-width: 780px) {
-    .wiki-layout {
+    .wiki-layout[data-left-rail][data-right-rail] {
       grid-template-columns: minmax(0, 1fr);
       padding: 20px 16px 48px;
       gap: 24px;
@@ -363,7 +365,7 @@
   .sig-history__title {
     font-family: var(--font-mono);
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 500;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--color-ink-muted);
