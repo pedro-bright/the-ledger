@@ -8,7 +8,8 @@ const CANARY = 'private-canary';
 const SDK_DIST = path.join(__dirname, '../node_modules/posthog-js/dist');
 
 // Every collection feature the project could switch on remotely is on here, so
-// recording, heatmaps, and surveys stay off only if the page's own options win.
+// recording, heatmaps, surveys, and flag requests stay off only if the page's own
+// options win.
 const REMOTE_CONFIG = {
   autocapture_opt_out: false,
   capturePerformance: { network_timing: true, web_vitals: true, web_vitals_allowed_metrics: null },
@@ -17,9 +18,11 @@ const REMOTE_CONFIG = {
   surveys: true,
   analytics: { endpoint: '/i/v0/e/' },
   defaultIdentifiedOnly: true,
-  hasFeatureFlags: false,
+  hasFeatureFlags: true,
   siteApps: [],
 };
+
+const nonEventPosts = (posts: string[]) => posts.filter(pathname => !/^\/(i\/v0\/)?e\/?$/.test(pathname));
 
 function decodeEvents(body: string): SentEvent[] {
   const json = body.startsWith('data=')
@@ -55,9 +58,6 @@ async function loadRealAnalytics(page: Page) {
           body: `window._POSTHOG_REMOTE_CONFIG = { phc_test: { config: ${JSON.stringify(REMOTE_CONFIG)}, siteApps: [] } };`,
         })
       : route.fulfill({ json: REMOTE_CONFIG }),
-  );
-  await page.route(/\/flags\//, route =>
-    route.fulfill({ json: { flags: {}, featureFlags: {}, featureFlagPayloads: {} } }),
   );
   await page.route(/\/(i\/v0\/)?e\/(\?|$)/, route => {
     events.push(...decodeEvents(route.request().postData() ?? ''));
@@ -157,7 +157,7 @@ test('the real analytics SDK keeps search terms in the browser and honors the pr
   expect(autocaptured).not.toContain('search-q');
 
   expect(scripts.filter(name => /recorder|survey/i.test(name))).toEqual([]);
-  expect(posts.filter(pathname => !/^\/((i\/v0\/)?e|flags)\/?$/.test(pathname))).toEqual([]);
+  expect(nonEventPosts(posts)).toEqual([]);
   expect(events.filter(event => event.event === '$snapshot' || event.event === '$$heatmap')).toEqual([]);
 
   const identifiers = named('$pageview').map(event => event.properties.distinct_id);
@@ -165,6 +165,23 @@ test('the real analytics SDK keeps search terms in the browser and honors the pr
   expect(await context.cookies()).toEqual([]);
   expect(await page.evaluate(() => ({ local: Object.keys(localStorage), session: Object.keys(sessionStorage) })))
     .toEqual({ local: [], session: [] });
+});
+
+test('a failed remote config fetch does not send search terms in a feature flag request', async ({ page }) => {
+  const { events, posts } = await loadRealAnalytics(page);
+  await page.route(/\/array\/phc_test\/config/, route => route.abort());
+
+  await page.goto(`/explore?q=${CANARY}-landing&utm_term=${CANARY}-utm`, {
+    referer: `https://www.bing.com/search?q=${CANARY}-engine`,
+  });
+  await expect(page.locator('#explorer-search')).toHaveValue(`${CANARY}-landing`);
+  await page.getByRole('button', { name: /^research$/i }).first().click();
+  await expect
+    .poll(() => events.map(event => event.event))
+    .toEqual(expect.arrayContaining(['$pageview', 'explorer_filter_applied']));
+
+  expect(nonEventPosts(posts)).toEqual([]);
+  expect(JSON.stringify(events)).not.toContain(CANARY);
 });
 
 test('footer links to the privacy note', async ({ page }) => {

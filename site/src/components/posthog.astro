@@ -11,6 +11,7 @@
     disable_session_recording: true,
     capture_heatmaps: false,
     disable_surveys: true,
+    advanced_disable_feature_flags: true,
     before_send: function (event) {
       var properties = event.properties;
       var keysCarryingSearchTerms = /^(ph_keyword|utm_term|\$session_entry_ph_keyword|\$session_entry_utm_term|\$web_vitals_.+_event)$/;
