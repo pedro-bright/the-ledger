@@ -16,11 +16,13 @@
     "url": {
       "type": "string",
       "format": "uri",
+      "pattern": "^https?://",
       "description": "URL of the source."
     },
     "archive_url": {
       "type": "string",
       "format": "uri",
+      "pattern": "^https?://",
       "description": "Wayback Machine or other archive URL. Mandatory for primary sources."
     },
     "title": {

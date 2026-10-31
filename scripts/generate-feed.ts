@@ -6,7 +6,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import matter from "gray-matter";
+import { parseFrontmatter } from "./frontmatter.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -69,7 +69,7 @@ function main() {
   for (const filePath of files) {
     try {
       const raw = fs.readFileSync(filePath, "utf-8");
-      const { data, content } = matter(raw);
+      const { data, content } = parseFrontmatter(raw);
 
       if (!data.id || !data.title || !data.date) continue;
 

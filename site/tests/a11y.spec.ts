@@ -68,3 +68,39 @@ test.describe('a11y (axe)', () => {
     });
   }
 });
+
+
+test('editable search boundaries have 3:1 contrast and mobile text is 16px', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/explore');
+  const controls = await page.locator('input[type="search"]').evaluateAll((inputs) => {
+    const luminance = (color: string) => {
+      const channels = color.match(/\d+(?:\.\d+)?/g)!.slice(0, 3).map(Number).map((value) => {
+        const v = value / 255;
+        return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+      });
+      return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
+    };
+    return inputs.map((input) => {
+      const style = getComputedStyle(input);
+      let parent = input.parentElement!;
+      while (getComputedStyle(parent).backgroundColor === 'rgba(0, 0, 0, 0)') parent = parent.parentElement!;
+      const contrast = (background: string) => {
+        const values = [luminance(style.borderTopColor), luminance(background)].sort((a, b) => b - a);
+        return (values[0] + 0.05) / (values[1] + 0.05);
+      };
+      return {
+        id: input.id,
+        inner: contrast(style.backgroundColor),
+        outer: contrast(getComputedStyle(parent).backgroundColor),
+        fontSize: parseFloat(style.fontSize),
+      };
+    });
+  });
+  expect(controls).toHaveLength(2);
+  for (const control of controls) {
+    expect(control.inner, control.id).toBeGreaterThanOrEqual(3);
+    expect(control.outer, control.id).toBeGreaterThanOrEqual(3);
+    expect(control.fontSize, control.id).toBeGreaterThanOrEqual(16);
+  }
+});

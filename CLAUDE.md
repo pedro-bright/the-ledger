@@ -119,7 +119,7 @@ Locked in — do not redesign without cause:
 - **Category colors** are tokens, not decoration: policy=indigo-700, models=amber-700, research=emerald-700, industry=violet-700, safety=red-700, culture=pink-700, open-source=cyan-700. All AA-contrast on page-bg. Always paired with text; never color-only.
 - **Significance scale**: Landmark (`#FDF2C5`/`#7A5A00`), Major (`#DBECF9`/`#0A4D82`), Notable (`#EDEAE3`/`#5C564D`). Use `<SignificanceFlag level="..." />`.
 - **Component vocabulary** in `site/src/components/wiki/`: Infobox, ArticleShell, FeaturedBox, EventRow, RailSection, PageHeader, SignificanceFlag, CategoryTag. Every detail and index page uses these; don't invent parallel patterns.
-- **Chrome stack** in `site/src/components/chrome/` and `Base.astro`: UtilBar (namespace tabs + account strip), Masthead (brand mark + title + tagline + search), TopNav (primary nav), SiteFooter (credit + license + secondary nav + colophon). Base.astro exposes `layout: 'article'|'index'|'full'` + named slots `leftRail` / `rightRail`.
+- **Chrome stack** in `site/src/components/chrome/` and `Base.astro`: UtilBar (global site links + RSS and GitHub links), Masthead (brand mark + title + tagline + search), TopNav (primary nav), SiteFooter (credit + license + secondary nav + colophon). Base.astro exposes `layout: 'article'|'index'|'full'` + named slots `leftRail` / `rightRail`.
 
 Push toward: longer line lengths (68ch) and generous leading on bodies; subtle fade-in animation only (no parallax, no scroll-hijacking); monospace metadata strips, thin 1px borders, understated hover states; dense-but-legible list layouts (EventRow) over card-heavy grids; Wikipedia-style floated infobox on article pages.
 
@@ -147,7 +147,7 @@ Anti-references — reject changes that make the site resemble any of these:
 - **Live:** https://the-ledger.net
 - **CI:** Push/PR to `main` triggers `validate.yml` (schema validation + graph build).
   Every PR and every push to `main` also runs `e2e.yml`: validate, graph and feed build, site build, `npm run test:parity`, `npm run test:no-dark-leaks`, and Playwright in `site/`.
-  Every PR gets a Vercel preview deploy (`preview.yml`).
+  Every non-draft PR also runs `preview.yml`, which only builds the site as a check and deploys nothing.
   Push to `main` also triggers `deploy.yml` (build site + deploy to Vercel).
 - **Stale sources:** Weekly cron checks for broken source URLs.
 - **Branch protection:** PRs required for `main`, reviews enforced.

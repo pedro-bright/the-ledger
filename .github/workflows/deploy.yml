@@ -8,21 +8,22 @@ concurrency:
   group: deploy
   cancel-in-progress: true
 
-env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+permissions:
+  contents: read
 
 jobs:
-  deploy:
-    name: Build & Deploy to Vercel
+  build:
+    name: Build Site
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
           cache: npm
@@ -44,7 +45,7 @@ jobs:
 
       - name: Install site dependencies
         working-directory: site
-        run: npm install
+        run: npm ci
 
       - name: Build site
         working-directory: site
@@ -53,9 +54,63 @@ jobs:
           PUBLIC_POSTHOG_HOST: ${{ secrets.PUBLIC_POSTHOG_HOST }}
         run: npm run build
 
+      - name: Upload built site
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: production-site
+          path: site/dist
+          retention-days: 1
+          if-no-files-found: error
+
+  # Holds the deploy token, so it skips the root and site installs and the build.
+  # The Vercel CLI executes a vercel.ts or vercel.js at the root of the directory
+  # it deploys, so the built site sits in public/ under a deploy root outside the
+  # checkout, and the job fails if the built site contains Vercel config.
+  deploy:
+    name: Deploy to Vercel
+    needs: build
+    runs-on: ubuntu-latest
+    environment: Production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+
       - name: Install Vercel CLI
-        run: npm install -g vercel@latest
+        run: npm ci --prefix .github/deploy-tools --ignore-scripts
+
+      - name: Download built site
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: production-site
+          path: ${{ runner.temp }}/deploy/public
+
+      - name: Reject Vercel config in built site
+        working-directory: ${{ runner.temp }}/deploy
+        run: |
+          found=$(find public -name vercel.ts -o -name vercel.mts -o -name vercel.js -o -name vercel.mjs -o -name vercel.cjs -o -name vercel.json)
+          if [ -n "$found" ]; then
+            echo "::error::Refusing to deploy: the built site contains Vercel config, which the Vercel CLI can execute or apply. Remove these files:"
+            echo "$found"
+            exit 1
+          fi
 
       - name: Deploy to Vercel
-        working-directory: site
-        run: vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} dist/
+        working-directory: ${{ runner.temp }}/deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          "$GITHUB_WORKSPACE/.github/deploy-tools/node_modules/.bin/vercel" deploy --prod \
+            --meta githubCommitSha="$GITHUB_SHA" \
+            --meta githubCommitRef="$GITHUB_REF_NAME" \
+            --meta githubOrg="$GITHUB_REPOSITORY_OWNER" \
+            --meta githubRepo="${GITHUB_REPOSITORY#*/}"

@@ -1,8 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import matter from 'gray-matter';
-import { marked } from 'marked';
 import yaml from 'js-yaml';
+import { parseFrontmatter, renderMarkdown } from './markdown';
 
 // ─── Types ────────────────────────────────────────────────────
 
@@ -37,6 +36,10 @@ export interface Contestation {
   last_challenged?: string;
 }
 
+export interface Revision {
+  last_reviewed?: string;
+}
+
 export interface EventData {
   id: string;
   title: string;
@@ -54,6 +57,7 @@ export interface EventData {
   sources?: Source[];
   significance_history?: SignificanceEntry[];
   state?: string;
+  revision?: Revision;
   content: string;
   htmlContent: string;
   slug: string;
@@ -114,8 +118,8 @@ function safeReadDir(dir: string): string[] {
 
 function parseMarkdownFile(filePath: string): { data: Record<string, any>; content: string; htmlContent: string } {
   const raw = fs.readFileSync(filePath, 'utf-8');
-  const { data, content } = matter(raw);
-  const htmlContent = marked.parse(content, { async: false }) as string;
+  const { data, content } = parseFrontmatter(raw);
+  const htmlContent = renderMarkdown(content);
   return { data, content, htmlContent };
 }
 
@@ -149,6 +153,13 @@ function isoDate(value: unknown): string {
     return trimmed;
   }
   return String(value);
+}
+
+/** Separate the opening section so canonical prose can precede metadata. */
+export function splitArticleLead(html: string): { lead: string; body: string } {
+  const headings = [...html.matchAll(/<h2(?:\s[^>]*)?>/g)];
+  const end = headings[1]?.index ?? html.length;
+  return { lead: html.slice(0, end), body: html.slice(end) };
 }
 
 // ─── Title formatting ─────────────────────────────────────────
@@ -204,6 +215,9 @@ export function loadEvents(): EventData[] {
           sources: data.sources,
           significance_history: data.significance_history,
           state: data.state,
+          revision: data.revision?.last_reviewed
+            ? { last_reviewed: isoDate(data.revision.last_reviewed) }
+            : undefined,
           content,
           htmlContent,
           slug: data.id || file.replace('.md', ''),

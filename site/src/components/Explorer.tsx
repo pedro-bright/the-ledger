@@ -58,7 +58,7 @@ function readFromUrl(allCategories: Set<string>): {
     return { search: '', categories: new Set(), significance: new Set(), year: null, sort: 'newest' };
   }
   const p = new URLSearchParams(window.location.search);
-  const cats = (p.get('cat') || '')
+  const cats = (p.get('cat') ?? p.get('category') ?? '')
     .split(',')
     .map((s) => s.trim())
     .filter((s) => s && allCategories.has(s));
@@ -293,7 +293,7 @@ export default function Explorer({ events, categories }: Props) {
               aria-label="Search events by title, summary, or tag"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-[10px] bg-page-bg border border-rule-strong text-sm text-ink placeholder:text-ink-faint font-sans rounded-sm min-h-[40px]"
+              className="w-full pl-9 pr-3 py-[10px] bg-page-bg border border-[var(--color-control-border)] text-base min-[781px]:text-sm text-ink placeholder:text-ink-faint font-sans rounded-sm min-h-[40px]"
             />
           </div>
         </div>
@@ -426,7 +426,7 @@ export default function Explorer({ events, categories }: Props) {
                   id="explorer-sort"
                   value={sortOption}
                   onChange={(e) => setSortOption(e.target.value as SortOption)}
-                  className="bg-page-bg border border-rule-strong text-sm text-ink font-sans py-[9px] px-3 rounded-sm min-h-[36px]"
+                  className="bg-page-bg border border-[var(--color-control-border)] text-base min-[781px]:text-sm text-ink font-sans py-[9px] px-3 rounded-sm min-h-[36px]"
                 >
                   <option value="newest">Newest first</option>
                   <option value="oldest">Oldest first</option>
@@ -521,6 +521,11 @@ export default function Explorer({ events, categories }: Props) {
               <>Try dropping one filter — the most constraining combinations rarely return results.</>
             )}
           </p>
+          <nav aria-label="Other indexes" className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm font-sans mb-5">
+            <a href="/threads" className="text-wiki-link hover:underline">Threads</a>
+            <a href="/controversies" className="text-wiki-link hover:underline">Controversies</a>
+            <a href="/actors" className="text-wiki-link hover:underline">Actors</a>
+          </nav>
           <p className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm font-sans">
             {search && (
               <button

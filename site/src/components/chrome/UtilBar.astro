@@ -1,26 +1,21 @@
 ---
-// Wiki-style utility bar: namespace tabs on the left, account/meta actions on the right.
+// Utility bar: global site links on the left, RSS and GitHub links on the right.
 // Sits at the very top of every page.
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
-const isArticleContext =
-  currentPath === '/' ||
-  currentPath.startsWith('/events') ||
-  currentPath.startsWith('/threads') ||
-  currentPath.startsWith('/controversies') ||
-  currentPath.startsWith('/actors');
-const isDiscussionContext = currentPath.startsWith('/about');
+const isHome = currentPath === '/';
+const isAbout = currentPath === '/about';
 ---
 <div class="wiki-utilbar">
   <div class="wiki-utilbar__inner">
-    <nav class="wiki-utilbar__tabs" aria-label="Namespace">
-      <a href="/" class="wiki-utilbar__tab" data-active={isArticleContext}>Article</a>
-      <a href="/about" class="wiki-utilbar__tab" data-active={isDiscussionContext}>Discussion</a>
+    <nav class="wiki-utilbar__tabs" aria-label="Site utilities">
+      <a href="/" class="wiki-utilbar__tab" data-active={isHome}>Home</a>
+      <a href="/about" class="wiki-utilbar__tab" data-active={isAbout}>About</a>
       <a
         href="https://github.com/pedro-bright/the-ledger/commits/main"
         target="_blank"
         rel="noopener"
         class="wiki-utilbar__tab"
-      >History</a>
+      >Repository history</a>
       <a
         href="https://github.com/pedro-bright/the-ledger/blob/main/CONTRIBUTING.md"
         target="_blank"
@@ -105,9 +100,9 @@ const isDiscussionContext = currentPath.startsWith('/about');
     .wiki-utilbar__meta { font-size: 12px; }
   }
   @media (max-width: 480px) {
-    .wiki-utilbar__inner { padding: 0 8px; gap: 4px; min-height: 38px; }
-    .wiki-utilbar__tab { padding: 9px 8px; font-size: 11.5px; }
-    .wiki-utilbar__meta { gap: 6px; font-size: 11.5px; }
+    .wiki-utilbar__inner { padding: 0 8px; gap: 0 4px; min-height: 38px; flex-wrap: wrap; }
+    .wiki-utilbar__tab { padding: 9px 8px; font-size: 11.5px; white-space: nowrap; }
+    .wiki-utilbar__meta { gap: 6px; font-size: 11.5px; min-height: 24px; padding-left: 8px; }
     .wiki-utilbar__meta .wiki-utilbar__sep { display: none; }
   }
 </style>
