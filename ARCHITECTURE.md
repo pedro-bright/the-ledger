@@ -16,7 +16,7 @@
 
 **Primary axis:** Time-aware historical reinterpretation — with epistemic rigor as the method and power analysis as the lens.
 
-**Product principle (from GPT-5.4-pro):** *The institution is not the log; it is the editorial process that turns the log into public knowledge.* The Ledger produces canonical, citable, periodically reviewed histories — with transparent provenance underneath.
+**Product principle (from GPT-5.4-pro):** *The institution is not the log; it is the editorial process that turns the log into public knowledge.* The Ledger produces canonical, citable histories - with transparent provenance underneath.
 
 **What makes this different:**
 - Not a news site (archival, not breaking)
@@ -609,7 +609,7 @@ Three views over the same data, serving different needs:
 - Contestation badge
 - Significance history shown if upgraded
 - "Part of thread: [link]" navigation
-- "Last reviewed: [date]" always visible
+- "This record last reviewed [date]" in the footer, omitted on automatic daily scan entries and when `last_reviewed` is not later than `created`
 - "View history" expandable (ledger layer)
 
 ### Thread Pages
