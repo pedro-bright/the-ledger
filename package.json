@@ -10,9 +10,10 @@
     "build-graph": "tsx scripts/build-graph.ts",
     "generate-feed": "tsx scripts/generate-feed.ts",
     "test:links": "tsx --test --test-concurrency=2 scripts/check-links.test.ts",
+    "test:security": "tsx --test scripts/content-security.test.ts",
     "test:parity": "tsx scripts/test-parity.ts",
     "test:no-dark-leaks": "tsx scripts/test-no-dark-leaks.ts",
-    "test:build": "npm run build-graph && npm run generate-feed && cd site && npm run build && cd .. && npm run test:parity && npm run test:no-dark-leaks"
+    "test:build": "npm run build-graph && npm run generate-feed && cd site && npm run build && cd .. && npm run test:parity && npm run test:no-dark-leaks && npm run test:security"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",

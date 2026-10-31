@@ -7,7 +7,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import matter from "gray-matter";
+import { parseFrontmatter } from "./frontmatter.js";
 import yaml from "js-yaml";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -68,7 +68,7 @@ function parseFile(filePath: string): Record<string, unknown> {
   if (ext === ".yml" || ext === ".yaml") {
     return (yaml.load(raw) as Record<string, unknown>) ?? {};
   }
-  return matter(raw).data;
+  return parseFrontmatter(raw).data;
 }
 
 function isoDate(value: unknown): string {

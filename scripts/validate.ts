@@ -9,7 +9,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
-import matter from "gray-matter";
+import { parseFrontmatter } from "./frontmatter.js";
 import yaml from "js-yaml";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -132,7 +132,7 @@ function parseFile(filePath: string): { data: Record<string, unknown>; content: 
   }
 
   // Markdown — parse frontmatter
-  const { data, content } = matter(raw);
+  const { data, content } = parseFrontmatter(raw);
   return { data: normalizeDates(data) as Record<string, unknown>, content };
 }
 
