@@ -189,6 +189,24 @@ test('a failed island offers retry and server-rendered typed connections', async
   await expect(record.getByRole('link', { name: /scaling laws/i }).first()).toBeVisible();
 });
 
+const statusScreens = {
+  'a phone': { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true },
+  'a laptop': { viewport: { width: 1366, height: 768 } },
+};
+
+for (const [device, options] of Object.entries(statusScreens)) {
+  test(`${device} shows the loading and failure messages on the first screen`, async ({ browser }) => {
+    const context = await browser.newContext({ baseURL: test.info().project.use.baseURL, ...options });
+    const page = await context.newPage();
+    await page.route('**/_astro/Graph.*.js', (route) => route.abort());
+    await page.goto('/graph', { waitUntil: 'domcontentloaded' });
+    await expect(page.getByText('Loading relationship graph.')).toBeInViewport({ ratio: 1 });
+    await expect(page.getByText('The graph could not load.')).toBeInViewport({ ratio: 1, timeout: 20000 });
+    await expect(page.getByRole('link', { name: 'Retry graph' })).toBeInViewport({ ratio: 1 });
+    await context.close();
+  });
+}
+
 test('map controls work from the keyboard and wheel scrolling stays native', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/graph');
