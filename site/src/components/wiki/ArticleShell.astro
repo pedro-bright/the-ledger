@@ -1,5 +1,8 @@
 ---
-// Article-page shell: breadcrumb → title → subtitle → body (with floated infobox) → footer.
+// Article-page shell: breadcrumb → title → subtitle → markers → body → footer.
+// With a `lead` slot, the metadata disclosure follows the lead and starts closed on phones; on
+// desktop the script below moves it before the lead and opens it, so it floats beside the text.
+// Without a `lead` slot, the infobox floats directly in the body.
 // Page provides `markers`, `infobox`, `lead`, default body, `references`, `seeAlso`, `footer` via slots.
 interface Props {
   title: string;
