@@ -25,7 +25,7 @@ We don't aggregate news. We don't write encyclopedias. We build a **machine for 
 
 The Ledger has two layers over the same data:
 
-1. **Canonical Layer** (what readers see) — The "current best understanding" of each event, thread, and controversy. Legible, citable, periodically reviewed narratives.
+1. **Canonical Layer** (what readers see) — The "current best understanding" of each event, thread, and controversy. Legible, citable narratives.
 
 2. **Ledger Layer** (what powers it) — Immutable, append-only event history. All assertions, disagreements, and revisions preserved. No silent rewriting. Git is the audit trail.
 
@@ -57,7 +57,11 @@ Nine non-negotiable principles govern The Ledger:
 2. **Contestability by Default** — Every claim has a challenge window.
 3. **Claims ≠ Facts** — Claims are attributed, dated, and contestable.
 4. **Time Awareness** — Wrongness is a feature. We track belief decay.
-5. **AI Transparency** — AI tools disclosed. Human editors review all content.
+5. **AI Transparency** - AI tools disclosed.
+   A named human editor reviews and approves all factual claims, confidence assessments, and interpretations.
+   Automatic daily scan entries are the documented exception, described in [`editorial/ai-assistance.md`](editorial/ai-assistance.md).
+   They are drafted and published automatically under the editorial rules and may not be read individually by a human before or after publication.
+   The curator is accountable for them and corrects errors when they are found or challenged, in public, through the existing correction and [challenge process](CONTRIBUTING.md#challenging-existing-content).
 6. **Source Primacy** — Primary sources over commentary. Archived URLs required.
 7. **Pluralism** — Minority views documented, not deleted.
 8. **Bias Disclosure** — Affiliations with relevant actors must be disclosed.

@@ -66,6 +66,8 @@ const breadcrumb = [
 const subtitle = `A ledger entry in the ${formatCategory(event.category).toLowerCase()} archive, dated ${event.date}.`;
 const hasSigHistory = event.significance_history && event.significance_history.length > 1;
 const description = `${event.title} — ${event.date}`;
+const { created, last_reviewed: reviewed, final_author: finalAuthor } = event.revision ?? {};
+const lastReviewed = reviewed && finalAuthor !== 'pedro-bright' && (!created || reviewed > created) ? reviewed : undefined;
 ---
 
 <Base title={event.title} description={description} layout="article">
@@ -146,7 +148,7 @@ const description = `${event.title} — ${event.date}`;
     title={event.title}
     subtitle={subtitle}
     breadcrumb={breadcrumb}
-    lastReviewed={event.revision?.last_reviewed}
+    lastReviewed={lastReviewed}
     sourcePath={sourcePath}
   >
     <Fragment slot="markers">
