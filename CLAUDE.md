@@ -47,7 +47,7 @@ the-ledger/
       styles/            # global.css
     tailwind.config.mjs  # Tailwind config with custom theme
     astro.config.mjs     # Astro + React + Tailwind integrations
-  .github/workflows/     # CI: validate.yml, e2e.yml, preview.yml, deploy.yml, stale-sources.yml
+  .github/workflows/     # CI: validate.yml, e2e.yml, stale-sources.yml
 ```
 
 ## Stack
@@ -147,8 +147,9 @@ Anti-references — reject changes that make the site resemble any of these:
 - **Live:** https://the-ledger.net
 - **CI:** Push/PR to `main` triggers `validate.yml` (schema validation + graph build).
   Every PR and every push to `main` also runs `e2e.yml`: validate, graph and feed build, site build, `npm run test:parity`, `npm run test:no-dark-leaks`, and Playwright in `site/`.
-  Every non-draft PR also runs `preview.yml`, which only builds the site as a check and deploys nothing.
-  Push to `main` also triggers `deploy.yml` (build site + deploy to Vercel).
+  Vercel's Git integration builds branch previews and deploys `main` to production using the root `vercel.json`.
+  `npm run build:vercel` generates the graph and feeds, builds Astro, and emits static files with generated security headers through Build Output API v3 in `.vercel/output/`.
+  Production builds read `PUBLIC_POSTHOG_PROJECT_TOKEN` and `PUBLIC_POSTHOG_HOST` from Vercel and print a build-log warning if either is missing; non-production builds remove both variables before building Astro.
 - **Stale sources:** Weekly cron checks for broken source URLs.
 - **Branch protection:** PRs required for `main`, reviews enforced.
 

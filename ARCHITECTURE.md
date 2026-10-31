@@ -526,7 +526,7 @@ the-ledger/
     ├── PULL_REQUEST_TEMPLATE.md
     └── workflows/
         ├── validate.yml                   # CI: schema, links, dates
-        ├── deploy.yml                     # auto-deploy on merge
+        ├── e2e.yml                        # static build, content parity and browser checks
         └── stale-sources.yml              # weekly link rot check
 ```
 
@@ -635,7 +635,7 @@ Three views over the same data, serving different needs:
 | Interactive components | React (via Astro islands) | Timeline, explorer, controversy panels, layered views |
 | Search | Pagefind (static) | No infrastructure, works offline |
 | CI | GitHub Actions | Schema validation, link checking, archive verification |
-| Hosting | Vercel or Netlify | Free tier, auto-deploy on merge |
+| Hosting | Vercel Git integration | Branch previews and production deploys from main; root vercel.json builds content, Astro and security headers |
 | Analytics | Plausible | Privacy-respecting |
 | Feed | RSS/Atom | Auto-generated from events |
 | License | CC BY-SA 4.0 | Open, attribution required |
