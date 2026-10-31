@@ -4,6 +4,7 @@ import ArticleShell from '../../components/wiki/ArticleShell.astro';
 import Infobox from '../../components/wiki/Infobox.astro';
 import RailSection from '../../components/wiki/RailSection.astro';
 import EventRow from '../../components/wiki/EventRow.astro';
+import ContestationBadge from '../../components/ContestationBadge';
 import { loadThreads, loadEvents, loadControversies, buildThreadEventMap, splitArticleLead } from '../../lib/content';
 
 export function getStaticPaths() {
@@ -143,19 +144,19 @@ const subtitle = thread.core_question ? `— ${thread.core_question}` : undefine
     title={thread.title}
     subtitle={subtitle}
     breadcrumb={breadcrumb}
-    lastModified={lastUpdatedIso || thread.last_updated}
+    lastModified={thread.last_updated}
     sourcePath={sourcePath}
   >
-    {thread.status && (
-      <Fragment slot="markers">
-        <span class={`status-chip status-chip--${thread.status}`}>{thread.status}</span>
-      </Fragment>
-    )}
+    <Fragment slot="markers">
+      {thread.status && <span class={`status-chip status-chip--${thread.status}`}>{thread.status}</span>}
+      {thread.contestation?.status !== 'uncontested' && <ContestationBadge status={thread.contestation?.status} />}
+    </Fragment>
 
     <Fragment slot="infobox">
       <Infobox title="Thread metadata">
         <dl>
           {thread.status && <><dt>Status</dt><dd><span class={`status-chip status-chip--${thread.status}`}>{thread.status}</span></dd></>}
+          {thread.contestation?.status && <><dt>Contestation</dt><dd><ContestationBadge status={thread.contestation.status} /></dd></>}
           {thread.started && <><dt>Started</dt><dd><time class="mono" datetime={thread.started}>{thread.started}</time></dd></>}
           {(lastUpdatedIso || thread.last_updated) && (
             <><dt>Last updated</dt><dd><time class="mono" datetime={lastUpdatedIso || thread.last_updated}>{lastUpdatedIso || thread.last_updated}</time></dd></>

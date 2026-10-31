@@ -139,7 +139,8 @@ test.describe('reading layout regressions', () => {
     { route: '/events/anthropic-dod-debate-2026', expected: ['Landmark', 'Medium confidence'] },
     { route: '/events/deepseek-r1-distill-impact', expected: ['Major', 'Low confidence', 'Unresolved'] },
     { route: `/events/${SLUGS.event}`, expected: ['Landmark'] },
-    { route: `/threads/${SLUGS.thread}`, expected: ['Active'] },
+    { route: `/threads/${SLUGS.thread}`, expected: ['Active', 'Contested'] },
+    { route: '/threads/ai-and-labor', expected: ['Active'] },
   ];
   for (const { route, expected } of MARKERS) {
     test(`${route} shows its markers at 390x844 with the metadata closed`, async ({ page }) => {
@@ -172,6 +173,34 @@ test.describe('reading layout regressions', () => {
     });
   }
 
+  test('controversy metadata stays visible at 390x844 without a disclosure', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(`/controversies/${SLUGS.controversy}`);
+    await expect(page.locator('.wiki-article__metadata')).toHaveCount(0);
+    await expect(page.locator('.wiki-infobox')).toBeVisible();
+    await expect(page.locator('.wiki-infobox dt').filter({ hasText: 'Status' })).toBeVisible();
+  });
+
+  test('the open desktop panel keeps a contested thread\'s contestation', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(`/threads/${SLUGS.thread}`);
+    await expect(page.locator('.wiki-article__metadata')).toHaveAttribute('open', '');
+    await expect(page.locator('.wiki-infobox dd').filter({ hasText: 'Contested' })).toBeVisible();
+  });
+
+  for (const route of ['/events/anthropic-dod-debate-2026', `/threads/${SLUGS.thread}`]) {
+    for (const width of [390, 1440]) {
+      test(`${route} prints its full metadata from a ${width}px window`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 844 });
+        await page.goto(route);
+        await page.emulateMedia({ media: 'print' });
+        await page.setViewportSize({ width: 624, height: 844 });
+        await expect(page.locator('.wiki-article__metadata .wiki-infobox')).toBeVisible();
+        await expect(page.locator('.wiki-article__metadata > summary')).toBeHidden();
+      });
+    }
+  }
+
   test.describe('without JavaScript', () => {
     test.use({ javaScriptEnabled: false });
 
@@ -180,6 +209,14 @@ test.describe('reading layout regressions', () => {
       await page.goto('/events/anthropic-dod-debate-2026');
       await expect(page.locator('.wiki-article__metadata')).not.toHaveAttribute('open', '');
       await expect(page.locator('.wiki-article__markers')).toBeVisible();
+    });
+
+    test('articles print their full metadata', async ({ page }) => {
+      await page.setViewportSize({ width: 624, height: 844 });
+      await page.goto('/events/anthropic-dod-debate-2026');
+      await page.emulateMedia({ media: 'print' });
+      await expect(page.locator('.wiki-article__metadata .wiki-infobox')).toBeVisible();
+      await expect(page.locator('.wiki-article__metadata > summary')).toBeHidden();
     });
   });
 
@@ -224,12 +261,15 @@ test.describe('reading layout regressions', () => {
       await page.setViewportSize({ width, height: 900 });
       await page.goto(`/events/${SLUGS.event}`);
       await page.evaluate(() => document.fonts.ready);
-      const prose = await page.locator('.wiki-article__prose').evaluate((el) => {
+      const blocks = await page.locator('.wiki-article__lead, .wiki-article__prose').evaluateAll((els) => els.map((el) => {
         const style = getComputedStyle(el);
         return { width: el.getBoundingClientRect().width, max: parseFloat(style.maxWidth) };
-      });
-      expect(prose.width).toBeLessThanOrEqual(prose.max + 1);
-      expect(prose.max).toBeLessThan(600);
+      }));
+      expect(blocks.length).toBe(2);
+      for (const block of blocks) {
+        expect(block.width).toBeLessThanOrEqual(block.max + 1);
+        expect(block.max).toBeLessThan(600);
+      }
       expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
     });
   }

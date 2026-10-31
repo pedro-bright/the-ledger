@@ -182,10 +182,6 @@ const hasFooter = Astro.slots.has('footer');
     display: block;
     clear: both;
   }
-  .wiki-article__prose,
-  .wiki-article__lead {
-    max-width: 68ch;
-  }
   .wiki-article__lead {
     margin-bottom: 2rem;
   }
@@ -219,6 +215,11 @@ const hasFooter = Astro.slots.has('footer');
   }
   @media (max-width: 780px) {
     .wiki-article__metadata { float: none; width: 100%; margin: 20px 0; }
+  }
+  @media print {
+    .wiki-article__metadata { float: none; width: 100%; margin: 0 0 20px; }
+    .wiki-article__metadata > summary { display: none; }
+    .wiki-article__metadata::details-content { content-visibility: visible; display: block; block-size: auto; }
   }
   .wiki-article__h2 {
     font-family: var(--font-display);

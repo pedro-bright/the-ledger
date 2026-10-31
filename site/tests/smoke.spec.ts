@@ -147,6 +147,13 @@ test('event provenance distinguishes review dates from event dates', async ({ pa
   await expect(page.locator('.wiki-article__lastmod')).not.toContainText('last modified');
 });
 
+test('thread footers report the thread modification date instead of a linked event date', async ({ page }) => {
+  await page.goto('/threads/ai-copyright-wars');
+  const footer = page.locator('.wiki-article__lastmod');
+  await expect(footer).toContainText('This record last modified 2026-03-08.');
+  await expect(footer.locator('time')).toHaveAttribute('datetime', '2026-03-08');
+});
+
 test('utility links describe their destinations', async ({ page }) => {
   await page.goto(`/events/${SLUGS.event}`);
   const utility = page.locator('.wiki-utilbar__tabs');
