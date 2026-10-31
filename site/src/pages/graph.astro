@@ -62,7 +62,14 @@ for (const edge of graph.edges) {
       <p class="graph-loading-message">Loading relationship graph.</p>
       <p class="graph-failure-message" hidden>The graph could not load.</p>
       <p><a href="#graph-relationships">Browse records and relationships below</a><span class="graph-retry" hidden> or <a href="/graph">Retry graph</a></span>.</p>
-      <noscript><p>JavaScript is required for the canvas. Records and relationships are available below.</p></noscript>
+      <noscript>
+        <style is:inline>
+          .graph-loading-message { display: none; }
+          .graph-wrap[data-graph-state] { min-height: 0; }
+          .graph-wrap .graph-placeholder { position: static; }
+        </style>
+        <p>JavaScript is required for the canvas. Records and relationships are available below.</p>
+      </noscript>
     </div>
     <Graph data={graph} client:only="react" />
   </div>
@@ -97,24 +104,46 @@ for (const edge of graph.edges) {
       ))}
     </div>
   </details>
+
+  <details id="graph-directory" class="graph-fallback">
+    <summary class="graph-fallback__summary">All {nodeCount} records as a linked list</summary>
+    <div class="graph-fallback__body">
+      {legend.map((group) => {
+        const records = graph.nodes
+          .filter((node) => node.type === group.type)
+          .sort((a, b) => (b.date || '').localeCompare(a.date || '') || a.title.localeCompare(b.title));
+        return (
+          <section class="graph-fallback__section" aria-labelledby={`directory-${group.type}`}>
+            <h2 id={`directory-${group.type}`} class="graph-fallback__heading">
+              <span class="graph-fallback__dot" style={`background:${group.color}`} aria-hidden="true"></span>
+              {group.label}
+              <span class="graph-fallback__count font-mono tabular-nums">({records.length})</span>
+            </h2>
+            <ul class="graph-fallback__list">
+              {records.map((node) => (
+                <li>
+                  <a href={route(node)}>{node.title}</a>
+                  {node.date && <time class="graph-fallback__date font-mono" datetime={node.date}> - {node.date}</time>}
+                </li>
+              ))}
+            </ul>
+          </section>
+        );
+      })}
+    </div>
+  </details>
 </Base>
 
 <script>
   const wrapper = document.querySelector<HTMLElement>('.graph-wrap');
   if (wrapper) {
-    const timer = window.setTimeout(() => {
+    window.setTimeout(() => {
       if (wrapper.dataset.graphState === 'ready') return;
       wrapper.dataset.graphState = 'failed';
       wrapper.querySelector<HTMLElement>('.graph-loading-message')!.hidden = true;
       wrapper.querySelector<HTMLElement>('.graph-failure-message')!.hidden = false;
       wrapper.querySelector<HTMLElement>('.graph-retry')!.hidden = false;
     }, 12000);
-    const observer = new MutationObserver(() => {
-      if (wrapper.dataset.graphState !== 'ready') return;
-      window.clearTimeout(timer);
-      observer.disconnect();
-    });
-    observer.observe(wrapper, { attributes: true, attributeFilter: ['data-graph-state'] });
   }
 </script>
 
@@ -158,10 +187,10 @@ for (const edge of graph.edges) {
   .graph-wrap {
     --graph-height: max(500px, calc(100svh - 280px));
     --graph-tools-height: 168px;
-    --graph-help-height: 112px;
+    --graph-help-height: 116px;
     position: relative;
-    height: calc(var(--graph-height) + var(--graph-tools-height) + var(--graph-help-height) + 32px);
-    margin-top: 8px;
+    min-height: calc(var(--graph-height) + var(--graph-tools-height) + var(--graph-help-height) + 32px);
+    margin: 8px 0 16px;
   }
   .graph-placeholder {
     position: absolute;
@@ -180,7 +209,7 @@ for (const edge of graph.edges) {
   .graph-wrap:not([data-graph-state='ready']) :global(astro-island) { visibility: hidden; }
   .graph-wrap :global(.graph-client) {
     display: grid;
-    grid-template-rows: var(--graph-tools-height) var(--graph-height) var(--graph-help-height);
+    grid-template-rows: minmax(var(--graph-tools-height), auto) var(--graph-height) minmax(var(--graph-help-height), auto);
     gap: 16px;
   }
   .graph-wrap :global(.graph-tools) { display: flex; flex-direction: column; gap: 8px; }
@@ -197,8 +226,9 @@ for (const edge of graph.edges) {
     background: var(--color-wiki-surface);
     color: var(--color-ink);
   }
-  .graph-wrap :global(.graph-client[data-gestures='disabled'] canvas) { touch-action: pan-y !important; }
+  .graph-wrap :global(.graph-client[data-gestures='disabled'] canvas) { touch-action: auto !important; }
   .graph-wrap :global(.graph-client[data-gestures='enabled'] canvas) { touch-action: none !important; }
+  @media not all and (any-pointer: coarse) { .graph-wrap :global(.graph-touch-only) { display: none; } }
   .graph-record { margin: 8px 0; font-size: 14px; }
   .graph-record summary { cursor: pointer; }
   .graph-record p, .graph-record ul { margin: 8px 0; }

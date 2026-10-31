@@ -44,7 +44,8 @@ export default function Graph({ data }: Props) {
   const [hidden, setHidden] = useState<Set<string>>(new Set());
   const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [gesturesEnabled, setGesturesEnabled] = useState(false);
-  const nodes = useMemo(() => data.nodes.map((node) => ({ ...node })), [data]);
+  const graphData = useMemo(() => ({ nodes: data.nodes, links: data.edges }), [data]);
+  const isVisible = (node: any) => !hidden.has(node.type);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -84,15 +85,6 @@ export default function Graph({ data }: Props) {
     const center = graph.centerAt();
     graph.centerAt(center.x + x / graph.zoom(), center.y + y / graph.zoom(), 0);
   };
-
-  const filteredData = useMemo(() => {
-    const visibleNodes = nodes.filter((n) => !hidden.has(n.type));
-    const visibleIds = new Set(visibleNodes.map((n) => n.id));
-    const visibleEdges = data.edges
-      .filter((edge) => visibleIds.has(edge.source) && visibleIds.has(edge.target))
-      .map((edge) => ({ ...edge }));
-    return { nodes: visibleNodes, links: visibleEdges };
-  }, [data, nodes, hidden]);
 
   const toggleType = (type: string) => {
     setHidden((prev) => {
@@ -165,12 +157,12 @@ export default function Graph({ data }: Props) {
         </div>
 
         <div className="graph-navigation" role="group" aria-label="Graph navigation">
-          <button type="button" aria-pressed={gesturesEnabled} onClick={() => setGesturesEnabled(!gesturesEnabled)}>
-            {gesturesEnabled ? 'Disable graph gestures' : 'Enable graph gestures'}
+          <button type="button" className="graph-touch-only" aria-pressed={gesturesEnabled} onClick={() => setGesturesEnabled(!gesturesEnabled)}>
+            {gesturesEnabled ? 'Disable touch gestures' : 'Enable touch gestures'}
           </button>
           <button type="button" aria-label="Zoom in" onClick={() => fgRef.current?.zoom(fgRef.current.zoom() * 1.25, 0)}>+</button>
           <button type="button" aria-label="Zoom out" onClick={() => fgRef.current?.zoom(fgRef.current.zoom() / 1.25, 0)}>-</button>
-          <button type="button" onClick={() => fgRef.current?.zoomToFit(0, 30)}>Fit graph</button>
+          <button type="button" onClick={() => fgRef.current?.zoomToFit(0, 30, isVisible)}>Fit graph</button>
           <span className="graph-pan" role="group" aria-label="Pan graph">
             <button type="button" aria-label="Pan left" onClick={() => pan(-80, 0)}>←</button>
             <button type="button" aria-label="Pan right" onClick={() => pan(80, 0)}>→</button>
@@ -183,14 +175,19 @@ export default function Graph({ data }: Props) {
       <div
         ref={containerRef}
         role="img"
-        aria-label={`Relationship graph of ${filteredData.nodes.length} visible records. Typed connections are available in the relationship browser below.`}
+        aria-label={`Relationship graph of ${data.nodes.filter(isVisible).length} visible records. Typed connections are available in the relationship browser below.`}
         aria-describedby="graph-help"
-        className="graph-canvas border border-rule-strong rounded-sm overflow-hidden"
+        className="border border-rule-strong rounded-sm overflow-hidden"
         style={{ background: '#FAFAF7' }}
+        onTouchStartCapture={(event) => {
+          if (!gesturesEnabled) event.stopPropagation();
+        }}
       >
         {size && <ForceGraph2D
           ref={fgRef}
-          graphData={filteredData}
+          graphData={graphData}
+          nodeVisibility={isVisible}
+          linkVisibility={(link: any) => isVisible(link.source) && isVisible(link.target)}
           width={size.width}
           height={size.height}
           nodeColor={(node: any) => NODE_COLORS[node.type] || '#7A7368'}
@@ -210,16 +207,15 @@ export default function Graph({ data }: Props) {
             }
             markReady();
           }}
-          enableNodeDrag={gesturesEnabled && !reducedMotion}
-          enablePanInteraction={gesturesEnabled}
-          enableZoomInteraction={(event: Event) => gesturesEnabled && event.type !== 'wheel'}
+          enableNodeDrag={!reducedMotion}
+          enableZoomInteraction={false}
         />}
       </div>
 
       <p id="graph-help" className="text-[12px] text-ink-faint font-mono">
-        Click a node to open its record. Use the buttons to pan or zoom.
-        Enable graph gestures to drag or pinch; disable them or press Escape to scroll the page.
-        <a href="#graph-relationships"> Browse relationships as text.</a>
+        Click a node to open its record. Use the buttons to pan or zoom, or drag with a mouse.
+        <span className="graph-touch-only"> Enable touch gestures to drag or pinch; disable them or press Escape to scroll the page.</span>
+        {' '}<a href="#graph-relationships">Browse relationships as text.</a>
       </p>
     </div>
   );
