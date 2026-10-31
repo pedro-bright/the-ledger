@@ -147,7 +147,7 @@ Anti-references — reject changes that make the site resemble any of these:
 - **Live:** https://the-ledger.net
 - **CI:** Push/PR to `main` triggers `validate.yml` (schema validation + graph build).
   Every PR and every push to `main` also runs `e2e.yml`: validate, graph and feed build, site build, `npm run test:parity`, `npm run test:no-dark-leaks`, and Playwright in `site/`.
-  Every PR gets a Vercel preview deploy (`preview.yml`).
+  Every non-draft PR also runs `preview.yml`, which only builds the site as a check and deploys nothing.
   Push to `main` also triggers `deploy.yml` (build site + deploy to Vercel).
 - **Stale sources:** Weekly cron checks for broken source URLs.
 - **Branch protection:** PRs required for `main`, reviews enforced.
