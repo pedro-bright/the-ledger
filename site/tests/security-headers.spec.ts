@@ -172,12 +172,14 @@ test.describe('security headers', () => {
     expect(value(pages[0])).toContain('missing-only');
   });
 
-  test('security.txt lists the public issue contact first, and an expiry a year out', () => {
-    const generated = securityTxt(new Date('2026-10-30T12:00:00.000Z'));
-    const contacts = generated.split('\n').filter((line) => line.startsWith('Contact: '));
-    expect(contacts[0]).toContain('/issues/new?');
-    expect(contacts[1]).toContain('/security/advisories/new');
-    expect(generated).toMatch(/^Expires: 2027-10-30T12:00:00Z$/m);
+  test('security.txt gives the private advisory contact and an expiry a year out', () => {
+    expect(securityTxt(new Date('2026-10-30T12:00:00.000Z')).split('\n')).toEqual([
+      'Contact: https://github.com/pedro-bright/the-ledger/security/advisories/new',
+      'Expires: 2027-10-30T12:00:00Z',
+      'Canonical: https://www.the-ledger.net/.well-known/security.txt',
+      'Preferred-Languages: en',
+      '',
+    ]);
     expect(fs.existsSync(path.join(DIST, '.well-known', 'security.txt'))).toBe(true);
   });
 });

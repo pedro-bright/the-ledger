@@ -116,10 +116,6 @@ function securityTxt(now = new Date()) {
   const expires = new Date(now);
   expires.setUTCFullYear(expires.getUTCFullYear() + 1);
   return [
-    '# To report a vulnerability, open an issue through the first contact to ask for a private channel.',
-    '# Issues are public, so leave out any details of the problem.',
-    '# The second contact, GitHub private vulnerability reporting, is coming and is not available yet.',
-    `Contact: ${REPO_URL}/issues/new?title=Request%20for%20a%20private%20security%20contact`,
     `Contact: ${REPO_URL}/security/advisories/new`,
     `Expires: ${expires.toISOString().replace(/\.\d+Z$/, 'Z')}`,
     'Canonical: https://www.the-ledger.net/.well-known/security.txt',
