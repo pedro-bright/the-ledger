@@ -227,6 +227,12 @@ for (const edge of graph.edges) {
     color: var(--color-ink);
     line-height: 1.45;
   }
+  .graph-wrap :global(.graph-navigation button:disabled) {
+    border-color: var(--color-rule);
+    background: var(--color-wiki-surface-strong);
+    color: var(--color-ink-muted);
+    cursor: not-allowed;
+  }
   .graph-wrap :global(.graph-client[data-gestures='disabled'] canvas) { touch-action: auto !important; }
   @media not all and (any-pointer: coarse) { .graph-wrap :global(.graph-touch-only) { display: none; } }
   .graph-record { margin: 8px 0; font-size: 14px; }
@@ -236,4 +242,10 @@ for (const edge of graph.edges) {
   .graph-record ul { padding-left: 18px; }
   .graph-record time { font-family: var(--font-mono); font-size: var(--text-meta); line-height: 1.45; }
   @media (min-width: 640px) { .graph-wrap { --graph-tools-height: 96px; --graph-help-height: 64px; } }
+  @media (max-width: 359px) and (any-pointer: coarse) {
+    .graph-wrap { --graph-tools-height: 212px; }
+  }
+  @media (min-width: 640px) and (max-width: 659px) and (any-pointer: coarse) {
+    .graph-wrap { --graph-tools-height: 128px; }
+  }
 </style>

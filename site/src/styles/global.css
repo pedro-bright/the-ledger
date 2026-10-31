@@ -7,14 +7,47 @@
    Light-mode, editorial-archival. See CLAUDE.md Design Context.
    ============================================================= */
 
-/* Georgia fallback measured against Source Serif 4 at weight 400 using the event corpus.
+/* Georgia faces measured against Source Serif 4 using the event corpus.
    The rem-based outer column stays fixed while the reading face loads. */
 @font-face {
   font-family: 'Source Serif Fallback';
   src: local('Georgia');
+  font-style: normal;
+  font-weight: 400;
   size-adjust: 107.37982%;
   ascent-override: 96.47995%;
   descent-override: 31.19767%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Source Serif Fallback';
+  src: local('Georgia Bold');
+  font-style: normal;
+  font-weight: 600 900;
+  size-adjust: 93.82811%;
+  ascent-override: 110.41467%;
+  descent-override: 35.70359%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Source Serif Fallback';
+  src: local('Georgia Italic');
+  font-style: italic;
+  font-weight: 400;
+  size-adjust: 96.82851%;
+  ascent-override: 106.99328%;
+  descent-override: 34.59725%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Source Serif Fallback';
+  src: local('Georgia Bold Italic');
+  font-style: italic;
+  font-weight: 600 900;
+  size-adjust: 87.10949%;
+  ascent-override: 118.93078%;
+  descent-override: 38.45735%;
   line-gap-override: 0%;
 }
 

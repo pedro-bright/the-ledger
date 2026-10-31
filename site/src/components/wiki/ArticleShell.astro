@@ -238,10 +238,10 @@ if (hasSeeAlso) sections.push({ id: 'see-also-head', title: 'See also', level: 2
     margin-top: 10px;
   }
   @media (min-width: 781px) and (scripting: enabled) {
-    .wiki-article__markers { display: none; }
+    .wiki-article__markers,
+    .wiki-article > .article-contents { display: none; }
   }
-  /* The prose block is constrained to 68ch on its own; if infobox floats right,
-     text wraps naturally around it. No width lockdown here. */
+  /* Prose keeps its fixed measure while text wraps around the infobox. */
   .wiki-article__body {
     overflow: visible;
   }

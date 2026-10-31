@@ -479,3 +479,27 @@ for (const reducedMotion of ['reduce', 'no-preference'] as const) {
     await expect(page.getByRole('button', { name: 'Re-layout graph', exact: true })).toBeDisabled();
   });
 }
+
+for (const width of [320, 340, 640, 659, 660, 700]) {
+  test(`touch controls at ${width}px hydrate without moving the following content`, async ({ browser }) => {
+    test.skip(test.info().project.name === 'mobile', 'This test defines its own touch viewport');
+    const context = await browser.newContext({ baseURL: test.info().project.use.baseURL, viewport: { width, height: 900 }, isMobile: true, hasTouch: true });
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => { release = resolve; });
+    try {
+      const page = await context.newPage();
+      await page.route('**/_astro/Graph.*.js', async (route) => { await held; await route.continue(); });
+      await page.goto('/graph', { waitUntil: 'domcontentloaded' });
+      await page.evaluate(() => document.fonts.ready);
+      const top = () => page.locator('#graph-relationships').evaluate((el) => el.getBoundingClientRect().top + scrollY);
+      const before = await top();
+      release();
+      await expect(page.locator('canvas').first()).toBeVisible();
+      await expect.poll(async () => Math.abs((await top()) - before)).toBeLessThan(2);
+      const disabled = page.getByRole('button', { name: 'Re-layout graph', exact: true });
+      for (const type of ['events', 'threads', 'controversies', 'actors']) await page.getByRole('button', { name: `Hide ${type}`, exact: true }).click();
+      await expect(disabled).toBeDisabled();
+      await expect(disabled).toHaveCSS('cursor', 'not-allowed');
+    } finally { release(); await context.close(); }
+  });
+}

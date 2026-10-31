@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, type MouseEvent } from 'react';
 import { getSignificanceOrder } from '../lib/epistemic';
 
 interface EventData {
@@ -488,8 +488,8 @@ export default function Explorer({ events, categories }: Props) {
               )}
               <button
                 type="button"
-                onClick={resetAll}
-                className="text-xs font-sans text-wiki-link hover:underline ml-1 bg-transparent border-0 p-0 cursor-pointer"
+                onClick={(event) => { focusSearchForKeyboard(event); resetAll(); }}
+                className="inline-flex min-h-6 items-center text-xs font-sans text-wiki-link hover:underline ml-1 bg-transparent border-0 p-0 cursor-pointer"
               >
                 Reset all
               </button>
@@ -529,8 +529,8 @@ export default function Explorer({ events, categories }: Props) {
             {search && (
               <button
                 type="button"
-                onClick={() => setSearch('')}
-                className="text-wiki-link hover:underline bg-transparent border-0 p-0 cursor-pointer"
+                onClick={(event) => { focusSearchForKeyboard(event); setSearch(''); }}
+                className="inline-flex min-h-6 items-center text-wiki-link hover:underline bg-transparent border-0 p-0 cursor-pointer"
               >
                 Clear search
               </button>
@@ -538,8 +538,8 @@ export default function Explorer({ events, categories }: Props) {
             {activeCategories.size > 0 && (
               <button
                 type="button"
-                onClick={() => setActiveCategories(new Set())}
-                className="text-wiki-link hover:underline bg-transparent border-0 p-0 cursor-pointer"
+                onClick={(event) => { focusSearchForKeyboard(event); setActiveCategories(new Set()); }}
+                className="inline-flex min-h-6 items-center text-wiki-link hover:underline bg-transparent border-0 p-0 cursor-pointer"
               >
                 Drop category filter
               </button>
@@ -547,8 +547,8 @@ export default function Explorer({ events, categories }: Props) {
             {activeSignificance.size > 0 && (
               <button
                 type="button"
-                onClick={() => setActiveSignificance(new Set())}
-                className="text-wiki-link hover:underline bg-transparent border-0 p-0 cursor-pointer"
+                onClick={(event) => { focusSearchForKeyboard(event); setActiveSignificance(new Set()); }}
+                className="inline-flex min-h-6 items-center text-wiki-link hover:underline bg-transparent border-0 p-0 cursor-pointer"
               >
                 Drop significance filter
               </button>
@@ -556,16 +556,16 @@ export default function Explorer({ events, categories }: Props) {
             {selectedYear !== null && (
               <button
                 type="button"
-                onClick={() => setSelectedYear(null)}
-                className="text-wiki-link hover:underline bg-transparent border-0 p-0 cursor-pointer"
+                onClick={(event) => { focusSearchForKeyboard(event); setSelectedYear(null); }}
+                className="inline-flex min-h-6 items-center text-wiki-link hover:underline bg-transparent border-0 p-0 cursor-pointer"
               >
                 Drop year filter
               </button>
             )}
             <button
               type="button"
-              onClick={resetAll}
-              className="text-wiki-link hover:underline bg-transparent border-0 p-0 cursor-pointer"
+              onClick={(event) => { focusSearchForKeyboard(event); resetAll(); }}
+              className="inline-flex min-h-6 items-center text-wiki-link hover:underline bg-transparent border-0 p-0 cursor-pointer"
             >
               Reset all filters
             </button>
@@ -583,6 +583,10 @@ export default function Explorer({ events, categories }: Props) {
 }
 
 // ─── Small subcomponents ────────────────────────────────────────
+
+function focusSearchForKeyboard(event: MouseEvent<HTMLButtonElement>) {
+  if (event.detail === 0) document.getElementById('explorer-search')?.focus();
+}
 
 function ActiveChip({
   label,
@@ -604,12 +608,15 @@ function ActiveChip({
       <button
         type="button"
         onClick={(event) => {
-          const buttons = Array.from(event.currentTarget.closest('[data-active-filters]')!.querySelectorAll<HTMLButtonElement>('button'));
-          const index = buttons.indexOf(event.currentTarget);
-          const next = buttons.length > 2 ? buttons[index + 1] || buttons[index - 1] : document.getElementById('explorer-search');
-          next?.focus();
+          if (event.detail === 0) {
+            const buttons = Array.from(event.currentTarget.closest('[data-active-filters]')!.querySelectorAll<HTMLButtonElement>('[data-filter-remove]'));
+            const index = buttons.indexOf(event.currentTarget);
+            const next = buttons[index + 1] || buttons[index - 1] || document.getElementById('explorer-search');
+            next?.focus();
+          }
           onRemove();
         }}
+        data-filter-remove
         aria-label={`Remove ${label} filter`}
         className="ml-0.5 inline-flex min-w-6 min-h-6 items-center justify-center text-ink-faint hover:text-ink bg-transparent border-0 p-0 cursor-pointer leading-none"
       >

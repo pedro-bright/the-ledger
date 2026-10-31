@@ -160,22 +160,130 @@ test('phone titles use reading-sized optical detail and desktop keeps its displa
   }
 });
 
-test('cold body font swap keeps the outer reading column fixed', async ({ browser }) => {
+for (const [path, selector] of [['/about', '.wiki-layout'], [article, '.wiki-article__prose']]) {
+  test(`cold body font swap keeps ${selector} fixed on ${path}`, async ({ browser }) => {
+    const context = await browser.newContext({ baseURL: test.info().project.use.baseURL, viewport: { width: 1440, height: 900 } });
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => { release = resolve; });
+    try {
+      const page = await context.newPage();
+      await page.route(/source-serif-4-latin-wght-normal.*\.woff2/, async (route) => { await held; await route.continue(); });
+      await page.goto(path, { waitUntil: 'domcontentloaded' });
+      const geometry = () => page.locator(selector).evaluate((el) => ({ width: el.getBoundingClientRect().width, x: el.getBoundingClientRect().x }));
+      const before = await geometry();
+      const preload = page.locator('link[rel="preload"][as="font"]');
+      release();
+      await page.evaluate(() => document.fonts.ready);
+      const after = await geometry();
+      await test.info().attach('cold-font-geometry', { body: JSON.stringify({ before, after }), contentType: 'application/json' });
+      expect(after).toEqual(before);
+      await expect(preload).toHaveAttribute('fetchpriority', 'high');
+      await expect(preload).toHaveAttribute('crossorigin', 'anonymous');
+    } finally { release(); await context.close(); }
+  });
+}
+
+test('removing the last chip by keyboard keeps the other filter and its focus', async ({ page }) => {
+  await page.goto('/explore?cat=models&sig=major');
+  await page.getByRole('button', { name: 'Remove Major filter', exact: true }).focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('button', { name: 'Remove Models filter', exact: true })).toBeFocused();
+  await expect(page).toHaveURL(/cat=models/);
+  await expect(page).not.toHaveURL(/sig=major/);
+});
+
+test('Reset all has a usable target and returns keyboard focus to search', async ({ page }) => {
+  await page.goto('/explore?cat=models');
+  const reset = page.getByRole('button', { name: 'Reset all', exact: true });
+  const box = (await reset.boundingBox())!;
+  expect(box.height).toBeGreaterThanOrEqual(24);
+  await reset.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#explorer-search')).toBeFocused();
+});
+
+for (const touch of [false, true]) {
+  test(`${touch ? 'touch' : 'mouse'} removal does not focus search or move the reader away`, async ({ browser }) => {
+    const context = await browser.newContext({ baseURL: test.info().project.use.baseURL, viewport: { width: 390, height: 844 }, hasTouch: touch, isMobile: touch });
+    try {
+      const page = await context.newPage();
+      await page.goto('/explore?cat=models');
+      const remove = page.getByRole('button', { name: 'Remove Models filter', exact: true });
+      await remove.scrollIntoViewIfNeeded();
+      if (touch) await remove.tap();
+      else await remove.click();
+      await expect(remove).toHaveCount(0);
+      await expect(page.locator('#explorer-search')).not.toBeFocused();
+      expect(await page.evaluate(() => scrollY)).toBeGreaterThan(100);
+    } finally { await context.close(); }
+  });
+}
+
+test('desktop contents enhancement keeps the reading body in place on a cold fragment load', async ({ browser }) => {
   const context = await browser.newContext({ baseURL: test.info().project.use.baseURL, viewport: { width: 1440, height: 900 } });
-  const page = await context.newPage();
   let release!: () => void;
   const held = new Promise<void>((resolve) => { release = resolve; });
-  await page.route(/source-serif-4-latin-wght-normal.*\.woff2/, async (route) => { await held; await route.continue(); });
-  await page.goto('/about', { waitUntil: 'domcontentloaded' });
-  const geometry = () => page.locator('.wiki-layout').evaluate((el) => ({ width: el.getBoundingClientRect().width, x: el.getBoundingClientRect().x }));
-  const before = await geometry();
-  const preload = page.locator('link[rel="preload"][as="font"]');
-  release();
+  try {
+    const page = await context.newPage();
+    let enhancement = '';
+    await page.route(`**/threads/${SLUGS.thread}`, async (route) => {
+      const response = await route.fetch();
+      const html = (await response.text()).replace(/<script type="module">([^<]*#article-contents[^<]*)<\/script>/, (_match, script: string) => {
+        enhancement = script;
+        return '<script type="module" src="/__held-article-shell.js"></script>';
+      });
+      await route.fulfill({ response, body: html });
+    });
+    await page.route('**/__held-article-shell.js', async (route) => {
+      await held;
+      await route.fulfill({ contentType: 'text/javascript', body: enhancement });
+    });
+    await page.goto(`/threads/${SLUGS.thread}#section-open-questions`, { waitUntil: 'commit' });
+    await expect(page.locator('#article-contents')).toBeAttached();
+    expect(enhancement).not.toBe('');
+    await expect(page.locator('.wiki-rail #article-contents')).toHaveCount(0);
+    await page.evaluate(async () => { await document.fonts.ready; });
+    const top = () => page.locator('.wiki-article__body').evaluate((el) => el.getBoundingClientRect().top + scrollY);
+    const before = await top();
+    release();
+    await expect(page.locator('.wiki-rail #article-contents')).toBeVisible();
+    expect(await top()).toBeCloseTo(before, 1);
+    await expect(page.locator('#section-open-questions')).toBeInViewport();
+  } finally { release(); await context.close(); }
+});
+
+test('fallback font matching loads real emphasis faces while the web fonts are held', async ({ browser }) => {
+  const context = await browser.newContext({ baseURL: test.info().project.use.baseURL });
+  let release!: () => void;
+  const held = new Promise<void>((resolve) => { release = resolve; });
+  try {
+    const page = await context.newPage();
+    await page.route(/source-serif-4-latin-wght-(normal|italic).*\.woff2/, async (route) => { await held; await route.continue(); });
+    await page.goto(article, { waitUntil: 'domcontentloaded' });
+    const hasGeorgia = await page.evaluate(async () => {
+      try {
+        await new FontFace('Georgia availability probe', 'local("Georgia")').load();
+        return true;
+      } catch { return false; }
+    });
+    test.skip(!hasGeorgia, 'Georgia is not installed in this browser environment');
+    const faces = await page.evaluate(async () => {
+      const styles = ['600 16px', 'italic 16px', 'italic 600 16px'];
+      return Promise.all(styles.map(async (style) => (await document.fonts.load(`${style} "Source Serif Fallback"`, 'Archival evidence')).map((face) => ({ style: face.style, weight: face.weight, status: face.status }))));
+    });
+    expect(faces[0]).toEqual([expect.objectContaining({ style: 'normal', weight: '600 900', status: 'loaded' })]);
+    expect(faces[1]).toEqual([expect.objectContaining({ style: 'italic', weight: '400', status: 'loaded' })]);
+    expect(faces[2]).toEqual([expect.objectContaining({ style: 'italic', weight: '600 900', status: 'loaded' })]);
+  } finally { release(); await context.close(); }
+});
+
+test('a linked uncontested thread keeps its badge inside the infobox at 820px', async ({ page }) => {
+  await page.setViewportSize({ width: 820, height: 900 });
+  await page.goto('/threads/creative-industries-ai');
   await page.evaluate(() => document.fonts.ready);
-  const after = await geometry();
-  await test.info().attach('cold-font-geometry', { body: JSON.stringify({ before, after }), contentType: 'application/json' });
-  expect(after).toEqual(before);
-  await expect(preload).toHaveAttribute('fetchpriority', 'high');
-  await expect(preload).toHaveAttribute('crossorigin', 'anonymous');
-  await context.close();
+  const overflow = await page.locator('.wiki-infobox').evaluate((box) => {
+    const right = box.getBoundingClientRect().right;
+    return [...box.querySelectorAll('dd, dd span')].filter((el) => el.getBoundingClientRect().right > right).map((el) => el.textContent);
+  });
+  expect(overflow).toEqual([]);
 });
