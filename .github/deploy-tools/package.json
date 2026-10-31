@@ -1,7 +1,7 @@
 {
   "name": "the-ledger-deploy-tools",
   "private": true,
-  "description": "Locked Vercel CLI for the deploy workflows, kept apart from the site and content tooling.",
+  "description": "Locked Vercel CLI for the deploy workflow, kept apart from the site and content tooling.",
   "dependencies": {
     "vercel": "65.8.0"
   }

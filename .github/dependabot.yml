@@ -9,7 +9,10 @@ updates:
       default-days: 7
 
   - package-ecosystem: npm
-    directory: /.github/deploy-tools
+    directories:
+      - /
+      - /site
+      - /.github/deploy-tools
     schedule:
       interval: weekly
     cooldown:
