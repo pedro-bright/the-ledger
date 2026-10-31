@@ -37,6 +37,7 @@ export interface Contestation {
 }
 
 export interface Revision {
+  created?: string;
   last_reviewed?: string;
   final_author?: string;
 }
@@ -217,7 +218,11 @@ export function loadEvents(): EventData[] {
           significance_history: data.significance_history,
           state: data.state,
           revision: data.revision?.last_reviewed
-            ? { last_reviewed: isoDate(data.revision.last_reviewed), final_author: data.revision.final_author }
+            ? {
+                created: data.revision.created ? isoDate(data.revision.created) : undefined,
+                last_reviewed: isoDate(data.revision.last_reviewed),
+                final_author: data.revision.final_author,
+              }
             : undefined,
           content,
           htmlContent,
