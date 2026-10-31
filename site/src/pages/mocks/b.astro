@@ -1,0 +1,925 @@
+---
+import MockShell from '../../layouts/MockShell.astro';
+import { loadEvents, loadThreads, loadControversies, getExcerpt } from '../../lib/content';
+
+const events = loadEvents();
+const threads = loadThreads();
+const controversies = loadControversies();
+
+const featuredEvent = events[0];
+const chapterEvents = events.slice(0, 6);
+const featuredThread = threads.find((t) => t.core_question) || threads[0];
+
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const ROMANS: Record<number, string> = { 1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI', 7: 'VII', 8: 'VIII', 9: 'IX', 10: 'X' };
+function toRomanSmall(n: number): string {
+  return ROMANS[n] || String(n);
+}
+function fmtChronicle(d: string) {
+  const dt = new Date(d);
+  return `${dt.getDate()} ${MONTHS[dt.getMonth()]} ${dt.getFullYear()}`;
+}
+function fmtMargin(d: string) {
+  const dt = new Date(d);
+  return `${MONTHS[dt.getMonth()].slice(0, 3)} ${dt.getDate()}, ’${String(dt.getFullYear()).slice(2)}`;
+}
+
+const today = new Date();
+const curVolume = today.getFullYear() - 2022; // the-ledger "launched" 2023 → vol I
+const curIssue = today.getMonth() + 1;
+const issueLine = `Vol. ${toRomanSmall(curVolume)} · № ${toRomanSmall(curIssue)} · ${MONTHS[today.getMonth()]} MMXXVI`;
+
+const featuredExcerpt = getExcerpt(featuredEvent.content, 280);
+---
+
+<MockShell title="Printed Chronicle" letter="B">
+  <div class="chron">
+    <!-- Masthead -->
+    <header class="chron-masthead">
+      <div class="chron-mast-rules">
+        <span class="chron-mast-rule" aria-hidden="true"></span>
+        <span class="chron-mast-rule chron-mast-rule--thin" aria-hidden="true"></span>
+      </div>
+      <h1 class="chron-mast-title">The Ledger</h1>
+      <p class="chron-mast-kicker">A bound chronicle of the age of artificial intelligence</p>
+      <div class="chron-mast-rules">
+        <span class="chron-mast-rule chron-mast-rule--thin" aria-hidden="true"></span>
+        <span class="chron-mast-rule" aria-hidden="true"></span>
+      </div>
+      <div class="chron-mast-meta">
+        <span>{issueLine}</span>
+        <span class="chron-mast-meta-sep">·</span>
+        <span>Curated by Terry Tang</span>
+        <span class="chron-mast-meta-sep">·</span>
+        <span>New York & San Francisco</span>
+      </div>
+    </header>
+
+    <!-- Table of contents -->
+    <nav class="chron-toc" aria-label="Contents">
+      <p class="chron-toc-head">— Contents —</p>
+      <ol class="chron-toc-list">
+        <li><span class="chron-toc-num">I</span> <a href="#note">From the Curator</a><span class="chron-toc-dots"></span><span class="chron-toc-page">p. 1</span></li>
+        <li><span class="chron-toc-num">II</span> <a href="#entries">Recent Entries</a><span class="chron-toc-dots"></span><span class="chron-toc-page">p. 3</span></li>
+        <li><span class="chron-toc-num">III</span> <a href="#feature">A Closer Look: {featuredEvent.title}</a><span class="chron-toc-dots"></span><span class="chron-toc-page">p. 7</span></li>
+        <li><span class="chron-toc-num">IV</span> <a href="#thread">The Thread: {featuredThread.title}</a><span class="chron-toc-dots"></span><span class="chron-toc-page">p. 14</span></li>
+        <li><span class="chron-toc-num">V</span> <a href="#controversies">On the Contested</a><span class="chron-toc-dots"></span><span class="chron-toc-page">p. 21</span></li>
+        <li><span class="chron-toc-num">VI</span> <a href="#colophon">Colophon</a><span class="chron-toc-dots"></span><span class="chron-toc-page">p. 24</span></li>
+      </ol>
+    </nav>
+
+    <!-- I · Editorial note -->
+    <section class="chron-section" id="note">
+      <p class="chron-chapter-num">I</p>
+      <h2 class="chron-section-title">From the Curator</h2>
+      <p class="chron-section-kicker">On why this chronicle exists.</p>
+
+      <div class="chron-columns">
+        <p class="chron-drop">
+          <span class="chron-dropcap">H</span>istory of the AI era is being written twice: once as
+          breathless news cycle, once as whatever will survive into next decade's textbooks.
+          The first is loud and instant. The second is quiet, slow, and almost always wrong on
+          the particulars. This ledger is an attempt — modest and admittedly imperfect — at
+          something between the two. A chronicle that records what happened, who said what,
+          and where we were wrong, while the record is still close enough to check.
+        </p>
+        <p>
+          Each entry is sourced, dated, and marked with its epistemic weather: whether the
+          claim is <em>uncontested</em> or <em>contested</em>, whether it is rated
+          <em>landmark</em>, <em>major</em>, or merely <em>notable</em>, and whether the
+          original author's confidence has since held up or been revised down. Immutability
+          here does not mean infallibility; it means corrections appear as additions, never
+          as quiet edits.
+        </p>
+        <p>
+          This issue collects the {events.length} entries on file as of {fmtChronicle(featuredEvent.date)},
+          the {threads.length} long-running threads under active curation, and the {controversies.length}
+          unresolved controversies that the ledger presents as genuinely unresolved — not
+          flattened into a single official position.
+        </p>
+        <p class="chron-sign">
+          — T.T., {MONTHS[today.getMonth()]} MMXXVI
+        </p>
+      </div>
+    </section>
+
+    <hr class="chron-ornament" />
+
+    <!-- II · Recent entries -->
+    <section class="chron-section" id="entries">
+      <p class="chron-chapter-num">II</p>
+      <h2 class="chron-section-title">Recent Entries</h2>
+      <p class="chron-section-kicker">In the order they entered the record.</p>
+
+      <ol class="chron-entries">
+        {chapterEvents.map((e, i) => (
+          <li class="chron-entry">
+            <aside class="chron-margin">
+              <span class="chron-margin-date">{fmtMargin(e.date)}</span>
+              <span class="chron-margin-cat">{e.category}</span>
+              {e.significance === 'landmark' && <span class="chron-margin-sig chron-margin-sig--landmark">landmark</span>}
+              {e.significance === 'major' && <span class="chron-margin-sig chron-margin-sig--major">major</span>}
+            </aside>
+            <div class="chron-entry-body">
+              <p class="chron-entry-num">Entry {toRomanSmall(i + 1)}</p>
+              <h3 class="chron-entry-title"><a href="#">{e.title}</a></h3>
+              <p class="chron-entry-lead">{getExcerpt(e.content, 220)}</p>
+              <p class="chron-entry-more">
+                <a href="#">Read entry →</a>
+                {e.sources && <span class="chron-entry-src"> · {e.sources.length} source{e.sources.length === 1 ? '' : 's'}</span>}
+              </p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <hr class="chron-ornament" />
+
+    <!-- III · A closer look -->
+    <section class="chron-section chron-feature" id="feature">
+      <p class="chron-chapter-num">III</p>
+      <h2 class="chron-section-title">A Closer Look</h2>
+      <p class="chron-section-kicker">One entry, in full.</p>
+
+      <div class="chron-feature-header">
+        <p class="chron-feature-kicker">
+          {fmtChronicle(featuredEvent.date)} · {featuredEvent.category}
+          {featuredEvent.significance && <Fragment> · <span class="chron-feature-sig">{featuredEvent.significance}</span></Fragment>}
+        </p>
+        <h3 class="chron-feature-title">{featuredEvent.title}</h3>
+        <p class="chron-feature-deck">{featuredExcerpt}</p>
+      </div>
+
+      <div class="chron-feature-body">
+        <aside class="chron-feature-margin">
+          {featuredEvent.actors && featuredEvent.actors.length > 0 && (
+            <Fragment>
+              <dl>
+                <dt>Actors in this entry</dt>
+                {featuredEvent.actors.slice(0, 6).map((a) => (
+                  <dd>{a.id} <span class="chron-feat-role">({a.role})</span></dd>
+                ))}
+              </dl>
+            </Fragment>
+          )}
+          {featuredEvent.threads && featuredEvent.threads.length > 0 && (
+            <Fragment>
+              <dl>
+                <dt>Appears in threads</dt>
+                {featuredEvent.threads.map((t) => (
+                  <dd>— {t}</dd>
+                ))}
+              </dl>
+            </Fragment>
+          )}
+          {featuredEvent.confidence && (
+            <dl>
+              <dt>Confidence</dt>
+              <dd>{featuredEvent.confidence}</dd>
+            </dl>
+          )}
+          {featuredEvent.contestation?.status && (
+            <dl>
+              <dt>Contestation</dt>
+              <dd>{featuredEvent.contestation.status}</dd>
+            </dl>
+          )}
+        </aside>
+        <div class="chron-prose chron-prose--dropcap" set:html={featuredEvent.htmlContent} />
+      </div>
+
+      <div class="chron-refs">
+        <p class="chron-refs-head">— Sources —</p>
+        <ol class="chron-refs-list">
+          {(featuredEvent.sources || []).map((s) => (
+            <li>
+              <a href={s.url} target="_blank" rel="noopener">{s.title}</a>
+              {s.publisher && <Fragment>, <em>{s.publisher}</em></Fragment>}
+              {s.date && <Fragment>, {fmtChronicle(s.date)}</Fragment>}.
+              {s.archive_url && <Fragment> <a href={s.archive_url} class="chron-refs-archive" target="_blank" rel="noopener">[archived]</a></Fragment>}
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <hr class="chron-ornament" />
+
+    <!-- IV · The Thread -->
+    <section class="chron-section" id="thread">
+      <p class="chron-chapter-num">IV</p>
+      <h2 class="chron-section-title">The Thread</h2>
+      <p class="chron-section-kicker">A long-running question, followed over time.</p>
+
+      <div class="chron-thread-header">
+        <h3 class="chron-thread-title">{featuredThread.title}</h3>
+        {featuredThread.core_question && (
+          <blockquote class="chron-thread-question">
+            {featuredThread.core_question}
+          </blockquote>
+        )}
+        <p class="chron-thread-meta">
+          Curated by <strong>{featuredThread.curator || 'Editorial'}</strong>
+          {featuredThread.started && <Fragment> · Opened {fmtChronicle(featuredThread.started)}</Fragment>}
+          {featuredThread.events && <Fragment> · {featuredThread.events.length} entries</Fragment>}
+          {featuredThread.status && <Fragment> · Status: <em>{featuredThread.status}</em></Fragment>}
+        </p>
+      </div>
+
+      <div class="chron-prose" set:html={featuredThread.htmlContent} />
+    </section>
+
+    <hr class="chron-ornament" />
+
+    <!-- V · Controversies -->
+    <section class="chron-section" id="controversies">
+      <p class="chron-chapter-num">V</p>
+      <h2 class="chron-section-title">On the Contested</h2>
+      <p class="chron-section-kicker">Questions the record does not flatten.</p>
+
+      <ul class="chron-cont-list">
+        {controversies.map((c) => (
+          <li>
+            <h3 class="chron-cont-title"><a href="#">{c.title}</a></h3>
+            {c.positions && c.positions.length >= 2 && (
+              <div class="chron-cont-positions">
+                <div class="chron-cont-pos">
+                  <p class="chron-cont-pos-label">Position A</p>
+                  <p class="chron-cont-pos-claim">{c.positions[0].claim}</p>
+                </div>
+                <span class="chron-cont-versus" aria-hidden="true">⁂</span>
+                <div class="chron-cont-pos">
+                  <p class="chron-cont-pos-label">Position B</p>
+                  <p class="chron-cont-pos-claim">{c.positions[1].claim}</p>
+                </div>
+              </div>
+            )}
+            <p class="chron-cont-meta">
+              {c.polarity} · {c.positions?.length || 0} positions documented
+            </p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- VI · Colophon -->
+    <footer class="chron-colophon" id="colophon">
+      <p class="chron-colo-mark" aria-hidden="true">⁂</p>
+      <p class="chron-colo-title">Colophon</p>
+      <p class="chron-colo-body">
+        This chronicle is set in <em>Fraunces</em>, a variable serif by Phaedra Charles and
+        Flavia Zimbardi, drawn in the spirit of a 1970s hot-metal face. Its optical-size axis
+        adjusts letter contrast to the size at which it is read — delicate in display, warm at
+        body. Metadata is set in <em>JetBrains Mono</em>. The ledger itself is maintained under
+        CC-BY-SA-4.0 at <a href="https://github.com/terrytangyin/the-ledger">github.com/terrytangyin/the-ledger</a>,
+        with contributions, source tips, and challenges accepted by pull request.
+      </p>
+      <p class="chron-colo-meta">
+        Mock B · Printed Chronicle direction · Compare
+        <a href="/mocks/a">A</a> · <a href="/mocks/c">C</a> · <a href="/mocks/d">D</a>
+      </p>
+    </footer>
+  </div>
+
+  <style>
+    .chron {
+      background: #F4EFE5;
+      color: #1C1916;
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 18px;
+      line-height: 1.55;
+      min-height: 100vh;
+      font-feature-settings: 'kern', 'liga', 'onum';
+    }
+
+    /* masthead */
+    .chron-masthead {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 72px 32px 36px;
+      text-align: center;
+    }
+    .chron-mast-rules {
+      display: flex; flex-direction: column; gap: 3px; margin: 18px 0;
+    }
+    .chron-mast-rule {
+      display: block;
+      height: 2px;
+      background: #1C1916;
+    }
+    .chron-mast-rule--thin {
+      height: 1px;
+      background: #1C1916;
+    }
+    .chron-mast-title {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;
+      font-weight: 400;
+      font-size: clamp(3.5rem, 2rem + 5vw, 6rem);
+      line-height: 1;
+      letter-spacing: -0.01em;
+      margin: 0;
+      color: #1C1916;
+    }
+    .chron-mast-kicker {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 14;
+      font-style: italic;
+      font-size: 18px;
+      color: #3C3832;
+      margin: 10px 0 0;
+    }
+    .chron-mast-meta {
+      margin-top: 8px;
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 14;
+      font-variant-caps: small-caps;
+      font-feature-settings: 'smcp', 'c2sc';
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      color: #4A443B;
+    }
+    .chron-mast-meta-sep { margin: 0 10px; color: #8A806E; }
+
+    /* contents */
+    .chron-toc {
+      max-width: 680px;
+      margin: 36px auto 72px;
+      padding: 28px 32px;
+      border-top: 1px solid #C9C0AE;
+      border-bottom: 1px solid #C9C0AE;
+    }
+    .chron-toc-head {
+      text-align: center;
+      font-variant-caps: small-caps;
+      font-feature-settings: 'smcp';
+      letter-spacing: 0.18em;
+      color: #5C564D;
+      font-size: 12px;
+      margin: 0 0 16px;
+    }
+    .chron-toc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 17px;
+    }
+    .chron-toc-list li {
+      display: grid;
+      grid-template-columns: 32px minmax(0, 1fr) auto;
+      align-items: baseline;
+      gap: 10px;
+      padding: 6px 0;
+    }
+    .chron-toc-num {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 36;
+      font-style: italic;
+      color: #732B24;
+      text-align: right;
+    }
+    .chron-toc-list a {
+      color: #1C1916;
+      text-decoration: none;
+      border-bottom: 1px dotted transparent;
+      transition: border-color 160ms ease;
+    }
+    .chron-toc-list a:hover { border-bottom-color: #732B24; }
+    .chron-toc-dots {
+      height: 1em;
+      border-bottom: 1px dotted #A99E85;
+      display: block;
+      min-width: 40px;
+    }
+    .chron-toc-page {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #7D7362;
+      font-style: italic;
+    }
+
+    /* section scaffolding */
+    .chron-section {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 32px;
+    }
+    .chron-chapter-num {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144;
+      font-weight: 400;
+      font-style: italic;
+      font-size: 56px;
+      line-height: 1;
+      color: #732B24;
+      margin: 0 0 10px;
+      text-align: center;
+    }
+    .chron-section-title {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144;
+      font-weight: 400;
+      font-size: clamp(2rem, 1.5rem + 1.5vw, 2.75rem);
+      line-height: 1.08;
+      letter-spacing: -0.015em;
+      text-align: center;
+      margin: 0 0 8px;
+      color: #1C1916;
+    }
+    .chron-section-kicker {
+      text-align: center;
+      font-style: italic;
+      font-size: 17px;
+      color: #5C564D;
+      margin: 0 0 40px;
+    }
+
+    /* editorial note */
+    .chron-columns p {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 14, 'SOFT' 40, 'WONK' 0;
+      font-size: 19px;
+      line-height: 1.65;
+      margin: 0 0 16px;
+      color: #1C1916;
+      hyphens: auto;
+    }
+    .chron-drop::first-letter,
+    .chron-prose--dropcap > p:first-of-type::first-letter {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144;
+      font-weight: 500;
+      font-size: 5em;
+      float: left;
+      line-height: 0.88;
+      margin: 0.08em 0.08em 0 0;
+      color: #732B24;
+    }
+    .chron-dropcap {
+      display: none; /* we use ::first-letter instead */
+    }
+    .chron-sign {
+      margin-top: 24px;
+      font-style: italic;
+      color: #5C564D;
+      font-size: 16px;
+    }
+
+    /* ornament rule */
+    .chron-ornament {
+      border: 0;
+      text-align: center;
+      overflow: visible;
+      margin: 28px auto;
+      max-width: 720px;
+      position: relative;
+      height: 36px;
+    }
+    .chron-ornament::before {
+      content: "⁂";
+      color: #732B24;
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      display: inline-block;
+      padding: 0 12px;
+      background: #F4EFE5;
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .chron-ornament::after {
+      content: "";
+      display: block;
+      border-top: 1px solid #C9C0AE;
+      position: absolute;
+      top: 50%;
+      left: 15%;
+      right: 15%;
+    }
+
+    /* entries */
+    .chron-entries { list-style: none; padding: 0; margin: 0; }
+    .chron-entry {
+      display: grid;
+      grid-template-columns: 140px minmax(0, 1fr);
+      gap: 32px;
+      padding: 28px 0;
+      border-bottom: 1px solid #C9C0AE;
+    }
+    .chron-entry:last-child { border-bottom: 0; }
+    @media (max-width: 640px) {
+      .chron-entry { grid-template-columns: 1fr; gap: 10px; }
+    }
+    .chron-margin {
+      padding-top: 6px;
+      text-align: right;
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      color: #5C564D;
+      font-size: 14px;
+      line-height: 1.3;
+    }
+    @media (max-width: 640px) {
+      .chron-margin {
+        text-align: left;
+        display: flex; flex-wrap: wrap; gap: 8px;
+      }
+    }
+    .chron-margin-date {
+      display: block;
+      font-variant-caps: small-caps;
+      font-feature-settings: 'smcp';
+      letter-spacing: 0.08em;
+      color: #1C1916;
+      font-style: normal;
+      margin-bottom: 4px;
+      font-size: 12px;
+    }
+    .chron-margin-cat {
+      display: block;
+      font-size: 13px;
+      color: #5C564D;
+    }
+    .chron-margin-sig {
+      display: inline-block;
+      margin-top: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 1px 5px;
+      border: 1px solid currentColor;
+      border-radius: 1px;
+      font-style: normal;
+    }
+    .chron-margin-sig--landmark { color: #8A6500; }
+    .chron-margin-sig--major { color: #0A4D82; }
+
+    .chron-entry-num {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 13px;
+      color: #8A806E;
+      margin: 0 0 2px;
+      font-variant-caps: small-caps;
+      font-feature-settings: 'smcp';
+      letter-spacing: 0.08em;
+    }
+    .chron-entry-title {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 72;
+      font-weight: 500;
+      font-size: 24px;
+      line-height: 1.2;
+      margin: 0 0 10px;
+      color: #1C1916;
+    }
+    .chron-entry-title a {
+      color: inherit;
+      text-decoration: none;
+      background-image: linear-gradient(to right, #1C1916 0%, #1C1916 100%);
+      background-position: 0 100%;
+      background-repeat: no-repeat;
+      background-size: 0% 1px;
+      transition: background-size 300ms ease;
+    }
+    .chron-entry-title a:hover {
+      background-size: 100% 1px;
+    }
+    .chron-entry-lead {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 14, 'SOFT' 40;
+      font-size: 17px;
+      line-height: 1.55;
+      margin: 0 0 8px;
+      color: #3C3832;
+    }
+    .chron-entry-more {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 14px;
+      color: #5C564D;
+      margin: 0;
+    }
+    .chron-entry-more a { color: #732B24; text-decoration: none; }
+    .chron-entry-more a:hover { text-decoration: underline; }
+    .chron-entry-src { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-style: normal; color: #7D7362; }
+
+    /* feature article */
+    .chron-feature-header {
+      text-align: center;
+      max-width: 620px;
+      margin: 0 auto 40px;
+    }
+    .chron-feature-kicker {
+      font-variant-caps: small-caps;
+      font-feature-settings: 'smcp';
+      letter-spacing: 0.12em;
+      color: #5C564D;
+      font-size: 13px;
+      margin: 0 0 10px;
+    }
+    .chron-feature-sig { color: #732B24; font-weight: 600; }
+    .chron-feature-title {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144;
+      font-weight: 400;
+      font-size: clamp(2rem, 1.5rem + 1.5vw, 2.75rem);
+      line-height: 1.12;
+      letter-spacing: -0.01em;
+      margin: 0 0 14px;
+      color: #1C1916;
+    }
+    .chron-feature-deck {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 14;
+      font-style: italic;
+      font-size: 20px;
+      line-height: 1.45;
+      color: #3C3832;
+      margin: 0;
+    }
+
+    .chron-feature-body {
+      display: grid;
+      grid-template-columns: 160px minmax(0, 1fr);
+      gap: 32px;
+      align-items: start;
+    }
+    @media (max-width: 780px) {
+      .chron-feature-body { grid-template-columns: 1fr; gap: 24px; }
+    }
+    .chron-feature-margin {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 14;
+      font-size: 13px;
+      color: #4A443B;
+      padding-top: 6px;
+    }
+    .chron-feature-margin dl {
+      margin: 0 0 18px;
+    }
+    .chron-feature-margin dt {
+      font-variant-caps: small-caps;
+      font-feature-settings: 'smcp';
+      letter-spacing: 0.08em;
+      font-size: 11px;
+      font-weight: 600;
+      color: #1C1916;
+      margin-bottom: 4px;
+    }
+    .chron-feature-margin dd {
+      margin: 0 0 2px;
+      font-style: italic;
+      color: #3C3832;
+    }
+    .chron-feat-role { color: #8A806E; font-style: normal; font-size: 12px; }
+
+    /* prose */
+    .chron-prose {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 14, 'SOFT' 40, 'WONK' 0;
+      font-size: 19px;
+      line-height: 1.65;
+      color: #1C1916;
+      max-width: 62ch;
+      hyphens: auto;
+    }
+    .chron-prose p { margin: 0 0 18px; }
+    .chron-prose h2 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 72;
+      font-weight: 500;
+      font-size: 26px;
+      margin: 32px 0 10px;
+      line-height: 1.2;
+      color: #1C1916;
+    }
+    .chron-prose h3 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 36;
+      font-weight: 500;
+      font-size: 20px;
+      margin: 24px 0 8px;
+    }
+    .chron-prose a {
+      color: #732B24;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(115, 43, 36, 0.4);
+    }
+    .chron-prose a:hover { border-bottom-color: #732B24; }
+    .chron-prose blockquote {
+      margin: 18px 0;
+      padding: 0 24px;
+      border-left: 3px solid #732B24;
+      color: #3C3832;
+      font-style: italic;
+    }
+    .chron-prose ul, .chron-prose ol {
+      padding-left: 26px;
+      margin: 0 0 18px;
+    }
+    .chron-prose li { margin-bottom: 6px; }
+    .chron-prose code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      background: #EBE3D0;
+      padding: 1px 4px;
+      border-radius: 2px;
+    }
+
+    .chron-refs {
+      margin-top: 36px;
+      padding-top: 28px;
+      border-top: 1px solid #C9C0AE;
+    }
+    .chron-refs-head {
+      font-variant-caps: small-caps;
+      font-feature-settings: 'smcp';
+      letter-spacing: 0.18em;
+      color: #5C564D;
+      font-size: 12px;
+      margin: 0 0 12px;
+      text-align: center;
+    }
+    .chron-refs-list {
+      padding-left: 20px;
+      font-size: 15px;
+      line-height: 1.5;
+      color: #3C3832;
+      max-width: 62ch;
+      margin: 0 auto;
+    }
+    .chron-refs-list li { margin-bottom: 8px; }
+    .chron-refs-list a {
+      color: #732B24;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(115, 43, 36, 0.4);
+    }
+    .chron-refs-list a:hover { border-bottom-color: #732B24; }
+    .chron-refs-archive {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #5C564D !important;
+      border-bottom: 0 !important;
+    }
+
+    /* thread */
+    .chron-thread-header {
+      text-align: center;
+      max-width: 620px;
+      margin: 0 auto 36px;
+    }
+    .chron-thread-title {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144;
+      font-weight: 400;
+      font-size: clamp(1.75rem, 1.3rem + 1.5vw, 2.5rem);
+      line-height: 1.12;
+      margin: 0 0 20px;
+    }
+    .chron-thread-question {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 14;
+      font-style: italic;
+      font-size: 22px;
+      line-height: 1.45;
+      color: #1C1916;
+      margin: 0 0 18px;
+      padding: 0 20px;
+      position: relative;
+    }
+    .chron-thread-question::before,
+    .chron-thread-question::after {
+      content: "";
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: #732B24;
+      margin: 12px auto;
+    }
+    .chron-thread-meta {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 14;
+      font-size: 14px;
+      color: #5C564D;
+      margin: 0;
+    }
+
+    /* controversies */
+    .chron-cont-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .chron-cont-list li {
+      padding: 24px 0;
+      border-bottom: 1px solid #C9C0AE;
+    }
+    .chron-cont-list li:last-child { border-bottom: 0; }
+    .chron-cont-title {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 72;
+      font-weight: 500;
+      font-size: 22px;
+      margin: 0 0 12px;
+    }
+    .chron-cont-title a {
+      color: #1C1916;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+    }
+    .chron-cont-title a:hover { border-bottom-color: #732B24; }
+    .chron-cont-positions {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 18px;
+      align-items: start;
+      margin: 0 0 10px;
+    }
+    @media (max-width: 640px) {
+      .chron-cont-positions { grid-template-columns: 1fr; }
+      .chron-cont-versus { display: none; }
+    }
+    .chron-cont-pos-label {
+      font-variant-caps: small-caps;
+      font-feature-settings: 'smcp';
+      letter-spacing: 0.1em;
+      font-size: 11px;
+      color: #732B24;
+      margin: 0 0 4px;
+    }
+    .chron-cont-pos-claim {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 14, 'SOFT' 40;
+      font-style: italic;
+      font-size: 16px;
+      line-height: 1.5;
+      color: #1C1916;
+      margin: 0;
+    }
+    .chron-cont-versus {
+      font-family: 'Fraunces', serif;
+      color: #732B24;
+      font-size: 20px;
+      padding-top: 20px;
+    }
+    .chron-cont-meta {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 14;
+      font-style: italic;
+      font-size: 13px;
+      color: #7D7362;
+      margin: 8px 0 0;
+    }
+
+    /* colophon */
+    .chron-colophon {
+      max-width: 680px;
+      margin: 48px auto 0;
+      padding: 48px 32px 72px;
+      border-top: 2px solid #1C1916;
+      text-align: center;
+    }
+    .chron-colo-mark {
+      color: #732B24;
+      font-size: 22px;
+      margin: 0 0 10px;
+    }
+    .chron-colo-title {
+      font-variant-caps: small-caps;
+      font-feature-settings: 'smcp';
+      letter-spacing: 0.2em;
+      font-size: 14px;
+      color: #1C1916;
+      margin: 0 0 16px;
+    }
+    .chron-colo-body {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 14, 'SOFT' 40;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #3C3832;
+      max-width: 54ch;
+      margin: 0 auto 18px;
+    }
+    .chron-colo-body a {
+      color: #732B24;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(115, 43, 36, 0.4);
+    }
+    .chron-colo-body em {
+      font-style: italic;
+    }
+    .chron-colo-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #7D7362;
+      letter-spacing: 0.04em;
+      margin: 0;
+    }
+    .chron-colo-meta a { color: #732B24; text-decoration: none; margin: 0 3px; }
+    .chron-colo-meta a:hover { text-decoration: underline; }
+  </style>
+</MockShell>
