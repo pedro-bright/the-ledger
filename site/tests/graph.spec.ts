@@ -366,7 +366,7 @@ test('touch gestures scroll the page until explicitly enabled, also with reduced
 });
 
 test('a pinch over the inactive map zooms the page', async ({ browser, browserName }) => {
-  test.skip(browserName !== 'chromium', 'CDP pinch synthesis requires Chromium');
+  test.skip(browserName !== 'chromium', 'CDP touch dispatch requires Chromium');
   const context = await browser.newContext({ baseURL: test.info().project.use.baseURL, viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
   const page = await context.newPage();
   await page.goto('/graph');
@@ -375,7 +375,15 @@ test('a pinch over the inactive map zooms the page', async ({ browser, browserNa
   await canvas.scrollIntoViewIfNeeded();
   const box = await canvas.boundingBox();
   const session = await context.newCDPSession(page);
-  await session.send('Input.synthesizePinchGesture', { x: box!.x + box!.width / 2, y: Math.min(box!.y + 200, 600), scaleFactor: 2, gestureSourceType: 'touch' });
+  // Input.synthesizePinchGesture takes a platform-specific input path and left the scale at 1 on Linux CI.
+  const x = box!.x + box!.width / 2;
+  const y = Math.min(box!.y + 200, 600);
+  const fingers = (spread: number) => [{ x, y: y - spread, id: 0 }, { x, y: y + spread, id: 1 }];
+  await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: fingers(40) });
+  for (let spread = 50; spread <= 120; spread += 10) {
+    await session.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: fingers(spread) });
+  }
+  await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
   await expect.poll(() => page.evaluate(() => visualViewport!.scale)).toBeGreaterThan(1.2);
   await context.close();
 });
