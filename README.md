@@ -85,6 +85,18 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
 To report a security problem, use [GitHub private vulnerability reporting](https://github.com/pedro-bright/the-ledger/security/advisories/new).
 The same contact is published at `/.well-known/security.txt` on the site.
 
+## Deployment
+
+Vercel builds branch previews and deploys `main` to production through its Git integration.
+The root `vercel.json` installs both packages and runs `npm run build:vercel`, which generates the graph and feeds before building Astro.
+The build emits static files, generated security headers with per-page script hashes, and `/.well-known/security.txt` through Vercel's Build Output API v3 in `.vercel/output/`.
+Vercel configuration stays outside the published static files.
+
+Set `PUBLIC_POSTHOG_PROJECT_TOKEN` and `PUBLIC_POSTHOG_HOST` in Vercel's Production environment using the existing production analytics settings.
+If either is missing, the production build still publishes, without working analytics, and prints a warning in the build log.
+All other builds remove both variables before running Astro, so previews cannot send analytics to the production project.
+GitHub Actions runs content validation and browser checks; Vercel handles deployment.
+
 ## Project Structure
 
 ```
