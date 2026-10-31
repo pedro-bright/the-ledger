@@ -147,6 +147,12 @@ test('metadata values, dates, and citations render their type roles', async ({ p
   await citation(page.locator('.wiki-article__references ol'));
   await code(page.locator('.wiki-footer__rev'));
 
+  for (const record of ['/events/anthropic-dod-debate-2026', '/threads/ai-copyright-wars']) {
+    await page.goto(record);
+    await value(page.locator('.wiki-article__lastmod'));
+    await code(page.locator('.wiki-article__lastmod time'));
+  }
+
   await page.goto('/');
   await value(page.locator('.featured-meta .category-tag'));
   await value(page.locator('.wiki-thread-list__meta').first());
