@@ -199,8 +199,8 @@ const currentYear = new Date().getFullYear();
 </Base>
 
 <style>
-  /* Keep the article readable without fighting the full-layout 72ch cap.
-     .prose already sets its own max-width: 68ch; the wrapper stays centered. */
+  /* The full layout caps at 38rem and .prose at 35.972rem. Both are rem widths,
+     so the column holds its width through the font swap; the wrapper stays centered. */
   .about-prose {
     margin: 0 auto;
   }

@@ -33,6 +33,40 @@ test('desktop contents occupy the navigation rail', async ({ page }) => {
   await expect(page.locator('.wiki-rail[data-side="left"]').getByRole('navigation', { name: 'On this page' })).toBeVisible();
 });
 
+test('desktop contents links show a whole focus ring clear of their text', async ({ page }) => {
+  test.skip(test.info().project.name === 'mobile', 'The contents list scrolls only in the desktop rail');
+  await page.goto(`/threads/${SLUGS.thread}`);
+  const contents = page.locator('.wiki-rail #article-contents');
+  const links = contents.locator('a');
+  await expect(links.first()).toBeVisible();
+  const count = await links.count();
+  for (const contrast of ['no-preference', 'more'] as const) {
+    await page.emulateMedia({ contrast });
+    await contents.locator('summary').focus();
+    for (let index = 0; index < count; index++) {
+      await page.keyboard.press('Tab');
+      await expect(links.nth(index)).toBeFocused();
+      const ring = await links.nth(index).evaluate((link) => {
+        const box = link.getBoundingClientRect();
+        const clip = link.closest('ol')!.getBoundingClientRect();
+        const style = getComputedStyle(link);
+        const offset = parseFloat(style.outlineOffset);
+        const spread = parseFloat(style.outlineWidth) + offset;
+        const text = document.createRange();
+        text.selectNodeContents(link);
+        return {
+          focusVisible: link.matches(':focus-visible'),
+          clipped: Math.max(clip.left - box.left + spread, box.right + spread - clip.right, clip.top - box.top + spread, box.bottom + spread - clip.bottom),
+          textGap: text.getBoundingClientRect().left - (box.left - offset),
+        };
+      });
+      expect(ring.focusVisible).toBe(true);
+      expect(ring.clipped).toBeLessThanOrEqual(0);
+      expect(ring.textGap).toBeGreaterThan(0);
+    }
+  }
+});
+
 test('contents appear only on long articles and list only their h2 sections', async ({ page }) => {
   await page.goto(`/threads/${SLUGS.thread}`);
   const contents = page.locator('#article-contents');

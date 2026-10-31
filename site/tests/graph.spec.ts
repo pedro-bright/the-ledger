@@ -480,10 +480,14 @@ for (const reducedMotion of ['reduce', 'no-preference'] as const) {
   });
 }
 
-for (const width of [320, 340, 640, 659, 660, 700]) {
-  test(`touch controls at ${width}px hydrate without moving the following content`, async ({ browser }) => {
-    test.skip(test.info().project.name === 'mobile', 'This test defines its own touch viewport');
-    const context = await browser.newContext({ baseURL: test.info().project.use.baseURL, viewport: { width, height: 900 }, isMobile: true, hasTouch: true });
+const hydrationViewports = [
+  ...[320, 340, 640, 659, 660, 700].map((width) => ({ width, touch: true })),
+  { width: 320, touch: false },
+];
+for (const { width, touch } of hydrationViewports) {
+  test(`${touch ? 'touch' : 'mouse'} controls at ${width}px hydrate without moving the following content`, async ({ browser }) => {
+    test.skip(test.info().project.name === 'mobile', 'This test defines its own viewport');
+    const context = await browser.newContext({ baseURL: test.info().project.use.baseURL, viewport: { width, height: 900 }, isMobile: touch, hasTouch: touch });
     let release!: () => void;
     const held = new Promise<void>((resolve) => { release = resolve; });
     try {

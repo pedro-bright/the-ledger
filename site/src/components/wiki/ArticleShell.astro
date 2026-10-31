@@ -173,12 +173,17 @@ if (hasSeeAlso) sections.push({ id: 'see-also-head', title: 'See also', level: 2
   .article-contents li { margin: 0; }
   .article-contents a { display: block; padding: 4px 0; }
   @media (min-width: 781px) {
-    .article-contents ol { max-height: 50vh; overflow-y: auto; }
+    .article-contents ol { max-height: 50vh; overflow-y: auto; margin-inline: -4px; }
+    .article-contents a { padding-inline: 4px; }
+    .article-contents a:focus-visible { outline-offset: -2px; }
     .article-contents summary {
       font-family: var(--font-display);
       font-variation-settings: 'opsz' 36, 'SOFT' 0, 'WONK' 0;
       font-size: 15px;
     }
+  }
+  @media (min-width: 781px) and (prefers-contrast: more) {
+    .article-contents a:focus-visible { outline-offset: -3px; }
   }
   .wiki-article__breadcrumb {
     font-family: var(--font-sans);
