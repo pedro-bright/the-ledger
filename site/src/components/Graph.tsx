@@ -22,7 +22,7 @@ type Props = {
   data: { nodes: GraphNode[]; edges: GraphEdge[] };
 };
 
-// Wiki-native palette — balanced for the pale page-bg (#FAFAF7) canvas.
+// Wiki-native palette, balanced for the pale page-bg (#FAFAF7) canvas.
 const NODE_COLORS: Record<string, string> = {
   event: '#0645AD',       // wiki-link blue
   thread: '#B45309',      // category-models amber
@@ -37,43 +37,61 @@ const TYPE_LABELS: Record<string, string> = {
   actor: 'Actors',
 };
 
+const STATIC_OVERVIEW_QUERY = '(prefers-reduced-motion: reduce), (any-pointer: coarse), (max-width: 639px)';
+
+// Smallest camera scale for the opening overview. Fit graph can go below it to show every record.
+const MIN_OVERVIEW_SCALE = 0.24;
+
 export default function Graph({ data }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const fgRef = useRef<any>(undefined);
-  const [size, setSize] = useState({ width: 800, height: 600 });
+  const [size, setSize] = useState<{ width: number; height: number } | null>(null);
   const [hidden, setHidden] = useState<Set<string>>(new Set());
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const [staticOverview] = useState(() => window.matchMedia(STATIC_OVERVIEW_QUERY).matches);
+  const [laidOut, setLaidOut] = useState(false);
+  const [gesturesEnabled, setGesturesEnabled] = useState(false);
+  const graphData = useMemo(() => ({ nodes: data.nodes, links: data.edges }), [data]);
+  const isVisible = (node: any) => !hidden.has(node.type);
 
   useEffect(() => {
     if (!containerRef.current) return;
+    const container = containerRef.current;
     const resize = () => {
-      const rect = containerRef.current!.getBoundingClientRect();
-      setSize({ width: rect.width, height: Math.max(500, window.innerHeight - 280) });
+      setSize({ width: container.clientWidth, height: container.clientHeight });
     };
     resize();
-    window.addEventListener('resize', resize);
-    return () => window.removeEventListener('resize', resize);
+    const observer = new ResizeObserver(resize);
+    observer.observe(container);
+    return () => observer.disconnect();
   }, []);
 
-  // Respect prefers-reduced-motion: freeze physics simulation quickly to avoid continuous motion.
   useEffect(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return;
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
     const update = () => setReducedMotion(mq.matches);
-    update();
-    mq.addEventListener?.('change', update);
-    return () => mq.removeEventListener?.('change', update);
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
   }, []);
 
-  const filteredData = useMemo(() => {
-    const visibleNodes = data.nodes.filter((n) => !hidden.has(n.type));
-    const visibleIds = new Set(visibleNodes.map((n) => n.id));
-    const visibleEdges = data.edges.filter(
-      (e) => visibleIds.has(typeof e.source === 'string' ? e.source : (e.source as any).id) &&
-             visibleIds.has(typeof e.target === 'string' ? e.target : (e.target as any).id)
-    );
-    return { nodes: visibleNodes, links: visibleEdges };
-  }, [data, hidden]);
+  useEffect(() => {
+    const cancel = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setGesturesEnabled(false);
+    };
+    window.addEventListener('keydown', cancel);
+    return () => window.removeEventListener('keydown', cancel);
+  }, []);
+
+  const markReady = () => {
+    const wrapper = containerRef.current?.closest<HTMLElement>('.graph-wrap');
+    if (wrapper && wrapper.dataset.graphState !== 'ready') wrapper.dataset.graphState = 'ready';
+  };
+
+  const pan = (x: number, y: number) => {
+    const graph = fgRef.current;
+    if (!graph) return;
+    const center = graph.centerAt();
+    graph.centerAt(center.x + x / graph.zoom(), center.y + y / graph.zoom(), 0);
+  };
 
   const toggleType = (type: string) => {
     setHidden((prev) => {
@@ -108,61 +126,75 @@ export default function Graph({ data }: Props) {
     return acc;
   }, {});
 
-  // Accessible fallback: flat node list grouped by type, with route links
-  // identical to the canvas click handler. Screen readers + keyboard users
-  // get the same navigation affordances as the pointer interaction.
-  const fallbackRoute = (n: GraphNode) =>
-    n.type === 'event' ? `/events/${n.id}` :
-    n.type === 'thread' ? `/threads/${n.id}` :
-    n.type === 'controversy' ? `/controversies/${n.id}` :
-    `/actors/${n.id}`;
-
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="label-eyebrow mr-1">Show</span>
-        {types.map((type) => {
-          const isHidden = hidden.has(type);
-          const base =
-            'inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-sans rounded-sm border transition-colors duration-150 min-h-[32px]';
-          const visible = 'bg-wiki-surface-strong text-ink font-semibold';
-          const hiddenCls =
-            'bg-page-bg border-rule-strong text-ink hover:bg-wiki-surface';
-          return (
-            <button
-              key={type}
-              type="button"
-              onClick={() => {
-                toggleType(type);
-                (window as any).posthog?.capture('graph_type_toggled', {
-                  node_type: type,
-                  action: isHidden ? 'shown' : 'hidden',
-                });
-              }}
-              aria-pressed={!isHidden}
-              aria-label={`${isHidden ? 'Show' : 'Hide'} ${TYPE_LABELS[type].toLowerCase()}`}
-              className={`${base} ${isHidden ? hiddenCls : visible}`}
-              style={!isHidden ? { borderColor: NODE_COLORS[type] } : undefined}
-            >
-              <span>{TYPE_LABELS[type]}</span>
-              <span className="font-mono text-[11px] tabular-nums text-ink-faint">
-                ({counts[type]})
-              </span>
-            </button>
-          );
-        })}
+    <div className="graph-client" data-gestures={gesturesEnabled ? 'enabled' : 'disabled'}>
+      <div className="graph-tools">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="label-eyebrow mr-1">Show</span>
+          {types.map((type) => {
+            const isHidden = hidden.has(type);
+            const base =
+              'inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-sans rounded-sm border transition-colors duration-150 min-h-[32px]';
+            const visible = 'bg-wiki-surface-strong text-ink font-semibold';
+            const hiddenCls =
+              'bg-page-bg border-rule-strong text-ink hover:bg-wiki-surface';
+            return (
+              <button
+                key={type}
+                type="button"
+                onClick={() => {
+                  toggleType(type);
+                  (window as any).posthog?.capture('graph_type_toggled', {
+                    node_type: type,
+                    action: isHidden ? 'shown' : 'hidden',
+                  });
+                }}
+                aria-pressed={!isHidden}
+                aria-label={`${isHidden ? 'Show' : 'Hide'} ${TYPE_LABELS[type].toLowerCase()}`}
+                className={`${base} ${isHidden ? hiddenCls : visible}`}
+                style={!isHidden ? { borderColor: NODE_COLORS[type] } : undefined}
+              >
+                <span>{TYPE_LABELS[type]}</span>
+                <span className="font-mono text-[11px] tabular-nums text-ink-faint">
+                  ({counts[type]})
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="graph-navigation" role="group" aria-label="Graph navigation">
+          <button type="button" className="graph-touch-only" aria-pressed={gesturesEnabled} onClick={() => setGesturesEnabled(!gesturesEnabled)}>
+            {gesturesEnabled ? 'Disable touch gestures' : 'Enable touch gestures'}
+          </button>
+          <button type="button" aria-label="Zoom in" onClick={() => fgRef.current?.zoom(fgRef.current.zoom() * 1.25, 0)}>+</button>
+          <button type="button" aria-label="Zoom out" onClick={() => fgRef.current?.zoom(fgRef.current.zoom() / 1.25, 0)}>-</button>
+          <button type="button" onClick={() => fgRef.current?.zoomToFit(0, 30, isVisible)}>Fit graph</button>
+          <span className="graph-pan" role="group" aria-label="Pan graph">
+            <button type="button" aria-label="Pan left" onClick={() => pan(-80, 0)}>←</button>
+            <button type="button" aria-label="Pan right" onClick={() => pan(80, 0)}>→</button>
+            <button type="button" aria-label="Pan up" onClick={() => pan(0, -80)}>↑</button>
+            <button type="button" aria-label="Pan down" onClick={() => pan(0, 80)}>↓</button>
+          </span>
+        </div>
       </div>
 
       <div
         ref={containerRef}
         role="img"
-        aria-label={`Relational graph of ${data.nodes.length} nodes — events, threads, controversies, and actors linked by shared references. A text list follows for keyboard and screen-reader navigation.`}
+        aria-label={`Relationship graph of ${data.nodes.filter(isVisible).length} visible records. Typed connections are available in the relationship browser below.`}
+        aria-describedby="graph-help"
         className="border border-rule-strong rounded-sm overflow-hidden"
         style={{ background: '#FAFAF7' }}
+        onTouchStartCapture={(event) => {
+          if (!gesturesEnabled) event.stopPropagation();
+        }}
       >
-        <ForceGraph2D
+        {size && <ForceGraph2D
           ref={fgRef}
-          graphData={filteredData}
+          graphData={graphData}
+          nodeVisibility={isVisible}
+          linkVisibility={(link: any) => isVisible(link.source) && isVisible(link.target)}
           width={size.width}
           height={size.height}
           nodeColor={(node: any) => NODE_COLORS[node.type] || '#7A7368'}
@@ -172,61 +204,28 @@ export default function Graph({ data }: Props) {
           linkWidth={1}
           onNodeClick={handleNodeClick}
           backgroundColor="#FAFAF7"
-          cooldownTicks={reducedMotion ? 0 : 100}
-          d3AlphaDecay={reducedMotion ? 0.5 : 0.0228}
+          cooldownTicks={staticOverview || reducedMotion ? 0 : 100}
+          warmupTicks={staticOverview && !laidOut ? 100 : 0}
+          onEngineTick={markReady}
+          onEngineStop={() => {
+            if (staticOverview && !laidOut) {
+              const graph = fgRef.current;
+              graph.zoomToFit(0, 30);
+              if (graph.zoom() < MIN_OVERVIEW_SCALE) graph.zoom(MIN_OVERVIEW_SCALE, 0);
+            }
+            setLaidOut(true);
+            markReady();
+          }}
           enableNodeDrag={!reducedMotion}
-        />
+          enableZoomInteraction={false}
+        />}
       </div>
 
-      <p className="text-[12px] text-ink-faint font-mono">
-        Click a node to open. Drag to pan, scroll to zoom. Toggle types above to filter.
+      <p id="graph-help" className="text-[12px] text-ink-faint font-mono">
+        Click a node to open its record. Use the buttons to pan or zoom, or drag with a mouse.
+        <span className="graph-touch-only"> Enable touch gestures to drag or pinch; disable them or press Escape to scroll the page.</span>
+        {' '}<a href="#graph-relationships">Browse relationships as text.</a>
       </p>
-
-      {/* Accessible text-list equivalent of the graph. Keyboard and screen-reader
-          users can navigate the full node set; pointer users can ignore it. */}
-      <details className="graph-fallback">
-        <summary className="graph-fallback__summary">
-          All {data.nodes.length} nodes as a linked list
-        </summary>
-        <div className="graph-fallback__body">
-          {types.map((type) => {
-            const nodes = filteredData.nodes.filter((n: any) => n.type === type);
-            if (nodes.length === 0) return null;
-            return (
-              <section key={type} className="graph-fallback__section" aria-labelledby={`graph-fallback-${type}`}>
-                <h3 id={`graph-fallback-${type}`} className="graph-fallback__heading">
-                  <span
-                    className="graph-fallback__dot"
-                    aria-hidden="true"
-                    style={{ background: NODE_COLORS[type] }}
-                  />
-                  {TYPE_LABELS[type]}
-                  <span className="graph-fallback__count font-mono tabular-nums">
-                    ({nodes.length})
-                  </span>
-                </h3>
-                <ul className="graph-fallback__list">
-                  {nodes
-                    .slice()
-                    .sort((a: any, b: any) =>
-                      (b.date || '').localeCompare(a.date || '') || a.title.localeCompare(b.title)
-                    )
-                    .map((n: any) => (
-                      <li key={n.id}>
-                        <a href={fallbackRoute(n)}>{n.title}</a>
-                        {n.date && (
-                          <time className="graph-fallback__date font-mono" dateTime={n.date}>
-                            {' '}— {n.date}
-                          </time>
-                        )}
-                      </li>
-                    ))}
-                </ul>
-              </section>
-            );
-          })}
-        </div>
-      </details>
     </div>
   );
 }
