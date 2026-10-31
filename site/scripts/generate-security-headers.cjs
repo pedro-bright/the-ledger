@@ -1,15 +1,9 @@
 #!/usr/bin/env node
 /**
- * generate-security-headers.cjs - Run by the deploy job in deploy.yml on the downloaded
- * build, as `node generate-security-headers.cjs <deploy-root>`. Hashes the pages in
- * <deploy-root>/public and writes <deploy-root>/vercel.json (response headers) and
- * <deploy-root>/public/.well-known/security.txt.
- *
- * The job runs `vercel deploy` from the deploy root, so the CLI reads its config there,
- * and it refuses a build that contains Vercel config. It also doesn't receive hidden
- * files from the build. So neither file can be written during the build.
- *
- * The job doesn't install the project's dependencies, so this uses only Node built-ins.
+ * Security policy helpers used by scripts/vercel-output.mjs after Astro builds.
+ * The packager carries these headers into Build Output API routes and publishes
+ * security.txt, keeping configuration outside the static files.
+ * This module uses only Node built-ins.
  * The script hashes are generated because they change whenever an inline script or the
  * PostHog token changes.
  *
@@ -130,23 +124,4 @@ function securityTxt(now = new Date()) {
   ].join('\n');
 }
 
-function main(deployRoot) {
-  const site = path.join(deployRoot, 'public');
-  const pages = new Map(
-    findHtmlFiles(site).map((file) => {
-      const html = fs.readFileSync(path.join(site, file), 'utf8');
-      return [file, new Set(inlineScripts(html).map(scriptHash))];
-    }),
-  );
-
-  const config = buildConfig(pages);
-  fs.writeFileSync(path.join(deployRoot, 'vercel.json'), `${JSON.stringify(config, null, 2)}\n`);
-  fs.mkdirSync(path.join(site, '.well-known'), { recursive: true });
-  fs.writeFileSync(path.join(site, '.well-known', 'security.txt'), securityTxt());
-
-  console.log(`Security headers: ${pages.size} pages, ${config.headers.length} header rules.`);
-}
-
 module.exports = { CSP_HEADER, buildConfig, findHtmlFiles, inlineScripts, pageSource, scriptHash, securityTxt };
-
-if (require.main === module) main(process.argv[2]);
