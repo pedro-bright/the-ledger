@@ -2,7 +2,7 @@
 
 *Writing standards for The Ledger.*
 
-**Version:** 1.0 | **Last updated:** 2026-03-08
+**Version:** 1.0 | **Last updated:** 2026-10-30
 
 ---
 
@@ -82,6 +82,11 @@ Every event follows this structure:
 
 - In markdown body: use descriptive link text, not raw URLs
 - Sources in frontmatter: include both `url` and `title` fields
+
+### Markdown bodies
+
+- Raw HTML renders as literal text and images render as their alt text, so use neither
+- Links must be relative or use `http`, `https`, or `mailto`; any other link renders as plain text
 
 ## Quality Checklist
 

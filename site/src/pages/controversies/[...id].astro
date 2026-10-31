@@ -244,7 +244,8 @@ function displayActor(id: string): { name: string; href?: string } {
   </Fragment>
 </Base>
 
-<script is:inline define:vars={{ controversyId: controversy.id, controversyTitle: controversy.title }}>
+<script is:inline data-controversy-id={controversy.id} data-controversy-title={controversy.title}>
+  const { controversyId, controversyTitle } = document.currentScript.dataset;
   document.addEventListener('DOMContentLoaded', function () {
     // Track external source link clicks in controversy references and position source lists
     document.querySelectorAll('.wiki-article__references a[target="_blank"], .position__sources a[target="_blank"]').forEach(function (el) {

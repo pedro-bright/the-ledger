@@ -28,6 +28,7 @@
     "website": {
       "type": "string",
       "format": "uri",
+      "pattern": "^https?://",
       "description": "Official website URL."
     },
     "aliases": {

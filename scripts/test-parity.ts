@@ -8,7 +8,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import matter from "gray-matter";
+import { parseFrontmatter } from "./frontmatter.js";
 import yaml from "js-yaml";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -41,7 +41,7 @@ function readId(filePath: string): string | null {
       const id = data?.id;
       return typeof id === "string" ? id : null;
     }
-    const { data } = matter(raw);
+    const { data } = parseFrontmatter(raw);
     const id = (data as Record<string, unknown>).id;
     return typeof id === "string" ? id : null;
   } catch {

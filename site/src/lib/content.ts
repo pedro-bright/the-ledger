@@ -1,8 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import matter from 'gray-matter';
-import { marked } from 'marked';
 import yaml from 'js-yaml';
+import { parseFrontmatter, renderMarkdown } from './markdown';
 
 // ─── Types ────────────────────────────────────────────────────
 
@@ -114,8 +113,8 @@ function safeReadDir(dir: string): string[] {
 
 function parseMarkdownFile(filePath: string): { data: Record<string, any>; content: string; htmlContent: string } {
   const raw = fs.readFileSync(filePath, 'utf-8');
-  const { data, content } = matter(raw);
-  const htmlContent = marked.parse(content, { async: false }) as string;
+  const { data, content } = parseFrontmatter(raw);
+  const htmlContent = renderMarkdown(content);
   return { data, content, htmlContent };
 }
 

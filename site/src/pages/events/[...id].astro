@@ -264,7 +264,8 @@ const description = `${event.title} — ${event.date}`;
   </ArticleShell>
 </Base>
 
-<script is:inline define:vars={{ eventId: event.id, eventTitle: event.title, eventCategory: event.category }}>
+<script is:inline data-event-id={event.id} data-event-title={event.title} data-event-category={event.category}>
+  const { eventId, eventTitle, eventCategory } = document.currentScript.dataset;
   document.addEventListener('DOMContentLoaded', function () {
     // Track source reference link clicks
     document.querySelectorAll('.wiki-article__references a[target="_blank"]:not(.ref-archive)').forEach(function (el) {
