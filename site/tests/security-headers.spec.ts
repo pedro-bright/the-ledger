@@ -1,7 +1,10 @@
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { test, expect } from '@playwright/test';
 import { getTransformedRoutes } from '@vercel/routing-utils';
+import yaml from 'js-yaml';
 import {
   CSP_HEADER,
   buildConfig,
@@ -14,19 +17,53 @@ import {
 import { SLUGS } from './_slugs';
 
 /**
- * Checks the headers generated into dist/vercel.json. `astro preview` doesn't read that
- * file, so the browser tests add the policy to each document response themselves.
+ * Checks the headers the deploy job in deploy.yml generates, by running the job's own
+ * steps on the built site. `astro preview` doesn't read the resulting vercel.json, so the
+ * browser tests add the policy to each document response themselves.
  *
  * Desktop-chromium only: the policy doesn't vary by viewport.
  */
 
 const DIST = path.join(process.cwd(), 'dist');
+const REPO = path.join(process.cwd(), '..');
 
 type HeaderRule = { source: string; headers: { key: string; value: string }[] };
 type HeaderRoute = { src: string; headers: Record<string, string> };
 
+type DeployStep = { name: string; run: string; 'working-directory'?: string };
+
+let runnerTemp: string | undefined;
+
+/**
+ * Runs the deploy job's steps between downloading the build and deploying it, on a copy of
+ * dist/, once per worker. Returns the deploy root.
+ */
+function deployRoot(): string {
+  if (!runnerTemp) {
+    runnerTemp = fs.mkdtempSync(path.join(os.tmpdir(), 'ledger-deploy-'));
+    // upload-artifact leaves hidden files out of the artifact by default.
+    fs.cpSync(DIST, path.join(runnerTemp, 'deploy', 'public'), {
+      recursive: true,
+      filter: (source) => !path.basename(source).startsWith('.'),
+    });
+    const workflow = yaml.load(fs.readFileSync(path.join(REPO, '.github/workflows/deploy.yml'), 'utf8')) as {
+      jobs: { deploy: { steps: DeployStep[] } };
+    };
+    const { steps } = workflow.jobs.deploy;
+    const names = steps.map(({ name }) => name);
+    for (const step of steps.slice(names.indexOf('Download built site') + 1, names.indexOf('Deploy to Vercel'))) {
+      execFileSync('bash', ['-e', '-c', step.run], {
+        cwd: step['working-directory']?.replace('${{ runner.temp }}', runnerTemp) ?? REPO,
+        env: { ...process.env, RUNNER_TEMP: runnerTemp },
+        stdio: 'pipe',
+      });
+    }
+  }
+  return path.join(runnerTemp, 'deploy');
+}
+
 function headerRules(): HeaderRule[] {
-  return JSON.parse(fs.readFileSync(path.join(DIST, 'vercel.json'), 'utf8')).headers;
+  return JSON.parse(fs.readFileSync(path.join(deployRoot(), 'vercel.json'), 'utf8')).headers;
 }
 
 // Compiled by Vercel's routing library, so URLs match the way they do on a deployment.
@@ -44,6 +81,10 @@ function policyFor(routes: HeaderRoute[], urlPath: string): string {
 test.describe('security headers', () => {
   test.beforeEach(({}, testInfo) => {
     test.skip(testInfo.project.name !== 'chromium', 'desktop only');
+  });
+
+  test.afterAll(() => {
+    if (runnerTemp) fs.rmSync(runnerTemp, { recursive: true, force: true });
   });
 
   async function loadWithPolicy(page: import('@playwright/test').Page, urlPath: string) {
@@ -180,6 +221,12 @@ test.describe('security headers', () => {
       'Preferred-Languages: en',
       '',
     ]);
-    expect(fs.existsSync(path.join(DIST, '.well-known', 'security.txt'))).toBe(true);
+  });
+
+  test("the deploy job's steps accept the build and write the CLI's config and security.txt", () => {
+    expect(headerRules()[0].source).toBe('/(.*)');
+    const published = fs.readFileSync(path.join(deployRoot(), 'public', '.well-known', 'security.txt'), 'utf8');
+    expect(published.split('\n')[0]).toBe(securityTxt().split('\n')[0]);
+    expect(fs.existsSync(path.join(deployRoot(), 'public', 'vercel.json'))).toBe(false);
   });
 });
