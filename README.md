@@ -78,6 +78,9 @@ The Ledger uses a progressive contribution model:
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
 
+To report a security problem, use [private vulnerability reporting](https://github.com/pedro-bright/the-ledger/security/advisories/new) instead of a public issue.
+The same contact is published at `/.well-known/security.txt` on the site.
+
 ## Project Structure
 
 ```

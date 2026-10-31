@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/generate-security-headers.cjs",
     "preview": "astro preview",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
