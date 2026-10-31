@@ -13,6 +13,7 @@ const SDK_DIST = path.join(__dirname, '../node_modules/posthog-js/dist');
 const REMOTE_CONFIG = {
   autocapture_opt_out: false,
   capturePerformance: { network_timing: true, web_vitals: true, web_vitals_allowed_metrics: null },
+  captureDeadClicks: true,
   sessionRecording: { endpoint: '/s/' },
   heatmaps: true,
   surveys: true,
@@ -181,6 +182,28 @@ test('a failed remote config fetch does not send search terms in a feature flag 
     .toEqual(expect.arrayContaining(['$pageview', 'explorer_filter_applied']));
 
   expect(nonEventPosts(posts)).toEqual([]);
+  expect(JSON.stringify(events)).not.toContain(CANARY);
+});
+
+test('a dead click on the echoed search term does not send it', async ({ page }) => {
+  test.setTimeout(60_000);
+  const { events } = await loadRealAnalytics(page);
+  const deadClicks = () => events.filter(event => event.event === '$dead_click');
+  const clickSentenceUntilReported = async () => {
+    const reported = deadClicks().length;
+    await expect(async () => {
+      await page.locator('p', { hasText: 'Nothing contains' }).click({ position: { x: 6, y: 6 } });
+      await expect.poll(() => deadClicks().length, { timeout: 5_000 }).toBeGreaterThan(reported);
+    }).toPass({ timeout: 30_000 });
+  };
+
+  await page.goto(`/explore?q=${CANARY}-nomatch`);
+  // The first report proves the lazily loaded detector is running. The detector
+  // reports clicks oldest first, so the echoed term would arrive before the second.
+  await clickSentenceUntilReported();
+  await page.locator('span.font-mono', { hasText: `${CANARY}-nomatch` }).click();
+  await clickSentenceUntilReported();
+
   expect(JSON.stringify(events)).not.toContain(CANARY);
 });
 

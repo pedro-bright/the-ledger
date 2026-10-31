@@ -515,7 +515,7 @@ export default function Explorer({ events, categories }: Props) {
           <p className="text-sm text-ink-muted mb-5 leading-relaxed font-sans">
             {search && activeCategories.size === 0 && activeSignificance.size === 0 && selectedYear === null ? (
               <>
-                Nothing contains "<span className="font-mono text-ink">{search}</span>". Try a shorter query or a different spelling.
+                Nothing contains "<span className="ph-no-capture font-mono text-ink">{search}</span>". Try a shorter query or a different spelling.
               </>
             ) : (
               <>Try dropping one filter — the most constraining combinations rarely return results.</>
