@@ -25,7 +25,7 @@ We don't aggregate news. We don't write encyclopedias. We build a **machine for 
 
 The Ledger has two layers over the same data:
 
-1. **Canonical Layer** (what readers see) — The "current best understanding" of each event, thread, and controversy. Legible, citable, periodically reviewed narratives.
+1. **Canonical Layer** (what readers see) — The "current best understanding" of each event, thread, and controversy. Legible, citable narratives.
 
 2. **Ledger Layer** (what powers it) — Immutable, append-only event history. All assertions, disagreements, and revisions preserved. No silent rewriting. Git is the audit trail.
 

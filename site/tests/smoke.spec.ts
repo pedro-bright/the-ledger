@@ -147,6 +147,17 @@ test('event provenance distinguishes review dates from event dates', async ({ pa
   await expect(page.locator('.wiki-article__lastmod')).not.toContainText('last modified');
 });
 
+test('automatic scan entries do not claim a human review', async ({ page }) => {
+  const footer = page.locator('.wiki-article__lastmod');
+  await page.goto('/events/cohere-qwen38-flash-next-beijing-upload-attempt');
+  await expect(footer.getByRole('link', { name: 'View source on GitHub' })).toBeVisible();
+  await expect(footer).not.toContainText(/review/i);
+  await expect(page.locator('body')).not.toContainText(/last reviewed/i);
+
+  await page.goto('/events/anthropic-dod-debate-2026');
+  await expect(footer).toContainText('This record last reviewed 2026-10-26.');
+});
+
 test('thread footers report the thread modification date instead of a linked event date', async ({ page }) => {
   await page.goto('/threads/ai-copyright-wars');
   const footer = page.locator('.wiki-article__lastmod');

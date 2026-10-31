@@ -146,7 +146,7 @@ const description = `${event.title} — ${event.date}`;
     title={event.title}
     subtitle={subtitle}
     breadcrumb={breadcrumb}
-    lastReviewed={event.revision?.last_reviewed}
+    lastReviewed={event.revision?.final_author === 'pedro-bright' ? undefined : event.revision?.last_reviewed}
     sourcePath={sourcePath}
   >
     <Fragment slot="markers">
