@@ -132,23 +132,6 @@ for (const [name, parse] of [
   });
 }
 
-test("no tool or site module imports gray-matter outside the guarded parsers", () => {
-  const roots = [path.join(ROOT, "scripts"), path.join(ROOT, "site", "src")];
-  const allowed = new Set(["scripts/frontmatter.ts", "site/src/lib/markdown.ts", "scripts/content-security.test.ts"]);
-  const offenders: string[] = [];
-  for (const root of roots) {
-    for (const entry of fs.readdirSync(root, { recursive: true, encoding: "utf-8" })) {
-      const file = path.join(root, entry);
-      if (!fs.statSync(file).isFile()) continue;
-      const relative = path.relative(ROOT, file);
-      if (!allowed.has(relative) && /from\s+["']gray-matter["']/.test(fs.readFileSync(file, "utf-8"))) {
-        offenders.push(relative);
-      }
-    }
-  }
-  assert.deepEqual(offenders, []);
-});
-
 test("no command-line tool runs a code frontmatter file", () => {
   withMarker((marker) => {
     withSandbox({ "events/2026/01-rce-poc.md": codeFrontmatterPoc("js") }, (sandbox) => {

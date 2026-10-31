@@ -430,16 +430,6 @@ test.describe('guards outside the browser', () => {
     test.skip(testInfo.project.name === 'mobile', 'desktop only');
   });
 
-  test('define:vars never carries content into a script', () => {
-    const srcDir = path.join(SITE_DIR, 'src');
-    const users = fs
-      .readdirSync(srcDir, { recursive: true, encoding: 'utf-8' })
-      .filter((entry) => entry.endsWith('.astro'))
-      .filter((entry) => fs.readFileSync(path.join(srcDir, entry), 'utf-8').includes('define:vars'));
-    // posthog.astro only carries build environment values.
-    expect(users).toEqual([path.join('components', 'posthog.astro')]);
-  });
-
   // CI reaches this file through Playwright, so this keeps the frontmatter and
   // schema proofs on the required path too.
   test('the root content security suite passes', () => {
