@@ -32,7 +32,7 @@ const { eyebrow, title, subtitle, noRule = false } = Astro.props;
   }
   .page-header__title {
     font-family: var(--font-display);
-    font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;
+    font-variation-settings: 'opsz' var(--display-opsz), 'SOFT' 0, 'WONK' 0;
     font-weight: 500;
     font-size: 2.5rem;
     line-height: 1.05;
@@ -52,7 +52,7 @@ const { eyebrow, title, subtitle, noRule = false } = Astro.props;
     max-width: 62ch;
   }
   @media (max-width: 600px) {
-    .page-header__title { font-size: 2rem; }
+    .page-header__title { font-size: 2rem; line-height: 1.15; letter-spacing: -0.01em; }
     .page-header__subtitle { font-size: 1rem; }
   }
 </style>

@@ -443,3 +443,27 @@ test('the grouped directory lists direct links with dates, newest events first',
   await expect(directory.getByRole('link', { name: 'OpenAI', exact: true })).toHaveAttribute('href', '/actors/openai');
   await context.close();
 });
+
+for (const reducedMotion of ['reduce', 'no-preference'] as const) {
+  test(`explicit re-layout regroups the filtered network without a visible simulation under ${reducedMotion}`, async ({ page }) => {
+    test.slow();
+    await page.emulateMedia({ reducedMotion });
+    await recordDrawing(page);
+    await page.goto('/graph');
+    await settledFrame(page);
+    await page.getByRole('button', { name: 'Hide actors', exact: true }).click();
+    const before = await settledFrame(page);
+    await page.getByRole('button', { name: 'Re-layout graph', exact: true }).click();
+    await expect.poll(async () => JSON.stringify(await drawnFrame(page))).not.toBe(JSON.stringify(before));
+    const after = await settledFrame(page);
+    expect(after.length).toBe(before.length);
+    await page.waitForTimeout(3000);
+    expect(await drawnFrame(page)).toEqual(after);
+    await page.getByRole('button', { name: 'Show actors', exact: true }).click();
+    await settledFrame(page);
+    await page.getByRole('button', { name: 'Hide actors', exact: true }).click();
+    await expect.poll(() => drawnFrame(page)).toEqual(after);
+    for (const type of ['events', 'threads', 'controversies']) await page.getByRole('button', { name: `Hide ${type}`, exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Re-layout graph', exact: true })).toBeDisabled();
+  });
+}

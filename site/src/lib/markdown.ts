@@ -60,3 +60,25 @@ const contentMarked = new Marked({
 export function renderMarkdown(markdown: string): string {
   return contentMarked.parse(markdown, { async: false }) as string;
 }
+
+/** Anchor rendered article sections, including headings supplied by Astro slots. */
+export function anchorSections(html: string, used = new Set<string>()) {
+  const sections: Array<{ id: string; title: string; level: number }> = [];
+  const entities: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
+  const content = html.replace(/<h([23])(\s[^>]*)?>([\s\S]*?)<\/h\1>/g, (heading, level, attrs = '', inner) => {
+    const title = inner.replace(/<[^>]*>/g, '').replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos|nbsp);/gi, (entity: string, name: string) => {
+      if (!name.startsWith('#')) return entities[name.toLowerCase()] ?? entity;
+      const point = name[1].toLowerCase() === 'x' ? parseInt(name.slice(2), 16) : Number(name.slice(1));
+      return point > 0 && point <= 0x10ffff ? String.fromCodePoint(point) : entity;
+    }).trim();
+    const existing = attrs.match(/\bid=["']([^"']+)["']/)?.[1];
+    const base = `section-${title.normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '') || 'heading'}`;
+    let id = existing || base;
+    let suffix = 2;
+    while (used.has(id)) id = `${base}-${suffix++}`;
+    used.add(id);
+    sections.push({ id, title, level: Number(level) });
+    return existing === id ? heading : `<h${level}${attrs.replace(/\s+id=["'][^"']*["']/, '')} id="${id}">${inner}</h${level}>`;
+  });
+  return { content, sections };
+}

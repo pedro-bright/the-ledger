@@ -306,10 +306,10 @@ const lastReviewed = reviewed && finalAuthor !== 'pedro-bright' && (!created || 
   .rail-list--stacked > li { display: block; }
   .rail-stack { padding: 5px 0; line-height: 1.4; }
   .rail-stack__date,
-  .rail-stack__meta { display: block; font-size: 11px; color: var(--color-ink-faint); margin-top: 1px; }
+  .rail-stack__meta { display: block; font-size: var(--text-meta); color: var(--color-ink-faint); margin-top: 1px; line-height: 1.45; }
   .rail-stack__type { text-transform: capitalize; }
   .rail-stack__role { margin-left: 3px; }
-  .infobox-role { color: var(--color-ink-faint); font-size: 11px; }
+  .infobox-role { color: var(--color-ink-faint); font-size: var(--text-meta); line-height: 1.45; }
 
   /* Mobile-only epistemic key — the right rail is hidden below 780px,
      so we duplicate the definitions at the end of the article body. */
@@ -321,18 +321,19 @@ const lastReviewed = reviewed && finalAuthor !== 'pedro-bright' && (!created || 
     border: 1px solid var(--color-rule-strong);
     border-radius: 2px;
     font-family: var(--font-sans);
-    font-size: 13px;
+    font-size: var(--text-meta);
     line-height: 1.5;
     color: var(--color-ink-mid);
   }
   .mobile-epistemic-key > summary {
     cursor: pointer;
-    font-size: 11px;
+    font-size: var(--text-label);
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--color-ink-muted);
     padding: 2px 0;
+    line-height: 1.4;
   }
   .mobile-epistemic-key > summary:hover { color: var(--color-wiki-link); }
   .mobile-epistemic-key[open] > summary { margin-bottom: 10px; }
@@ -343,17 +344,18 @@ const lastReviewed = reviewed && finalAuthor !== 'pedro-bright' && (!created || 
     gap: 6px 14px;
   }
   .mobile-epistemic-key dt {
-    font-size: 11px;
+    font-size: var(--text-label);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     color: var(--color-ink-muted);
     margin: 0;
+    line-height: 1.4;
   }
   .mobile-epistemic-key dd {
     margin: 0;
     font-family: var(--font-serif);
-    font-size: 13px;
+    font-size: var(--text-meta);
     color: var(--color-ink-mid);
     line-height: 1.45;
   }
@@ -363,23 +365,25 @@ const lastReviewed = reviewed && finalAuthor !== 'pedro-bright' && (!created || 
 
   .epistemic-key { display: grid; grid-template-columns: 1fr; gap: 2px 0; margin: 0; }
   .epistemic-key dt {
-    margin-top: 6px; font-family: var(--font-sans); font-size: 11px; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-ink-muted);
+    margin-top: 6px; font-family: var(--font-sans); font-size: var(--text-label); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.04em; color: var(--color-ink-muted);
+    line-height: 1.4;
   }
   .epistemic-key dt:first-child { margin-top: 0; }
   .epistemic-key__term--landmark { color: #7A5A00; }
   .epistemic-key__term--major { color: #0A4D82; }
   .epistemic-key__term--notable { color: #5C564D; }
-  .epistemic-key dd { margin: 2px 0 0; font-size: 12.5px; color: var(--color-ink-mid); line-height: 1.45; }
+  .epistemic-key dd { margin: 2px 0 0; font-size: var(--text-meta); color: var(--color-ink-mid); line-height: 1.45; }
 
   .ref-meta { color: var(--color-ink-mid); }
-  .ref-date { font-size: 12px; color: var(--color-ink-faint); }
+  .ref-date { font-size: var(--text-meta); color: var(--color-ink-faint); line-height: 1.45; }
   .ref-type { margin-left: 6px; text-transform: lowercase; }
   .ref-type--primary { background: #DBECF9; color: #0A4D82; }
   .ref-archive {
-    font-family: var(--font-sans); font-size: 11.5px; color: var(--color-ink-faint);
+    font-family: var(--font-sans); font-size: var(--text-meta); color: var(--color-ink-faint);
     text-decoration: underline dotted;
+    line-height: 1.45;
   }
   .ref-archive:hover { color: var(--color-wiki-link); }
-  .see-also__date { color: var(--color-ink-faint); font-size: 12px; font-style: normal; }
+  .see-also__date { color: var(--color-ink-faint); font-size: var(--text-meta); font-style: normal; line-height: 1.45; }
 </style>

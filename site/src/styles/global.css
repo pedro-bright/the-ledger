@@ -7,12 +7,27 @@
    Light-mode, editorial-archival. See CLAUDE.md Design Context.
    ============================================================= */
 
+/* Georgia fallback measured against Source Serif 4 at weight 400 using the event corpus.
+   The rem-based outer column stays fixed while the reading face loads. */
+@font-face {
+  font-family: 'Source Serif Fallback';
+  src: local('Georgia');
+  size-adjust: 107.37982%;
+  ascent-override: 96.47995%;
+  descent-override: 31.19767%;
+  line-gap-override: 0%;
+}
+
 @layer base {
   :root {
     --font-display: 'Fraunces Variable', Fraunces, 'Iowan Old Style', Georgia, serif;
-    --font-serif: 'Source Serif 4 Variable', 'Source Serif 4', 'Iowan Old Style', Georgia, serif;
+    --font-serif: 'Source Serif 4 Variable', 'Source Serif 4', 'Source Serif Fallback', Georgia, serif;
     --font-sans: Inter, system-ui, -apple-system, sans-serif;
     --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    --display-opsz: 144;
+    --text-label: 0.75rem;
+    --text-meta: 0.8125rem;
 
     --text-caption: 0.75rem;
     --text-small: 0.875rem;
@@ -75,10 +90,14 @@
   }
   p a:hover { text-decoration-color: var(--color-wiki-link); }
 
-  /* Display serif — opsz 144 for sharp display, 36 for subheads, 14 for body italic. */
+  @media (max-width: 600px) {
+    :root { --display-opsz: 32; }
+  }
+
+  /* Desktop display detail, with sturdier phone hairlines; 36 for subheads and 14 for body italic. */
   .font-display {
     font-family: var(--font-display);
-    font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;
+    font-variation-settings: 'opsz' var(--display-opsz), 'SOFT' 0, 'WONK' 0;
     font-feature-settings: 'kern', 'liga', 'ss01';
   }
   .font-display-subhead {
@@ -169,11 +188,12 @@
   /* -------- Editorial labels. -------- */
   .label-eyebrow {
     font-family: var(--font-sans);
-    font-size: 0.6875rem;
+    font-size: var(--text-label);
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.04em;
     color: var(--color-ink-muted);
+    line-height: 1.4;
   }
 
   /* -------- Significance flags (landmark/major/notable). -------- */
@@ -181,9 +201,9 @@
     display: inline-block;
     padding: 1px 7px 2px;
     font-family: var(--font-sans);
-    font-size: 10px;
+    font-size: var(--text-label);
     font-weight: 600;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     border-radius: 2px;
     line-height: 1.4;
@@ -218,15 +238,17 @@
   .wiki-list-dated .date {
     flex: 0 0 6.5em;
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: var(--text-meta);
     color: var(--color-ink-faint);
     letter-spacing: 0.02em;
+    line-height: 1.45;
   }
   .wiki-list-dated .category-tag {
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: var(--text-meta);
     color: var(--color-ink-faint);
     text-transform: lowercase;
+    line-height: 1.45;
   }
 
   /* -------- Page layout: 3-column grid with sticky rails. -------- */
@@ -249,7 +271,7 @@
   }
   .wiki-layout[data-layout="full"] {
     grid-template-columns: minmax(0, 1fr);
-    max-width: 72ch;
+    max-width: 38rem;
   }
   .wiki-layout[data-layout="full"] .wiki-rail {
     display: none;
@@ -264,15 +286,16 @@
     top: 20px;
     align-self: start;
     font-family: var(--font-sans);
-    font-size: 13px;
+    font-size: var(--text-meta);
     color: var(--color-ink-mid);
     line-height: 1.5;
   }
   /* Left rail = navigation / index. Subtly lighter weight so the article
      body and right-rail metadata read as primary. */
   .wiki-rail[data-side="left"] {
-    font-size: 12.5px;
+    font-size: var(--text-meta);
     color: var(--color-ink-muted);
+    line-height: 1.45;
   }
   .wiki-rail[data-side="left"] .rail-list a {
     color: var(--color-wiki-link);
@@ -286,8 +309,9 @@
       gap: 32px;
     }
     .wiki-rail {
-      font-size: 12.5px;
-    }
+      font-size: var(--text-meta);
+    line-height: 1.45;
+  }
     .wiki-layout[data-left-rail="false"][data-right-rail="true"] {
       grid-template-columns: minmax(0, 1fr) 240px;
     }
@@ -350,9 +374,10 @@
   }
   .rail-list .count {
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: var(--text-meta);
     color: var(--color-ink-faint);
     flex-shrink: 0;
+    line-height: 1.45;
   }
 
   /* -------- Significance history: audit trail of level upgrades. -------- */
@@ -362,13 +387,14 @@
     border-top: 1px solid var(--color-rule);
   }
   .sig-history__title {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
+    font-family: var(--font-sans);
+    font-size: var(--text-label);
+    font-weight: 600;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--color-ink-muted);
     margin: 0 0 10px;
+    line-height: 1.4;
   }
   .sig-history__list {
     list-style: none;
@@ -380,20 +406,21 @@
   }
   .sig-history__row {
     display: grid;
-    grid-template-columns: 5.5em auto 1fr;
+    grid-template-columns: max-content auto 1fr;
     column-gap: 10px;
     align-items: baseline;
     font-family: var(--font-serif);
-    font-size: 13px;
+    font-size: var(--text-meta);
     line-height: 1.45;
     color: var(--color-ink-mid);
   }
   .sig-history__date {
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: var(--text-meta);
     color: var(--color-ink-faint);
     white-space: nowrap;
     letter-spacing: 0.02em;
+    line-height: 1.45;
   }
   .sig-history__reason {
     color: var(--color-ink-mid);
@@ -423,9 +450,10 @@
     border-bottom: 1px dotted var(--color-rule);
   }
   .explorer-row__date {
-    font-size: 12px;
+    font-size: var(--text-meta);
     color: var(--color-ink-faint);
     letter-spacing: 0.02em;
+    line-height: 1.45;
   }
   .explorer-row__pip {
     display: inline-block;
@@ -445,10 +473,11 @@
   .explorer-row__title:hover { text-decoration: underline; }
   .explorer-row__title:visited { color: var(--color-wiki-link-visited); }
   .explorer-row__category {
-    font-size: 11px;
+    font-size: var(--text-meta);
     text-transform: lowercase;
     letter-spacing: 0.02em;
     white-space: nowrap;
+    line-height: 1.45;
   }
   @media (max-width: 640px) {
     .explorer-row {
@@ -457,7 +486,6 @@
     }
     .explorer-row__date {
       grid-column: 1 / -1;
-      font-size: 11.5px;
     }
     .explorer-row__pip {
       grid-row: 2;
@@ -478,12 +506,13 @@
   }
   .graph-fallback__summary {
     font-family: var(--font-sans);
-    font-size: 13px;
+    font-size: var(--text-meta);
     font-weight: 600;
     color: var(--color-ink-mid);
     cursor: pointer;
     padding: 4px 0;
     list-style-position: outside;
+    line-height: 1.45;
   }
   .graph-fallback__summary:hover { color: var(--color-wiki-link); }
   .graph-fallback__body {
@@ -498,14 +527,15 @@
     align-items: baseline;
     gap: 8px;
     font-family: var(--font-sans);
-    font-size: 12px;
+    font-size: var(--text-label);
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     color: var(--color-ink-muted);
     margin: 0 0 8px;
     padding-bottom: 4px;
     border-bottom: 1px solid var(--color-rule);
+    line-height: 1.4;
   }
   .graph-fallback__dot {
     display: inline-block;
@@ -515,10 +545,11 @@
     flex-shrink: 0;
   }
   .graph-fallback__count {
-    font-size: 11px;
+    font-size: var(--text-meta);
     color: var(--color-ink-faint);
     font-weight: 400;
     margin-left: auto;
+    line-height: 1.45;
   }
   .graph-fallback__list {
     list-style: none;
@@ -534,9 +565,10 @@
     line-height: 1.4;
   }
   .graph-fallback__date {
-    font-size: 11px;
+    font-size: var(--text-meta);
     color: var(--color-ink-faint);
     white-space: nowrap;
+    line-height: 1.45;
   }
 
   /* -------- Prose: long-form rendered markdown. -------- */
@@ -545,13 +577,14 @@
     font-size: 1rem;
     line-height: 1.7;
     color: var(--color-ink);
-    max-width: 68ch;
+    /* 68 Source Serif zero advances at the body size, stable during font swap. */
+    max-width: 35.972rem;
   }
   .prose > :first-child { margin-top: 0; }
   .prose > :last-child { margin-bottom: 0; }
   .prose h1 {
     font-family: var(--font-display);
-    font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;
+    font-variation-settings: 'opsz' var(--display-opsz), 'SOFT' 0, 'WONK' 0;
     font-weight: 500;
     font-size: 2.25rem;
     line-height: 1.1;

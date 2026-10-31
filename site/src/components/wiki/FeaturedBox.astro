@@ -63,14 +63,15 @@ const { title, date, dateIso, meta } = Astro.props;
   }
   .wiki-box__date {
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: var(--text-meta);
     color: var(--color-ink-faint);
     letter-spacing: 0.02em;
+    line-height: 1.45;
   }
   .wiki-box__sub {
     font-family: var(--font-display);
     font-variation-settings: 'opsz' 14;
-    font-size: 12px;
+    font-size: var(--text-meta);
     line-height: 1.4;
     color: var(--color-ink-muted);
     font-style: italic;
@@ -105,8 +106,9 @@ const { title, date, dateIso, meta } = Astro.props;
   .wiki-box__body :global(p:last-child) { margin-bottom: 0; }
   .wiki-box__body :global(.read-more) {
     font-family: var(--font-sans);
-    font-size: 13px;
+    font-size: var(--text-meta);
     color: var(--color-wiki-link);
+    line-height: 1.45;
   }
   .wiki-box__body :global(.read-more:hover) { text-decoration: underline; }
 </style>

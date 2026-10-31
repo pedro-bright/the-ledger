@@ -50,7 +50,7 @@ export default function ConfidenceBadge({ level }: Props) {
 
   return (
     <span
-      className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[11px] font-sans font-semibold rounded-sm border uppercase tracking-[0.04em]"
+      className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[length:var(--text-label)] leading-[1.4] font-sans font-semibold rounded-sm border uppercase tracking-[0.04em]"
       style={{
         color: c.color,
         backgroundColor: c.bg,

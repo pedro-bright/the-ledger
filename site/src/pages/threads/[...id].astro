@@ -231,11 +231,11 @@ const subtitle = thread.core_question ? `— ${thread.core_question}` : undefine
   .controversy-list li:last-child { border-bottom: none; }
   .controversy-list a { font-family: var(--font-serif); font-size: 0.9375rem; color: var(--color-wiki-link); }
   .controversy-list a:hover { text-decoration: underline; }
-  .controversy-list__count { font-size: 12px; color: var(--color-ink-faint); }
+  .controversy-list__count { font-size: var(--text-meta); color: var(--color-ink-faint); line-height: 1.45; }
 
   .status-chip {
-    display: inline-block; font-family: var(--font-sans); font-size: 10px; font-weight: 600;
-    letter-spacing: 0.06em; text-transform: uppercase;
+    display: inline-block; font-family: var(--font-sans); font-size: var(--text-label); font-weight: 600;
+    letter-spacing: 0.04em; text-transform: uppercase;
     padding: 1px 7px 2px; border-radius: 2px; line-height: 1.4; vertical-align: middle;
   }
   .status-chip--active { background: #E5F3E9; color: #0A7C32; }
@@ -243,10 +243,11 @@ const subtitle = thread.core_question ? `— ${thread.core_question}` : undefine
 
   .snapshot { display: grid; grid-template-columns: 1fr; gap: 2px 0; margin: 0; }
   .snapshot dt {
-    margin-top: 8px; font-family: var(--font-sans); font-size: 11px; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-ink-muted);
+    margin-top: 8px; font-family: var(--font-sans); font-size: var(--text-label); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.04em; color: var(--color-ink-muted);
+    line-height: 1.4;
   }
   .snapshot dt:first-child { margin-top: 0; }
-  .snapshot dd { margin: 2px 0 0; font-size: 13px; color: var(--color-ink); line-height: 1.4; }
-  .snapshot__date { display: block; font-size: 11.5px; color: var(--color-ink-faint); margin-top: 1px; }
+  .snapshot dd { margin: 2px 0 0; font-size: var(--text-meta); color: var(--color-ink); line-height: 1.4; }
+  .snapshot__date { display: block; font-size: var(--text-meta); color: var(--color-ink-faint); margin-top: 1px; line-height: 1.45; }
 </style>

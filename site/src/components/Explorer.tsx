@@ -365,8 +365,7 @@ export default function Explorer({ events, categories }: Props) {
             type="button"
             onClick={() => setAdvancedOpen((v) => !v)}
             aria-expanded={advancedOpen}
-            className="text-xs font-mono text-ink-muted hover:text-wiki-link transition-colors uppercase tracking-wider inline-flex items-center gap-1.5 bg-transparent border-0 p-0 cursor-pointer"
-            style={{ letterSpacing: '0.08em' }}
+            className="text-[length:var(--text-label)] leading-[1.4] font-sans font-semibold text-ink-muted hover:text-wiki-link transition-colors uppercase tracking-[0.04em] inline-flex items-center gap-1.5 bg-transparent border-0 p-0 cursor-pointer"
           >
             <svg
               className={`w-3 h-3 transition-transform ${advancedOpen ? 'rotate-90' : ''}`}
@@ -455,7 +454,7 @@ export default function Explorer({ events, categories }: Props) {
         <div className="border-t border-rule pt-3 flex flex-col gap-2">
           {/* Selected filter chips with remove × */}
           {hasAnyFilter && (
-            <div className="flex flex-wrap items-baseline gap-2">
+            <div data-active-filters className="flex flex-wrap items-baseline gap-2">
               <span className="label-eyebrow mr-1">Active</span>
               {search && (
                 <ActiveChip className="ph-no-capture" label={`"${search}"`} onRemove={() => setSearch('')} />
@@ -496,7 +495,7 @@ export default function Explorer({ events, categories }: Props) {
               </button>
             </div>
           )}
-          <div className="flex items-center justify-between text-xs font-mono text-ink-faint tabular-nums">
+          <div className="flex items-center justify-between text-[length:var(--text-meta)] leading-[1.45] font-mono text-ink-faint tabular-nums">
             <span>
               {filtered.length === events.length
                 ? `${events.length} entries`
@@ -598,15 +597,21 @@ function ActiveChip({
 }) {
   return (
     <span
-      className={`${className} inline-flex items-center gap-1 px-2 py-0.5 text-[11px] font-sans font-medium rounded-sm border border-rule-strong bg-wiki-surface-strong text-ink`}
+      className={`${className} inline-flex items-center gap-1 px-2 py-0.5 text-[length:var(--text-meta)] leading-[1.45] font-sans font-medium rounded-sm border border-rule-strong bg-wiki-surface-strong text-ink`}
       style={color ? { color } : undefined}
     >
       <span>{label}</span>
       <button
         type="button"
-        onClick={onRemove}
+        onClick={(event) => {
+          const buttons = Array.from(event.currentTarget.closest('[data-active-filters]')!.querySelectorAll<HTMLButtonElement>('button'));
+          const index = buttons.indexOf(event.currentTarget);
+          const next = buttons.length > 2 ? buttons[index + 1] || buttons[index - 1] : document.getElementById('explorer-search');
+          next?.focus();
+          onRemove();
+        }}
         aria-label={`Remove ${label} filter`}
-        className="ml-0.5 text-ink-faint hover:text-ink bg-transparent border-0 p-0 cursor-pointer leading-none"
+        className="ml-0.5 inline-flex min-w-6 min-h-6 items-center justify-center text-ink-faint hover:text-ink bg-transparent border-0 p-0 cursor-pointer leading-none"
       >
         ×
       </button>

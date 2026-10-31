@@ -5,6 +5,7 @@ import '@fontsource-variable/fraunces/opsz.css';
 import '@fontsource-variable/fraunces/opsz-italic.css';
 // Source Serif 4 — body reading serif (weight axis, + italic).
 import '@fontsource-variable/source-serif-4/wght.css';
+import bodyFont from '@fontsource-variable/source-serif-4/files/source-serif-4-latin-wght-normal.woff2?url';
 import '@fontsource-variable/source-serif-4/wght-italic.css';
 // Inter — UI chrome.
 import '@fontsource/inter/400.css';
@@ -51,6 +52,7 @@ const hasRightRail = Astro.slots.has('rightRail');
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" href={bodyFont} as="font" type="font/woff2" crossorigin="anonymous" fetchpriority="high" />
     <meta name="generator" content={Astro.generator} />
     <title>{pageTitle}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
