@@ -57,6 +57,9 @@ jobs:
       - name: Run dark-leak check
         run: npm run test:no-dark-leaks
 
+      - name: Run CSS browser floor check
+        run: npm run test:css-floor
+
       - name: Run Playwright tests
         working-directory: site
         run: |

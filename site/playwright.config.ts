@@ -40,7 +40,8 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'npm run build && npm run preview',
+    // Astro 7 can otherwise background the server when invoked by an agent.
+    command: 'npm run build && npm run preview -- --ignore-lock',
     url: 'http://localhost:4321',
     reuseExistingServer: !process.env.CI,
     // The initial build is slow (content collection + graph + 100+ static pages).

@@ -15,7 +15,8 @@
     "test:security": "tsx --test scripts/content-security.test.ts",
     "test:parity": "tsx scripts/test-parity.ts",
     "test:no-dark-leaks": "tsx scripts/test-no-dark-leaks.ts",
-    "test:build": "npm run build-graph && npm run generate-feed && cd site && npm run build && cd .. && npm run test:parity && npm run test:no-dark-leaks && npm run test:security"
+    "test:css-floor": "tsx scripts/test-css-floor.ts",
+    "test:build": "npm run build-graph && npm run generate-feed && cd site && npm run build && cd .. && npm run test:parity && npm run test:no-dark-leaks && npm run test:css-floor && npm run test:security"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
@@ -30,7 +31,7 @@
     "typescript": "^5.6.0"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=22.23.4"
   },
   "license": "CC-BY-SA-4.0"
 }

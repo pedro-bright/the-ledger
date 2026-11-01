@@ -6,7 +6,7 @@ Open-source epistemic ledger of AI history -- tracks events, threads, controvers
 
 ```bash
 # Root-level tools (validation, feeds, graph)
-npm install              # Node >= 22
+npm install              # Node >= 22.23.4
 npm run validate         # Schema + cross-reference validation
 npm run build-graph      # Generates graph.json
 npm run generate-feed    # Generates feed.xml + rss.xml
@@ -46,13 +46,13 @@ the-ledger/
       pages/             # Route pages (index, explore, about, events/[id], threads/, controversies/)
       styles/            # global.css
     tailwind.config.mjs  # Tailwind config with custom theme
-    astro.config.mjs     # Astro + React + Tailwind integrations
+    astro.config.mjs     # Astro + React integration + Tailwind PostCSS
   .github/workflows/     # CI: validate.yml, e2e.yml, stale-sources.yml
 ```
 
 ## Stack
 
-- **Site:** Astro 5 + React 19 + Tailwind 3, static output
+- **Site:** Astro 7 + React 19 + Tailwind 3, static output
 - **Content:** Markdown with YAML frontmatter (events, threads, controversies) + plain YAML (actors)
 - **Tooling:** TypeScript scripts via tsx, schema validation via ajv
 - **License:** CC-BY-SA-4.0
