@@ -293,6 +293,8 @@ if (hasSeeAlso) sections.push({ id: 'see-also-head', title: 'See also', level: 2
     .wiki-article__metadata { float: none; width: 100%; margin: 20px 0; }
   }
   @media print {
+    .wiki-article__references-link,
+    .wiki-article > .article-contents { display: none; }
     .wiki-article__metadata { float: none; width: 100%; margin: 0 0 20px; }
     .wiki-article__metadata > summary { display: none; }
     .wiki-article__metadata::details-content { content-visibility: visible; display: block; block-size: auto; }
