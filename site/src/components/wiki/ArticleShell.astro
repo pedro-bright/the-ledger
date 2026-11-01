@@ -1,7 +1,9 @@
 ---
 import { anchorSections } from '../../lib/markdown';
 
-// Article-page shell: breadcrumb → title → subtitle → markers → body → footer.
+// Article-page shell: breadcrumb → title → subtitle → markers → References link → contents → body → footer.
+// Long articles get a contents list that stays in the page and starts closed on phones; on desktop
+// the script below moves it to the left rail and opens it.
 // With a `lead` slot, the metadata disclosure follows the lead and starts closed on phones; on
 // desktop the script below moves it before the lead and opens it, so it floats beside the text.
 // Without a `lead` slot, the infobox floats directly in the body.
