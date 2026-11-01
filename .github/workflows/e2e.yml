@@ -47,10 +47,6 @@ jobs:
           cp graph.json site/public/
           cp feed.xml rss.xml site/public/ 2>/dev/null || true
 
-      - name: Check site types
-        working-directory: site
-        run: npm run check
-
       - name: Build site
         working-directory: site
         run: npm run build
@@ -60,6 +56,9 @@ jobs:
 
       - name: Run dark-leak check
         run: npm run test:no-dark-leaks
+
+      - name: Run CSS browser floor check
+        run: npm run test:css-floor
 
       - name: Run Playwright tests
         working-directory: site

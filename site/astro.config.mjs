@@ -11,6 +11,9 @@ export default defineConfig({
     react(),
   ],
   vite: {
+    build: {
+      cssTarget: ['chrome87', 'edge88', 'firefox78', 'safari14'],
+    },
     css: {
       postcss: { plugins: [tailwind(), autoprefixer()] },
     },
