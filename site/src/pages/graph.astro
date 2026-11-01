@@ -220,7 +220,7 @@ for (const edge of graph.edges) {
     border-radius: 2px;
     min-width: 40px;
     min-height: 40px;
-    padding: 4px 10px;
+    padding: 4px 8px;
     font-family: var(--font-sans);
     font-size: var(--text-meta);
     background: var(--color-wiki-surface);
@@ -242,7 +242,8 @@ for (const edge of graph.edges) {
   .graph-record ul { padding-left: 18px; }
   .graph-record time { font-family: var(--font-mono); font-size: var(--text-meta); line-height: 1.45; }
   @media (min-width: 640px) { .graph-wrap { --graph-tools-height: 96px; --graph-help-height: 64px; } }
-  @media (max-width: 320px), (max-width: 359px) and (any-pointer: coarse) {
+  /* Keep these breakpoints clear of the navigation wrap points: the same text is about 4px wider on Linux than on macOS. */
+  @media (max-width: 313px), (max-width: 359px) and (any-pointer: coarse) {
     .graph-wrap { --graph-tools-height: 212px; }
   }
   @media (min-width: 640px) and (max-width: 659px) and (any-pointer: coarse) {

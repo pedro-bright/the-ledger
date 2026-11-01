@@ -481,8 +481,8 @@ for (const reducedMotion of ['reduce', 'no-preference'] as const) {
 }
 
 const hydrationViewports = [
-  ...[320, 340, 640, 659, 660, 700].map((width) => ({ width, touch: true })),
-  { width: 320, touch: false },
+  ...[320, 340, 360, 640, 659, 660, 700].map((width) => ({ width, touch: true })),
+  ...[320, 321].map((width) => ({ width, touch: false })),
 ];
 for (const { width, touch } of hydrationViewports) {
   test(`${touch ? 'touch' : 'mouse'} controls at ${width}px hydrate without moving the following content`, async ({ browser }) => {
