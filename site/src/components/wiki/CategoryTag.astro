@@ -1,5 +1,5 @@
 ---
-// Category label with inline color pip. Monospace lowercase — archival data voice.
+// Category value with an inline color pip and the shared metadata value type.
 // Used in lists, rows, infoboxes.
 interface Props {
   category?: string;
@@ -24,7 +24,7 @@ const display = category ? category.replace(/-/g, ' ').replace(/_/g, ' ') : '';
 {category && variant === 'inline' && (
   <span class={`category-tag category-tag--${category} ${className}`}>
     {!textOnly && <span class={`category-pip category-pip--${category}`} aria-hidden="true"></span>}
-    <span class="category-tag__text">{display}</span>
+    {display}
   </span>
 )}
 
@@ -33,15 +33,13 @@ const display = category ? category.replace(/-/g, ' ').replace(/_/g, ' ') : '';
     display: inline-flex;
     align-items: baseline;
     gap: 6px;
-    font-family: var(--font-mono);
-    font-size: 11px;
+    font-family: var(--font-sans);
+    font-size: var(--text-meta);
+    font-weight: 400;
     color: var(--color-ink-muted);
-    letter-spacing: 0.02em;
     text-transform: lowercase;
     white-space: nowrap;
-  }
-  .category-tag__text {
-    line-height: 1.3;
+    line-height: 1.45;
   }
   .category-pip {
     display: inline-block;

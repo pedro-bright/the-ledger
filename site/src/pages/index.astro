@@ -195,7 +195,7 @@ const stats = {
               {t.core_question && (
                 <span class="wiki-thread-list__q">{t.core_question}</span>
               )}
-              <span class="wiki-thread-list__meta font-mono">
+              <span class="wiki-thread-list__meta">
                 {t.eventCount} entries
                 {t.curator && <> · curator {t.curator}</>}
               </span>
@@ -328,7 +328,7 @@ const stats = {
         {featuredThread.core_question && (
           <p class="rail-thread__q">{featuredThread.core_question}</p>
         )}
-        <p class="rail-thread__meta font-mono">
+        <p class="rail-thread__meta">
           {featuredThread.eventCount} entries
           {featuredThread.curator && <> · curator {featuredThread.curator}</>}
         </p>
@@ -341,7 +341,7 @@ const stats = {
           {activeControversies.map((c) => (
             <li>
               <a href={`/controversies/${c.slug}`}>{c.title}</a>
-              <span class="rail-controversy__meta font-mono">
+              <span class="rail-controversy__meta">
                 {c.polarity && <>{c.polarity.replace('-', ' ')} · </>}
                 {(c.positions?.length || 0)} positions
               </span>
@@ -372,7 +372,7 @@ const stats = {
     border-bottom: 1px solid var(--color-rule-strong);
   }
   .intro__title {
-    font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;
+    font-variation-settings: 'opsz' var(--display-opsz), 'SOFT' 0, 'WONK' 0;
     font-size: 2.5rem;
     font-weight: 500;
     line-height: 1.05;
@@ -416,7 +416,8 @@ const stats = {
     margin-right: 4px;
   }
   .intro__stats {
-    font-size: 0.75rem;
+    font-size: var(--text-meta);
+    line-height: 1.45;
     color: var(--color-ink-faint);
     letter-spacing: 0.04em;
     margin: 0;
@@ -470,8 +471,9 @@ const stats = {
     margin-top: 4px;
   }
   .featured-date {
-    font-size: 11px;
+    font-size: var(--text-meta);
     color: var(--color-ink-faint);
+    line-height: 1.45;
   }
 
   /* Recent entries list */
@@ -486,8 +488,9 @@ const stats = {
     display: inline-block;
     margin-top: 10px;
     font-family: var(--font-sans);
-    font-size: 13px;
+    font-size: var(--text-meta);
     color: var(--color-wiki-link);
+    line-height: 1.45;
   }
   .more-link:hover { text-decoration: underline; }
 
@@ -524,9 +527,10 @@ const stats = {
   .wiki-thread-list__meta {
     display: inline;
     margin-left: 8px;
-    font-size: 11.5px;
+    font-family: var(--font-sans);
+    font-size: var(--text-meta);
     color: var(--color-ink-faint);
-    letter-spacing: 0.02em;
+    line-height: 1.45;
   }
 
   /* Contribute */
@@ -546,7 +550,8 @@ const stats = {
     flex-wrap: wrap;
     gap: 6px 18px;
     font-family: var(--font-sans);
-    font-size: 13px;
+    font-size: var(--text-meta);
+    line-height: 1.45;
   }
   .contribute-links a { color: var(--color-wiki-link); }
   .contribute-links a:hover { text-decoration: underline; }
@@ -562,10 +567,11 @@ const stats = {
   :global(.rail-controversy__meta) {
     display: block;
     margin-top: 2px;
-    font-size: 11px;
+    font-family: var(--font-sans);
+    font-size: var(--text-meta);
     color: var(--color-ink-faint);
-    letter-spacing: 0.02em;
     text-transform: lowercase;
+    line-height: 1.45;
   }
   :global(.rail-pip) {
     margin-right: 6px;
@@ -585,16 +591,17 @@ const stats = {
     font-family: var(--font-display);
     font-variation-settings: 'opsz' 14, 'SOFT' 0, 'WONK' 0;
     font-style: italic;
-    font-size: 13px;
+    font-size: var(--text-meta);
     line-height: 1.45;
     color: var(--color-ink-mid);
     margin: 0 0 6px;
   }
   :global(.rail-thread__meta) {
-    font-size: 11px;
+    font-family: var(--font-sans);
+    font-size: var(--text-meta);
     color: var(--color-ink-faint);
-    letter-spacing: 0.02em;
     margin: 0;
+    line-height: 1.45;
   }
 
   /* Epistemic key dl */
@@ -613,7 +620,7 @@ const stats = {
   :global(.epistemic-key dd) {
     margin: 0;
     font-family: var(--font-serif);
-    font-size: 12.5px;
+    font-size: var(--text-meta);
     line-height: 1.45;
     color: var(--color-ink-mid);
   }

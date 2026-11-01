@@ -400,6 +400,18 @@ test('larger text pushes the layout down instead of overlapping', async ({ page 
   expect((await bounds('#graph-help a')).bottom).toBeLessThanOrEqual((await bounds('#graph-relationships')).top);
 });
 
+test('type toggles show their label and count at one control size', async ({ page }) => {
+  await page.goto('/graph');
+  const parts = page.getByRole('button', { name: 'Hide events', exact: true }).locator('span');
+  await expect(parts).toHaveCount(2);
+  const type = await parts.evaluateAll((spans) => spans.map((span) => {
+    const { fontSize, lineHeight } = getComputedStyle(span);
+    return { fontSize, lineHeight };
+  }));
+  expect(type[0].fontSize).toBe('12px');
+  expect(type[1]).toEqual(type[0]);
+});
+
 test('the help link underlines only its words', async ({ page }) => {
   await page.goto('/graph');
   await expect(page.locator('#graph-help').getByRole('link')).toBeVisible();
@@ -443,3 +455,55 @@ test('the grouped directory lists direct links with dates, newest events first',
   await expect(directory.getByRole('link', { name: 'OpenAI', exact: true })).toHaveAttribute('href', '/actors/openai');
   await context.close();
 });
+
+for (const reducedMotion of ['reduce', 'no-preference'] as const) {
+  test(`explicit re-layout regroups the filtered network without a visible simulation under ${reducedMotion}`, async ({ page }) => {
+    test.slow();
+    await page.emulateMedia({ reducedMotion });
+    await recordDrawing(page);
+    await page.goto('/graph');
+    await settledFrame(page);
+    await page.getByRole('button', { name: 'Hide actors', exact: true }).click();
+    const before = await settledFrame(page);
+    await page.getByRole('button', { name: 'Re-layout graph', exact: true }).click();
+    await expect.poll(async () => JSON.stringify(await drawnFrame(page))).not.toBe(JSON.stringify(before));
+    const after = await settledFrame(page);
+    expect(after.length).toBe(before.length);
+    await page.waitForTimeout(3000);
+    expect(await drawnFrame(page)).toEqual(after);
+    await page.getByRole('button', { name: 'Show actors', exact: true }).click();
+    await settledFrame(page);
+    await page.getByRole('button', { name: 'Hide actors', exact: true }).click();
+    await expect.poll(() => drawnFrame(page)).toEqual(after);
+    for (const type of ['events', 'threads', 'controversies']) await page.getByRole('button', { name: `Hide ${type}`, exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Re-layout graph', exact: true })).toBeDisabled();
+  });
+}
+
+const hydrationViewports = [
+  ...[320, 340, 360, 640, 659, 660, 700].map((width) => ({ width, touch: true })),
+  ...[320, 321].map((width) => ({ width, touch: false })),
+];
+for (const { width, touch } of hydrationViewports) {
+  test(`${touch ? 'touch' : 'mouse'} controls at ${width}px hydrate without moving the following content`, async ({ browser }) => {
+    test.skip(test.info().project.name === 'mobile', 'This test defines its own viewport');
+    const context = await browser.newContext({ baseURL: test.info().project.use.baseURL, viewport: { width, height: 900 }, isMobile: touch, hasTouch: touch });
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => { release = resolve; });
+    try {
+      const page = await context.newPage();
+      await page.route('**/_astro/Graph.*.js', async (route) => { await held; await route.continue(); });
+      await page.goto('/graph', { waitUntil: 'domcontentloaded' });
+      await page.evaluate(() => document.fonts.ready);
+      const top = () => page.locator('#graph-relationships').evaluate((el) => el.getBoundingClientRect().top + scrollY);
+      const before = await top();
+      release();
+      await expect(page.locator('canvas').first()).toBeVisible();
+      await expect.poll(async () => Math.abs((await top()) - before)).toBeLessThan(2);
+      const disabled = page.getByRole('button', { name: 'Re-layout graph', exact: true });
+      for (const type of ['events', 'threads', 'controversies', 'actors']) await page.getByRole('button', { name: `Hide ${type}`, exact: true }).click();
+      await expect(disabled).toBeDisabled();
+      await expect(disabled).toHaveCSS('cursor', 'not-allowed');
+    } finally { release(); await context.close(); }
+  });
+}

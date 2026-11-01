@@ -1,5 +1,9 @@
 ---
-// Article-page shell: breadcrumb → title → subtitle → markers → body → footer.
+import { anchorSections } from '../../lib/markdown';
+
+// Article-page shell: breadcrumb → title → subtitle → markers → References link → contents → body → footer.
+// Long articles get a contents list that stays in the page and starts closed on phones; on desktop
+// the script below moves it to the left rail and opens it.
 // With a `lead` slot, the metadata disclosure follows the lead and starts closed on phones; on
 // desktop the script below moves it before the lead and opens it, so it floats beside the text.
 // Without a `lead` slot, the infobox floats directly in the body.
@@ -8,6 +12,8 @@ interface Props {
   title: string;
   subtitle?: string;
   breadcrumb?: Array<{ label: string; href?: string }>;
+  /** Written article text, as text or rendered HTML. Pages without it have no contents list. */
+  articleText?: string;
   /** Last modified ISO date — shown in the footer line. */
   lastModified?: string;
   lastReviewed?: string;
@@ -15,13 +21,21 @@ interface Props {
   sourcePath?: string;
 }
 
-const { title, subtitle, breadcrumb = [], lastModified, lastReviewed, sourcePath } = Astro.props;
+const { title, subtitle, breadcrumb = [], articleText = '', lastModified, lastReviewed, sourcePath } = Astro.props;
 const hasMarkers = Astro.slots.has('markers');
 const hasInfobox = Astro.slots.has('infobox');
 const hasLead = Astro.slots.has('lead');
 const hasReferences = Astro.slots.has('references');
 const hasSeeAlso = Astro.slots.has('seeAlso');
 const hasFooter = Astro.slots.has('footer');
+const usedAnchors = new Set<string>();
+const lead = anchorSections(hasLead ? await Astro.slots.render('lead') : '', usedAnchors);
+const body = anchorSections(await Astro.slots.render('default'), usedAnchors);
+const sections = [...lead.sections, ...body.sections].filter(({ level }) => level === 2);
+const articleWords = articleText.replace(/<[^>]*>/g, ' ').trim().split(/\s+/).length;
+const isLong = sections.length >= 3 && articleWords >= 600;
+if (hasReferences) sections.push({ id: 'refs-head', title: 'References', level: 2 });
+if (hasSeeAlso) sections.push({ id: 'see-also-head', title: 'See also', level: 2 });
 ---
 <article class="wiki-article">
   {breadcrumb.length > 0 && (
@@ -43,10 +57,24 @@ const hasFooter = Astro.slots.has('footer');
     <h1 class="wiki-article__title">{title}</h1>
     {subtitle && <p class="wiki-article__subtitle">{subtitle}</p>}
     {hasMarkers && <div class="wiki-article__markers"><slot name="markers" /></div>}
+    {hasReferences && <a class="wiki-article__references-link" href="#refs-head">References</a>}
   </header>
 
+  {isLong && (
+    <nav id="article-contents" class="article-contents rail-block" aria-label="On this page">
+      <details>
+        <summary>Contents</summary>
+        <ol>
+          {sections.map(({ id, title }) => (
+            <li><a href={`#${id}`}>{title}</a></li>
+          ))}
+        </ol>
+      </details>
+    </nav>
+  )}
+
   <div class="wiki-article__body">
-    {hasLead && <div class="wiki-article__lead prose"><slot name="lead" /></div>}
+    {hasLead && <div class="wiki-article__lead prose"><Fragment set:html={lead.content} /></div>}
     {hasInfobox && (hasLead ? (
       <details class="wiki-article__metadata">
         <summary>Record metadata</summary>
@@ -54,7 +82,7 @@ const hasFooter = Astro.slots.has('footer');
       </details>
     ) : <slot name="infobox" />)}
     <div class="wiki-article__prose prose">
-      <slot />
+      <Fragment set:html={body.content} />
     </div>
   </div>
 
@@ -102,7 +130,16 @@ const hasFooter = Astro.slots.has('footer');
 
 <script>
   const desktop = window.matchMedia('(min-width: 781px)');
+  const contents = document.querySelector<HTMLElement>('#article-contents');
+  const contentsHome = contents ? document.createComment('Article contents') : null;
+  if (contents && contentsHome) contents.before(contentsHome);
   const syncMetadata = () => {
+    if (contents && contentsHome) {
+      const rail = document.querySelector('.wiki-rail[data-side="left"]');
+      if (desktop.matches && rail) rail.prepend(contents);
+      else contentsHome.after(contents);
+      contents.querySelector('details')!.open = desktop.matches;
+    }
     document.querySelectorAll<HTMLDetailsElement>('.wiki-article__metadata').forEach((details) => {
       const body = details.parentElement!;
       const lead = body.querySelector('.wiki-article__lead')!;
@@ -119,15 +156,47 @@ const hasFooter = Astro.slots.has('footer');
   .wiki-article {
     max-width: 100%;
   }
+  .wiki-article__references-link {
+    display: inline-block;
+    margin-top: 12px;
+    font: var(--text-meta)/1.45 var(--font-sans);
+  }
+  .article-contents {
+    font: var(--text-meta)/1.45 var(--font-sans);
+    margin-bottom: 24px;
+  }
+  .article-contents summary {
+    cursor: pointer;
+    padding: 8px 0;
+    font-weight: 600;
+    color: var(--color-ink-mid);
+  }
+  .article-contents ol { list-style: none; padding: 0; margin: 4px 0 0; }
+  .article-contents li { margin: 0; }
+  .article-contents a { display: block; padding: 4px 0; }
+  @media (min-width: 781px) {
+    .article-contents ol { max-height: 50vh; overflow-y: auto; margin-inline: -4px; }
+    .article-contents a { padding-inline: 4px; }
+    .article-contents a:focus-visible { outline-offset: -2px; }
+    .article-contents summary {
+      font-family: var(--font-display);
+      font-variation-settings: 'opsz' 36, 'SOFT' 0, 'WONK' 0;
+      font-size: 15px;
+    }
+  }
+  @media (min-width: 781px) and (prefers-contrast: more) {
+    .article-contents a:focus-visible { outline-offset: -3px; }
+  }
   .wiki-article__breadcrumb {
     font-family: var(--font-sans);
-    font-size: 12px;
+    font-size: var(--text-meta);
     color: var(--color-ink-faint);
     margin-bottom: 16px;
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
     align-items: baseline;
+    line-height: 1.45;
   }
   .wiki-article__breadcrumb a {
     color: var(--color-wiki-link);
@@ -146,7 +215,7 @@ const hasFooter = Astro.slots.has('footer');
   }
   .wiki-article__title {
     font-family: var(--font-display);
-    font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;
+    font-variation-settings: 'opsz' var(--display-opsz), 'SOFT' 0, 'WONK' 0;
     font-weight: 500;
     font-size: 2.25rem;
     line-height: 1.1;
@@ -154,6 +223,9 @@ const hasFooter = Astro.slots.has('footer');
     color: var(--color-ink-dim);
     margin: 0;
     text-wrap: balance;
+  }
+  @media (max-width: 599px) {
+    .wiki-article__title { font-size: 2rem; line-height: 1.15; letter-spacing: -0.01em; }
   }
   .wiki-article__subtitle {
     font-family: var(--font-display);
@@ -173,10 +245,10 @@ const hasFooter = Astro.slots.has('footer');
     margin-top: 10px;
   }
   @media (min-width: 781px) and (scripting: enabled) {
-    .wiki-article__markers { display: none; }
+    .wiki-article__markers,
+    .wiki-article > .article-contents { display: none; }
   }
-  /* The prose block is constrained to 68ch on its own; if infobox floats right,
-     text wraps naturally around it. No width lockdown here. */
+  /* Prose keeps its fixed measure while text wraps around the infobox. */
   .wiki-article__body {
     overflow: visible;
   }
@@ -196,11 +268,12 @@ const hasFooter = Astro.slots.has('footer');
   .wiki-article__metadata > summary {
     cursor: pointer;
     font-family: var(--font-sans);
-    font-size: 13px;
+    font-size: var(--text-meta);
     color: var(--color-wiki-link);
     padding: 10px 12px;
     border: 1px solid var(--color-rule-strong);
     background: var(--color-wiki-surface);
+    line-height: 1.45;
   }
   .wiki-article__metadata :global(.wiki-infobox) {
     float: none;
@@ -283,9 +356,11 @@ const hasFooter = Astro.slots.has('footer');
     padding-top: 10px;
     border-top: 1px solid var(--color-rule);
     font-family: var(--font-sans);
-    font-size: 12px;
+    font-size: var(--text-meta);
     color: var(--color-ink-faint);
+    line-height: 1.45;
   }
+  .wiki-article__lastmod time { font-family: var(--font-mono); }
   .wiki-article__lastmod a {
     color: var(--color-wiki-link);
     text-decoration: underline;

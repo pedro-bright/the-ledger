@@ -68,9 +68,10 @@ const buildMonth = String(new Date().getMonth() + 1).padStart(2, '0');
   .wiki-footer__links a:hover { text-decoration: underline; }
   .wiki-footer__rev {
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: var(--text-meta);
     color: var(--color-ink-faint);
     letter-spacing: 0.02em;
+    line-height: 1.45;
   }
   @media (max-width: 780px) {
     .wiki-footer__inner {

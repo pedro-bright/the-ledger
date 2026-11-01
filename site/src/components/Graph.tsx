@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { forceSimulation, forceLink, forceManyBody, forceCenter } from 'd3-force-3d';
 import ForceGraph2D from 'react-force-graph-2d';
 
 type GraphNode = {
@@ -51,7 +52,12 @@ export default function Graph({ data }: Props) {
   const [staticOverview] = useState(() => window.matchMedia(STATIC_OVERVIEW_QUERY).matches);
   const [laidOut, setLaidOut] = useState(false);
   const [gesturesEnabled, setGesturesEnabled] = useState(false);
-  const graphData = useMemo(() => ({ nodes: data.nodes, links: data.edges }), [data]);
+  const [graphData, setGraphData] = useState(() => ({
+    nodes: data.nodes.map((node) => ({ ...node })),
+    links: data.edges.map((edge) => ({ ...edge })),
+  }));
+  const [regrouped, setRegrouped] = useState(false);
+  const [layoutMessage, setLayoutMessage] = useState('');
   const isVisible = (node: any) => !hidden.has(node.type);
 
   useEffect(() => {
@@ -100,6 +106,29 @@ export default function Graph({ data }: Props) {
       else next.add(type);
       return next;
     });
+  };
+
+  const relayout = () => {
+    // Compute only the selected network, without drawing its simulation ticks.
+    // Hidden records keep their previous positions when they return to the map.
+    const nodes: GraphNode[] = graphData.nodes.filter(isVisible).map((node) => ({
+      ...node, x: undefined, y: undefined, vx: 0, vy: 0,
+    }));
+    const ids = new Set(nodes.map((node) => node.id));
+    const links = data.edges.filter((edge) => ids.has(edge.source) && ids.has(edge.target)).map((edge) => ({ ...edge }));
+    const simulation = forceSimulation(nodes)
+      .force('link', forceLink<GraphNode, GraphEdge>(links).id((node) => node.id))
+      .force('charge', forceManyBody())
+      .force('center', forceCenter())
+      .stop();
+    simulation.tick(100);
+    const positions = new Map(nodes.map((node) => [node.id, node]));
+    setRegrouped(true);
+    setGraphData({
+      nodes: graphData.nodes.map((node) => positions.get(node.id) || { ...node }),
+      links: data.edges.map((edge) => ({ ...edge })),
+    });
+    setLayoutMessage(`Graph re-laid out for ${nodes.length} visible records.`);
   };
 
   const handleNodeClick = (node: any, event: MouseEvent) => {
@@ -155,7 +184,7 @@ export default function Graph({ data }: Props) {
                 style={!isHidden ? { borderColor: NODE_COLORS[type] } : undefined}
               >
                 <span>{TYPE_LABELS[type]}</span>
-                <span className="font-mono text-[11px] tabular-nums text-ink-faint">
+                <span className="font-mono font-normal tabular-nums text-ink-faint">
                   ({counts[type]})
                 </span>
               </button>
@@ -170,6 +199,7 @@ export default function Graph({ data }: Props) {
           <button type="button" aria-label="Zoom in" onClick={() => fgRef.current?.zoom(fgRef.current.zoom() * 1.25, 0)}>+</button>
           <button type="button" aria-label="Zoom out" onClick={() => fgRef.current?.zoom(fgRef.current.zoom() / 1.25, 0)}>-</button>
           <button type="button" onClick={() => fgRef.current?.zoomToFit(0, 30, isVisible)}>Fit graph</button>
+          <button type="button" disabled={!laidOut || data.nodes.filter(isVisible).length < 2} onClick={relayout}>Re-layout graph</button>
           <span className="graph-pan" role="group" aria-label="Pan graph">
             <button type="button" aria-label="Pan left" onClick={() => pan(-80, 0)}>←</button>
             <button type="button" aria-label="Pan right" onClick={() => pan(80, 0)}>→</button>
@@ -204,7 +234,7 @@ export default function Graph({ data }: Props) {
           linkWidth={1}
           onNodeClick={handleNodeClick}
           backgroundColor="#FAFAF7"
-          cooldownTicks={staticOverview || reducedMotion ? 0 : 100}
+          cooldownTicks={regrouped || staticOverview || reducedMotion ? 0 : 100}
           warmupTicks={staticOverview && !laidOut ? 100 : 0}
           onEngineTick={markReady}
           onEngineStop={() => {
@@ -221,7 +251,8 @@ export default function Graph({ data }: Props) {
         />}
       </div>
 
-      <p id="graph-help" className="text-[12px] text-ink-faint font-mono">
+      <p role="status" className="sr-only">{layoutMessage}</p>
+      <p id="graph-help" className="text-[length:var(--text-meta)] leading-[1.45] text-ink-faint font-sans">
         Click a node to open its record. Use the buttons to pan or zoom, or drag with a mouse.
         <span className="graph-touch-only"> Enable touch gestures to drag or pinch; disable them or press Escape to scroll the page.</span>
         {' '}<a href="#graph-relationships">Browse relationships as text.</a>

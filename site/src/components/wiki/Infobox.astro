@@ -20,6 +20,7 @@ const { title, wide = false } = Astro.props;
 
 <style>
   .wiki-infobox {
+    container-type: inline-size;
     float: right;
     width: 280px;
     margin: 4px 0 20px 28px;
@@ -27,7 +28,7 @@ const { title, wide = false } = Astro.props;
     border: 1px solid var(--color-rule-strong);
     border-radius: 2px;
     font-family: var(--font-sans);
-    font-size: 12.5px;
+    font-size: var(--text-meta);
     color: var(--color-ink);
     line-height: 1.45;
   }
@@ -52,12 +53,12 @@ const { title, wide = false } = Astro.props;
   /* Targeting any dl directly inside (.wiki-infobox dl) — the canonical shape. */
   .wiki-infobox :global(dl) {
     display: grid;
-    grid-template-columns: 100px 1fr;
+    grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
     gap: 7px 10px;
     margin: 0;
   }
   .wiki-infobox :global(dt) {
-    font-size: 11px;
+    font-size: var(--text-label);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -66,10 +67,11 @@ const { title, wide = false } = Astro.props;
     margin: 0;
   }
   .wiki-infobox :global(dd) {
-    font-size: 12.5px;
+    font-size: var(--text-meta);
     color: var(--color-ink);
     margin: 0;
     min-width: 0;
+    line-height: 1.45;
   }
   .wiki-infobox :global(dd ul) {
     list-style: none;
@@ -85,7 +87,13 @@ const { title, wide = false } = Astro.props;
   .wiki-infobox :global(a:hover) { text-decoration: underline; }
   .wiki-infobox :global(.mono) {
     font-family: var(--font-mono);
-    font-size: 11.5px;
+    font-size: var(--text-meta);
+    line-height: 1.45;
+  }
+
+  @container (max-width: 260px) {
+    .wiki-infobox :global(dl) { grid-template-columns: minmax(0, 1fr); gap: 3px; }
+    .wiki-infobox :global(dt:not(:first-child)) { margin-top: 8px; }
   }
 
   /* Between 1024–1200px the right rail narrows to 240px and the main column

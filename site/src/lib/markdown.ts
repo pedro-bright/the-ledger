@@ -1,5 +1,6 @@
 import matter from 'gray-matter';
 import { Marked } from 'marked';
+import { parseFragment, serialize, type DefaultTreeAdapterTypes } from 'parse5';
 
 const rejectFrontmatterLanguage = () => {
   throw new Error('Only YAML frontmatter is allowed.');
@@ -59,4 +60,29 @@ const contentMarked = new Marked({
 
 export function renderMarkdown(markdown: string): string {
   return contentMarked.parse(markdown, { async: false }) as string;
+}
+
+/** Anchor actual heading nodes; markup-like text in attributes must remain inert. */
+export function anchorSections(html: string, used: Set<string>) {
+  const fragment = parseFragment(html);
+  const sections: Array<{ id: string; title: string; level: number }> = [];
+  const text = (node: DefaultTreeAdapterTypes.Node): string => {
+    if ('value' in node) return node.value;
+    return 'childNodes' in node ? node.childNodes.map(text).join('') : '';
+  };
+  const visit = (node: DefaultTreeAdapterTypes.Node) => {
+    if ('tagName' in node && (node.tagName === 'h2' || node.tagName === 'h3')) {
+      const title = text(node).trim();
+      const base = `section-${title.normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '') || 'heading'}`;
+      let id = base;
+      let suffix = 2;
+      while (used.has(id)) id = `${base}-${suffix++}`;
+      used.add(id);
+      node.attrs = [...node.attrs.filter((attr) => attr.name !== 'id'), { name: 'id', value: id }];
+      sections.push({ id, title, level: Number(node.tagName[1]) });
+    }
+    if ('childNodes' in node) node.childNodes.forEach(visit);
+  };
+  visit(fragment);
+  return { content: serialize(fragment), sections };
 }

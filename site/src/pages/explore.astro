@@ -64,7 +64,7 @@ const years = Array.from(yearCounts.keys()).sort((a, b) => b - a);
       <button
         id="explore-intro-dismiss"
         type="button"
-        class="explore-intro__dismiss font-mono"
+        class="explore-intro__dismiss"
         aria-label="Dismiss intro"
       >
         got it ✕
@@ -184,13 +184,14 @@ const years = Array.from(yearCounts.keys()).sort((a, b) => b - a);
     border: none;
     padding: 4px 6px;
     margin: -4px -6px;
-    font-size: 11px;
+    font-family: var(--font-sans);
+    font-size: var(--text-meta);
     color: var(--color-ink-mid);
-    letter-spacing: 0.02em;
     text-transform: lowercase;
     cursor: pointer;
     transition: color 120ms ease;
     border-radius: 2px;
+    line-height: 1.45;
   }
   .explore-intro__dismiss:hover {
     color: var(--color-wiki-link);
@@ -220,8 +221,8 @@ const years = Array.from(yearCounts.keys()).sort((a, b) => b - a);
   .explore-intro__grid dd {
     margin: 0;
     font-family: var(--font-serif);
-    font-size: 13px;
-    line-height: 1.5;
+    font-size: var(--text-meta);
+    line-height: 1.45;
     color: var(--color-ink-mid);
   }
   @media (max-width: 640px) {

@@ -46,7 +46,7 @@ export default function ContestationBadge({ status, iconOnly = false }: Props) {
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2 py-0.5 text-[11px] font-sans font-semibold rounded-sm border uppercase tracking-[0.04em] ${iconOnly ? 'w-[22px] h-[22px] p-0 justify-center' : ''}`}
+      className={`inline-flex items-center gap-1.5 px-2 py-0.5 text-[length:var(--text-label)] leading-[1.4] font-sans font-semibold rounded-sm border uppercase tracking-[0.04em] ${iconOnly ? 'w-[22px] h-[22px] p-0 justify-center' : ''}`}
       style={{
         color: c.color,
         backgroundColor: c.bg,

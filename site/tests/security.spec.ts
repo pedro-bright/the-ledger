@@ -19,6 +19,8 @@ const REPO_ROOT = path.resolve(SITE_DIR, '..');
 
 const BREAKOUT_TITLE = 'PoC title </SCRIPT><SCRIPT>window.__poc_title_breakout=1</SCRIPT> "quoted" & <b>tagged</b>';
 
+const HEADING_URL = 'https://example.com/<h2><svg/onload=window.__poc_heading_rewrite=1></h2>';
+
 const HOSTILE_BODY = `## Summary
 
 Summary with an inline script <img src="x" onerror="window.__poc_img_onerror=1"> in it.
@@ -99,7 +101,7 @@ polarity: binary
 positions:
   - claim: First claim
     sources:
-      - url: https://example.com/position
+      - url: ${JSON.stringify(HEADING_URL)}
         title: Position source
   - claim: Second claim
 ---
@@ -237,6 +239,12 @@ test.describe('built pages with hostile content', () => {
       expect(pageErrors).toEqual([]);
     });
   }
+
+  test('heading-like source URLs remain inert link data', async ({ page }) => {
+    await page.goto(`${origin}/controversies/zz-poc-controversy`);
+    await expectInert(page);
+    await expect(page.locator('.position__sources a').first()).toHaveAttribute('href', HEADING_URL);
+  });
 
   test('event analytics still report the exact title', async ({ page }) => {
     await page.goto(`${origin}/events/zz-poc-event`);
