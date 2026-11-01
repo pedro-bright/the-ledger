@@ -1,5 +1,8 @@
 import { test, expect, type Page } from '@playwright/test';
 
+// Include the query string Astro 7 adds when retrying a failed island import.
+const graphModule = '**/_astro/Graph.*.js*';
+
 async function recordDrawing(page: Page) {
   await page.addInitScript(() => {
     const arcs: number[][] = [];
@@ -160,7 +163,7 @@ test('cold hydration reserves the graph and leaves relationships available on fa
   });
   let release!: () => void;
   const pending = new Promise<void>((resolve) => { release = resolve; });
-  await page.route('**/_astro/Graph.*.js', async (route) => { await pending; await route.continue(); });
+  await page.route(graphModule, async (route) => { await pending; await route.continue(); });
   await page.goto('/graph', { waitUntil: 'domcontentloaded' });
   await expect(page.getByText('Loading relationship graph.')).toBeVisible();
   const before = await page.locator('.graph-wrap').boundingBox();
@@ -175,7 +178,7 @@ test('cold hydration reserves the graph and leaves relationships available on fa
 });
 
 test('a failed island offers retry and server-rendered typed connections', async ({ page }) => {
-  await page.route('**/_astro/Graph.*.js', (route) => route.abort());
+  await page.route(graphModule, (route) => route.abort());
   await page.goto('/graph');
   await expect(page.getByText('The graph could not load.')).toBeVisible({ timeout: 20000 });
   await expect(page.getByRole('link', { name: 'Retry graph' })).toHaveAttribute('href', '/graph');
@@ -198,7 +201,7 @@ for (const [device, options] of Object.entries(statusScreens)) {
   test(`${device} shows the loading and failure messages on the first screen`, async ({ browser }) => {
     const context = await browser.newContext({ baseURL: test.info().project.use.baseURL, ...options });
     const page = await context.newPage();
-    await page.route('**/_astro/Graph.*.js', (route) => route.abort());
+    await page.route(graphModule, (route) => route.abort());
     await page.goto('/graph', { waitUntil: 'domcontentloaded' });
     await expect(page.getByText('Loading relationship graph.')).toBeInViewport({ ratio: 1 });
     await expect(page.getByText('The graph could not load.')).toBeInViewport({ ratio: 1, timeout: 20000 });
@@ -492,7 +495,7 @@ for (const { width, touch } of hydrationViewports) {
     const held = new Promise<void>((resolve) => { release = resolve; });
     try {
       const page = await context.newPage();
-      await page.route('**/_astro/Graph.*.js', async (route) => { await held; await route.continue(); });
+      await page.route(graphModule, async (route) => { await held; await route.continue(); });
       await page.goto('/graph', { waitUntil: 'domcontentloaded' });
       await page.evaluate(() => document.fonts.ready);
       const top = () => page.locator('#graph-relationships').evaluate((el) => el.getBoundingClientRect().top + scrollY);

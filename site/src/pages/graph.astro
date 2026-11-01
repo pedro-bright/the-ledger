@@ -3,10 +3,11 @@ import Base from '../layouts/Base.astro';
 import PageHeader from '../components/wiki/PageHeader.astro';
 import Graph from '../components/Graph';
 import fs from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 
-// Resolve graph.json relative to this file so the path is stable regardless of cwd.
-const graphPath = fileURLToPath(new URL('../../../graph.json', import.meta.url));
+// Astro builds run from site/, as does the content loader. Bundled import.meta.url
+// points at a generated chunk in Astro 7, rather than this source file.
+const graphPath = path.resolve(process.cwd(), '..', 'graph.json');
 const graph: { nodes: { id: string; title: string; type: 'event' | 'thread' | 'controversy' | 'actor'; date?: string }[]; edges: { source: string; target: string; type: string }[] } = JSON.parse(fs.readFileSync(graphPath, 'utf-8'));
 
 const nodeCount = graph.nodes.length;
