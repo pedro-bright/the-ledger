@@ -123,6 +123,11 @@ test('metadata labels and values use consistent readable sizes', async ({ page }
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 
+test('significance chips render their locked tint', async ({ page }) => {
+  await page.goto(article);
+  await expect(page.locator('.wiki-infobox .flag-chip--landmark')).toHaveCSS('background-color', 'rgb(253, 242, 197)');
+});
+
 test('metadata values, dates, and citations render their type roles', async ({ page }) => {
   const value = async (locator: Locator) => {
     await expect(locator).toHaveCSS('font-family', /^Inter/);

@@ -243,9 +243,6 @@
     vertical-align: middle;
     border: 1px solid transparent;
   }
-  .flag-chip--landmark { background: #FDF2C5; color: #7A5A00; }
-  .flag-chip--major    { background: #DBECF9; color: #0A4D82; }
-  .flag-chip--notable  { background: #EDEAE3; color: #5C564D; }
 
   /* -------- Double-rule section break. -------- */
   .wiki-hr {
@@ -772,6 +769,11 @@
   }
   .skip-link { transition: none; }
 }
+
+/* -------- Significance chip tints. -------- */
+.flag-chip--landmark { background: #FDF2C5; color: #7A5A00; }
+.flag-chip--major    { background: #DBECF9; color: #0A4D82; }
+.flag-chip--notable  { background: #EDEAE3; color: #5C564D; }
 
 /* -------- High-contrast: thicker rules, stronger borders, bolder chrome. */
 @media (prefers-contrast: more) {
