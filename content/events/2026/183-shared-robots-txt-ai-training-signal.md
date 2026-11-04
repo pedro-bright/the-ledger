@@ -89,9 +89,9 @@ Its communications head, Andy Stone, told The Verge, "We believe creating a comm
 
 Until this announcement, a publisher that wanted to keep its pages out of AI training had to find and block each developer's own crawler or token, and the rules differed by company.
 A single token honored by four of the largest US model developers gives sites one place to state that preference, and it builds on work in a formal standards body.
-It arrived as publishers were pursuing the issue through other means, including lawsuits that cite robots.txt (such as the Times and Tribune suits against Perplexity) and Cloudflare's decision to block AI crawlers by default.
+It arrived as publishers were pursuing the issue through other means, including lawsuits that cite robots.txt (such as The New York Times and Chicago Tribune suits against Perplexity) and Cloudflare's decision to block AI crawlers by default.
 
 The commitment is limited in several ways.
-The signal is a preference, and the draft leaves crawling, enforcement and private licensing deals outside its scope.
+The signal states a preference and includes no enforcement mechanism; the draft says it does not govern crawling and that private agreements can override it.
 It covers training only; use of content to ground AI answers is handled by separate, company-specific controls such as Microsoft's grounding setting.
 Three of the four companies had not yet implemented it, the draft can still change or lapse in the working group, and Meta had not said whether it would honor it.
