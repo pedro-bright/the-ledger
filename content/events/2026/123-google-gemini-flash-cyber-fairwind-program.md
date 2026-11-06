@@ -33,7 +33,7 @@ sources:
     publisher: Google DeepMind
     date: 2026-09-02
     accessed: 2026-09-08
-    archive_url: https://web.archive.org/web/20261023024817/https://deepmind.google/models/gemini/cyber/
+    archive_url: https://web.archive.org/web/20260903135016/https://deepmind.google/models/gemini/cyber/
   - url: https://simonwillison.net/2026/Sep/2/llm-gemini/
     title: "llm-gemini 0.34"
     type: secondary_reporting

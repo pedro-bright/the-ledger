@@ -19,7 +19,7 @@ sources:
     publisher: CourtListener
     date: 2026-10-06
     accessed: 2026-10-10
-    archive_url: https://web.archive.org/web/20260325004228/https://www.courtlistener.com/docket/69129096/united-states-v-smith/
+    archive_url: https://web.archive.org/web/*/https://www.courtlistener.com/docket/69129096/united-states-v-smith/
   - url: https://storage.courtlistener.com/recap/gov.uscourts.nysd.627522/gov.uscourts.nysd.627522.60.0.pdf
     title: "Government Sentencing Submission, United States v. Michael Smith, 24 Cr. 504 (JGK), ECF No. 60"
     type: primary_document

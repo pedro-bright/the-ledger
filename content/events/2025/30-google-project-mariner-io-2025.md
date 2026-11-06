@@ -16,7 +16,7 @@ sources:
     title: "Google Rolls Out Project Mariner, Its Web-Browsing AI Agent"
     type: secondary_reporting
     date: 2025-05-20
-  - url: https://deepmind.google/models/project-mariner/
+  - url: https://web.archive.org/web/20250619054221/https://deepmind.google/models/project-mariner/
     title: "Project Mariner"
     type: official
     date: 2025-05-20
