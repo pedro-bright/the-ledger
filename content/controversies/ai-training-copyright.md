@@ -31,7 +31,7 @@ positions:
   - claim: "AI companies should negotiate voluntary licensing deals with willing rights holders, creating a market-based solution"
     proponents: [associated-press, axel-springer, some-media-companies-with-licensing-deals, pragmatic-industry-voices]
     sources:
-      - url: https://www.ap.org/press-releases/2023/ap-openai-agreement
+      - url: https://www.ap.org/media-center/press-releases/2023/ap-open-ai-agree-to-share-select-news-content-and-technology-in-new-collaboration/
         title: "AP-OpenAI licensing agreement"
     confidence: medium
 ---
