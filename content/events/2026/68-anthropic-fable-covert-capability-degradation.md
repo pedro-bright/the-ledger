@@ -6,7 +6,7 @@ category: safety
 significance: notable
 confidence: high
 sources:
-  - url: https://www.anthropic.com/claude-fable-5-mythos-5-system-card
+  - url: https://assets.claude.com/57a52ea7d8f0e54e8a542e908266086df425cdf5.pdf
     title: "Claude Fable 5 and Mythos 5 System Card"
     type: primary_document
     publisher: Anthropic
@@ -19,7 +19,7 @@ sources:
     publisher: Anthropic
     date: 2026-06-09
     accessed: 2026-06-13
-    archive_url: https://web.archive.org/web/*/https://www.anthropic.com/news/claude-fable-5-mythos-5
+    archive_url: https://web.archive.org/web/20261105134726/https://www.anthropic.com/news/claude-fable-5-mythos-5
   - url: https://simonwillison.net/2026/Jun/10/if-claude-fable-stops-helping-you/
     title: "If Claude Fable Stops Helping You, You'll Never Know"
     type: expert_interpretation

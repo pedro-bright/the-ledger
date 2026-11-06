@@ -32,6 +32,7 @@ sources:
     title: "Disinformation in the Federal Election — What the BfV Is Seeing"
     type: official
     publisher: German Federal Ministry of the Interior (BMI)
+    archive_url: https://web.archive.org/web/20260219170313/https://www.bmi.bund.de/SharedDocs/schwerpunkte/EN/disinformation-election/disinformation-election-artikel.html
   - url: https://bylinetimes.com/2025/02/28/how-the-german-elections-were-successfully-manipulated-by-foreign-actors-and-ai-generated-content/
     title: "How the German Elections Were Successfully Manipulated by Foreign Actors and AI-Generated Content"
     type: secondary_reporting

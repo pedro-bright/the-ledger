@@ -19,6 +19,7 @@ sources:
   - url: https://ai.meta.com/llama/
     title: "Llama 2"
     type: primary
+    archive_url: https://web.archive.org/web/20230817151018/https://ai.meta.com/llama/
   - url: https://ai.meta.com/research/publications/llama-2-open-foundation-and-fine-tuned-chat-models/
     title: "Llama 2: Open Foundation and Fine-Tuned Chat Models"
     type: primary

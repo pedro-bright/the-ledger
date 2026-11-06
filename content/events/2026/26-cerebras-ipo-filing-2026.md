@@ -12,7 +12,7 @@ sources:
     publisher: Cerebras Systems
     date: 2026-04-17
     accessed: 2026-04-23
-    archive_url: https://web.archive.org/web/*/https://www.cerebras.ai/press-release/cerebras-systems-announces-filing-of-registration-statement-for-proposed-initial-ipo
+    archive_url: https://web.archive.org/web/20260714004053/https://www.cerebras.ai/press-release/cerebras-systems-announces-filing-of-registration-statement-for-proposed-initial-ipo
   - url: https://www.bloomberg.com/news/articles/2026-04-17/ai-chipmaker-cerebras-systems-files-publicly-again-for-us-ipo
     title: "AI Chipmaker Cerebras Systems Files Publicly Again for US IPO"
     type: secondary_reporting

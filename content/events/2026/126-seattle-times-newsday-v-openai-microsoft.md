@@ -19,7 +19,7 @@ sources:
     publisher: CourtListener
     date: 2026-09-04
     accessed: 2026-09-10
-    archive_url: https://web.archive.org/web/*/https://www.courtlistener.com/docket/74754553/the-seattle-times-company-v-openai-inc/
+    archive_url: https://web.archive.org/web/20260906010616/https://www.courtlistener.com/docket/74754553/the-seattle-times-company-v-openai-inc/
   - url: https://www.reuters.com/legal/government/seattle-times-newsday-sue-openai-microsoft-alleging-copyright-infringement-2026-09-05/
     title: "Seattle Times, Newsday sue OpenAI, Microsoft, alleging copyright infringement"
     type: secondary_reporting

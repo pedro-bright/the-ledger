@@ -17,7 +17,7 @@ sources:
   - url: https://www.nytimes.com/2024/05/20/technology/scarlett-johansson-openai-voice.html
     title: "Scarlett Johansson Says She Was 'Shocked' by OpenAI's Imitation of Her Voice"
     type: secondary
-  - url: https://www.washingtonpost.com/technology/2024/05/20/scarlett-johansson-openai-voice-chatgpt/
+  - url: https://www.washingtonpost.com/technology/2024/05/20/openai-scarlett-johansson-chatgpt-ai-voice/
     title: "Scarlett Johansson says she was 'shocked and angered' by ChatGPT voice"
     type: secondary
 ---

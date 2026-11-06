@@ -12,7 +12,7 @@ sources:
     publisher: OpenAI
     date: 2026-08-25
     accessed: 2026-08-28
-    archive_url: https://web.archive.org/web/*/https://openai.com/index/jalapeno-first-results
+    archive_url: https://web.archive.org/web/20261024165254/https://openai.com/index/jalapeno-first-results/
   - url: https://techcrunch.com/2026/08/25/openais-jalapeno-chip-is-built-for-fast-inference-at-scale-benchmarks-show/
     title: "OpenAI's Jalapeño chip is built for fast inference at scale, benchmarks show"
     type: secondary_reporting

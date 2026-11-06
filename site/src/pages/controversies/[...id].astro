@@ -29,13 +29,13 @@ const siblings = linkedThread
 const positions = controversy.positions || [];
 
 // Union + dedupe of sources across positions
-const dedupedSources: Array<{ url: string; title: string; publisher?: string }> = [];
+const dedupedSources: Array<{ url: string; title: string; publisher?: string; archive_url?: string }> = [];
 const seenUrls = new Set<string>();
 for (const p of positions) {
   for (const s of p.sources || []) {
     if (!s?.url || seenUrls.has(s.url)) continue;
     seenUrls.add(s.url);
-    dedupedSources.push({ url: s.url, title: s.title || s.url, publisher: s.publisher });
+    dedupedSources.push({ url: s.url, title: s.title || s.url, publisher: s.publisher, archive_url: s.archive_url });
   }
 }
 
@@ -174,6 +174,14 @@ function displayActor(id: string): { name: string; href?: string } {
             <li>
               <a href={s.url} target="_blank" rel="noopener noreferrer">{s.title}</a>
               {s.publisher && <> — {s.publisher}</>}
+              {s.archive_url && (
+                <>
+                  {' '}
+                  <a href={s.archive_url} target="_blank" rel="noopener noreferrer" class="ref-archive">
+                    archived copy
+                  </a>
+                </>
+              )}
             </li>
           ))}
         </ol>
@@ -249,12 +257,22 @@ function displayActor(id: string): { name: string; href?: string } {
   const { controversyId, controversyTitle } = document.currentScript.dataset;
   document.addEventListener('DOMContentLoaded', function () {
     // Track external source link clicks in controversy references and position source lists
-    document.querySelectorAll('.wiki-article__references a[target="_blank"], .position__sources a[target="_blank"]').forEach(function (el) {
+    document.querySelectorAll('.wiki-article__references a[target="_blank"]:not(.ref-archive), .position__sources a[target="_blank"]').forEach(function (el) {
       el.addEventListener('click', function () {
         window.posthog?.capture('controversy_source_clicked', {
           controversy_id: controversyId,
           controversy_title: controversyTitle,
           source_title: el.textContent?.trim(),
+        });
+      });
+    });
+
+    // Track archive copy link clicks
+    document.querySelectorAll('a.ref-archive').forEach(function (el) {
+      el.addEventListener('click', function () {
+        window.posthog?.capture('archive_link_clicked', {
+          event_id: controversyId,
+          event_title: controversyTitle,
         });
       });
     });
@@ -288,6 +306,12 @@ function displayActor(id: string): { name: string; href?: string } {
   }
   .position__sources a:hover { text-decoration-color: var(--color-wiki-link); }
   .position__pub { color: var(--color-ink-mid); }
+  .ref-archive {
+    font-family: var(--font-sans); font-size: var(--text-meta); color: var(--color-ink-faint);
+    text-decoration: underline dotted;
+    line-height: 1.45;
+  }
+  .ref-archive:hover { color: var(--color-wiki-link); }
 
   :global(.rail-positions) { list-style: none; padding: 0; margin: 0; }
   :global(.rail-positions > li) { padding: 6px 0; border-bottom: 1px dotted var(--color-rule); }

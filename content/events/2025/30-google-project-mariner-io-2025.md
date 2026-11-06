@@ -20,6 +20,7 @@ sources:
     title: "Project Mariner"
     type: official
     date: 2025-05-20
+    archive_url: https://web.archive.org/web/20250619054221/https://deepmind.google/models/project-mariner/
   - url: https://blog.google/innovation-and-ai/technology/ai/io-2025-keynote/
     title: "Google I/O 2025 Keynote"
     type: primary_recording

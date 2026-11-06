@@ -12,14 +12,14 @@ sources:
     publisher: Alibaba
     date: 2026-08-12
     accessed: 2026-08-18
-    archive_url: https://web.archive.org/web/*/https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B
+    archive_url: https://web.archive.org/web/20261101040144/https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B
   - url: https://huggingface.co/Qwen/Qwen3.8-27B
     title: "Qwen3.8-27B Model Card"
     type: official
     publisher: Alibaba
     date: 2026-08-14
     accessed: 2026-08-18
-    archive_url: https://web.archive.org/web/*/https://huggingface.co/Qwen/Qwen3.8-27B
+    archive_url: https://web.archive.org/web/20261105142318/https://huggingface.co/Qwen/Qwen3.8-27B
   - url: https://simonwillison.net/2026/Aug/16/qwen-38-27b/
     title: "Qwen 3.8 27B is excellent, but it defaults to wildly overthinking things"
     type: secondary_reporting

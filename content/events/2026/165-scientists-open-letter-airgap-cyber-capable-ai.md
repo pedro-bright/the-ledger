@@ -19,14 +19,14 @@ sources:
     publisher: Yoshua Bengio (personal)
     date: 2026-10-13
     accessed: 2026-10-18
-    archive_url: https://web.archive.org/web/*/https://x.com/Yoshua_Bengio/status/2110061471937757320
+    archive_url: https://web.archive.org/web/20261014223024/https://x.com/Yoshua_Bengio/status/2110061471937757320
   - url: https://x.com/NicolasPapernot/status/2110078126604607686
     title: "Nicolas Papernot on X: \"Over 400 academics in 30+ countries signed our open letter\""
     type: primary_recording
     publisher: Nicolas Papernot (personal)
     date: 2026-10-13
     accessed: 2026-10-18
-    archive_url: https://web.archive.org/web/*/https://x.com/NicolasPapernot/status/2110078126604607686
+    archive_url: https://web.archive.org/web/20261016123050/https://x.com/NicolasPapernot/status/2110078126604607686
   - url: https://www.reuters.com/legal/litigation/scientists-call-international-body-oversee-advanced-ai-2026-10-13/
     title: "Scientists call for international body to oversee advanced AI"
     type: secondary_reporting

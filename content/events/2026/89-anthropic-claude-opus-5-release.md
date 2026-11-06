@@ -12,14 +12,14 @@ sources:
     publisher: Anthropic
     date: 2026-07-24
     accessed: 2026-07-28
-    archive_url: https://web.archive.org/web/*/https://www.anthropic.com/news/claude-opus-5
+    archive_url: https://web.archive.org/web/20261104231809/https://www.anthropic.com/news/claude-opus-5
   - url: https://www-cdn.anthropic.com/c5fbac3f0b1280a933ebd26d3cb8bb9f5bdeaf48/Claude%20Opus%205%20System%20Card.pdf
     title: "System Card: Claude Opus 5"
     type: primary_document
     publisher: Anthropic
     date: 2026-07-24
     accessed: 2026-07-28
-    archive_url: https://web.archive.org/web/*/https://www-cdn.anthropic.com/c5fbac3f0b1280a933ebd26d3cb8bb9f5bdeaf48/Claude%20Opus%205%20System%20Card.pdf
+    archive_url: https://web.archive.org/web/20261016235535/https://www-cdn.anthropic.com/c5fbac3f0b1280a933ebd26d3cb8bb9f5bdeaf48/Claude%2520Opus%25205%2520System%2520Card.pdf
   - url: https://techcrunch.com/2026/07/24/anthropic-launches-opus-5/
     title: "Anthropic Launches Opus 5"
     type: secondary_reporting

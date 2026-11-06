@@ -33,6 +33,7 @@ positions:
     sources:
       - url: https://www.nscai.gov/2021-final-report/
         title: "National Security Commission on AI Final Report"
+        archive_url: https://web.archive.org/web/20211223222301/https://www.nscai.gov/2021-final-report/
     confidence: medium
   - claim: "Autonomous Weapons Red Line — A categorical distinction exists between military AI for logistics/intelligence and autonomous lethal weapons"
     proponents: [humanitarian-law-experts, some-ai-lab-policy-teams, international-red-cross]

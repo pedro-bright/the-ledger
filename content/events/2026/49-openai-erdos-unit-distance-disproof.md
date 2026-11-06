@@ -12,7 +12,7 @@ sources:
     publisher: OpenAI
     date: 2026-05-20
     accessed: 2026-05-25
-    archive_url: https://web.archive.org/web/*/https://openai.com/index/model-disproves-discrete-geometry-conjecture/
+    archive_url: https://web.archive.org/web/20261023175429/https://openai.com/index/model-disproves-discrete-geometry-conjecture/
   - url: https://arxiv.org/abs/2605.20695
     title: "Remarks on the disproof of the unit distance conjecture"
     type: primary_document

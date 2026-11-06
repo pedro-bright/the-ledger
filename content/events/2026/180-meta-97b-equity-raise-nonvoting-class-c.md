@@ -40,14 +40,14 @@ sources:
     publisher: U.S. Securities and Exchange Commission
     date: 2026-10-29
     accessed: 2026-11-01
-    archive_url: https://web.archive.org/web/*/https://www.sec.gov/Archives/edgar/data/1326801/000119312526438017/d183592d8k.htm
+    archive_url: https://web.archive.org/web/20261104021400/https://www.sec.gov/Archives/edgar/data/1326801/000119312526438017/d183592d8k.htm
   - url: https://www.sec.gov/Archives/edgar/data/1326801/000162828026066700/meta-09302026xexhibit991.htm
     title: "Meta Reports Third Quarter 2026 Results (Form 8-K, Exhibit 99.1)"
     type: primary_document
     publisher: U.S. Securities and Exchange Commission
     date: 2026-10-21
     accessed: 2026-11-01
-    archive_url: https://web.archive.org/web/*/https://www.sec.gov/Archives/edgar/data/1326801/000162828026066700/meta-09302026xexhibit991.htm
+    archive_url: https://web.archive.org/web/20261024044640/https://www.sec.gov/Archives/edgar/data/1326801/000162828026066700/meta-09302026xexhibit991.htm
   - url: https://nvidianews.nvidia.com/news/nvidia-and-meta-to-expand-collaboration-on-muse-and-muse-family-of-models-amid-robust-growth
     title: "NVIDIA and Meta to Expand Collaboration on Muse and Muse Family of Models Amid Robust Growth"
     type: official

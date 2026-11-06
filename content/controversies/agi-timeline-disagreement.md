@@ -11,7 +11,7 @@ positions:
     sources:
       - url: https://darioamodei.com/machines-of-loving-grace
         title: "Machines of Loving Grace (Amodei, 2024)"
-      - url: https://blog.samaltman.com/the-intelligence-age
+      - url: https://ia.samaltman.com/
         title: "The Intelligence Age (Altman, 2024)"
     confidence: low
   - claim: "AGI is 10-20+ years away and requires fundamental breakthroughs beyond current paradigms"

@@ -12,7 +12,7 @@ sources:
     publisher: Google DeepMind
     date: 2026-05-19
     accessed: 2026-05-23
-    archive_url: https://web.archive.org/web/*/https://deepmind.google/models/model-cards/gemini-3-5-flash/
+    archive_url: https://web.archive.org/web/20261021162418/https://deepmind.google/models/model-cards/gemini-3-5-flash/
   - url: https://techcrunch.com/2026/05/19/with-gemini-3-5-flash-google-bets-its-next-ai-wave-on-agents-not-chatbots/
     title: "With Gemini 3.5 Flash, Google Bets Its Next AI Wave on Agents, Not Chatbots"
     type: secondary_reporting

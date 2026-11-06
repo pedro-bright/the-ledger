@@ -6,13 +6,13 @@ category: industry
 significance: notable
 confidence: high
 sources:
-  - url: https://x.com/NoamShazeer
+  - url: https://x.com/NoamShazeer/status/2067400851438932297
     title: "Noam Shazeer on X: \"I'm excited to share that I'll be joining OpenAI and look forward to working with the exceptional team there.\""
     type: primary_recording
     publisher: Noam Shazeer (personal)
     date: 2026-06-18
     accessed: 2026-06-21
-    archive_url: https://web.archive.org/web/*/https://x.com/NoamShazeer
+    archive_url: https://web.archive.org/web/20261013052040/https://x.com/NoamShazeer/status/2067400851438932297
   - url: https://www.theinformation.com/articles/star-google-ai-researcher-shazeer-joins-openai
     title: "Star Google AI Researcher Shazeer Joins OpenAI"
     type: secondary_reporting

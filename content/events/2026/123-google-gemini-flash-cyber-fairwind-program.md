@@ -12,28 +12,28 @@ sources:
     publisher: Google
     date: 2026-09-02
     accessed: 2026-09-08
-    archive_url: https://web.archive.org/web/*/https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/
+    archive_url: https://web.archive.org/web/20261102151859/https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/
   - url: https://blog.google/innovation-and-ai/technology/safety-security/fairwind-program/
     title: "Proactive cyber defense for governments and enterprises"
     type: official
     publisher: Google
     date: 2026-09-02
     accessed: 2026-09-08
-    archive_url: https://web.archive.org/web/*/https://blog.google/innovation-and-ai/technology/safety-security/fairwind-program/
+    archive_url: https://web.archive.org/web/20261103160522/https://blog.google/innovation-and-ai/technology/safety-security/fairwind-program/
   - url: https://deepmind.google/fairwind-program/
     title: "Fairwind Program"
     type: official
     publisher: Google DeepMind
     date: 2026-09-02
     accessed: 2026-09-08
-    archive_url: https://web.archive.org/web/*/https://deepmind.google/fairwind-program/
+    archive_url: https://web.archive.org/web/20261029122039/https://deepmind.google/fairwind-program/
   - url: https://deepmind.google/models/gemini/cyber/
     title: "Gemini 3.8 Flash Cyber"
     type: official
     publisher: Google DeepMind
     date: 2026-09-02
     accessed: 2026-09-08
-    archive_url: https://web.archive.org/web/*/https://deepmind.google/models/gemini/cyber/
+    archive_url: https://web.archive.org/web/20260903135016/https://deepmind.google/models/gemini/cyber/
   - url: https://simonwillison.net/2026/Sep/2/llm-gemini/
     title: "llm-gemini 0.34"
     type: secondary_reporting

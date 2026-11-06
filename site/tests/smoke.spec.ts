@@ -89,6 +89,21 @@ test.describe('smoke', () => {
     await expectChrome(page);
   });
 
+  test('controversy references show archived copies next to dead originals', async ({ page }) => {
+    const response = await page.goto('/controversies/militarization-vs-safety');
+    expect(response?.status()).toBe(200);
+    const reference = page
+      .locator('.wiki-article__references li')
+      .filter({ has: page.locator('a[href="https://www.nscai.gov/2021-final-report/"]') });
+    await expect(reference).toHaveCount(1);
+    const archive = reference.getByRole('link', { name: 'archived copy', exact: true });
+    await expect(archive).toBeVisible();
+    await expect(archive).toHaveAttribute(
+      'href',
+      'https://web.archive.org/web/20211223222301/https://www.nscai.gov/2021-final-report/',
+    );
+  });
+
   test('actors index: renders title', async ({ page }) => {
     const response = await page.goto('/actors');
     expect(response?.status()).toBe(200);

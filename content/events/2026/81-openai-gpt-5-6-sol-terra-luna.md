@@ -12,7 +12,7 @@ sources:
     publisher: OpenAI
     date: 2026-07-09
     accessed: 2026-07-12
-    archive_url: https://web.archive.org/web/*/https://openai.com/index/gpt-5-6/
+    archive_url: https://web.archive.org/web/20261031021145/https://openai.com/index/gpt-5-6/
   - url: https://techcrunch.com/2026/07/09/openai-says-gpt-5-6-is-the-preferred-model-for-microsoft-copilot-amid-breakup-chatter/
     title: "OpenAI says GPT-5.6 is the preferred model for Microsoft Copilot amid breakup chatter"
     type: secondary_reporting

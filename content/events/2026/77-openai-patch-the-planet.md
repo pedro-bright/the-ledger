@@ -12,14 +12,14 @@ sources:
     publisher: OpenAI
     date: 2026-06-22
     accessed: 2026-06-26
-    archive_url: https://web.archive.org/web/*/https://openai.com/index/patch-the-planet/
+    archive_url: https://web.archive.org/web/20261103191220/https://openai.com/index/patch-the-planet/
   - url: https://openai.com/index/daybreak-securing-the-world/
     title: "Daybreak: Tools for securing every organization in the world"
     type: official
     publisher: OpenAI
     date: 2026-06-22
     accessed: 2026-06-26
-    archive_url: https://web.archive.org/web/*/https://openai.com/index/daybreak-securing-the-world/
+    archive_url: https://web.archive.org/web/20261026042559/https://openai.com/index/daybreak-securing-the-world/
   - url: https://www.axios.com/2026/06/22/openai-rolls-out-more-capable-version-of-cyber-model
     title: "OpenAI gives GPT-5.5-Cyber more powerful cybersecurity capabilities"
     type: secondary_reporting

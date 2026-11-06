@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-05-25
     accessed: 2026-05-28
-    archive_url: https://web.archive.org/web/*/https://www.anthropic.com/news/chris-olah-pope-leo-encyclical
+    archive_url: https://web.archive.org/web/20261025145937/https://www.anthropic.com/news/chris-olah-pope-leo-encyclical
   - url: https://www.washingtonpost.com/world/2026/05/25/pope-elevates-ai-ethics-religious-imperative-with-first-encyclical/
     title: "Pope elevates AI ethics to a religious imperative with first encyclical"
     type: secondary_reporting

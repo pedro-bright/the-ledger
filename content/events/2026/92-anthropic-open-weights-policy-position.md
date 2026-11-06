@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-07-27
     accessed: 2026-08-01
-    archive_url: https://web.archive.org/web/*/https://www.anthropic.com/news/position-open-weights-models
+    archive_url: https://web.archive.org/web/20261026152210/https://www.anthropic.com/news/position-open-weights-models
   - url: https://www.axios.com/2026/07/27/anthropic-open-weight-ban-china-dario-amodei
     title: "Anthropic CEO Dario Amodei says he does not support open-weight AI ban"
     type: secondary_reporting

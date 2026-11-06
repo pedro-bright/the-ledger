@@ -12,7 +12,7 @@ sources:
     publisher: OpenAI
     date: 2026-06-11
     accessed: 2026-06-18
-    archive_url: https://web.archive.org/web/*/https://openai.com/index/openai-to-acquire-ona/
+    archive_url: https://web.archive.org/web/20261012092407/https://openai.com/index/openai-to-acquire-ona/
   - url: https://www.bloomberg.com/news/articles/2026-06-11/openai-to-acquire-cloud-platform-ona-to-support-ai-agents
     title: "OpenAI to Acquire Cloud Platform Ona to Support AI Agents"
     type: secondary_reporting

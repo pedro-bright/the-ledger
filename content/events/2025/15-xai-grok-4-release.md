@@ -20,6 +20,7 @@ sources:
     title: "What's New in Grok 4: Release Facts, Benchmarks, and Value"
     type: secondary_reporting
     date: 2025-07-09
+    archive_url: https://web.archive.org/web/20250715105339/https://smythos.com/developers/ai-models/whats-new-in-grok-4-release-facts-benchmarks-and-value/
 ---
 
 ## Summary

@@ -103,6 +103,7 @@ positions:
     sources:
       - url: ${JSON.stringify(HEADING_URL)}
         title: Position source
+        archive_url: https://example.com/position-arc
   - claim: Second claim
 ---
 
@@ -280,6 +281,19 @@ test.describe('built pages with hostile content', () => {
           source_title: 'Position source',
         },
       },
+    ]);
+    expect(await capturedAfterClick(page, '.wiki-article__references a[target="_blank"]:not(.ref-archive)')).toEqual([
+      {
+        name: 'controversy_source_clicked',
+        props: {
+          controversy_id: 'zz-poc-controversy',
+          controversy_title: BREAKOUT_TITLE,
+          source_title: 'Position source',
+        },
+      },
+    ]);
+    expect(await capturedAfterClick(page, 'a.ref-archive')).toEqual([
+      { name: 'archive_link_clicked', props: { event_id: 'zz-poc-controversy', event_title: BREAKOUT_TITLE } },
     ]);
     expect(pageErrors).toEqual([]);
   });

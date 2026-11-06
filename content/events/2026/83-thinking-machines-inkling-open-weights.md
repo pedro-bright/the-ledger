@@ -12,14 +12,14 @@ sources:
     publisher: Thinking Machines Lab
     date: 2026-07-15
     accessed: 2026-07-20
-    archive_url: https://web.archive.org/web/*/https://thinkingmachines.ai/news/introducing-inkling/
+    archive_url: https://web.archive.org/web/20261106000937/https://thinkingmachines.ai/news/introducing-inkling/
   - url: https://thinkingmachines.ai/model-card/inkling/
     title: "Inkling Model Card"
     type: primary_document
     publisher: Thinking Machines Lab
     date: 2026-07-15
     accessed: 2026-07-20
-    archive_url: https://web.archive.org/web/*/https://thinkingmachines.ai/model-card/inkling/
+    archive_url: https://web.archive.org/web/20261026102944/https://thinkingmachines.ai/model-card/inkling/
   - url: https://techcrunch.com/2026/07/15/thinking-machines-amps-up-its-bet-against-one-size-fits-all-ai-with-its-first-open-model-inkling/
     title: "Thinking Machines amps up its bet against one-size-fits-all AI with its first open model, Inkling"
     type: secondary_reporting

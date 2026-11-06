@@ -12,7 +12,7 @@ sources:
     publisher: OpenAI
     date: 2026-05-20
     accessed: 2026-05-23
-    archive_url: https://web.archive.org/web/*/https://openai.com/index/introducing-openai-for-singapore/
+    archive_url: https://web.archive.org/web/20261002165801/https://openai.com/index/introducing-openai-for-singapore/
   - url: https://www.bloomberg.com/news/articles/2026-05-20/openai-commits-234-million-for-new-ai-lab-in-singapore
     title: "OpenAI Commits $234 Million for New AI Lab in Singapore"
     type: secondary_reporting

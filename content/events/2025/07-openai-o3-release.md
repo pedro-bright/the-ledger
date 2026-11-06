@@ -19,7 +19,7 @@ sources:
     date: '2025-01-31'
     accessed: '2026-10-26'
     archive_url: https://web.archive.org/web/20261005030808/https://openai.com/index/openai-o3-mini/
-  - url: https://www.theverge.com/2025/1/31/24356705/openai-o3-mini-available-chatgpt
+  - url: https://www.theverge.com/news/603849/openai-o3-mini-launch-chatgpt-api-available-now
     title: OpenAI's o3-mini is now available to all ChatGPT users
     type: secondary
 revision:

@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-04-07
     accessed: 2026-04-22
-    archive_url: https://web.archive.org/web/*/https://www.anthropic.com/glasswing
+    archive_url: https://web.archive.org/web/20261105015705/https://www.anthropic.com/glasswing
   - url: https://www.axios.com/2026/04/19/nsa-anthropic-mythos-pentagon
     title: "Scoop: NSA using Anthropic's Mythos despite Defense Department blacklist"
     type: secondary_reporting

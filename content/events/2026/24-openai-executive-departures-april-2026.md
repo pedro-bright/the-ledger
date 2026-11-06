@@ -12,7 +12,7 @@ sources:
     publisher: Kevin Weil
     date: 2026-04-17
     accessed: 2026-04-21
-    archive_url: https://web.archive.org/web/*/https://x.com/kevinweil/status/2045230426210648348
+    archive_url: https://web.archive.org/web/20260422092955/https://x.com/kevinweil/status/2045230426210648348
   - url: https://techcrunch.com/2026/04/17/kevin-weil-and-bill-peebles-exit-openai-as-company-continues-to-shed-side-quests/
     title: "Kevin Weil and Bill Peebles exit OpenAI as company continues to shed 'side quests'"
     type: secondary_reporting

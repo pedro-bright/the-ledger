@@ -12,14 +12,14 @@ sources:
     publisher: Hugging Face
     date: 2026-07-16
     accessed: 2026-07-22
-    archive_url: https://web.archive.org/web/*/https://huggingface.co/blog/security-incident-july-2026
+    archive_url: https://web.archive.org/web/20261105170846/https://huggingface.co/blog/security-incident-july-2026
   - url: https://openai.com/index/hugging-face-model-evaluation-security-incident/
     title: "OpenAI and Hugging Face partner to address security incident during model evaluation"
     type: official
     publisher: OpenAI
     date: 2026-07-21
     accessed: 2026-07-22
-    archive_url: https://web.archive.org/web/*/https://openai.com/index/hugging-face-model-evaluation-security-incident/
+    archive_url: https://web.archive.org/web/20261027012800/https://openai.com/index/hugging-face-model-evaluation-security-incident/
   - url: https://techcrunch.com/2026/07/21/openai-says-hugging-face-was-breached-by-its-pre-release-models/
     title: "OpenAI says Hugging Face was breached by its pre-release models"
     type: secondary_reporting

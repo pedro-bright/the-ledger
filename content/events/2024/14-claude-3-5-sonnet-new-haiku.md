@@ -19,7 +19,7 @@ sources:
     date: '2024-10-22'
     accessed: '2026-10-26'
     archive_url: https://web.archive.org/web/20261016182144/https://www.anthropic.com/news/3-5-models-and-computer-use
-  - url: https://www.theverge.com/2024/10/22/24277152/anthropic-claude-computer-use-ai-agent
+  - url: https://www.theverge.com/2024/10/22/24276822/anthopic-claude-3-5-sonnet-computer-use-ai
     title: Anthropic's latest AI can use your computer the way you do
     type: secondary
 revision:

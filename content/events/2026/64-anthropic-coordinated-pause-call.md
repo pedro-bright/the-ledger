@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-06-04
     accessed: 2026-06-08
-    archive_url: https://web.archive.org/web/*/https://www.anthropic.com/institute/recursive-self-improvement
+    archive_url: https://web.archive.org/web/20261105211102/https://www.anthropic.com/institute/recursive-self-improvement
   - url: https://www.bloomberg.com/news/articles/2026-06-05/anthropic-calls-for-ai-pause-button-to-let-humans-take-stock
     title: "Anthropic Calls for AI Pause Button to Let Humans Take Stock"
     type: secondary_reporting

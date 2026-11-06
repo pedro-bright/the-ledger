@@ -12,14 +12,14 @@ sources:
     publisher: CourtListener
     date: 2026-09-17
     accessed: 2026-09-23
-    archive_url: https://web.archive.org/web/*/https://storage.courtlistener.com/recap/gov.uscourts.nysd.640396/gov.uscourts.nysd.640396.1977.1.pdf
+    archive_url: https://web.archive.org/web/20261021141526/https://storage.courtlistener.com/recap/gov.uscourts.nysd.640396/gov.uscourts.nysd.640396.1977.1.pdf
   - url: https://www.courtlistener.com/docket/69879510/in-re-openai-inc-copyright-infringement-litigation/
     title: "In re OpenAI, Inc. Copyright Infringement Litigation, 1:25-md-03143 - Docket"
     type: primary_document
     publisher: CourtListener
     date: 2026-09-21
     accessed: 2026-09-23
-    archive_url: https://web.archive.org/web/*/https://www.courtlistener.com/docket/69879510/in-re-openai-inc-copyright-infringement-litigation/
+    archive_url: https://web.archive.org/web/20260928044137/https://www.courtlistener.com/docket/69879510/in-re-openai-inc-copyright-infringement-litigation/
   - url: https://techcrunch.com/2026/09/17/microsoft-exec-called-ai-scraping-the-largest-theft-of-labor-in-human-history-new-unredacted-filings-reveal/
     title: "Microsoft exec called AI scraping 'the largest theft of labor in human history,' new unredacted filings reveal"
     type: secondary_reporting

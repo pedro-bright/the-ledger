@@ -12,14 +12,14 @@ sources:
     publisher: NVIDIA
     date: 2026-08-10
     accessed: 2026-08-16
-    archive_url: https://web.archive.org/web/*/https://nvidianews.nvidia.com/news/nvidia-partners-with-apollo-blackrock-blackstone-brookfield-goldman-sachs-and-kkr-to-establish-ai-compute-infrastructure-financing-platforms-to-mobilize-over-500-billion-of-third-party-capital
+    archive_url: https://web.archive.org/web/20260824141201/https://nvidianews.nvidia.com/news/nvidia-partners-with-apollo-blackrock-blackstone-brookfield-goldman-sachs-and-kkr-to-establish-ai-compute-infrastructure-financing-platforms-to-mobilize-over-500-billion-of-third-party-capital
   - url: https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Partners-With-Apollo-BlackRock-Blackstone-Brookfield-Goldman-Sachs-and-KKR-to-Establish-AI-Compute-Infrastructure-Financing-Platforms-to-Mobilize-Over-500-Billion-of-Third-Party-Capital/default.aspx
     title: "NVIDIA Partners With Apollo, BlackRock, Blackstone, Brookfield, Goldman Sachs and KKR to Establish AI Compute Infrastructure Financing Platforms"
     type: primary_document
     publisher: NVIDIA Investor Relations
     date: 2026-08-10
     accessed: 2026-08-16
-    archive_url: https://web.archive.org/web/*/https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Partners-With-Apollo-BlackRock-Blackstone-Brookfield-Goldman-Sachs-and-KKR-to-Establish-AI-Compute-Infrastructure-Financing-Platforms-to-Mobilize-Over-500-Billion-of-Third-Party-Capital/default.aspx
+    archive_url: https://web.archive.org/web/20260918044509/https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Partners-With-Apollo-BlackRock-Blackstone-Brookfield-Goldman-Sachs-and-KKR-to-Establish-AI-Compute-Infrastructure-Financing-Platforms-to-Mobilize-Over-500-Billion-of-Third-Party-Capital/default.aspx
   - url: https://www.bloomberg.com/news/articles/2026-08-10/nvidia-to-team-with-wall-street-on-500-billion-package-ft-says
     title: "Nvidia Taps Wall Street for $500 Billion Funding Commitment"
     type: secondary_reporting

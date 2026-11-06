@@ -12,7 +12,7 @@ sources:
     publisher: Z.ai
     date: 2026-08-26
     accessed: 2026-08-29
-    archive_url: https://web.archive.org/web/*/https://huggingface.co/zai-org/GLM-5.3-Flash
+    archive_url: https://web.archive.org/web/20261103192758/https://huggingface.co/zai-org/GLM-5.3-Flash
   - url: https://www.bloomberg.com/news/articles/2026-08-26/china-s-z-ai-made-ox-alpha-stealth-model-that-rivals-deepseek
     title: "Z.ai's Shares Soar After Claiming Surprise AI Hit Ox Alpha"
     type: secondary_reporting

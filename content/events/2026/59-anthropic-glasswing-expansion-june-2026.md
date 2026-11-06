@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-06-02
     accessed: 2026-06-05
-    archive_url: https://web.archive.org/web/*/https://www.anthropic.com/news/expanding-project-glasswing
+    archive_url: https://web.archive.org/web/20261024055207/https://www.anthropic.com/news/expanding-project-glasswing
   - url: https://techcrunch.com/2026/06/02/anthropic-scales-claude-mythos-to-critical-infrastructure-in-15-countries/
     title: "Anthropic scales Claude Mythos to critical infrastructure in 15 countries"
     type: secondary_reporting

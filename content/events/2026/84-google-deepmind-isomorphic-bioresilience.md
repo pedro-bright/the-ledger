@@ -12,7 +12,7 @@ sources:
     publisher: Google DeepMind
     date: 2026-07-16
     accessed: 2026-07-20
-    archive_url: https://web.archive.org/web/*/https://deepmind.google/blog/our-approach-to-bioresilience/
+    archive_url: https://web.archive.org/web/20261020131225/https://deepmind.google/blog/our-approach-to-bioresilience/
   - url: https://www.axios.com/2026/07/16/google-deepmind-biosecurity-safety
     title: "Exclusive: Google DeepMind expands biosecurity effort amid AI safety push"
     type: secondary_reporting

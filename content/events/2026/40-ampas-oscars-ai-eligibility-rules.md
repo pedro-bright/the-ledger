@@ -12,7 +12,7 @@ sources:
     publisher: Academy of Motion Picture Arts and Sciences
     date: 2026-05-01
     accessed: 2026-05-06
-    archive_url: https://web.archive.org/web/*/https://press.oscars.org/news/awards-rules-and-campaign-promotional-regulations-approved-99th-oscarsr
+    archive_url: https://web.archive.org/web/20261019063727/https://press.oscars.org/news/awards-rules-and-campaign-promotional-regulations-approved-99th-oscarsr
   - url: https://techcrunch.com/2026/05/02/ai-generated-actors-and-scripts-are-now-ineligible-for-oscars/
     title: "AI-generated actors and scripts are now ineligible for Oscars"
     type: secondary_reporting

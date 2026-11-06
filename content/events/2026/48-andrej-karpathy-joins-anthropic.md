@@ -12,7 +12,7 @@ sources:
     publisher: Andrej Karpathy (personal)
     date: 2026-05-19
     accessed: 2026-05-24
-    archive_url: https://web.archive.org/web/*/https://x.com/karpathy/status/2056753169888334312
+    archive_url: https://web.archive.org/web/20261004083242/https://x.com/karpathy/status/2056753169888334312
   - url: https://techcrunch.com/2026/05/19/openai-co-founder-andrej-karpathy-joins-anthropics-pre-training-team/
     title: "OpenAI co-founder Andrej Karpathy joins Anthropic's pre-training team"
     type: secondary_reporting
