@@ -257,12 +257,22 @@ function displayActor(id: string): { name: string; href?: string } {
   const { controversyId, controversyTitle } = document.currentScript.dataset;
   document.addEventListener('DOMContentLoaded', function () {
     // Track external source link clicks in controversy references and position source lists
-    document.querySelectorAll('.wiki-article__references a[target="_blank"], .position__sources a[target="_blank"]').forEach(function (el) {
+    document.querySelectorAll('.wiki-article__references a[target="_blank"]:not(.ref-archive), .position__sources a[target="_blank"]').forEach(function (el) {
       el.addEventListener('click', function () {
         window.posthog?.capture('controversy_source_clicked', {
           controversy_id: controversyId,
           controversy_title: controversyTitle,
           source_title: el.textContent?.trim(),
+        });
+      });
+    });
+
+    // Track archive copy link clicks
+    document.querySelectorAll('a.ref-archive').forEach(function (el) {
+      el.addEventListener('click', function () {
+        window.posthog?.capture('archive_link_clicked', {
+          event_id: controversyId,
+          event_title: controversyTitle,
         });
       });
     });
