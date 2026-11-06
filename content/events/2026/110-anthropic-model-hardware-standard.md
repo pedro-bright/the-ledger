@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-08-27
     accessed: 2026-08-30
-    archive_url: https://web.archive.org/web/20261026212924/https://www.anthropic.com/news/model-hardware-standard-research-preview
+    archive_url: https://web.archive.org/web/20260830041633/https://www.anthropic.com/news/model-hardware-standard-research-preview
   - url: https://www.bloomberg.com/news/articles/2026-08-27/anthropic-tests-new-way-for-claude-to-work-with-robots-and-scientific-lab-tools
     title: "Anthropic Unveils MHS to Let Claude AI Work With Robots, Lab Equipment"
     type: secondary_reporting

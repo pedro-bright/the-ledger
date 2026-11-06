@@ -12,7 +12,7 @@ sources:
     publisher: United States District Court, Northern District of California
     date: 2026-05-18
     accessed: 2026-05-22
-    archive_url: https://web.archive.org/web/20261025171856/https://cand.uscourts.gov/cases-e-filing/cases/424-cv-04722-ygr/musk-v-altman-et-al
+    archive_url: https://web.archive.org/web/20260523082336/https://cand.uscourts.gov/cases-e-filing/cases/424-cv-04722-ygr/musk-v-altman-et-al
   - url: https://www.bloomberg.com/news/articles/2026-05-18/elon-musk-loses-case-against-sam-altman-to-force-openai-overhaul
     title: "Elon Musk Loses Case Against Sam Altman Over OpenAI's Overhaul"
     type: secondary_reporting

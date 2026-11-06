@@ -19,7 +19,7 @@ sources:
     publisher: Meta
     date: 2026-10-12
     accessed: 2026-10-16
-    archive_url: https://web.archive.org/web/20261026203751/https://research.meta.ai/static/muse-wonder-model-card
+    archive_url: https://web.archive.org/web/20261016033519/https://research.meta.ai/static/muse-wonder-model-card
   - url: https://techcrunch.com/2026/10/12/meta-releases-its-first-frontier-model-muse-wonder/
     title: "Meta releases its first frontier model, Muse Wonder"
     type: secondary_reporting

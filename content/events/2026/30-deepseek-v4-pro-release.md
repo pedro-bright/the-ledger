@@ -12,7 +12,7 @@ sources:
     publisher: DeepSeek AI
     date: 2026-04-24
     accessed: 2026-04-27
-    archive_url: https://web.archive.org/web/20261104151523/https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro
+    archive_url: https://web.archive.org/web/20260427030628/https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro
   - url: https://www.bloomberg.com/news/articles/2026-04-24/deepseek-unveils-newest-flagship-a-year-after-ai-breakthrough
     title: "DeepSeek Unveils Newest Flagship AI Model a Year after Upending Silicon Valley"
     type: secondary_reporting

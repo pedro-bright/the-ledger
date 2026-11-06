@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-06-17
     accessed: 2026-06-19
-    archive_url: https://web.archive.org/web/20261020172726/https://www.anthropic.com/news/seoul-office-partnerships-korean-ai-ecosystem
+    archive_url: https://web.archive.org/web/20260624155834/https://www.anthropic.com/news/seoul-office-partnerships-korean-ai-ecosystem
   - url: https://www.bloomberg.com/news/articles/2026-06-16/trump-s-anthropic-crackdown-sets-off-ai-alarms-for-us-allies
     title: "Trump's Anthropic Crackdown Sets Off AI Alarms for US Allies"
     type: secondary_reporting

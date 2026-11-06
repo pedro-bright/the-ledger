@@ -26,7 +26,7 @@ sources:
     publisher: U.S. Securities and Exchange Commission
     date: 2026-10-28
     accessed: 2026-11-01
-    archive_url: https://web.archive.org/web/*/https://www.sec.gov/Archives/edgar/data/1326801/000119312526436410/d94886d424b5.htm
+    archive_url: https://web.archive.org/web/20261103023949/https://www.sec.gov/Archives/edgar/data/1326801/000119312526436410/d94886d424b5.htm
   - url: https://www.sec.gov/Archives/edgar/data/1326801/000119312526436405/d133631d424b5.htm
     title: "Meta Platforms, Inc. - Prospectus Supplement, 250,000,000 Series A Depositary Shares (Form 424B5)"
     type: primary_document

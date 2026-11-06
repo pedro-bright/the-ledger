@@ -12,7 +12,7 @@ sources:
     publisher: Z.ai
     date: 2026-08-28
     accessed: 2026-09-02
-    archive_url: https://web.archive.org/web/20261103075621/https://huggingface.co/zai-org/GLM-5.3
+    archive_url: https://web.archive.org/web/20260902164113/https://huggingface.co/zai-org/GLM-5.3
   - url: https://www.axios.com/2026/08/14/china-open-source-ai-glm-53
     title: "China's Z.ai holds GLM 5.3 release over hacking risks"
     type: secondary_reporting

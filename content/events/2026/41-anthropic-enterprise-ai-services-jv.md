@@ -12,14 +12,14 @@ sources:
     publisher: Anthropic
     date: 2026-05-04
     accessed: 2026-05-07
-    archive_url: https://web.archive.org/web/20261027142222/https://www.anthropic.com/news/enterprise-ai-services-company
+    archive_url: https://web.archive.org/web/20260507013841/https://www.anthropic.com/news/enterprise-ai-services-company
   - url: https://www.blackstone.com/news/press/anthropic-partners-with-blackstone-hellman-friedman-and-goldman-sachs-to-launch-enterprise-ai-services-firm/
     title: "Anthropic Partners with Blackstone, Hellman & Friedman, and Goldman Sachs to Launch Enterprise AI Services Firm"
     type: official
     publisher: Blackstone
     date: 2026-05-04
     accessed: 2026-05-07
-    archive_url: https://web.archive.org/web/20261024054139/https://www.blackstone.com/news/press/anthropic-partners-with-blackstone-hellman-friedman-and-goldman-sachs-to-launch-enterprise-ai-services-firm/
+    archive_url: https://web.archive.org/web/20260513133700/https://www.blackstone.com/news/press/anthropic-partners-with-blackstone-hellman-friedman-and-goldman-sachs-to-launch-enterprise-ai-services-firm/
   - url: https://techcrunch.com/2026/05/04/anthropic-and-openai-are-both-launching-joint-ventures-for-enterprise-ai-services/
     title: "Anthropic and OpenAI are both launching joint ventures for enterprise AI services"
     type: secondary_reporting

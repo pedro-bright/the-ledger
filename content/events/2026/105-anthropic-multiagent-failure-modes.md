@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-08-13
     accessed: 2026-08-20
-    archive_url: https://web.archive.org/web/20261026213601/https://www.anthropic.com/research/multiagent-systems
+    archive_url: https://web.archive.org/web/20260820030857/https://www.anthropic.com/research/multiagent-systems
   - url: https://techcrunch.com/2026/08/13/anthropic-set-ai-agents-loose-on-the-same-task-they-started-a-turf-war/
     title: "Anthropic set AI agents loose on the same task. They started a turf war."
     type: secondary_reporting

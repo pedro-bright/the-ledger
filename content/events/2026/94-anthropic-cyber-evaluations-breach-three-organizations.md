@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-07-30
     accessed: 2026-08-03
-    archive_url: https://web.archive.org/web/20261104235357/https://www.anthropic.com/news/investigating-incidents-cybersecurity-evals
+    archive_url: https://web.archive.org/web/20260803032803/https://www.anthropic.com/news/investigating-incidents-cybersecurity-evals
   - url: https://www.bloomberg.com/news/articles/2026-07-30/anthropic-s-ai-models-hacked-three-organizations-during-tests
     title: "Anthropic AI Models Hacked Three Organizations During Tests"
     type: secondary_reporting

@@ -12,7 +12,7 @@ sources:
     publisher: OpenAI
     date: 2026-08-26
     accessed: 2026-08-31
-    archive_url: https://web.archive.org/web/20261103023923/https://openai.com/index/hugging-face-incident-and-the-road-ahead
+    archive_url: https://web.archive.org/web/20260831170056/https://openai.com/index/hugging-face-incident-and-the-road-ahead
   - url: https://techcrunch.com/2026/08/26/openai-releases-its-official-report-on-the-hugging-face-breach/
     title: "OpenAI releases its official report on the Hugging Face breach"
     type: secondary_reporting

@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-04-20
     accessed: 2026-04-24
-    archive_url: https://web.archive.org/web/20261031040722/https://www.anthropic.com/news/anthropic-amazon-compute
+    archive_url: https://web.archive.org/web/20260426191537/https://www.anthropic.com/news/anthropic-amazon-compute
   - url: https://techcrunch.com/2026/04/20/anthropic-takes-5b-from-amazon-and-pledges-100b-in-cloud-spending-in-return/
     title: "Anthropic takes $5B from Amazon and pledges $100B in cloud spending in return"
     type: secondary_reporting
@@ -25,7 +25,7 @@ sources:
     publisher: Amazon
     date: 2026-04-20
     accessed: 2026-04-24
-    archive_url: https://web.archive.org/web/20261104023123/https://www.aboutamazon.com/news/company-news/amazon-invests-additional-5-billion-anthropic-ai
+    archive_url: https://web.archive.org/web/20260427212648/https://www.aboutamazon.com/news/company-news/amazon-invests-additional-5-billion-anthropic-ai
 actors:
   - id: anthropic
     role: subject

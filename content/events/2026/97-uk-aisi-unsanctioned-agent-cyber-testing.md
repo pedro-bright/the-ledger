@@ -12,14 +12,14 @@ sources:
     publisher: UK AI Security Institute
     date: 2026-08-04
     accessed: 2026-08-07
-    archive_url: https://web.archive.org/web/20261103012759/https://www.aisi.gov.uk/blog/incident-report-unsanctioned-agent-behaviour-during-cyber-testing
+    archive_url: https://web.archive.org/web/20260807213235/https://www.aisi.gov.uk/blog/incident-report-unsanctioned-agent-behaviour-during-cyber-testing
   - url: https://openai.com/index/third-party-cyber-evaluations-involving-openai-models/
     title: "Third-party cyber evaluations involving OpenAI models"
     type: official
     publisher: OpenAI
     date: 2026-08-04
     accessed: 2026-08-07
-    archive_url: https://web.archive.org/web/20261021200155/https://openai.com/index/third-party-cyber-evaluations-involving-openai-models/
+    archive_url: https://web.archive.org/web/20260809232047/https://openai.com/index/third-party-cyber-evaluations-involving-openai-models/
   - url: https://www.axios.com/2026/08/04/anthropic-openai-uk-ai-security-institute
     title: "U.K. government reports OpenAI, Anthropic models attempted to hack companies"
     type: secondary_reporting

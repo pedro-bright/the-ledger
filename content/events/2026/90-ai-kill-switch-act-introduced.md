@@ -19,7 +19,7 @@ sources:
     publisher: Office of Rep. Ted Lieu
     date: 2026-07-23
     accessed: 2026-07-29
-    archive_url: https://web.archive.org/web/20261019015757/https://lieu.house.gov/media-center/press-releases/reps-lieu-and-moran-introduce-bill-require-kill-switch-ai-systems-can
+    archive_url: https://web.archive.org/web/20260729195818/https://lieu.house.gov/media-center/press-releases/reps-lieu-and-moran-introduce-bill-require-kill-switch-ai-systems-can
   - url: https://www.semafor.com/article/07/24/2026/us-lawmakers-propose-ai-kill-switch-bill
     title: "US lawmakers propose AI 'kill switch' bill"
     type: secondary_reporting

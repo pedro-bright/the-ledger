@@ -12,14 +12,14 @@ sources:
     publisher: SpaceX
     date: 2026-04-21
     accessed: 2026-04-25
-    archive_url: https://web.archive.org/web/20260603105504/https://x.com/SpaceX/status/2046713419978453374
+    archive_url: https://web.archive.org/web/20260428190445/https://x.com/SpaceX/status/2046713419978453374
   - url: https://cursor.com/blog/spacex-model-training
     title: "Cursor partners with SpaceX on model training"
     type: primary_document
     publisher: Cursor
     date: 2026-04-21
     accessed: 2026-04-25
-    archive_url: https://web.archive.org/web/20261025114852/https://cursor.com/blog/spacex-model-training
+    archive_url: https://web.archive.org/web/20260426072703/https://cursor.com/blog/spacex-model-training
   - url: https://www.bloomberg.com/news/articles/2026-04-21/spacex-says-has-agreement-to-acquire-cursor-for-60-billion
     title: "SpaceX Has Deal for Right to Acquire Cursor for $60 Billion"
     type: secondary_reporting

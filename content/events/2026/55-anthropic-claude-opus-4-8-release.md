@@ -25,7 +25,7 @@ sources:
     publisher: Anthropic
     date: 2026-05-28
     accessed: 2026-06-01
-    archive_url: https://web.archive.org/web/20261104231727/https://www.anthropic.com/news/claude-opus-4-8
+    archive_url: https://web.archive.org/web/20260601041248/https://www.anthropic.com/news/claude-opus-4-8
   - url: https://simonwillison.net/2026/May/28/claude-opus-4-8/
     title: "Claude Opus 4.8"
     type: expert_interpretation

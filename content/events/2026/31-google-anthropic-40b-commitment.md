@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-04-06
     accessed: 2026-04-28
-    archive_url: https://web.archive.org/web/20261101101405/https://www.anthropic.com/news/google-broadcom-partnership-compute
+    archive_url: https://web.archive.org/web/20260429073718/https://www.anthropic.com/news/google-broadcom-partnership-compute
   - url: https://www.bloomberg.com/news/articles/2026-04-24/google-plans-to-invest-up-to-40-billion-in-anthropic
     title: "Google Plans to Invest Up to $40 Billion in Anthropic"
     type: secondary_reporting

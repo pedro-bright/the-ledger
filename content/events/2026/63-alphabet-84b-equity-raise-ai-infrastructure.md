@@ -12,7 +12,7 @@ sources:
     publisher: Alphabet Inc.
     date: 2026-06-01
     accessed: 2026-06-08
-    archive_url: https://web.archive.org/web/20261006081850/https://abc.xyz/investor/news/news-details/2026/Alphabet-Announces-Proposed-80-Billion-Equity-Capital-Raise-to-Expand-AI-Infrastructure-and-Compute-2026-b0myAMewCa/default.aspx
+    archive_url: https://web.archive.org/web/20260608184713/https://abc.xyz/investor/news/news-details/2026/Alphabet-Announces-Proposed-80-Billion-Equity-Capital-Raise-to-Expand-AI-Infrastructure-and-Compute-2026-b0myAMewCa/default.aspx
   - url: https://www.bloomberg.com/news/articles/2026-06-01/alphabet-to-raise-80-billion-in-equity-capital-for-ai-spending
     title: "Alphabet to Raise $80 Billion in Equity for AI Spending"
     type: secondary_reporting

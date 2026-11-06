@@ -12,7 +12,7 @@ sources:
     publisher: NIST / U.S. Department of Commerce
     date: 2026-05-05
     accessed: 2026-05-08
-    archive_url: https://web.archive.org/web/*/https://www.nist.gov/news-events/news/2026/05/caisi-signs-agreements-regarding-frontier-ai-national-security-testing
+    archive_url: https://web.archive.org/web/20260508044139/https://www.nist.gov/news-events/news/2026/05/caisi-signs-agreements-regarding-frontier-ai-national-security-testing
   - url: https://www.axios.com/2026/05/05/us-frontier-ai-testing-white-house-pivots-safety
     title: "U.S. ramps up frontier AI testing as White House pivots toward safety"
     type: secondary_reporting

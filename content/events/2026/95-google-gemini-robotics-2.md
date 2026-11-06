@@ -12,7 +12,7 @@ sources:
     publisher: Google DeepMind
     date: 2026-07-30
     accessed: 2026-08-03
-    archive_url: https://web.archive.org/web/20261026133254/https://deepmind.google/blog/gemini-robotics-2-brings-whole-body-intelligence-to-robots/
+    archive_url: https://web.archive.org/web/20260810223323/https://deepmind.google/blog/gemini-robotics-2-brings-whole-body-intelligence-to-robots/
   - url: https://www.bloomberg.com/news/articles/2026-07-30/google-unveils-gemini-ai-for-robots-struggling-with-dexterity
     title: "Google Unveils Gemini AI for Robots Struggling With Dexterity"
     type: secondary_reporting

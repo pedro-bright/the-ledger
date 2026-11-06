@@ -12,7 +12,7 @@ sources:
     publisher: Google DeepMind
     date: 2026-06-18
     accessed: 2026-06-21
-    archive_url: https://web.archive.org/web/20261103161245/https://deepmind.google/blog/securing-the-future-of-ai-agents/
+    archive_url: https://web.archive.org/web/20260707200918/https://deepmind.google/blog/securing-the-future-of-ai-agents/
   - url: https://www.axios.com/2026/06/18/google-deepmind-prepares-for-rogue-ai-agents
     title: "Google DeepMind prepares for rogue AI agents"
     type: secondary_reporting

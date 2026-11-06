@@ -12,7 +12,7 @@ sources:
     publisher: Google DeepMind
     date: 2026-08-06
     accessed: 2026-08-11
-    archive_url: https://web.archive.org/web/20261010155500/https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/
+    archive_url: https://web.archive.org/web/20260812015137/https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/
   - url: https://www.wired.com/story/deepmind-ai-model-can-predict-hurricanes-earlier/
     title: "DeepMind Says Its AI Can Predict Hurricanes Earlier Than Everyone Else"
     type: secondary_reporting

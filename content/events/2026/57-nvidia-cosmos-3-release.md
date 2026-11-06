@@ -12,14 +12,14 @@ sources:
     publisher: NVIDIA Newsroom
     date: 2026-06-01
     accessed: 2026-06-04
-    archive_url: https://web.archive.org/web/20261008135448/https://nvidianews.nvidia.com/news/nvidia-launches-cosmos-3-the-open-frontier-foundation-model-for-physical-ai
+    archive_url: https://web.archive.org/web/20260609205329/https://nvidianews.nvidia.com/news/nvidia-launches-cosmos-3-the-open-frontier-foundation-model-for-physical-ai
   - url: https://research.nvidia.com/labs/cosmos-lab/cosmos3/technical-report.pdf
     title: "Cosmos 3: Omnimodal World Models for Physical AI"
     type: primary_document
     publisher: NVIDIA Research
     date: 2026-06-01
     accessed: 2026-06-04
-    archive_url: https://web.archive.org/web/20261012131431/https://research.nvidia.com/labs/cosmos-lab/cosmos3/technical-report.pdf
+    archive_url: https://web.archive.org/web/20260605173729/https://research.nvidia.com/labs/cosmos-lab/cosmos3/technical-report.pdf
   - url: https://www.axios.com/2026/06/01/nvidia-ai-push-cosmos-3-world-model
     title: "Nvidia's Cosmos 3 open AI world model helps robots, autonomous vehicles"
     type: secondary_reporting

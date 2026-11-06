@@ -12,14 +12,14 @@ sources:
     publisher: OpenAI
     date: 2026-07-08
     accessed: 2026-07-11
-    archive_url: https://web.archive.org/web/20261026202923/https://openai.com/index/introducing-gpt-live/
+    archive_url: https://web.archive.org/web/20260714055913/https://openai.com/index/introducing-gpt-live/
   - url: https://deploymentsafety.openai.com/gpt-live
     title: "GPT-Live System Card"
     type: primary_document
     publisher: OpenAI
     date: 2026-07-08
     accessed: 2026-07-11
-    archive_url: https://web.archive.org/web/20261027022350/https://deploymentsafety.openai.com/gpt-live
+    archive_url: https://web.archive.org/web/20260711030815/https://deploymentsafety.openai.com/gpt-live
   - url: https://techcrunch.com/2026/07/08/openai-releases-new-voice-models-for-more-natural-live-conversations/
     title: "OpenAI releases new voice models for more natural live conversations"
     type: secondary_reporting

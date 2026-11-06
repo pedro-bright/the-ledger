@@ -12,7 +12,7 @@ sources:
     publisher: NVIDIA
     date: 2026-05-31
     accessed: 2026-06-03
-    archive_url: https://web.archive.org/web/20261026162528/https://www.nvidia.com/en-us/geforce/news/computex-2026-nvidia-geforce-rtx-announcements/
+    archive_url: https://web.archive.org/web/20260603034852/https://www.nvidia.com/en-us/geforce/news/computex-2026-nvidia-geforce-rtx-announcements/
   - url: https://www.cnbc.com/2026/05/31/nvidias-new-chip-to-power-fresh-line-of-windows-laptops-by-dell-hp.html
     title: "Nvidia jumps into PCs with new Arm-based chip debuting in laptops from Microsoft, Dell, HP"
     type: secondary_reporting

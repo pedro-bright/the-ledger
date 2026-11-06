@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-06-09
     accessed: 2026-06-12
-    archive_url: https://web.archive.org/web/20261105134726/https://www.anthropic.com/news/claude-fable-5-mythos-5
+    archive_url: https://web.archive.org/web/20260612233524/https://www.anthropic.com/news/claude-fable-5-mythos-5
   - url: https://techcrunch.com/2026/06/09/anthropics-claude-fable-5-is-a-version-of-mythos-the-public-can-access-today/
     title: "Anthropic's Claude Fable 5 is a version of Mythos the public can access today"
     type: secondary_reporting

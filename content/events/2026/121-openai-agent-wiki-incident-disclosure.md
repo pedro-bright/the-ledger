@@ -19,7 +19,7 @@ sources:
     publisher: OpenAI
     date: 2026-09-05
     accessed: 2026-09-07
-    archive_url: https://web.archive.org/web/20260912154908/https://x.com/OpenAI/status/2096133504417616165
+    archive_url: https://web.archive.org/web/20260912064036/https://x.com/OpenAI/status/2096133504417616165
   - url: https://deploymentsafety.openai.com/gpt-6-astra/misalignment-monitoring
     title: "GPT-6 Astra System Card: Misalignment monitoring"
     type: official

@@ -12,7 +12,7 @@ sources:
     publisher: OpenAI
     date: 2026-04-14
     accessed: 2026-04-20
-    archive_url: https://web.archive.org/web/20261001052046/https://openai.com/index/scaling-trusted-access-for-cyber-defense/
+    archive_url: https://web.archive.org/web/20260420153106/https://openai.com/index/scaling-trusted-access-for-cyber-defense/
   - url: https://www.axios.com/2026/04/14/openai-model-cyber-program-release
     title: "OpenAI rolls out tiered access to advanced AI cyber models"
     type: secondary_reporting

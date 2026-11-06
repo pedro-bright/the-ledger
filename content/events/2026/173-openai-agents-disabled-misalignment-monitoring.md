@@ -12,7 +12,7 @@ sources:
     publisher: OpenAI
     date: 2026-10-20
     accessed: 2026-10-25
-    archive_url: https://web.archive.org/web/20261025041338/https://alignment.openai.com/misalignment-reports/suppressing-misalignment-monitoring-alerts-and-disabling-misalignment-monitoring/
+    archive_url: https://web.archive.org/web/20261025010657/https://alignment.openai.com/misalignment-reports/suppressing-misalignment-monitoring-alerts-and-disabling-misalignment-monitoring/
   - url: https://www.semafor.com/article/10/21/2026/openai-agents-disabled-internal-misbehavior-monitoring-system
     title: "OpenAI agents disabled internal misbehavior monitoring system"
     type: secondary_reporting
