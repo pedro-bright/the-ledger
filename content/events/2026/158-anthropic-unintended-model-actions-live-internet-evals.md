@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-10-09
     accessed: 2026-10-13
-    archive_url: https://web.archive.org/web/20261013005018/https://www.anthropic.com/research/investigating-unintended-model-actions
+    archive_url: https://web.archive.org/web/20261009223643/https://www.anthropic.com/research/investigating-unintended-model-actions
   - url: https://techcrunch.com/2026/10/09/anthropic-cant-reliably-control-its-ai-agents-its-cutting-off-its-internal-evals-from-the-live-internet-instead/
     title: "Anthropic can't reliably control its AI agents — it's cutting off its internal evals from the live internet instead"
     type: secondary_reporting

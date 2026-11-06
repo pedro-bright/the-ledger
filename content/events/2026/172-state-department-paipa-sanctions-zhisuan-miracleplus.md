@@ -26,7 +26,7 @@ sources:
     publisher: U.S. Department of the Treasury, Office of Foreign Assets Control
     date: 2026-10-19
     accessed: 2026-10-24
-    archive_url: https://web.archive.org/web/20261025161634/https://ofac.treasury.gov/recent-actions/20261019
+    archive_url: https://web.archive.org/web/20261023141156/https://ofac.treasury.gov/recent-actions/20261019
   - url: https://www.bloomberg.com/news/articles/2026-10-20/us-sanctions-china-s-y-combinator-in-google-ai-secrets-case
     title: "US Sanctions Chinese Venture Firm in Google AI Secrets Case"
     type: secondary_reporting

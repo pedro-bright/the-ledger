@@ -44,7 +44,7 @@ sources:
     publisher: OpenAI
     date: '2026-02-05'
     accessed: '2026-10-26'
-    archive_url: https://web.archive.org/web/20261026205508/https://openai.com/index/introducing-gpt-5-3-codex/
+    archive_url: https://web.archive.org/web/20261010022457/https://openai.com/index/introducing-gpt-5-3-codex/
 actors:
   - id: openai
     role: subject

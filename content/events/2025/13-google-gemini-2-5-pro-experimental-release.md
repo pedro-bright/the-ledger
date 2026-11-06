@@ -18,7 +18,7 @@ sources:
     date: '2025-03-25'
     publisher: Google
     accessed: '2026-10-26'
-    archive_url: https://web.archive.org/web/20261027060312/https://blog.google/innovation-and-ai/models-and-research/google-deepmind/gemini-model-thinking-updates-march-2025/
+    archive_url: https://web.archive.org/web/20261015010938/https://blog.google/innovation-and-ai/models-and-research/google-deepmind/gemini-model-thinking-updates-march-2025/
   - url: https://www.rdworldonline.com/googles-gemini-2-5-pro-model-tops-lmarena-by-40-points-outperforms-competitors-in-scientific-reasoning/
     title: Google's Gemini 2.5 Pro model tops LMArena by close to 40 points
     type: secondary_reporting

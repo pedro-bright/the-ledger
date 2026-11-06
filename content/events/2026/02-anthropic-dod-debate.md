@@ -29,7 +29,7 @@ sources:
     publisher: Anthropic
     date: '2026-02-26'
     accessed: '2026-10-26'
-    archive_url: https://web.archive.org/web/20261026152125/https://www.anthropic.com/news/statement-department-of-war
+    archive_url: https://web.archive.org/web/20261016064504/https://www.anthropic.com/news/statement-department-of-war
   - url: https://www.anthropic.com/news/statement-comments-secretary-war
     title: Statement on the comments from Secretary of War Pete Hegseth
     type: primary_document

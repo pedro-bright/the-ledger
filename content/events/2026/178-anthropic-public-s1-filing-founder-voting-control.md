@@ -12,14 +12,14 @@ sources:
     publisher: U.S. Securities and Exchange Commission
     date: 2026-10-26
     accessed: 2026-10-29
-    archive_url: https://web.archive.org/web/20261030174736/https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm
+    archive_url: https://web.archive.org/web/20261026130626/https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm
   - url: https://www.anthropic.com/news/s1-sec
     title: "Anthropic files S-1 with the SEC for proposed initial public offering"
     type: official
     publisher: Anthropic
     date: 2026-10-26
     accessed: 2026-10-29
-    archive_url: https://web.archive.org/web/20261029061134/https://www.anthropic.com/news/s1-sec
+    archive_url: https://web.archive.org/web/20261026130856/https://www.anthropic.com/news/s1-sec
   - url: https://www.nbcnews.com/business/markets/anthropic-releases-ipo-filing-ahead-highly-anticipated-stock-debut-rcna605676
     title: "Anthropic reveals $80 billion loss, huge spending spree ahead of IPO"
     type: secondary_reporting

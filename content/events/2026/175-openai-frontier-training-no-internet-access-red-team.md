@@ -12,7 +12,7 @@ sources:
     publisher: OpenAI
     date: 2026-10-23
     accessed: 2026-10-27
-    archive_url: https://web.archive.org/web/20261103053022/https://openai.com/index/securing-our-frontier-model-training-environment/
+    archive_url: https://web.archive.org/web/20261023195140/https://openai.com/index/securing-our-frontier-model-training-environment/
   - url: https://techcrunch.com/2026/10/23/openai-says-it-will-no-longer-train-its-ai-models-on-the-live-internet-citing-significant-risks/
     title: "OpenAI says it will no longer train its AI models on the live internet, citing 'significant risks'"
     type: secondary_reporting

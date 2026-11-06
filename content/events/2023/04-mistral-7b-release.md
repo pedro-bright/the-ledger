@@ -18,7 +18,7 @@ sources:
     publisher: Mistral AI
     date: '2023-09-27'
     accessed: '2026-10-26'
-    archive_url: https://web.archive.org/web/20261030104829/https://mistral.ai/news/announcing-mistral-7b/
+    archive_url: https://web.archive.org/web/20261014093018/https://mistral.ai/news/announcing-mistral-7b/
   - url: https://arxiv.org/abs/2310.06825
     title: Mistral 7B
     type: primary

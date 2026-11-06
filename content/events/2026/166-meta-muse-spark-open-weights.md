@@ -12,21 +12,21 @@ sources:
     publisher: Meta
     date: 2026-10-15
     accessed: 2026-10-19
-    archive_url: https://web.archive.org/web/20261019072132/https://research.meta.ai/blog/muse-spark-open
+    archive_url: https://web.archive.org/web/20261015165925/https://research.meta.ai/blog/muse-spark-open
   - url: https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B
     title: "Muse-Spark-Open-816B-A42B Model Card"
     type: primary_document
     publisher: Meta
     date: 2026-10-15
     accessed: 2026-10-19
-    archive_url: https://web.archive.org/web/20261019072132/https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B
+    archive_url: https://web.archive.org/web/20261015170519/https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B
   - url: https://huggingface.co/blog/meta-muse-spark-open
     title: "Welcome Muse Spark Open: open-weight frontier multimodal mixture-of-experts model from Meta"
     type: official
     publisher: Hugging Face
     date: 2026-10-15
     accessed: 2026-10-19
-    archive_url: https://web.archive.org/web/20261021101645/https://huggingface.co/blog/meta-muse-spark-open
+    archive_url: https://web.archive.org/web/20261016054122/https://huggingface.co/blog/meta-muse-spark-open
   - url: https://techcrunch.com/2026/10/15/meta-launches-an-open-weight-model-that-runs-on-macs/
     title: "Meta launches an open-weight AI model that runs on Macs"
     type: secondary_reporting

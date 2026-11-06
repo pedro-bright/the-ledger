@@ -12,28 +12,28 @@ sources:
     publisher: Reflection AI
     date: 2026-10-16
     accessed: 2026-10-20
-    archive_url: https://web.archive.org/web/20261020005449/https://huggingface.co/reflection/Beam-1.0-501B-A23B
+    archive_url: https://web.archive.org/web/20261016141048/https://huggingface.co/reflection/Beam-1.0-501B-A23B
   - url: https://reflection.ai/blog/beam-is-available
     title: "Beam is now available"
     type: official
     publisher: Reflection AI
     date: 2026-10-16
     accessed: 2026-10-20
-    archive_url: https://web.archive.org/web/20261020072916/https://reflection.ai/blog/beam-is-available
+    archive_url: https://web.archive.org/web/20261016133609/https://reflection.ai/blog/beam-is-available
   - url: https://reflection.ai/blog/introducing-beam
     title: "Introducing Beam: Reflection's 501B open-weight model"
     type: official
     publisher: Reflection AI
     date: 2026-10-05
     accessed: 2026-10-20
-    archive_url: https://web.archive.org/web/20261020225526/https://reflection.ai/blog/introducing-beam
+    archive_url: https://web.archive.org/web/20261005194517/https://reflection.ai/blog/introducing-beam
   - url: https://huggingface.co/blog/reflection-beam
     title: "Welcome Beam: a 501B open model you can own, customize, and scale"
     type: official
     publisher: Hugging Face
     date: 2026-10-16
     accessed: 2026-10-20
-    archive_url: https://web.archive.org/web/20261020145916/https://huggingface.co/blog/reflection-beam
+    archive_url: https://web.archive.org/web/20261016140645/https://huggingface.co/blog/reflection-beam
   - url: https://techcrunch.com/2026/10/05/reflection-debuts-beam-a-open-weight-ai-model-to-rival-chinese-models-at-lower-compute-cost/
     title: "Reflection debuts Beam, an open-weight AI model to rival Chinese models at lower compute cost"
     type: secondary_reporting

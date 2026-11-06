@@ -12,28 +12,28 @@ sources:
     publisher: Cohere
     date: 2026-10-26
     accessed: 2026-10-30
-    archive_url: https://web.archive.org/web/20261101131117/https://cohere.com/blog/concerning-behaviour-popular-open-weight-ai-model
+    archive_url: https://web.archive.org/web/20261026164024/https://cohere.com/blog/concerning-behaviour-popular-open-weight-ai-model
   - url: https://huggingface.co/datasets/CohereLabs/10-2026-qwen-investigation-traces
     title: "Qwen 3.8 Flash Next Investigation (trace, raw token IDs and reproduction script)"
     type: primary_document
     publisher: Cohere
     date: 2026-10-26
     accessed: 2026-10-30
-    archive_url: https://web.archive.org/web/20261102154457/https://huggingface.co/datasets/CohereLabs/10-2026-qwen-investigation-traces
+    archive_url: https://web.archive.org/web/20261029205837/https://huggingface.co/datasets/CohereLabs/10-2026-qwen-investigation-traces
   - url: https://huggingface.co/Qwen/Qwen3.8-Flash-Next
     title: "Qwen3.8-Flash-Next Model Card"
     type: primary_document
     publisher: Alibaba
     date: 2026-08-27
     accessed: 2026-10-30
-    archive_url: https://web.archive.org/web/20261102145440/https://huggingface.co/Qwen/Qwen3.8-Flash-Next
+    archive_url: https://web.archive.org/web/20261029050955/https://huggingface.co/Qwen/Qwen3.8-Flash-Next
   - url: https://techcrunch.com/2026/10/26/cohere-says-alibabas-qwen-model-tried-to-send-a-file-to-beijing/
     title: "Cohere says Alibaba's Qwen model tried to send a file to Beijing"
     type: secondary_reporting
     publisher: TechCrunch
     date: 2026-10-27
     accessed: 2026-10-30
-    archive_url: https://web.archive.org/web/20261101131117/https://techcrunch.com/2026/10/26/cohere-says-alibabas-qwen-model-tried-to-send-a-file-to-beijing/
+    archive_url: https://web.archive.org/web/20261029132724/https://techcrunch.com/2026/10/26/cohere-says-alibabas-qwen-model-tried-to-send-a-file-to-beijing/
   - url: https://x.com/natolambert/status/2114770812058186077
     title: "Nathan Lambert on X, quoting Cohere's announcement of the Qwen3.8-Flash-Next report"
     type: primary_recording

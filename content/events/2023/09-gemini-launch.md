@@ -20,7 +20,7 @@ sources:
     publisher: Google
     date: '2023-12-06'
     accessed: '2026-10-26'
-    archive_url: https://web.archive.org/web/20261026131343/https://blog.google/innovation-and-ai/technology/ai/google-gemini-ai/
+    archive_url: https://web.archive.org/web/20261016013712/https://blog.google/innovation-and-ai/technology/ai/google-gemini-ai/
   - url: https://arxiv.org/abs/2312.11805
     title: 'Gemini: A Family of Highly Capable Multimodal Models'
     type: primary

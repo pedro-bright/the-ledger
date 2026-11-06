@@ -12,7 +12,7 @@ sources:
     publisher: OpenAI
     date: 2026-10-05
     accessed: 2026-10-09
-    archive_url: https://web.archive.org/web/20261009051151/https://openai.com/index/eu-text-provenance/
+    archive_url: https://web.archive.org/web/20261005170359/https://openai.com/index/eu-text-provenance/
   - url: https://cdn.openai.com/pdf/e9508624-d767-41b6-a26d-e34ca798ada6/textgrain-entropy-calibrated-watermarking-for-language-model-text.pdf
     title: "textGrain: Entropy-Calibrated Watermarking for Language Model Text"
     type: primary_document

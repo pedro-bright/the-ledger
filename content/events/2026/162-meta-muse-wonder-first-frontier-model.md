@@ -12,7 +12,7 @@ sources:
     publisher: Meta
     date: 2026-10-12
     accessed: 2026-10-16
-    archive_url: https://web.archive.org/web/20261016023759/https://research.meta.ai/blog/muse-wonder
+    archive_url: https://web.archive.org/web/20261015224100/https://research.meta.ai/blog/muse-wonder
   - url: https://research.meta.ai/static/muse-wonder-model-card
     title: "Muse Wonder Model Card"
     type: primary_document
