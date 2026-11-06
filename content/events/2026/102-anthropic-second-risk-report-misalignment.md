@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-08-14
     accessed: 2026-08-17
-    archive_url: https://web.archive.org/web/*/https://www.anthropic.com/aug-2026-risk-report
+    archive_url: https://web.archive.org/web/20261103171924/https://assets.claude.com/f61d49fa5596956a5dec75fea0e973bf6a6a8378.pdf
   - url: https://www.axios.com/2026/08/14/anthropic-model-2-ai-risk
     title: "Anthropic sees AI risks rising, no plan to release stronger \"Model 2\""
     type: secondary_reporting

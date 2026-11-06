@@ -16,10 +16,11 @@ sources:
     title: "Grok 4"
     type: official
     date: 2025-07-09
-  - url: https://web.archive.org/web/20260614195630/https://smythos.com/developers/ai-models/whats-new-in-grok-4-release-facts-benchmarks-and-value/
+  - url: https://smythos.com/developers/ai-models/whats-new-in-grok-4-release-facts-benchmarks-and-value/
     title: "What's New in Grok 4: Release Facts, Benchmarks, and Value"
     type: secondary_reporting
     date: 2025-07-09
+    archive_url: https://web.archive.org/web/20260614195630/https://smythos.com/developers/ai-models/whats-new-in-grok-4-release-facts-benchmarks-and-value/
 ---
 
 ## Summary
