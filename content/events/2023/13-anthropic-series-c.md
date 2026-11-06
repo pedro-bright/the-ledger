@@ -19,7 +19,7 @@ sources:
   - url: https://www.wsj.com/tech/ai/google-commits-2-billion-in-funding-to-ai-startup-anthropic-db4d4c50
     title: "Google Commits $2 Billion in Funding to AI Startup Anthropic"
     type: secondary
-  - url: https://www.cnbc.com/2023/10/27/google-commits-2-billion-to-invest-in-openai-rival-anthropic.html
+  - url: https://www.cnbc.com/2023/10/27/google-commits-to-invest-2-billion-in-openai-competitor-anthropic.html
     title: "Google commits to invest $2 billion in OpenAI rival Anthropic"
     type: secondary
 ---

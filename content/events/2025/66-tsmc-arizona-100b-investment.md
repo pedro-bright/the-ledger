@@ -21,7 +21,7 @@ sources:
     title: "TSMC Announces Additional U.S. Investment"
     type: official
     date: 2025-03-03
-  - url: https://www.cnbc.com/2025/03/03/tsmc-trump-meeting-chipmaking-investment/index.html
+  - url: https://www.cnbc.com/2025/03/03/tsmc-to-announce-100-billion-investment-in-us-chip-plants.html
     title: "TSMC pledges additional $100 billion investment in US, announces plans for three more factories"
     type: secondary_reporting
     date: 2025-03-03
