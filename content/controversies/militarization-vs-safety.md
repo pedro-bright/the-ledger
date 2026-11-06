@@ -31,7 +31,7 @@ positions:
   - claim: "Democratic Necessity — Democratic nations must develop military AI or cede advantage to authoritarian states"
     proponents: [defense-hawks, geopolitical-realists, some-bipartisan-legislators]
     sources:
-      - url: https://www.nscai.gov/2021-final-report/
+      - url: https://web.archive.org/web/20211223222301/https://www.nscai.gov/2021-final-report/
         title: "National Security Commission on AI Final Report"
     confidence: medium
   - claim: "Autonomous Weapons Red Line — A categorical distinction exists between military AI for logistics/intelligence and autonomous lethal weapons"

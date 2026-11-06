@@ -12,7 +12,7 @@ sources:
     publisher: Office of Rep. Jay Obernolte
     date: 2026-06-04
     accessed: 2026-06-07
-    archive_url: https://web.archive.org/web/*/https://obernolte.house.gov/media/press-releases/obernolte-trahan-release-discussion-draft-great-american-ai-act
+    archive_url: https://web.archive.org/web/20261024210048/https://obernolte.house.gov/media/press-releases/obernolte-trahan-release-discussion-draft-great-american-ai-act
   - url: https://rollcall.com/2026/06/04/bipartisan-ai-draft-proposes-three-year-preemption-of-state-laws/
     title: "Bipartisan AI draft proposes three-year preemption of state laws"
     type: secondary_reporting

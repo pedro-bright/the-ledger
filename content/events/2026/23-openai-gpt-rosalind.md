@@ -12,7 +12,7 @@ sources:
     publisher: OpenAI
     date: 2026-04-16
     accessed: 2026-04-20
-    archive_url: https://web.archive.org/web/*/https://openai.com/index/introducing-gpt-rosalind/
+    archive_url: https://web.archive.org/web/20261021124314/https://openai.com/index/introducing-gpt-rosalind/
   - url: https://www.axios.com/2026/04/16/openai-models-life-sciences-drugs
     title: "OpenAI launches new AI model for life sciences research"
     type: secondary_reporting

@@ -16,7 +16,7 @@ regions: [US]
 tags: [open-weights, large-language-model, open-source-ai]
 threads: [open-vs-closed-weights]
 sources:
-  - url: https://ai.meta.com/llama/
+  - url: https://web.archive.org/web/20230817151018/https://ai.meta.com/llama/
     title: "Llama 2"
     type: primary
   - url: https://ai.meta.com/research/publications/llama-2-open-foundation-and-fine-tuned-chat-models/

@@ -12,7 +12,7 @@ sources:
     publisher: Microsoft
     date: 2026-04-27
     accessed: 2026-04-30
-    archive_url: https://web.archive.org/web/*/https://blogs.microsoft.com/blog/2026/04/27/the-next-phase-of-the-microsoft-openai-partnership/
+    archive_url: https://web.archive.org/web/20261021143027/https://blogs.microsoft.com/blog/2026/04/27/the-next-phase-of-the-microsoft-openai-partnership/
   - url: https://techcrunch.com/2026/04/27/openai-ends-microsoft-legal-peril-over-its-50b-amazon-deal/
     title: "OpenAI ends Microsoft legal peril over its $50B Amazon deal"
     type: secondary_reporting

@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-07-28
     accessed: 2026-08-02
-    archive_url: https://web.archive.org/web/*/https://www.anthropic.com/research/discovering-cryptographic-weaknesses
+    archive_url: https://web.archive.org/web/20261030163319/https://www.anthropic.com/research/discovering-cryptographic-weaknesses
   - url: https://www.nytimes.com/2026/07/28/us/politics/anthropic-ai-encryption-security-aes.html
     title: "Anthropic AI Model Finds Flaws in Tough-to-Crack Encryption Algorithms"
     type: secondary_reporting

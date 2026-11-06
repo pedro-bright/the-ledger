@@ -19,7 +19,7 @@ sources:
     publisher: Anthropic
     date: 2026-06-09
     accessed: 2026-06-13
-    archive_url: https://web.archive.org/web/*/https://www.anthropic.com/news/claude-fable-5-mythos-5
+    archive_url: https://web.archive.org/web/20261105134726/https://www.anthropic.com/news/claude-fable-5-mythos-5
   - url: https://simonwillison.net/2026/Jun/10/if-claude-fable-stops-helping-you/
     title: "If Claude Fable Stops Helping You, You'll Never Know"
     type: expert_interpretation

@@ -12,7 +12,7 @@ sources:
     publisher: Meta AI
     date: 2026-07-09
     accessed: 2026-07-12
-    archive_url: https://web.archive.org/web/*/https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/
+    archive_url: https://web.archive.org/web/20261026205453/https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/
   - url: https://ai.meta.com/blog/introducing-muse-spark-msl/
     title: "Muse Spark 1.1: Meta Superintelligence Labs' Agentic Model"
     type: official

@@ -12,7 +12,7 @@ sources:
     publisher: Apple
     date: 2026-06-08
     accessed: 2026-06-11
-    archive_url: https://web.archive.org/web/*/https://www.apple.com/newsroom/2026/06/apple-unveils-next-generation-of-apple-intelligence-siri-ai-and-more/
+    archive_url: https://web.archive.org/web/20261019064119/https://www.apple.com/newsroom/2026/06/apple-unveils-next-generation-of-apple-intelligence-siri-ai-and-more/
   - url: https://www.bloomberg.com/opinion/articles/2026-06-09/apple-siri-ai-reboot-makes-it-even-more-dependent-on-google-gemini
     title: "Apple Siri AI Reboot Makes It Even More Dependent on Google Gemini"
     type: secondary_reporting

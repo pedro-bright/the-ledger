@@ -28,7 +28,7 @@ sources:
     type: expert_interpretation
     publisher: Institute for Strategic Dialogue
     date: 2025-02-10
-  - url: https://www.bmi.bund.de/SharedDocs/schwerpunkte/EN/disinformation-election/disinformation-election-artikel.html
+  - url: https://web.archive.org/web/20260219170313/https://www.bmi.bund.de/SharedDocs/schwerpunkte/EN/disinformation-election/disinformation-election-artikel.html
     title: "Disinformation in the Federal Election — What the BfV Is Seeing"
     type: official
     publisher: German Federal Ministry of the Interior (BMI)

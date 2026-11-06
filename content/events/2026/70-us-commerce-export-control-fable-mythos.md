@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-06-12
     accessed: 2026-06-15
-    archive_url: https://web.archive.org/web/*/https://www.anthropic.com/news/fable-mythos-access
+    archive_url: https://web.archive.org/web/20261031202814/https://www.anthropic.com/news/fable-mythos-access
   - url: https://www.nbcnews.com/tech/tech-news/anthropic-suspends-new-ai-models-fable-mythos-government-directive-rcna349901
     title: "Anthropic suspends new AI models after government directive"
     type: secondary_reporting

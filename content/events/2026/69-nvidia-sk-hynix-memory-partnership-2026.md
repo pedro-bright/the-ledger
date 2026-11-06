@@ -12,7 +12,7 @@ sources:
     publisher: NVIDIA Corporation
     date: 2026-06-07
     accessed: 2026-06-14
-    archive_url: https://web.archive.org/web/*/https://nvidianews.nvidia.com/news/sk-hynix-ai-factory
+    archive_url: https://web.archive.org/web/20261019124813/https://nvidianews.nvidia.com/news/sk-hynix-ai-factory
   - url: https://www.bloomberg.com/news/articles/2026-06-07/nvidia-sk-hynix-sign-multi-year-pact-to-develop-next-gen-chips
     title: "Nvidia, SK Hynix Sign Multi-Year Deal to Develop Next-Gen AI Memory Chips"
     type: secondary_reporting

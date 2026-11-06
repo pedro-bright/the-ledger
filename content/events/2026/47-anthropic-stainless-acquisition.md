@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-05-18
     accessed: 2026-05-24
-    archive_url: https://web.archive.org/web/*/https://www.anthropic.com/news/anthropic-acquires-stainless
+    archive_url: https://web.archive.org/web/20261105165228/https://www.anthropic.com/news/anthropic-acquires-stainless
   - url: https://techcrunch.com/2026/05/18/anthropic-has-acquired-the-dev-tools-startup-used-by-openai-google-and-cloudflare/
     title: "Anthropic has acquired the dev tools startup used by OpenAI, Google, and Cloudflare"
     type: secondary_reporting

@@ -12,14 +12,14 @@ sources:
     publisher: U.S. Department of State
     date: 2026-10-19
     accessed: 2026-10-24
-    archive_url: https://web.archive.org/web/*/https://www.state.gov/releases/office-of-the-spokesman/2026/10/imposing-sanctions-to-protect-americans-from-intellectual-property-theft-fact-sheet*
+    archive_url: https://web.archive.org/web/20261105020618/https://www.state.gov/releases/office-of-the-spokesman/2026/10/imposing-sanctions-to-protect-americans-from-intellectual-property-theft-fact-sheet/
   - url: https://www.state.gov/releases/office-of-the-spokesman/2026/10/imposing-sanctions-to-protect-americans-from-intellectual-property-theft/
     title: "Imposing Sanctions to Protect Americans from Intellectual Property Theft"
     type: official
     publisher: U.S. Department of State
     date: 2026-10-19
     accessed: 2026-10-24
-    archive_url: https://web.archive.org/web/*/https://www.state.gov/releases/office-of-the-spokesman/2026/10/imposing-sanctions-to-protect-americans-from-intellectual-property-theft/*
+    archive_url: https://web.archive.org/web/20261023132613/https://www.state.gov/releases/office-of-the-spokesman/2026/10/imposing-sanctions-to-protect-americans-from-intellectual-property-theft
   - url: https://ofac.treasury.gov/recent-actions/20261019
     title: "Protecting American Intellectual Property Act of 2022 (PAIPA) Designations; Issuance of Associated General Licenses"
     type: primary_document

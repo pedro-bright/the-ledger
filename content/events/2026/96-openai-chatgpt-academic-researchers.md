@@ -12,7 +12,7 @@ sources:
     publisher: OpenAI
     date: 2026-07-29
     accessed: 2026-08-05
-    archive_url: https://web.archive.org/web/*/https://openai.com/index/chatgpt-for-academic-researchers/
+    archive_url: https://web.archive.org/web/20261006234318/https://openai.com/index/chatgpt-for-academic-researchers/
   - url: https://www.axios.com/2026/07/29/openai-academics-research-chatgpt-sol
     title: "OpenAI opens its top AI models to 100,000 academic researchers"
     type: secondary_reporting

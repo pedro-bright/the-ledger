@@ -12,7 +12,7 @@ sources:
     publisher: Business Wire
     date: 2026-04-24
     accessed: 2026-04-29
-    archive_url: https://web.archive.org/web/*/https://www.businesswire.com/news/home/20260424174908/en/Sovereign-AI-for-the-World-Cohere-and-Aleph-Alpha-to-Form-Global-AI-Powerhouse-as-Nations-and-Enterprises-Demand-Control-Over-Their-Technology
+    archive_url: https://web.archive.org/web/20260611065800/https://www.businesswire.com/news/home/20260424174908/en/Sovereign-AI-for-the-World-Cohere-and-Aleph-Alpha-to-Form-Global-AI-Powerhouse-as-Nations-and-Enterprises-Demand-Control-Over-Their-Technology
   - url: https://techcrunch.com/2026/04/24/cohere-acquires-merges-with-german-based-startup-to-create-a-transatlantic-ai-powerhouse/
     title: "Cohere acquires, merges with Germany-based startup to create a 'transatlantic AI powerhouse'"
     type: secondary_reporting

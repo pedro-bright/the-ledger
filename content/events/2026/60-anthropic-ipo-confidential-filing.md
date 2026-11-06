@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-06-01
     accessed: 2026-06-06
-    archive_url: https://web.archive.org/web/*/https://www.anthropic.com/news/confidential-draft-s1-sec
+    archive_url: https://web.archive.org/web/20261027045954/https://www.anthropic.com/news/confidential-draft-s1-sec
   - url: https://techcrunch.com/2026/06/01/anthropic-files-to-go-public/
     title: "Anthropic files to go public"
     type: secondary_reporting

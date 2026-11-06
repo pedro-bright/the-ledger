@@ -12,7 +12,7 @@ sources:
     publisher: OpenAI
     date: 2026-06-24
     accessed: 2026-06-27
-    archive_url: https://web.archive.org/web/*/https://openai.com/index/openai-broadcom-jalapeno-inference-chip/
+    archive_url: https://web.archive.org/web/20261020061303/https://openai.com/index/openai-broadcom-jalapeno-inference-chip/
   - url: https://techcrunch.com/2026/06/24/openai-unveils-its-first-custom-chip-built-by-broadcom/
     title: "OpenAI unveils its first custom chip, built by Broadcom"
     type: secondary_reporting
