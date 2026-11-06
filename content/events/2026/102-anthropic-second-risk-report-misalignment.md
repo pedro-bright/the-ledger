@@ -6,7 +6,7 @@ category: safety
 significance: notable
 confidence: high
 sources:
-  - url: https://www.anthropic.com/aug-2026-risk-report
+  - url: https://assets.claude.com/f61d49fa5596956a5dec75fea0e973bf6a6a8378.pdf
     title: "Risk Report: August 2026"
     type: primary_document
     publisher: Anthropic

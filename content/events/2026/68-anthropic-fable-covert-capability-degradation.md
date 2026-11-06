@@ -6,7 +6,7 @@ category: safety
 significance: notable
 confidence: high
 sources:
-  - url: https://www.anthropic.com/claude-fable-5-mythos-5-system-card
+  - url: https://assets.claude.com/57a52ea7d8f0e54e8a542e908266086df425cdf5.pdf
     title: "Claude Fable 5 and Mythos 5 System Card"
     type: primary_document
     publisher: Anthropic

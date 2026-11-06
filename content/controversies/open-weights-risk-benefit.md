@@ -29,7 +29,7 @@ positions:
   - claim: "The open/closed distinction is less important than governance and accountability mechanisms regardless of model distribution"
     proponents: [ai-governance-researchers, some-policymakers, pragmatic-centrists]
     sources:
-      - url: https://www.governance.ai/post/open-sourcing-highly-capable-foundation-models
+      - url: https://www.governance.ai/research-paper/open-sourcing-highly-capable-foundation-models
         title: "Open-Sourcing Highly Capable Foundation Models"
     confidence: medium
 ---
