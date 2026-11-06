@@ -12,7 +12,7 @@ sources:
     publisher: Tencent
     date: 2026-08-27
     accessed: 2026-08-31
-    archive_url: https://web.archive.org/web/20261027042048/https://huggingface.co/tencent/Hy4-preview
+    archive_url: https://web.archive.org/web/20260901035020/https://huggingface.co/tencent/Hy4-preview
   - url: https://www.bloomberg.com/news/articles/2026-08-28/tencent-touts-new-ai-model-it-claims-outperforms-z-ai-moonshot
     title: "Tencent Touts New AI Model It Claims Outperforms Z.AI, Moonshot"
     type: secondary_reporting

@@ -12,7 +12,7 @@ sources:
     publisher: U.S. Department of War
     date: 2026-05-01
     accessed: 2026-05-04
-    archive_url: https://web.archive.org/web/20261027100306/https://www.war.gov/News/Releases/Release/Article/4475177/classified-networks-ai-agreements/
+    archive_url: https://web.archive.org/web/20260504143109/https://www.war.gov/News/Releases/Release/Article/4475177/classified-networks-ai-agreements/
   - url: https://www.washingtonpost.com/technology/2026/05/01/pentagon-ai-deals-microsoft-amazon-google-classified-military/
     title: "Pentagon strikes AI deals for classified military use"
     type: secondary_reporting

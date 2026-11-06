@@ -12,14 +12,14 @@ sources:
     publisher: CourtListener
     date: 2026-09-30
     accessed: 2026-10-05
-    archive_url: https://web.archive.org/web/20261002082321/https://storage.courtlistener.com/recap/gov.uscourts.dcd.284823/gov.uscourts.dcd.284823.32.0.pdf
+    archive_url: https://web.archive.org/web/20261006015111/https://storage.courtlistener.com/recap/gov.uscourts.dcd.284823/gov.uscourts.dcd.284823.32.0.pdf
   - url: https://www.courtlistener.com/docket/71332589/penske-media-corporation-v-google-llc/
     title: "Penske Media Corporation v. Google LLC, 1:25-cv-03192 - Docket"
     type: primary_document
     publisher: CourtListener
     date: 2026-09-30
     accessed: 2026-10-05
-    archive_url: https://web.archive.org/web/20261002201905/https://www.courtlistener.com/docket/71332589/penske-media-corporation-v-google-llc/
+    archive_url: https://web.archive.org/web/20261006000751/https://www.courtlistener.com/docket/71332589/penske-media-corporation-v-google-llc/
   - url: https://www.reuters.com/legal/litigation/google-wins-dismissal-chegg-penske-media-lawsuits-over-ai-overviews-2026-10-01/
     title: "Google wins dismissal of Chegg, Penske Media lawsuits over AI overviews"
     type: secondary_reporting

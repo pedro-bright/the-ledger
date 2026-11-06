@@ -12,14 +12,14 @@ sources:
     publisher: The White House
     date: 2026-06-02
     accessed: 2026-06-05
-    archive_url: https://web.archive.org/web/20261105165325/https://www.whitehouse.gov/presidential-actions/2026/06/promoting-advanced-artificial-intelligence-innovation-and-security/
+    archive_url: https://web.archive.org/web/20260605131510/https://www.whitehouse.gov/presidential-actions/2026/06/promoting-advanced-artificial-intelligence-innovation-and-security/
   - url: https://www.whitehouse.gov/fact-sheets/2026/06/fact-sheet-president-donald-j-trump-promotes-advanced-artificial-intelligence-innovation-and-security/
     title: "Fact Sheet: President Donald J. Trump Promotes Advanced Artificial Intelligence Innovation and Security"
     type: official
     publisher: The White House
     date: 2026-06-02
     accessed: 2026-06-05
-    archive_url: https://web.archive.org/web/20261015203157/https://www.whitehouse.gov/fact-sheets/2026/06/fact-sheet-president-donald-j-trump-promotes-advanced-artificial-intelligence-innovation-and-security/
+    archive_url: https://web.archive.org/web/20260608042904/https://www.whitehouse.gov/fact-sheets/2026/06/fact-sheet-president-donald-j-trump-promotes-advanced-artificial-intelligence-innovation-and-security/
   - url: https://www.npr.org/2026/06/02/nx-s1-5844347/ai-safety-trump-executive-order
     title: "Trump's new AI safety order seeks voluntary review of new models"
     type: secondary_reporting

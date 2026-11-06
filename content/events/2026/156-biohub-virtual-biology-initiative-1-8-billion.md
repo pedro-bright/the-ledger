@@ -12,7 +12,7 @@ sources:
     publisher: Biohub
     date: 2026-10-07
     accessed: 2026-10-11
-    archive_url: https://web.archive.org/web/20261007150236/https://biohub.org/news/virtual-biology-initiative-expansion/
+    archive_url: https://web.archive.org/web/20261011032230/https://biohub.org/news/virtual-biology-initiative-expansion/
   - url: https://www.reuters.com/business/healthcare-pharmaceuticals/us-government-google-join-zuckerberg-backed-biohub-18-billion-push-ai-biology-2026-10-07/
     title: "US government, Google join Zuckerberg-backed Biohub in $1.8 billion push for AI biology data"
     type: secondary_reporting

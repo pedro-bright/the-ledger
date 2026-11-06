@@ -12,7 +12,7 @@ sources:
     publisher: Axios
     date: 2026-05-22
     accessed: 2026-05-26
-    archive_url: https://web.archive.org/web/20260729093325/https://www.axios.com/2026/05/22/ai-executive-order-cancelled-white-house
+    archive_url: https://web.archive.org/web/20260602145404/https://www.axios.com/2026/05/22/ai-executive-order-cancelled-white-house
   - url: https://www.nbcnews.com/tech/tech-news/trump-scraps-signing-landmark-executive-order-regulating-ai-rcna346288
     title: "Trump Abruptly Scraps Signing of Landmark Executive Order Regulating AI"
     type: secondary_reporting

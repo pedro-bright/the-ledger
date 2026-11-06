@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-07-21
     accessed: 2026-07-25
-    archive_url: https://web.archive.org/web/20261026152126/https://www.anthropic.com/news/donation-public-first-action
+    archive_url: https://web.archive.org/web/20260730054713/https://www.anthropic.com/news/donation-public-first-action
   - url: https://www.axios.com/2026/07/22/anthropic-doubles-funding-ai-policy-fight-elections
     title: "Anthropic Doubles Funding for AI Policy Fight Ahead of Elections"
     type: secondary_reporting

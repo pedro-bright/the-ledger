@@ -23,7 +23,7 @@ sources:
     publisher: Google
     date: '2025-02-05'
     accessed: '2026-10-26'
-    archive_url: https://web.archive.org/web/20261005052109/https://blog.google/innovation-and-ai/models-and-research/google-deepmind/gemini-model-updates-february-2025/
+    archive_url: https://web.archive.org/web/20261026060305/https://blog.google/innovation-and-ai/models-and-research/google-deepmind/gemini-model-updates-february-2025/
 revision:
   last_reviewed: 2026-10-26
   draft_assistance: ai-assisted

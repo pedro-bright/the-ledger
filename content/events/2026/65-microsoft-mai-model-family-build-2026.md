@@ -12,7 +12,7 @@ sources:
     publisher: Microsoft
     date: 2026-06-02
     accessed: 2026-06-09
-    archive_url: https://web.archive.org/web/20261024033914/https://blogs.microsoft.com/blog/2026/06/02/microsoft-build-2026-be-yourself-at-work/
+    archive_url: https://web.archive.org/web/20260609071914/https://blogs.microsoft.com/blog/2026/06/02/microsoft-build-2026-be-yourself-at-work/
   - url: https://www.cnbc.com/2026/06/02/microsoft-unveils-new-ai-models-lessen-reliance-on-openai-lower-costs.html
     title: "Microsoft unveils new AI models to lessen reliance on OpenAI, lower costs"
     type: secondary_reporting

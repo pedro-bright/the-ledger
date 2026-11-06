@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-05-28
     accessed: 2026-05-31
-    archive_url: https://web.archive.org/web/20261026211924/https://www.anthropic.com/news/series-h
+    archive_url: https://web.archive.org/web/20260601003211/https://www.anthropic.com/news/series-h
   - url: https://techcrunch.com/2026/05/28/anthropic-raises-65-billion-nears-1t-valuation-ahead-of-ipo/
     title: "Anthropic raises $65 billion, nears $1T valuation ahead of IPO"
     type: secondary_reporting

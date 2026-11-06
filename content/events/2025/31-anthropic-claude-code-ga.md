@@ -22,7 +22,7 @@ sources:
     date: '2025-05-22'
     publisher: Anthropic
     accessed: '2026-10-26'
-    archive_url: https://web.archive.org/web/20261022151535/https://www.anthropic.com/news/claude-4
+    archive_url: https://web.archive.org/web/20261027004930/https://www.anthropic.com/news/claude-4
   - url: https://github.com/anthropics/claude-code
     title: Claude Code — GitHub Repository
     type: primary_document

@@ -19,7 +19,7 @@ sources:
     publisher: Mikita Balesni (personal)
     date: 2026-10-08
     accessed: 2026-10-12
-    archive_url: https://web.archive.org/web/20261010210622/https://mikitabalesni.com/letter/letter.pdf
+    archive_url: https://web.archive.org/web/20261012145504/https://mikitabalesni.com/letter/letter.pdf
   - url: https://x.com/OpenAINewsroom/status/2108441580806025712
     title: "OpenAI Newsroom on X: \"A note from our research leaders\""
     type: primary_recording

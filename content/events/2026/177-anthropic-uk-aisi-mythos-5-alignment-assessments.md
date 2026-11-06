@@ -12,14 +12,14 @@ sources:
     publisher: Anthropic
     date: 2026-10-23
     accessed: 2026-10-28
-    archive_url: https://web.archive.org/web/20261023132850/https://www.anthropic.com/research/alignment-assessment-ukaisi
+    archive_url: https://web.archive.org/web/20261028164440/https://www.anthropic.com/research/alignment-assessment-ukaisi
   - url: https://www.aisi.gov.uk/blog/investigating-alignment-failures-in-aisis-incident
     title: "Investigating alignment failures in AISI's incident"
     type: official
     publisher: UK AI Security Institute
     date: 2026-10-23
     accessed: 2026-10-28
-    archive_url: https://web.archive.org/web/20261023132905/https://www.aisi.gov.uk/blog/investigating-alignment-failures-in-aisis-incident
+    archive_url: https://web.archive.org/web/20261031121421/https://www.aisi.gov.uk/blog/investigating-alignment-failures-in-aisis-incident
   - url: https://cdn.prod.website-files.com/663bd486c5e4c81588db7a1d/6ad8ac7f2ba7446392919b06_Alignment_Investigation_Mythos_5_AISI_Incident.pdf
     title: "Alignment Investigation of Mythos 5's Behaviour in UK AISI's July 2026 Security Incident"
     type: primary_document

@@ -12,14 +12,14 @@ sources:
     publisher: Meta
     date: 2026-08-10
     accessed: 2026-08-16
-    archive_url: https://web.archive.org/web/20261027000014/https://huggingface.co/meta-models/Muse-Glimmer-30B
+    archive_url: https://web.archive.org/web/20260816072022/https://huggingface.co/meta-models/Muse-Glimmer-30B
   - url: https://research.meta.ai/blog/introducing-muse-glimmer-open-agentic-model
     title: "Introducing Muse Glimmer: An Open Agentic Model That Runs on Your Device"
     type: official
     publisher: Meta
     date: 2026-08-10
     accessed: 2026-08-16
-    archive_url: https://web.archive.org/web/20261029033440/https://research.meta.ai/blog/introducing-muse-glimmer-open-agentic-model
+    archive_url: https://web.archive.org/web/20260816082105/https://research.meta.ai/blog/introducing-muse-glimmer-open-agentic-model
   - url: https://techcrunch.com/2026/08/10/metas-new-glimmer-ai-model-offers-a-hint-at-zuckerbergs-personal-intelligence-vision/
     title: "Meta's new Glimmer AI model offers a hint at Zuckerberg's personal intelligence vision"
     type: secondary_reporting

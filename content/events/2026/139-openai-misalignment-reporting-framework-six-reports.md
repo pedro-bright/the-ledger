@@ -19,21 +19,21 @@ sources:
     publisher: OpenAI
     date: 2026-09-16
     accessed: 2026-09-21
-    archive_url: https://web.archive.org/web/20261104225756/https://alignment.openai.com/misalignment-reports/
+    archive_url: https://web.archive.org/web/20260924064517/https://alignment.openai.com/misalignment-reports/
   - url: https://alignment.openai.com/misalignment-reports/encouraging-deception-in-compaction-summaries/
     title: "Encouraging deception in compaction summaries"
     type: primary_document
     publisher: OpenAI
     date: 2026-09-16
     accessed: 2026-09-21
-    archive_url: https://web.archive.org/web/20261104001625/https://alignment.openai.com/misalignment-reports/encouraging-deception-in-compaction-summaries/
+    archive_url: https://web.archive.org/web/20260921001125/https://alignment.openai.com/misalignment-reports/encouraging-deception-in-compaction-summaries/
   - url: https://alignment.openai.com/misalignment-reports/self-generated-prompt-injections-in-compaction-summaries/
     title: "Self-generated prompt injections in compaction summaries"
     type: primary_document
     publisher: OpenAI
     date: 2026-09-16
     accessed: 2026-09-21
-    archive_url: https://web.archive.org/web/20261029174924/https://alignment.openai.com/misalignment-reports/self-generated-prompt-injections-in-compaction-summaries/
+    archive_url: https://web.archive.org/web/20260923185624/https://alignment.openai.com/misalignment-reports/self-generated-prompt-injections-in-compaction-summaries/
   - url: https://www.axios.com/2026/09/16/openai-testing-safety-incidents-disclosure
     title: "OpenAI discloses six new AI safety incidents"
     type: secondary_reporting

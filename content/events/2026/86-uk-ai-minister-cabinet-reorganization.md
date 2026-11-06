@@ -12,14 +12,14 @@ sources:
     publisher: UK Government
     date: 2026-07-20
     accessed: 2026-07-24
-    archive_url: https://web.archive.org/web/20261101231414/https://www.gov.uk/government/news/ministerial-appointments-july-2026
+    archive_url: https://web.archive.org/web/20260724112321/https://www.gov.uk/government/news/ministerial-appointments-july-2026
   - url: https://www.gov.uk/government/ministers/minister-of-state-minister-for-artificial-intelligence
     title: "Minister of State (Minister for Artificial Intelligence)"
     type: official
     publisher: UK Government
     date: 2026-07-20
     accessed: 2026-07-24
-    archive_url: https://web.archive.org/web/20261019184045/https://www.gov.uk/government/ministers/minister-of-state-minister-for-artificial-intelligence
+    archive_url: https://web.archive.org/web/20260806064211/https://www.gov.uk/government/ministers/minister-of-state-minister-for-artificial-intelligence
   - url: https://www.bloomberg.com/news/articles/2026-07-20/burnham-names-narayan-as-uk-s-first-ai-minister-to-new-cabinet
     title: "Burnham Names Narayan as UK's First AI Minister to Join Cabinet"
     type: secondary_reporting

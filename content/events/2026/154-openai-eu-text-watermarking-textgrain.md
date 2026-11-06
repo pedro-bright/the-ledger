@@ -12,14 +12,14 @@ sources:
     publisher: OpenAI
     date: 2026-10-05
     accessed: 2026-10-09
-    archive_url: https://web.archive.org/web/20261005170359/https://openai.com/index/eu-text-provenance/
+    archive_url: https://web.archive.org/web/20261009051151/https://openai.com/index/eu-text-provenance/
   - url: https://cdn.openai.com/pdf/e9508624-d767-41b6-a26d-e34ca798ada6/textgrain-entropy-calibrated-watermarking-for-language-model-text.pdf
     title: "textGrain: Entropy-Calibrated Watermarking for Language Model Text"
     type: primary_document
     publisher: OpenAI
     date: 2026-10-05
     accessed: 2026-10-09
-    archive_url: https://web.archive.org/web/20261012050605/https://cdn.openai.com/pdf/e9508624-d767-41b6-a26d-e34ca798ada6/textgrain-entropy-calibrated-watermarking-for-language-model-text.pdf
+    archive_url: https://web.archive.org/web/20261009200229/https://cdn.openai.com/pdf/e9508624-d767-41b6-a26d-e34ca798ada6/textgrain-entropy-calibrated-watermarking-for-language-model-text.pdf
   - url: https://techcrunch.com/2026/10/05/openai-will-start-watermarking-chatgpts-text-in-the-eu/
     title: "OpenAI will start watermarking ChatGPT's text in the EU"
     type: secondary_reporting

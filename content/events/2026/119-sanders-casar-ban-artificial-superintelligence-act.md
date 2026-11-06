@@ -19,7 +19,7 @@ sources:
     publisher: Office of Sen. Bernie Sanders
     date: 2026-09-03
     accessed: 2026-09-06
-    archive_url: https://web.archive.org/web/20261007145321/https://www.sanders.senate.gov/wp-content/uploads/Ban-Artificial-Superintelligence-Act-Release-Summary.pdf
+    archive_url: https://web.archive.org/web/20260908203235/https://www.sanders.senate.gov/wp-content/uploads/Ban-Artificial-Superintelligence-Act-Release-Summary.pdf
   - url: https://www.washingtonpost.com/technology/2026/09/03/sanders-proposes-artificial-superintelligence-ban-after-rogue-ai-incidents/
     title: "Sanders proposes ban on 'artificial superintelligence' after rogue AI incidents"
     type: secondary_reporting

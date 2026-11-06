@@ -12,7 +12,7 @@ sources:
     publisher: Moonshot AI
     date: 2026-07-27
     accessed: 2026-07-31
-    archive_url: https://web.archive.org/web/20261103164117/https://huggingface.co/moonshotai/Kimi-K3
+    archive_url: https://web.archive.org/web/20260731021834/https://huggingface.co/moonshotai/Kimi-K3
   - url: https://www.bloomberg.com/news/articles/2026-07-27/china-s-moonshot-to-release-breakthrough-ai-model-for-download
     title: "China's Moonshot Releases Breakthrough AI Model for Download"
     type: secondary_reporting

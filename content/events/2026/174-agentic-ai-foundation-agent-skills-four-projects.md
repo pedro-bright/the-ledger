@@ -19,7 +19,7 @@ sources:
     publisher: Linux Foundation
     date: 2026-10-22
     accessed: 2026-10-26
-    archive_url: https://web.archive.org/web/20261027213440/https://www.linuxfoundation.org/press/agentic-ai-foundation-announces-four-new-projects-agent-skills-open-responses-openenv-and-opensandbox
+    archive_url: https://web.archive.org/web/20261026130409/https://www.linuxfoundation.org/press/agentic-ai-foundation-announces-four-new-projects-agent-skills-open-responses-openenv-and-opensandbox
   - url: https://simonwillison.net/2026/Oct/22/donating-agent-skills/
     title: "Donating Agent Skills to the Agentic AI Foundation"
     type: secondary_reporting

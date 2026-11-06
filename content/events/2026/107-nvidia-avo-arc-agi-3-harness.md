@@ -12,14 +12,14 @@ sources:
     publisher: NVIDIA
     date: 2026-08-21
     accessed: 2026-08-25
-    archive_url: https://web.archive.org/web/20261026042143/https://developer.nvidia.com/blog/nvidia-avo-reaches-100-on-arc-agi-3-demonstrating-a-frontier-level-general-purpose-architecture-for-long-horizon-autonomous-agents/
+    archive_url: https://web.archive.org/web/20260830150739/https://developer.nvidia.com/blog/nvidia-avo-reaches-100-on-arc-agi-3-demonstrating-a-frontier-level-general-purpose-architecture-for-long-horizon-autonomous-agents/
   - url: https://arxiv.org/abs/2603.24517
     title: "AVO: Agentic Variation Operators for Autonomous Evolutionary Search"
     type: primary_document
     publisher: arXiv
     date: 2026-08-21
     accessed: 2026-08-25
-    archive_url: https://web.archive.org/web/20261024154416/https://arxiv.org/abs/2603.24517
+    archive_url: https://web.archive.org/web/20260825074806/https://arxiv.org/abs/2603.24517
   - url: https://techcrunch.com/2026/08/21/nvidia-just-showed-that-the-harness-not-the-ai-model-is-now-the-real-hero/
     title: "Nvidia just showed that the harness, not the AI model, is now the real hero"
     type: secondary_reporting

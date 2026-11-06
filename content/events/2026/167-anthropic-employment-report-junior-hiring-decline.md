@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-10-16
     accessed: 2026-10-20
-    archive_url: https://web.archive.org/web/20261016210152/https://www.anthropic.com/research/employment-at-anthropic
+    archive_url: https://web.archive.org/web/20261020001817/https://www.anthropic.com/research/employment-at-anthropic
   - url: https://techcrunch.com/2026/10/17/anthropic-says-its-workforce-has-become-less-junior-and-is-spending-more-time-in-meetings/
     title: "Anthropic says its workforce has become less junior and is spending more time in meetings"
     type: secondary_reporting

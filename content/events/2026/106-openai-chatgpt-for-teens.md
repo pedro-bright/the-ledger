@@ -12,7 +12,7 @@ sources:
     publisher: OpenAI
     date: 2026-08-18
     accessed: 2026-08-21
-    archive_url: https://web.archive.org/web/20261026081312/https://openai.com/index/chatgpt-for-teens/
+    archive_url: https://web.archive.org/web/20260822180946/https://openai.com/index/chatgpt-for-teens/
   - url: https://techcrunch.com/2026/08/18/openai-launches-a-safer-chatgpt-for-teens-years-after-teens-started-using-it/
     title: "OpenAI launches a safer ChatGPT for teens — years after teens started using it"
     type: secondary_reporting

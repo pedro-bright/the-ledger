@@ -12,14 +12,14 @@ sources:
     publisher: Microsoft AI
     date: 2026-09-14
     accessed: 2026-09-18
-    archive_url: https://web.archive.org/web/20261022210015/https://microsoft.ai/code-of-conduct/
+    archive_url: https://web.archive.org/web/20260920154949/https://microsoft.ai/code-of-conduct/
   - url: https://microsoft.ai/news/mai-code-of-conduct/
     title: "Humanist AI in practice: A public consultation on our Code of Conduct for MAI Models"
     type: official
     publisher: Microsoft AI
     date: 2026-09-14
     accessed: 2026-09-18
-    archive_url: https://web.archive.org/web/20261022110325/https://microsoft.ai/news/mai-code-of-conduct/
+    archive_url: https://web.archive.org/web/20260918145606/https://microsoft.ai/news/mai-code-of-conduct/
   - url: https://techcrunch.com/2026/09/14/microsofts-new-ai-code-of-conduct-tells-models-not-to-hack-systems-or-trick-humans/
     title: "Microsoft's new AI 'code of conduct' tells models not to hack systems or trick humans"
     type: secondary_reporting

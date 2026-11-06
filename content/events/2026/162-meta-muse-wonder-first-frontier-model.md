@@ -12,14 +12,14 @@ sources:
     publisher: Meta
     date: 2026-10-12
     accessed: 2026-10-16
-    archive_url: https://web.archive.org/web/20261015224100/https://research.meta.ai/blog/muse-wonder
+    archive_url: https://web.archive.org/web/20261016023759/https://research.meta.ai/blog/muse-wonder
   - url: https://research.meta.ai/static/muse-wonder-model-card
     title: "Muse Wonder Model Card"
     type: primary_document
     publisher: Meta
     date: 2026-10-12
     accessed: 2026-10-16
-    archive_url: https://web.archive.org/web/20261026203751/https://research.meta.ai/static/muse-wonder-model-card
+    archive_url: https://web.archive.org/web/20261016033519/https://research.meta.ai/static/muse-wonder-model-card
   - url: https://techcrunch.com/2026/10/12/meta-releases-its-first-frontier-model-muse-wonder/
     title: "Meta releases its first frontier model, Muse Wonder"
     type: secondary_reporting

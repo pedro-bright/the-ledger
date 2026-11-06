@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-10-12
     accessed: 2026-10-16
-    archive_url: https://web.archive.org/web/20261012193123/https://www.anthropic.com/research/self-replicating-ai
+    archive_url: https://web.archive.org/web/20261016033501/https://www.anthropic.com/research/self-replicating-ai
   - url: https://www.reuters.com/business/ai-models-may-soon-self-replicate-without-access-data-centers-anthropic-warns-2026-10-13/
     title: "AI models may soon self-replicate without access to data centers, Anthropic warns"
     type: secondary_reporting

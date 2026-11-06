@@ -12,7 +12,7 @@ sources:
     publisher: Office of the Governor of California
     date: 2026-09-30
     accessed: 2026-10-07
-    archive_url: https://web.archive.org/web/20261005201531/https://www.gov.ca.gov/2026/09/30/californias-nation-leading-ai-framework-just-got-stronger-governor-newsom-signs-more-first-in-the-nation-worker-protections-and-more/
+    archive_url: https://web.archive.org/web/20261010033134/https://www.gov.ca.gov/2026/09/30/californias-nation-leading-ai-framework-just-got-stronger-governor-newsom-signs-more-first-in-the-nation-worker-protections-and-more/
   - url: https://sd05.senate.ca.gov/news/newsom-signs-mcnerneys-no-robo-bosses-act-2026-requiring-human-oversight-ai-workplace
     title: "Newsom Signs McNerney's No Robo Bosses Act of 2026 Requiring Human Oversight of AI in the Workplace"
     type: official
@@ -26,7 +26,7 @@ sources:
     publisher: Office of the Governor of California
     date: 2026-09-30
     accessed: 2026-10-07
-    archive_url: https://web.archive.org/web/20261005100558/https://www.gov.ca.gov/2026/09/30/governor-newsom-issues-legislative-update-9-30-2026/
+    archive_url: https://web.archive.org/web/20261009080741/https://www.gov.ca.gov/2026/09/30/governor-newsom-issues-legislative-update-9-30-2026/
   - url: https://www.washingtonpost.com/politics/2026/09/30/newsom-california-trump-ai-journalism-bills/1e03e644-bd21-11f1-81fc-9b76f8343b6c_story.html
     title: "California Gov. Gavin Newsom signs laws to protect workers from AI risks"
     type: secondary_reporting

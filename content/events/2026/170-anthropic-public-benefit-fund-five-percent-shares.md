@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-10-18
     accessed: 2026-10-22
-    archive_url: https://web.archive.org/web/20261018180940/https://www.anthropic.com/news/public-benefit-fund
+    archive_url: https://web.archive.org/web/20261022020057/https://www.anthropic.com/news/public-benefit-fund
   - url: https://techcrunch.com/2026/10/18/anthropic-says-its-committing-5-of-its-shares-to-a-public-benefit-fund/
     title: "Anthropic says it's committing 5% of its shares to a 'public benefit fund'"
     type: secondary_reporting

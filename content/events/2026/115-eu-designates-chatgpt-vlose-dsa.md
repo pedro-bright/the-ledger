@@ -19,7 +19,7 @@ sources:
     publisher: OpenAI
     date: 2026-04-17
     accessed: 2026-09-03
-    archive_url: https://web.archive.org/web/*/https://help.openai.com/en/articles/8959649-eu-digital-services-act-dsa
+    archive_url: https://web.archive.org/web/20260905034040/https://help.openai.com/en/articles/8959649-eu-digital-services-act-dsa
   - url: https://www.bloomberg.com/news/articles/2026-08-31/chatgpt-reddit-rddt-roblox-rblx-face-eu-digital-services-act-rules
     title: "ChatGPT, Reddit, Roblox Face EU Digital Services Act Rules"
     type: secondary_reporting

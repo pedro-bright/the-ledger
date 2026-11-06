@@ -12,21 +12,21 @@ sources:
     publisher: Mistral AI
     date: 2026-10-29
     accessed: 2026-11-02
-    archive_url: https://web.archive.org/web/20261029141730/https://mistral.ai/news/mistral-large-4-oss/
+    archive_url: https://web.archive.org/web/20261102000350/https://mistral.ai/news/mistral-large-4-oss/
   - url: https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B
     title: "Mistral-Large-4-1T-A52B Model Card"
     type: primary_document
     publisher: Mistral AI
     date: 2026-10-29
     accessed: 2026-11-02
-    archive_url: https://web.archive.org/web/20261101100540/https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B
+    archive_url: https://web.archive.org/web/20261102154443/https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B
   - url: https://huggingface.co/blog/mistral-large4
     title: "Welcome Le Chonk: Mistral Large 4 on Hugging Face"
     type: official
     publisher: Hugging Face
     date: 2026-10-29
     accessed: 2026-11-02
-    archive_url: https://web.archive.org/web/20261030071059/https://huggingface.co/blog/mistral-large4
+    archive_url: https://web.archive.org/web/20261104194730/https://huggingface.co/blog/mistral-large4
   - url: https://techcrunch.com/2026/10/29/mistral-releases-weights-for-its-trillion-parameter-ai-model-targeting-cybersecurity/
     title: "Mistral releases weights for its trillion-parameter AI model, targeting cybersecurity"
     type: secondary_reporting

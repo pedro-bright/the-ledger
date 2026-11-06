@@ -12,7 +12,7 @@ sources:
     publisher: U.S. Attorney's Office, Southern District of New York
     date: 2026-10-06
     accessed: 2026-10-10
-    archive_url: https://web.archive.org/web/20261009200837/https://www.justice.gov/usao-sdny/pr/north-carolina-man-sentenced-18-months-prison-super-intelligence-assisted-music
+    archive_url: https://web.archive.org/web/20261011135423/https://www.justice.gov/usao-sdny/pr/north-carolina-man-sentenced-18-months-prison-super-intelligence-assisted-music
   - url: https://www.courtlistener.com/docket/69129096/united-states-v-smith/
     title: "United States v. Smith, 1:24-cr-00504 (S.D.N.Y.) - Docket, including Minute Entry for sentencing held October 6, 2026"
     type: primary_document
@@ -46,14 +46,14 @@ sources:
     publisher: U.S. Attorney's Office, Southern District of New York
     date: 2024-09-04
     accessed: 2026-10-10
-    archive_url: https://web.archive.org/web/20261008224541/https://www.justice.gov/usao-sdny/pr/north-carolina-musician-charged-music-streaming-fraud-aided-artificial-intelligence
+    archive_url: https://web.archive.org/web/20261010163357/https://www.justice.gov/usao-sdny/pr/north-carolina-musician-charged-music-streaming-fraud-aided-artificial-intelligence
   - url: https://www.justice.gov/usao-sdny/pr/north-carolina-man-pleads-guilty-music-streaming-fraud-aided-artificial-intelligence-0
     title: "North Carolina Man Pleads Guilty To Music Streaming Fraud Aided By Artificial Intelligence"
     type: official
     publisher: U.S. Attorney's Office, Southern District of New York
     date: 2026-03-19
     accessed: 2026-10-10
-    archive_url: https://web.archive.org/web/20261001042851/https://www.justice.gov/usao-sdny/pr/north-carolina-man-pleads-guilty-music-streaming-fraud-aided-artificial-intelligence-0
+    archive_url: https://web.archive.org/web/20261010100129/https://www.justice.gov/usao-sdny/pr/north-carolina-man-pleads-guilty-music-streaming-fraud-aided-artificial-intelligence-0
 actors:
   - id: michael-smith-musician
     role: defendant

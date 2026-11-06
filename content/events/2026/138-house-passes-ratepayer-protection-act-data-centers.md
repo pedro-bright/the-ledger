@@ -19,7 +19,7 @@ sources:
     publisher: House Committee on Energy and Commerce
     date: 2026-09-16
     accessed: 2026-09-20
-    archive_url: https://web.archive.org/web/20261003232111/https://energycommerce.house.gov/posts/ratepayer-protection-act-passes-house-with-strong-bipartisan-support
+    archive_url: https://web.archive.org/web/20260924021423/https://energycommerce.house.gov/posts/ratepayer-protection-act-passes-house-with-strong-bipartisan-support
   - url: https://gabeevans.house.gov/media/press-releases/congressman-gabe-evans-bipartisan-ratepayer-protection-act-passes-house
     title: "Congressman Gabe Evans' Bipartisan Ratepayer Protection Act Passes the House"
     type: official

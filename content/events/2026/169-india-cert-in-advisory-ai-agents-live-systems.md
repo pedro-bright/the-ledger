@@ -12,7 +12,7 @@ sources:
     publisher: Indian Computer Emergency Response Team (CERT-In)
     date: 2026-10-15
     accessed: 2026-10-21
-    archive_url: "https://web.archive.org/web/20261015121815/https://www.cert-in.org.in/s2cMainServlet?pageid=PUBVLNOTES02&VLCODE=CIAD-2026-0049"
+    archive_url: "https://web.archive.org/web/20261022032913/https://www.cert-in.org.in/s2cMainServlet?pageid=PUBVLNOTES02&VLCODE=CIAD-2026-0049"
   - url: https://www.reuters.com/legal/litigation/rogue-ai-agents-broke-into-indian-firms-live-systems-government-says-2026-10-16/
     title: "Rogue AI agents broke into Indian firms' live systems, government says"
     type: secondary_reporting

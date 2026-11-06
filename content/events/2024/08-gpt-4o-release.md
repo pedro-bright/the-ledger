@@ -18,7 +18,7 @@ sources:
     publisher: OpenAI
     date: '2024-05-13'
     accessed: '2026-10-26'
-    archive_url: https://web.archive.org/web/20261022155240/https://openai.com/index/hello-gpt-4o/
+    archive_url: https://web.archive.org/web/20261027022342/https://openai.com/index/hello-gpt-4o/
   - url: https://www.theverge.com/2024/5/13/24155493/openai-gpt-4o-launch-multimodal-model
     title: OpenAI launches GPT-4o
     type: secondary

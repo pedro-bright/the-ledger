@@ -12,7 +12,7 @@ sources:
     publisher: CourtListener
     date: 2026-09-01
     accessed: 2026-09-08
-    archive_url: https://web.archive.org/web/20261004050627/https://storage.courtlistener.com/recap/gov.uscourts.nysd.640396/gov.uscourts.nysd.640396.1682.0.pdf
+    archive_url: https://web.archive.org/web/20260910123512/https://storage.courtlistener.com/recap/gov.uscourts.nysd.640396/gov.uscourts.nysd.640396.1682.0.pdf
   - url: https://www.courtlistener.com/docket/69879510/in-re-openai-inc-copyright-infringement-litigation/
     title: "In re OpenAI, Inc. Copyright Infringement Litigation, 1:25-md-03143 - Docket"
     type: primary_document

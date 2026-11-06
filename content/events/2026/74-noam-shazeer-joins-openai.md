@@ -12,7 +12,7 @@ sources:
     publisher: Noam Shazeer (personal)
     date: 2026-06-18
     accessed: 2026-06-21
-    archive_url: https://web.archive.org/web/20261013052040/https://x.com/NoamShazeer/status/2067400851438932297
+    archive_url: https://web.archive.org/web/20261004072915/https://x.com/NoamShazeer/status/2067400851438932297
   - url: https://www.theinformation.com/articles/star-google-ai-researcher-shazeer-joins-openai
     title: "Star Google AI Researcher Shazeer Joins OpenAI"
     type: secondary_reporting
