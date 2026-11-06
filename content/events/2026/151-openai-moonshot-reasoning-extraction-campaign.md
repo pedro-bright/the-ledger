@@ -19,7 +19,7 @@ sources:
     publisher: arXiv
     date: 2026-08-10
     accessed: 2026-10-04
-    archive_url: https://web.archive.org/web/*/https://arxiv.org/abs/2608.09867
+    archive_url: https://web.archive.org/web/20261023034134/https://arxiv.org/abs/2608.09867
   - url: https://www.bloomberg.com/news/articles/2026-09-30/openai-blames-moonshot-for-mass-data-extraction-on-its-ai-models
     title: "OpenAI Blames Moonshot for Mass Data Extraction on Its AI Models"
     type: secondary_reporting

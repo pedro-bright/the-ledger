@@ -12,7 +12,7 @@ sources:
     publisher: OpenAI
     date: 2026-08-27
     accessed: 2026-08-30
-    archive_url: https://web.archive.org/web/*/https://openai.com/collective-cyberdefense/
+    archive_url: https://web.archive.org/web/20261014173740/https://openai.com/collective-cyberdefense/
   - url: https://techcrunch.com/2026/08/27/openai-anthropic-google-and-100-other-companies-call-for-action-to-defend-against-rogue-ai/
     title: "OpenAI, Anthropic, Google, and 100 other companies call for action to defend against rogue AI"
     type: secondary_reporting

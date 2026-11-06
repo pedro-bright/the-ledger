@@ -19,7 +19,7 @@ sources:
     publisher: DeepSeek AI
     date: 2026-09-10
     accessed: 2026-09-13
-    archive_url: https://web.archive.org/web/*/https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/blob/main/DeepSeek_V41_Tech_Report.pdf
+    archive_url: https://web.archive.org/web/20261102150357/https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/blob/main/DeepSeek_V41_Tech_Report.pdf
   - url: https://www.bloomberg.com/news/articles/2026-09-10/deepseek-s-new-low-cost-model-deals-a-fresh-blow-to-openai-z-ai
     title: "DeepSeek's New Low-Cost Model Deals a Fresh Blow to OpenAI, Z.ai"
     type: secondary_reporting

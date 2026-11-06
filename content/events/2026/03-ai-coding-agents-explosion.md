@@ -13,7 +13,7 @@ actors:
 tags: [coding-agents, software-development, productivity, automation]
 threads: [scaling-laws-debate, open-vs-closed-weights]
 sources:
-  - url: https://www.anthropic.com/claude-code
+  - url: https://claude.com/product/claude-code
     title: "Claude Code"
     type: official
     date: 2025-03-01

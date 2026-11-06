@@ -12,7 +12,7 @@ sources:
     publisher: OpenAI
     date: 2026-09-11
     accessed: 2026-09-16
-    archive_url: https://web.archive.org/web/*/https://openai.com/hugging-face-incident-and-misalignment/
+    archive_url: https://web.archive.org/web/20261023204517/https://openai.com/hugging-face-incident-and-misalignment/
   - url: https://www.rubyhack.ai/
     title: "OpenAI agents carried out an undisclosed cyber-attack on RubyGems"
     type: primary_document

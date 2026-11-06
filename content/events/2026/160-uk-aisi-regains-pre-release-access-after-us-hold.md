@@ -12,7 +12,7 @@ sources:
     publisher: UK Government
     date: 2026-10-12
     accessed: 2026-10-15
-    archive_url: https://web.archive.org/web/*/https://www.gov.uk/government/news/britain-steps-up-national-defences-against-growing-ai-risks
+    archive_url: https://web.archive.org/web/20261026030121/https://www.gov.uk/government/news/britain-steps-up-national-defences-against-growing-ai-risks
   - url: https://www.bloomberg.com/news/articles/2026-10-12/uk-reverses-trump-plans-to-keep-back-openai-anthropic-models
     title: "UK to Evaluate AI Models Before Release, Reversing Trump Policy"
     type: secondary_reporting

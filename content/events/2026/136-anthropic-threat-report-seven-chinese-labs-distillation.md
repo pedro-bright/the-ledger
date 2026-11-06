@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-09-10
     accessed: 2026-09-17
-    archive_url: https://web.archive.org/web/*/https://www.anthropic.com/threat-intelligence-report-september-2026
+    archive_url: https://web.archive.org/web/20261104004719/https://www.anthropic.com/threat-intelligence-report-september-2026
   - url: https://techcrunch.com/2026/09/10/anthropic-details-distillation-campaigns-from-alibaba-moonshot-ai-and-deepseek/
     title: "Anthropic details distillation campaigns from Alibaba, Moonshot AI, and DeepSeek"
     type: secondary_reporting

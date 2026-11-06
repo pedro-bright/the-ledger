@@ -12,7 +12,7 @@ sources:
     publisher: Anthropic
     date: 2026-08-14
     accessed: 2026-08-20
-    archive_url: https://web.archive.org/web/*/https://www.anthropic.com/news/claude-text-watermark
+    archive_url: https://web.archive.org/web/20261105025523/https://www.anthropic.com/news/claude-text-watermark
   - url: https://techcrunch.com/2026/08/15/anthropic-shares-more-details-about-how-claudes-new-watermarks-will-work/
     title: "Anthropic shares more details about how Claude's new watermarks will work"
     type: secondary_reporting

@@ -19,7 +19,7 @@ sources:
     publisher: The White House
     date: 2026-06-05
     accessed: 2026-06-10
-    archive_url: https://web.archive.org/web/*/https://www.whitehouse.gov/fact-sheets/2026/06/fact-sheet-president-donald-j-trump-signs-historic-directive-on-ai-in-the-national-security-enterprise/
+    archive_url: https://web.archive.org/web/20261005204526/https://www.whitehouse.gov/fact-sheets/2026/06/fact-sheet-president-donald-j-trump-signs-historic-directive-on-ai-in-the-national-security-enterprise/
   - url: https://www.washingtonpost.com/business/2026/06/05/artificial-intelligence-ai-military-trump-weapons/1bbec184-6127-11f1-9c46-d6211372eede_story.html
     title: "Trump calls for military to accelerate use of AI while protecting Americans"
     type: secondary_reporting

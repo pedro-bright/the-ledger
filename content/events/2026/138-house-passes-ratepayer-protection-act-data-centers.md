@@ -19,14 +19,14 @@ sources:
     publisher: House Committee on Energy and Commerce
     date: 2026-09-16
     accessed: 2026-09-20
-    archive_url: https://web.archive.org/web/*/https://energycommerce.house.gov/posts/ratepayer-protection-act-passes-house-with-strong-bipartisan-support
+    archive_url: https://web.archive.org/web/20261003232111/https://energycommerce.house.gov/posts/ratepayer-protection-act-passes-house-with-strong-bipartisan-support
   - url: https://gabeevans.house.gov/media/press-releases/congressman-gabe-evans-bipartisan-ratepayer-protection-act-passes-house
     title: "Congressman Gabe Evans' Bipartisan Ratepayer Protection Act Passes the House"
     type: official
     publisher: Office of Representative Gabe Evans
     date: 2026-09-16
     accessed: 2026-09-20
-    archive_url: https://web.archive.org/web/*/https://gabeevans.house.gov/media/press-releases/congressman-gabe-evans-bipartisan-ratepayer-protection-act-passes-house
+    archive_url: https://web.archive.org/web/20260920192656/https://gabeevans.house.gov/media/press-releases/congressman-gabe-evans-bipartisan-ratepayer-protection-act-passes-house
   - url: https://www.nbcnews.com/politics/congress/house-passes-bill-shield-consumers-data-center-price-hikes-energy-rcna597683
     title: "House passes bill to shield consumers from data center price hikes on energy"
     type: secondary_reporting

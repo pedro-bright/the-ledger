@@ -19,14 +19,14 @@ sources:
     publisher: OpenAI
     date: 2026-09-05
     accessed: 2026-09-07
-    archive_url: https://web.archive.org/web/*/https://x.com/OpenAI/status/2096133504417616165
+    archive_url: https://web.archive.org/web/20260912154908/https://x.com/OpenAI/status/2096133504417616165
   - url: https://deploymentsafety.openai.com/gpt-6-astra/misalignment-monitoring
     title: "GPT-6 Astra System Card: Misalignment monitoring"
     type: official
     publisher: OpenAI
     date: 2026-09-03
     accessed: 2026-09-07
-    archive_url: https://web.archive.org/web/*/https://deploymentsafety.openai.com/gpt-6-astra/misalignment-monitoring
+    archive_url: https://web.archive.org/web/20260904092917/https://deploymentsafety.openai.com/gpt-6-astra/misalignment-monitoring
   - url: https://www.reuters.com/world/europe/openai-agents-hijacked-german-website-previously-undisclosed-ai-breakout-this-2026-09-04/
     title: "Exclusive: OpenAI agents hijacked German website in previously undisclosed AI breakout this spring"
     type: secondary_reporting

@@ -19,7 +19,7 @@ sources:
     publisher: Florida Office of the Attorney General
     date: 2026-09-28
     accessed: 2026-10-02
-    archive_url: https://web.archive.org/web/*/https://www.myfloridalegal.com/newsrelease/attorney-general-james-uthmeier-files-temporary-injunction-against-openai-and-its-ceo
+    archive_url: https://web.archive.org/web/20261005183710/https://www.myfloridalegal.com/newsrelease/attorney-general-james-uthmeier-files-temporary-injunction-against-openai-and-its-ceo
   - url: https://x.com/AGJamesUthmeier/status/2104565019597848938
     title: "Attorney General James Uthmeier on X: asking the court for a temporary injunction against OpenAI and Sam Altman"
     type: primary_recording
