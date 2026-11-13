@@ -43,21 +43,32 @@ jobs:
           path: broken-links-report.md
 
       - name: Post report summary
-        if: steps.check.outcome == 'failure' || hashFiles('broken-links-summary.md') != ''
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           ARTIFACT_URL: ${{ steps.upload.outputs.artifact-url }}
+          CHECK_OUTCOME: ${{ steps.check.outcome }}
         with:
           script: |
             const fs = require('fs');
             const date = new Date().toISOString().slice(0, 10);
             const summaryPath = 'broken-links-summary.md';
             const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-            const body = fs.existsSync(summaryPath)
-              ? `${fs.readFileSync(summaryPath, 'utf-8')}\n\nFull report: [broken-links-report.md](${process.env.ARTIFACT_URL})`
-              : `## Source Link Check Failed\n\nThe weekly link checker failed before writing a report. See [the workflow run](${runUrl}) for details.`;
+            const summary = fs.existsSync(summaryPath) ? fs.readFileSync(summaryPath, 'utf-8') : null;
+            const counts = summary?.match(/^Found (\d+) broken link\(s\), (\d+) suspicious redirect\(s\)/);
+            // A failed checker without a valid report must not close a maintenance issue.
+            const failed = summary ? !counts : process.env.CHECK_OUTCOME !== 'success';
+            const broken = Number(counts?.[1] ?? 0);
+            const suspicious = Number(counts?.[2] ?? 0);
+            const clean = !failed && broken === 0 && suspicious === 0;
+            const title = failed
+              ? `Source link check failed (${date})`
+              : `Source link problems: ${broken} broken, ${suspicious} suspicious (${date})`;
+            const body = summary
+              ? `${summary}\n\nFull report: [broken-links-report.md](${process.env.ARTIFACT_URL})`
+              : failed
+                ? `## Source Link Check Failed\n\nThe weekly link checker failed before writing a report. See [the workflow run](${runUrl}) for details.`
+                : `No broken links or suspicious redirects found on ${date}. See [the workflow run](${runUrl}) for details.`;
 
-            // Check for existing open issue
             const issues = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -67,19 +78,28 @@ jobs:
             });
 
             if (issues.data.length > 0) {
-              // Update existing issue
-              await github.rest.issues.createComment({
+              const issue_number = issues.data[0].number;
+              if (clean) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number,
+                  body: `No broken links or suspicious redirects found on ${date}. See [the workflow run](${runUrl}) for details.`,
+                });
+              }
+              await github.rest.issues.update({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                issue_number: issues.data[0].number,
-                body: `### Updated: ${date}\n\n${body}`,
+                issue_number,
+                title,
+                body,
+                ...(clean ? { state: 'closed' } : {}),
               });
-            } else {
-              // Create new issue
+            } else if (!clean) {
               await github.rest.issues.create({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                title: `🔗 Source link problems detected - ${date}`,
+                title,
                 body,
                 labels: ['broken-links', 'maintenance'],
               });

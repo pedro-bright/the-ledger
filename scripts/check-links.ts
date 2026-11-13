@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * Check source URLs with GET, preserving occurrences and redirect destinations.
- * Exits nonzero on broken links. Broken links and suspicious redirects keep
+ * Exits nonzero on broken links. Problems and unverified links keep
  * broken-links-report.md (full) and broken-links-summary.md, which the weekly
  * stale-sources job uploads and posts.
  */
@@ -46,15 +46,29 @@ interface LinkResult extends UrlResult {
   occurrences: LinkOccurrence[];
 }
 
-function walkDir(dir: string): string[] {
-  const results: string[] = [];
-  if (!fs.existsSync(dir)) return results;
-  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    const fullPath = path.join(dir, entry.name);
-    if (entry.isDirectory()) results.push(...walkDir(fullPath));
-    else if (/\.(md|ya?ml)$/.test(entry.name)) results.push(fullPath);
+// Resolve every selection before fetching, so a typo never falls back to the archive.
+function contentFiles(args: string[]): string[] {
+  const root = fs.realpathSync(CONTENT_DIR);
+  const seen = new Set<string>();
+  const files: string[] = [];
+  const insideContent = (file: string) => {
+    const relative = path.relative(root, file);
+    return relative !== ".." && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative);
+  };
+  function visit(file: string) {
+    if (!insideContent(file)) throw new Error(`Path must be under content/: ${file}`);
+    const real = fs.realpathSync(file);
+    if (!insideContent(real)) throw new Error(`Path must be under content/: ${file}`);
+    if (seen.has(real)) return;
+    seen.add(real);
+    if (fs.statSync(real).isDirectory()) {
+      for (const name of fs.readdirSync(real)) visit(path.join(real, name));
+    } else if (/\.(md|ya?ml)$/.test(real)) {
+      files.push(real);
+    }
   }
-  return results;
+  for (const arg of args.length ? args : [CONTENT_DIR]) visit(path.resolve(arg));
+  return files;
 }
 
 export function extractUrls(filePath: string): LinkOccurrence[] {
@@ -127,9 +141,14 @@ export function suspiciousRedirect(url: string, finalUrl: string): string | unde
 export async function checkUrl(url: string): Promise<UrlResult> {
   let finalUrl = url;
   let unpinned = false;
+  const visited = new Set<string>();
   try {
     for (let hop = 0; hop <= MAX_REDIRECTS; hop++) {
       unpinned ||= unpinnedArchive(finalUrl);
+      if (visited.has(finalUrl)) {
+        return { status: "TOO_MANY_REDIRECTS", ok: false, finalUrl, ...(unpinned ? { issue: "UNPINNED_ARCHIVE" } : {}) };
+      }
+      visited.add(finalUrl);
       await waitForHost(finalUrl);
       const response = await fetch(finalUrl, {
         method: "GET",
@@ -141,7 +160,7 @@ export async function checkUrl(url: string): Promise<UrlResult> {
       await response.body?.cancel();
       const location = response.headers.get("location");
       if ([301, 302, 303, 307, 308].includes(response.status) && location) {
-        if (hop === MAX_REDIRECTS) return { status: "TOO_MANY_REDIRECTS", ok: false, finalUrl };
+        if (hop === MAX_REDIRECTS) return { status: "TOO_MANY_REDIRECTS", ok: false, finalUrl, ...(unpinned ? { issue: "UNPINNED_ARCHIVE" } : {}) };
         finalUrl = new URL(location, finalUrl).href;
         continue;
       }
@@ -158,7 +177,20 @@ export async function checkUrl(url: string): Promise<UrlResult> {
   } catch (error) {
     const timeout = error instanceof Error && ["AbortError", "TimeoutError"].includes(error.name);
     const message = error instanceof Error ? error.message : String(error);
-    return { status: timeout ? "TIMEOUT" : message.slice(0, 60), ok: false, finalUrl };
+    // fetch wraps DNS errors in a TypeError; retain the definitive missing-name code.
+    let cause: unknown = error;
+    const causes = new Set<unknown>();
+    let missingName = false;
+    while (cause && typeof cause === "object" && !causes.has(cause)) {
+      causes.add(cause);
+      const failure = cause as { code?: string; cause?: unknown };
+      missingName ||= failure.code === "ENOTFOUND";
+      cause = failure.cause;
+    }
+    return {
+      status: missingName ? "ENOTFOUND" : timeout ? "TIMEOUT" : message.slice(0, 60),
+      ok: false, finalUrl, ...(unpinned ? { issue: "UNPINNED_ARCHIVE" } : {}),
+    };
   }
 }
 
@@ -170,6 +202,14 @@ export function groupLinks(links: LinkOccurrence[]): Map<string, LinkOccurrence[
     grouped.set(link.url, occurrences);
   }
   return grouped;
+}
+
+// A blocked request cannot establish that a source is gone. Definitive failures
+// take precedence over redirect heuristics, which apply to successful responses.
+function classification(result: UrlResult): "broken" | "suspicious" | "unverified" | "healthy" {
+  if (result.issue === "UNPINNED_ARCHIVE" || [404, 410, "ENOTFOUND", "TOO_MANY_REDIRECTS"].includes(result.status)) return "broken";
+  if (!result.ok) return "unverified";
+  return result.suspicious ? "suspicious" : "healthy";
 }
 
 // Keep whole lines while they fit, clipping any single overlong line.
@@ -192,9 +232,9 @@ export function formatReport(
   limit = Infinity,
   maxChars = Number.isFinite(limit) ? SUMMARY_MAX_CHARS : Infinity,
 ): string {
-  const broken = results.filter((r) => !r.ok);
-  const suspicious = results.filter((r) => r.ok && r.suspicious);
-  const redirects = results.filter((r) => r.finalUrl !== r.url);
+  const broken = results.filter((r) => classification(r) === "broken");
+  const suspicious = results.filter((r) => classification(r) === "suspicious");
+  const unverified = results.filter((r) => classification(r) === "unverified");
   const detail = (link: LinkResult) =>
     `Status: \`${link.status}\`${link.issue ? ` (${link.issue})` : ""}` +
     (link.suspicious ? ` (suspicious redirect: ${link.suspicious})` : "") +
@@ -205,7 +245,6 @@ export function formatReport(
         `- **${occurrence.file} (${occurrence.field})**: [${link.url}](${link.url}) - ${detail(link)}`,
       ),
     );
-    if (entries.length === 0) return [];
     const more = entries.length - limit;
     return ["", `## ${title}`, "", ...entries.slice(0, limit), ...(more > 0 ? [`- ...and ${more} more occurrence(s)`] : [])];
   };
@@ -213,15 +252,21 @@ export function formatReport(
   const count = (type: string) => counts.set(type, (counts.get(type) ?? 0) + 1);
   for (const link of broken) count(`Broken \`${link.issue ?? link.status}\``);
   for (const link of suspicious) count(`Suspicious redirect (${link.suspicious})`);
-  if (redirects.length) counts.set("Redirects", redirects.length);
+  const unverifiedCounts = new Map<string, number>();
+  for (const link of unverified) {
+    const type = `Unverified \`${link.status}\``;
+    unverifiedCounts.set(type, (unverifiedCounts.get(type) ?? 0) + 1);
+  }
   const lines = [
-    "## Source Link Report", "",
-    `Found ${broken.length} broken link(s) and ${suspicious.length} suspicious redirect(s) ` +
+    `Found ${broken.length} broken link(s), ${suspicious.length} suspicious redirect(s) and ` +
+      `${unverified.length} link(s) that could not be verified from this network ` +
       `among ${results.length} URL(s) on ${new Date().toISOString().slice(0, 10)}:`, "",
     ...Array.from(counts, ([type, n]) => `- ${type}: ${n}`),
-    ...section("Broken Links", broken),
-    ...section("Suspicious Redirects", suspicious),
-    ...section("Redirects", redirects),
+    ...section("Broken", broken),
+    ...section("Suspicious redirects", suspicious),
+    ...(Number.isFinite(limit)
+      ? ["", "## Could not verify from this network", "", ...Array.from(unverifiedCounts, ([type, n]) => `- ${type}: ${n}`)]
+      : section("Could not verify from this network", unverified)),
   ];
   return Number.isFinite(maxChars) ? fitLines(lines, maxChars) : lines.join("\n");
 }
@@ -229,7 +274,7 @@ export function formatReport(
 export function writeReports(results: LinkResult[], dir = ROOT): boolean {
   const reportPath = path.join(dir, REPORT_FILE);
   const summaryPath = path.join(dir, SUMMARY_FILE);
-  if (!results.some((r) => !r.ok || r.suspicious)) {
+  if (results.every((r) => classification(r) === "healthy")) {
     fs.rmSync(reportPath, { force: true });
     fs.rmSync(summaryPath, { force: true });
     return false;
@@ -241,7 +286,7 @@ export function writeReports(results: LinkResult[], dir = ROOT): boolean {
 
 async function main() {
   console.log("The Ledger - Checking source links...\n");
-  const grouped = groupLinks(walkDir(CONTENT_DIR).flatMap(extractUrls));
+  const grouped = groupLinks(contentFiles(process.argv.slice(2)).flatMap(extractUrls));
   const uniqueLinks = Array.from(grouped.entries());
   console.log(`Found ${uniqueLinks.length} unique URLs to check.\n`);
   const results: LinkResult[] = [];
@@ -259,7 +304,10 @@ async function main() {
     const label = result.suspicious ? `Suspicious redirect (${result.suspicious})` : "Redirect";
     console.log(`  ${label}: ${result.url} -> ${result.finalUrl} (Status: ${result.status})`);
   }
-  const broken = results.filter((r) => !r.ok);
+  for (const link of results.filter((r) => classification(r) === "unverified")) {
+    console.warn(`  Warning: unverified link ${link.url} (Status: ${link.status})`);
+  }
+  const broken = results.filter((r) => classification(r) === "broken");
   if (broken.length) console.log(`Found ${broken.length} broken link(s):\n`);
   for (const link of broken) {
     for (const occurrence of link.occurrences) console.log(`  ${occurrence.file} (${occurrence.field})`);
@@ -272,5 +320,8 @@ async function main() {
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  main();
+  main().catch((error) => {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exitCode = 1;
+  });
 }
