@@ -88,7 +88,9 @@ function existsHtml(relPath: string): boolean {
 }
 
 async function checkSitemap(entries: { label: string; file: string; page: string }[]) {
-  const { default: config } = await import("../site/astro.config.mjs");
+  // astro.config.mjs has no declaration file, so its import is typed here with the one field this check reads.
+  const configUrl = new URL("../site/astro.config.mjs", import.meta.url).href;
+  const { default: config } = (await import(configUrl)) as { default: { site: string } };
   const parser = new XMLParser({
     ignoreAttributes: false,
     parseTagValue: false,
