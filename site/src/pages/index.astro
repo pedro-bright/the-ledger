@@ -11,9 +11,9 @@ import {
   loadControversies,
   loadActors,
   getCategories,
-  getExcerpt,
   buildThreadEventMap,
 } from '../lib/content';
+import { buildHomeIndex, buildHomeWindow } from '../lib/home';
 
 const events = loadEvents();
 const threads = loadThreads();
@@ -23,37 +23,6 @@ const categories = getCategories();
 const threadEventMap = buildThreadEventMap(events);
 
 // ─── Dates ────────────────────────────────────────────────────
-// Build the "today" label and ISO from local-time fields so the visible label
-// and the <time datetime> attribute can never disagree across UTC offsets.
-const today = new Date();
-const todayIso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-const todayMonthDay = todayIso.slice(5, 10); // MM-DD
-const todayLabel = today.toLocaleDateString('en-US', {
-  month: 'long',
-  day: 'numeric',
-  year: 'numeric',
-});
-
-// ─── Today's featured entry ───────────────────────────────────
-// Pool = the N most-recent landmark+major events (loadEvents pre-sorts
-// newest-first), so the date stamp under "Today's featured entry" feels
-// current instead of pulling an 8-month-old landmark out of the all-time
-// rotation. We still rotate deterministically by daysSinceEpoch within
-// the pool — same entry for every reader on the same UTC day, advances
-// at midnight UTC. Fall back to all events only if no significant ones
-// exist (effectively never, but keeps the front page renderable).
-const RECENT_FEATURED_POOL_SIZE = 12;
-const recentSignificant = events
-  .filter((e) => e.significance === 'landmark' || e.significance === 'major')
-  .slice(0, RECENT_FEATURED_POOL_SIZE);
-const featuredPool = recentSignificant.length > 0 ? recentSignificant : events;
-const daysSinceEpoch = Math.floor(
-  Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) / 86_400_000,
-);
-const featured = featuredPool.length > 0
-  ? featuredPool[daysSinceEpoch % featuredPool.length]
-  : undefined;
-const featuredExcerpt = featured ? getExcerpt(featured.content, 320) : '';
 // Parse ISO date as a local-date (not UTC midnight) so the visible label
 // can't drift off-by-one in negative-offset timezones.
 function formatLocalIsoDate(iso: string, options: Intl.DateTimeFormatOptions): string {
@@ -62,18 +31,22 @@ function formatLocalIsoDate(iso: string, options: Intl.DateTimeFormatOptions): s
   const [, y, mo, d] = m;
   return new Date(Number(y), Number(mo) - 1, Number(d)).toLocaleDateString('en-US', options);
 }
+// The build day in UTC. The page is rendered for it, and the inline script
+// replaces it with the reader's local day.
+const buildIso = new Date().toISOString().slice(0, 10);
+const buildLabel = formatLocalIsoDate(buildIso, { month: 'long', day: 'numeric', year: 'numeric' });
+
+// ─── Today's featured entry and On this day ───────────────────
+// Chosen here for each day around the build, so the reader's day is usually
+// already in the page and can be shown before first paint.
+const homeWindow = buildHomeWindow(buildHomeIndex(events), buildIso);
+// "<" is written as a JSON escape so that no title or excerpt puts markup in the page
+// source, which the security header generator scans for script elements.
+const homeWindowJson = JSON.stringify(homeWindow).replace(/</g, '\\u003c');
+const { featured, onThisDay } = homeWindow[buildIso];
 const featuredDateLabel = featured
   ? formatLocalIsoDate(featured.date, { month: 'short', day: 'numeric', year: 'numeric' })
   : '';
-
-// ─── On this day (historical matches, excluding current year) ─
-const onThisDay = events
-  .filter((e) => {
-    const md = e.date.slice(5, 10);
-    const year = e.date.slice(0, 4);
-    return md === todayMonthDay && year !== todayIso.slice(0, 4);
-  })
-  .slice(0, 5);
 
 // ─── Recent entries ───────────────────────────────────────────
 const recentEvents = events.slice(0, 10);
@@ -103,7 +76,7 @@ for (const e of events) {
   categoryCounts.set(e.category, (categoryCounts.get(e.category) || 0) + 1);
 }
 
-// ─── Random entry (picked at build time) ──────────────────────
+// ─── Random entry (fallback target) ──────────────────────
 const randomEvent = events[Math.floor(Math.random() * events.length)];
 
 // ─── Stats line ───────────────────────────────────────────────
@@ -136,7 +109,7 @@ const stats = {
       <span class="sep">·</span>
       <span>{stats.actors} actors</span>
       <span class="sep">·</span>
-      <span>updated <time datetime={todayIso}>{todayLabel}</time></span>
+      <span><time datetime={buildIso}>{buildLabel}</time></span>
     </p>
   </section>
 
@@ -144,10 +117,10 @@ const stats = {
   {featured && (
     <FeaturedBox title="Today's featured entry" date={featuredDateLabel} dateIso={featured.date} meta="§ Editor's pick">
       <h3><a href={`/events/${featured.slug}`}>{featured.title}</a></h3>
-      <p>{featuredExcerpt}</p>
+      <p data-home-featured-excerpt>{featured.excerpt}</p>
       <p class="featured-meta">
-        <CategoryTag category={featured.category} />
-        {featured.significance && <SignificanceFlag level={featured.significance} />}
+        <span data-home-featured-category><CategoryTag category={featured.category} /></span>
+        <span data-home-featured-significance>{featured.significance && <SignificanceFlag level={featured.significance} />}</span>
         <time class="featured-date font-mono" datetime={featured.date}>{featured.date}</time>
       </p>
       <a class="read-more" href={`/events/${featured.slug}`}>Continue reading →</a>
@@ -155,20 +128,170 @@ const stats = {
   )}
 
   <!-- 3. On this day -->
-  {onThisDay.length > 0 && (
-    <section class="home-section home-section--compact">
-      <h2 class="home-section__title font-display">On this day</h2>
-      <ul class="wiki-list-dated">
-        {onThisDay.map((e) => (
-          <li>
-            <span class="date"><time datetime={e.date}>{e.date.slice(0, 4)}</time></span>
-            <a href={`/events/${e.slug}`}>{e.title}</a>
-            <CategoryTag category={e.category} />
-          </li>
-        ))}
-      </ul>
-    </section>
-  )}
+  <section id="home-anniversaries" class="home-section home-section--compact" hidden={onThisDay.length === 0}>
+    <h2 class="home-section__title font-display">On this day</h2>
+    <ul class="wiki-list-dated">
+      {onThisDay.map((e) => (
+        <li>
+          <span class="date"><time datetime={e.date}>{e.date.slice(0, 4)}</time></span>
+          <a href={`/events/${e.slug}`}>{e.title}</a>
+          <CategoryTag category={e.category} />
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <template id="home-anniversary-row">
+    <li>
+      <span class="date"><time></time></span>
+      <a></a>
+      <span data-home-category></span>
+    </li>
+  </template>
+  {categories.map((category) => (
+    <template id={`home-category-${category.id}`}><CategoryTag category={category.id} /></template>
+  ))}
+  {(['landmark', 'major', 'notable'] as const).map((level) => (
+    <template id={`home-significance-${level}`}><SignificanceFlag level={level} /></template>
+  ))}
+  <template id="home-window" data-days={homeWindowJson}></template>
+
+  <!-- Shows the reader's day before the sections above are painted. -->
+  <script is:inline>
+    (function () {
+      const today = new Date();
+      const iso = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+      const box = document.querySelector('.wiki-box--featured');
+
+      const label = document.querySelector('.intro__stats time');
+      label.dateTime = iso;
+      label.textContent = today.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+      function cloneTemplate(id) {
+        return document.getElementById(id)?.content.cloneNode(true) || document.createDocumentFragment();
+      }
+
+      function showDay(day) {
+        const featured = day.featured;
+        if (box && featured) {
+          const href = '/events/' + featured.slug;
+          const title = box.querySelector('h3 a');
+          title.href = href;
+          title.textContent = featured.title;
+          box.querySelector('.read-more').href = href;
+          box.querySelector('[data-home-featured-excerpt]').textContent = featured.excerpt;
+          box.querySelector('[data-home-featured-category]').replaceChildren(cloneTemplate('home-category-' + featured.category));
+          box.querySelector('[data-home-featured-significance]').replaceChildren(cloneTemplate('home-significance-' + featured.significance));
+          box.querySelectorAll('time').forEach(function (time) { time.dateTime = featured.date; });
+          box.querySelector('.featured-date').textContent = featured.date;
+          const parts = featured.date.slice(0, 10).split('-').map(Number);
+          box.querySelector('.wiki-box__date').textContent = new Date(parts[0], parts[1] - 1, parts[2]).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        const section = document.getElementById('home-anniversaries');
+        const rows = day.onThisDay.map(function (event) {
+          const row = cloneTemplate('home-anniversary-row');
+          const time = row.querySelector('time');
+          time.dateTime = event.date;
+          time.textContent = event.date.slice(0, 4);
+          const link = row.querySelector('a');
+          link.href = '/events/' + event.slug;
+          link.textContent = event.title;
+          row.querySelector('[data-home-category]').replaceChildren(cloneTemplate('home-category-' + event.category));
+          return row;
+        });
+        section.querySelector('ul').replaceChildren(...rows);
+        section.hidden = rows.length === 0;
+      }
+
+      let indexRequest;
+      function loadIndex() {
+        indexRequest ??= fetch('/home-index.json').then(function (response) {
+          if (!response.ok) throw new Error('Home index unavailable');
+          return response.json();
+        });
+        return indexRequest;
+      }
+
+      const day = JSON.parse(document.getElementById('home-window').dataset.days)[iso];
+      if (day) {
+        showDay(day);
+      } else {
+        // The reader's day is outside the embedded days, so the page changes after it is
+        // painted. Holding the featured box at its painted height leaves any unused space
+        // at the bottom of the box when the entry for the reader's day is shorter.
+        loadIndex().then(function (index) {
+          if (box) box.style.minHeight = box.getBoundingClientRect().height + 'px';
+          const days = Math.floor(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) / 86400000);
+          showDay({
+            featured: index.featuredPool[days % index.featuredPool.length],
+            onThisDay: (index.eventsByMonthDay[iso.slice(5)] || [])
+              .filter(function (event) { return event.date.slice(0, 4) !== iso.slice(0, 4); }).slice(0, 5),
+          });
+        }).catch(function () { /* Keep the build day's entries when the index cannot be fetched. */ });
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        // The index is fetched when the reader reaches for the link, and the target is
+        // chosen on each click. A plain click that comes before the index waits for it.
+        const randomLink = document.querySelector('[data-home-random]');
+        if (randomLink) {
+          let slugs = [];
+          function loadSlugs() {
+            return loadIndex().then(function (index) {
+              slugs = Object.values(index.eventsByMonthDay).flat().map(function (event) { return event.slug; });
+            }, function () { /* Keep the build-time target. */ });
+          }
+          function pickRandom() {
+            if (slugs.length > 0) randomLink.href = '/events/' + slugs[Math.floor(Math.random() * slugs.length)];
+            return slugs.length > 0;
+          }
+          randomLink.addEventListener('pointerenter', loadSlugs);
+          randomLink.addEventListener('focus', loadSlugs);
+          randomLink.addEventListener('auxclick', pickRandom);
+          randomLink.addEventListener('click', function (event) {
+            // Clicks that open a new tab or window keep the browser's own handling.
+            if (pickRandom() || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+            event.preventDefault();
+            loadSlugs().then(function () {
+              pickRandom();
+              location.assign(randomLink.href);
+            });
+          });
+        }
+
+        // Read the displayed entry at click time so analytics follows the rotation.
+        document.addEventListener('click', function (event) {
+          const title = box?.querySelector('h3 a');
+          const link = event.target.closest('a');
+          if (title && link?.getAttribute('href') === title.getAttribute('href')) {
+            window.posthog?.capture('featured_entry_clicked', {
+              event_slug: title.getAttribute('href').split('/').pop(),
+              event_title: title.textContent,
+            });
+          }
+        });
+
+        // Contribute section link clicks
+        document.querySelectorAll('.contribute-links a').forEach(function (el) {
+          el.addEventListener('click', function () {
+            window.posthog?.capture('contribute_link_clicked', {
+              link_text: el.textContent?.trim(),
+              link_href: el.getAttribute('href'),
+            });
+          });
+        });
+
+        // RSS feed link click
+        var rssFeedLink = document.querySelector('a[href="/feed.xml"]');
+        if (rssFeedLink) {
+          rssFeedLink.addEventListener('click', function () {
+            window.posthog?.capture('rss_feed_clicked');
+          });
+        }
+      });
+    })();
+  </script>
 
   <!-- 4. Recent entries -->
   <section class="home-section">
@@ -276,47 +399,11 @@ const stats = {
           <a href="https://github.com/pedro-bright/the-ledger" target="_blank" rel="noopener noreferrer">GitHub</a>
         </li>
         {randomEvent && (
-          <li><a href={`/events/${randomEvent.slug}`}>Random entry</a></li>
+          <li><a data-home-random href={`/events/${randomEvent.slug}`}>Random entry</a></li>
         )}
       </ul>
     </RailSection>
   </Fragment>
-
-  <!-- PostHog: home-page action tracking -->
-  <script is:inline data-featured-slug={featured?.slug} data-featured-title={featured?.title}>
-    const { featuredSlug, featuredTitle } = document.currentScript.dataset;
-    document.addEventListener('DOMContentLoaded', function () {
-      // Featured entry clicks (title + "Continue reading" link)
-      if (featuredSlug) {
-        document.querySelectorAll('a[href="/events/' + featuredSlug + '"]').forEach(function (el) {
-          el.addEventListener('click', function () {
-            window.posthog?.capture('featured_entry_clicked', {
-              event_slug: featuredSlug,
-              event_title: featuredTitle,
-            });
-          });
-        });
-      }
-
-      // Contribute section link clicks
-      document.querySelectorAll('.contribute-links a').forEach(function (el) {
-        el.addEventListener('click', function () {
-          window.posthog?.capture('contribute_link_clicked', {
-            link_text: el.textContent?.trim(),
-            link_href: el.getAttribute('href'),
-          });
-        });
-      });
-
-      // RSS feed link click
-      var rssFeedLink = document.querySelector('a[href="/feed.xml"]');
-      if (rssFeedLink) {
-        rssFeedLink.addEventListener('click', function () {
-          window.posthog?.capture('rss_feed_clicked');
-        });
-      }
-    });
-  </script>
 
   <!-- ─── Right rail ─── -->
   <Fragment slot="rightRail">
