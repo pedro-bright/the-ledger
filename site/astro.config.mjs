@@ -4,7 +4,9 @@ import tailwind from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
 import sitemap from '@astrojs/sitemap';
 import { fileURLToPath } from 'node:url';
-import { sitemapSerializer } from './scripts/sitemap.mts';
+import { sitemapDates } from './scripts/sitemap.mts';
+
+const dates = sitemapDates(fileURLToPath(new URL('../content/', import.meta.url)));
 
 export default defineConfig({
   site: 'https://the-ledger.net',
@@ -12,9 +14,8 @@ export default defineConfig({
   compressHTML: true,
   integrations: [
     react(),
-    sitemap({
-      serialize: sitemapSerializer(fileURLToPath(new URL('../content/', import.meta.url))),
-    }),
+    dates.integration,
+    sitemap({ serialize: dates.serialize }),
   ],
   vite: {
     build: {

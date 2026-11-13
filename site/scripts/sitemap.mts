@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
-import { parseFrontmatter } from '../../scripts/frontmatter.ts';
+import { parseFrontmatter } from '../src/lib/markdown.ts';
 
 export function loadSitemapDates(contentDir: string): Map<string, string> {
   const dates = new Map<string, string>();
@@ -25,11 +25,20 @@ export function loadSitemapDates(contentDir: string): Map<string, string> {
   return dates;
 }
 
-export function sitemapSerializer(contentDir: string) {
-  let dates: Map<string, string> | undefined;
-  return <Item extends { url: string }>(item: Item): Item & { lastmod?: string } => {
-    dates ??= loadSitemapDates(contentDir);
-    const lastmod = dates.get(new URL(item.url).pathname);
-    return lastmod ? { ...item, lastmod } : item;
+export function sitemapDates(contentDir: string) {
+  let dates!: Map<string, string>;
+  return {
+    integration: {
+      name: 'ledger-sitemap-dates',
+      hooks: {
+        'astro:build:start': () => {
+          dates = loadSitemapDates(contentDir);
+        },
+      },
+    },
+    serialize<Item extends { url: string }>(item: Item): Item & { lastmod?: string } {
+      const lastmod = dates.get(new URL(item.url).pathname);
+      return lastmod ? { ...item, lastmod } : item;
+    },
   };
 }
