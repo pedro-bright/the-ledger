@@ -284,7 +284,7 @@ test('featured click tracking follows the displayed entry', async ({ page }) => 
   const text = await title.textContent();
   await page.evaluate(() => {
     (window as any).__captures = [];
-    window.posthog = { capture: (...args: unknown[]) => (window as any).__captures.push(args) } as any;
+    (window as any).posthog = { capture: (...args: unknown[]) => (window as any).__captures.push(args) };
     document.addEventListener('click', (event) => event.preventDefault());
   });
   await title.click();
