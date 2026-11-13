@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
 import matter from "gray-matter";
-import { parseFrontmatter as siteParseFrontmatter } from "../site/src/lib/markdown.js";
+import { parseFrontmatter as siteParseFrontmatter } from "../site/src/lib/frontmatter.mjs";
 import { parseFrontmatter } from "./frontmatter.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");

@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
-import { parseFrontmatter } from '../src/lib/markdown.ts';
+import { parseFrontmatter } from '../src/lib/frontmatter.mts';
 
 export function loadSitemapDates(contentDir: string): Map<string, string> {
   const dates = new Map<string, string>();
