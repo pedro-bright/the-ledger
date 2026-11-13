@@ -1,7 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import yaml from 'js-yaml';
-import { parseFrontmatter, renderMarkdown } from './markdown';
+import { parseFrontmatter } from './frontmatter.mts';
+import { renderMarkdown } from './markdown';
 
 // ─── Types ────────────────────────────────────────────────────
 

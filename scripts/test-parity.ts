@@ -1,8 +1,10 @@
 #!/usr/bin/env tsx
 /**
  * test-parity.ts — After `npm run build` produces site/dist/, verify every
- * piece of content has a corresponding static page. Exits 1 if any expected
- * page is missing.
+ * piece of content has a corresponding static page, that the sitemap lists
+ * each event, thread, controversy and actor page exactly once with a lastmod
+ * on every event, and that robots.txt names the sitemap index. Exits 1 if any
+ * of these checks fails.
  */
 
 import fs from "node:fs";
@@ -10,6 +12,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseFrontmatter } from "./frontmatter.js";
 import yaml from "js-yaml";
+import assert from "node:assert/strict";
+import { XMLParser, XMLValidator } from "fast-xml-parser";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -83,9 +87,55 @@ function existsHtml(relPath: string): boolean {
   return fs.existsSync(path.join(DIST_DIR, relPath));
 }
 
+async function checkSitemap(entries: { label: string; file: string; page: string }[]) {
+  // astro.config.mjs has no declaration file, so its import is typed here with the one field this check reads.
+  const configUrl = new URL("../site/astro.config.mjs", import.meta.url).href;
+  const { default: config } = (await import(configUrl)) as { default: { site: string } };
+  const parser = new XMLParser({
+    ignoreAttributes: false,
+    parseTagValue: false,
+    isArray: (name) => name === "url" || name === "sitemap",
+  });
+  const readXml = (file: string) => {
+    const xml = fs.readFileSync(path.join(DIST_DIR, file), "utf8");
+    assert.equal(XMLValidator.validate(xml), true, `${file} must be valid XML`);
+    return parser.parse(xml);
+  };
+  const namespace = "http://www.sitemaps.org/schemas/sitemap/0.9";
+  const index = readXml("sitemap-index.xml").sitemapindex;
+  assert.equal(index?.["@_xmlns"], namespace);
+  assert.ok(index.sitemap?.length > 0, "Sitemap index must name a sitemap");
+
+  const urls = new Map<string, { lastmod?: string }>();
+  for (const sitemap of index.sitemap) {
+    const url = new URL(sitemap.loc);
+    assert.equal(url.origin, new URL(config.site).origin);
+    const document = readXml(decodeURIComponent(url.pathname).replace(/^\//, "")).urlset;
+    assert.equal(document?.["@_xmlns"], namespace);
+    for (const entry of document.url ?? []) {
+      assert.equal(urls.has(entry.loc), false, `Duplicate sitemap URL: ${entry.loc}`);
+      assert.doesNotMatch(new URL(entry.loc).pathname, /^\/404(?:\.html|\/)?$/);
+      urls.set(entry.loc, entry);
+    }
+  }
+  for (const entry of entries.filter((entry) => entry.label !== "page")) {
+    const url = new URL(entry.page.replace(/index\.html$/, ""), config.site).href;
+    const item = urls.get(url);
+    assert.ok(item, `Missing sitemap URL: ${url} (${entry.file})`);
+    if (entry.label === "event") assert.ok(item.lastmod, `Missing event lastmod: ${url}`);
+  }
+  const robots = fs.readFileSync(path.join(DIST_DIR, "robots.txt"), "utf8");
+  assert.match(robots, /^User-agent: \*$/m);
+  assert.match(robots, /^Allow: \/$/m);
+  assert.doesNotMatch(robots, /^Disallow:\s*\S/m);
+  const sitemapLines = [...robots.matchAll(/^Sitemap:\s*(\S+)\s*$/gm)];
+  assert.deepEqual(sitemapLines.map((line) => line[1]), [new URL("sitemap-index.xml", config.site).href]);
+  console.log(`Sitemap: ${urls.size} unique URLs, event lastmod and robots.txt verified.\n`);
+}
+
 // --------------- Main ---------------
 
-function main() {
+async function main() {
   console.log("Content parity check — comparing content/ to site/dist/\n");
 
   if (!fs.existsSync(DIST_DIR)) {
@@ -200,6 +250,7 @@ function main() {
   }
 
   if (missing.length === 0 && malformed.length === 0) {
+    await checkSitemap(checks);
     console.log("OK: every content item has a static page and all top-level routes built.");
     process.exit(0);
   }
