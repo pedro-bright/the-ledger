@@ -1,8 +1,10 @@
 #!/usr/bin/env tsx
 /**
  * test-parity.ts — After `npm run build` produces site/dist/, verify every
- * piece of content has a corresponding static page. Exits 1 if any expected
- * page is missing.
+ * piece of content has a corresponding static page, that the sitemap lists
+ * each event, thread, controversy and actor page exactly once with a lastmod
+ * on every event, and that robots.txt names the sitemap index. Exits 1 if any
+ * of these checks fails.
  */
 
 import fs from "node:fs";
