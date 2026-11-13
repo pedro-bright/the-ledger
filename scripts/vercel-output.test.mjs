@@ -60,6 +60,9 @@ const SITE = {
   'graph.json': '{"nodes":[]}',
   'feed.xml': '<feed/>',
   'rss.xml': '<rss/>',
+  'sitemap-index.xml': '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><sitemap><loc>https://the-ledger.net/sitemap-0.xml</loc></sitemap></sitemapindex>',
+  'sitemap-0.xml': '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://the-ledger.net/</loc></url></urlset>',
+  'robots.txt': 'User-agent: *\nAllow: /\n\nSitemap: https://the-ledger.net/sitemap-index.xml\n',
   'asset.js': 'console.log(1)',
 };
 
@@ -163,9 +166,9 @@ test('an HTML file not named index.html does not take its directory page policy'
   });
 });
 
-test('feeds, graph, assets and security.txt are published with the site headers', () => {
+test('feeds, graph, crawl files, assets and security.txt are published with the site headers', () => {
   withBuild(SITE, (build) => {
-    for (const file of ['graph.json', 'feed.xml', 'rss.xml', 'asset.js']) {
+    for (const file of ['graph.json', 'feed.xml', 'rss.xml', 'sitemap-index.xml', 'sitemap-0.xml', 'robots.txt', 'asset.js']) {
       const response = request(build, `/${file}`);
       assert.equal(response.status, 200, file);
       assert.equal(response.headers['X-Frame-Options'], 'DENY', file);
