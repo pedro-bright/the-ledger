@@ -19,6 +19,14 @@ const longDate = (iso: string) => new Date(`${iso}T12:00:00Z`)
 const embeddedDays = (page: Page): Promise<string[]> => page.locator('#home-window')
   .evaluate((el) => Object.keys(JSON.parse((el as HTMLElement).dataset.days!)));
 
+const isoDay = (time: number) => new Date(time).toISOString().slice(0, 10);
+
+/** Opens the home page and returns a day the build did not embed, so the page has to fetch the index for it. */
+async function dayOutsideBuild(page: Page) {
+  await page.goto('/');
+  return isoDay(Date.parse((await embeddedDays(page))[1]) + 30 * DAY_MS);
+}
+
 /** Checks the page against the rotation and anniversary rules applied to the published index. */
 async function expectDay(page: Page, index: HomeIndex, iso: string) {
   const pick = index.featuredPool[(Date.parse(iso) / DAY_MS) % index.featuredPool.length];
@@ -47,12 +55,14 @@ test('home uses the viewing date and finds historical anniversaries', async ({ p
 
 test('home hides anniversaries on an empty day', async ({ page, request }) => {
   const index = await homeIndex(request);
-  const emptyDay = Array.from({ length: 365 }, (_, day) => new Date(Date.UTC(2027, 0, 1 + day)).toISOString().slice(0, 10))
+  await page.goto('/');
+  const afterEmbedded = Date.parse((await embeddedDays(page)).at(-1)!) + DAY_MS;
+  const emptyDay = Array.from({ length: 365 }, (_, day) => isoDay(afterEmbedded + day * DAY_MS))
     .find((iso) => !index.eventsByMonthDay[iso.slice(5)])!;
   expect(emptyDay).toBeDefined();
   await page.clock.setFixedTime(new Date(`${emptyDay}T12:00:00`));
   const loaded = page.waitForResponse('**/home-index.json');
-  await page.goto('/');
+  await page.reload();
   await loaded;
   await expectDay(page, index, emptyDay);
   await expect(page.locator(anniversaries)).toBeHidden();
@@ -105,10 +115,8 @@ test('days around the build are shown without a later change or the index', asyn
 });
 
 test('a day outside the embedded days is filled from the index', async ({ page, request }) => {
-  await page.goto('/');
-  const buildDay = (await embeddedDays(page))[1];
+  const iso = await dayOutsideBuild(page);
   const index = await homeIndex(request);
-  const iso = new Date(Date.parse(buildDay) + 30 * DAY_MS).toISOString().slice(0, 10);
   await page.clock.setFixedTime(new Date(`${iso}T12:00:00`));
   const loaded = page.waitForResponse('**/home-index.json');
   await page.reload();
@@ -137,12 +145,13 @@ test('JavaScript disabled keeps the build-time home content', async ({ browser, 
 test('failed home index keeps the fallback usable without an unhandled error', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
-  await page.clock.setFixedTime(new Date('2027-03-14T12:00:00'));
+  const iso = await dayOutsideBuild(page);
+  await page.clock.setFixedTime(new Date(`${iso}T12:00:00`));
   await page.route('**/home-index.json', (route) => route.abort());
   const failed = page.waitForEvent('requestfailed', (sent) => sent.url().endsWith('/home-index.json'));
-  await page.goto('/');
+  await page.reload();
   await failed;
-  await expect(page.locator(dateLabel)).toHaveText('March 14, 2027');
+  await expect(page.locator(dateLabel)).toHaveText(longDate(iso));
   await expect(page.locator(featured)).toBeVisible();
   await expect(page.locator('[data-home-random]')).toHaveAttribute('href', /^\/events\//);
   expect(errors).toEqual([]);
@@ -167,33 +176,73 @@ test('local calendar date determines the rotation across UTC midnight', async ({
   }
 });
 
+const randomLink = (page: Page) => page.getByRole('link', { name: 'Random entry', exact: true });
+const eventSlugs = (index: HomeIndex) => Object.values(index.eventsByMonthDay).flat().map((event) => event.slug);
+
 test('Random entry chooses a destination on each click', async ({ page }) => {
   test.skip(test.info().project.name === 'mobile', 'Random entry is in the desktop navigation rail');
   await page.goto('/');
-  const link = page.getByRole('link', { name: 'Random entry', exact: true });
+  const link = randomLink(page);
+  const initial = await link.getAttribute('href');
   // The index is fetched when the reader reaches for the link.
   const loaded = page.waitForResponse('**/home-index.json');
   await link.hover();
-  const index: HomeIndex = await (await loaded).json();
-  const slugs = Object.values(index.eventsByMonthDay).flat().map((event) => event.slug);
-  // Keep the home document open to click twice.
+  const slugs = eventSlugs(await (await loaded).json());
+  const target = (value: number) => `/events/${slugs[Math.floor(value * slugs.length)]}`;
+  // Keep the home document open to click several times.
   await page.evaluate(() => {
-    document.addEventListener('click', (event) => event.preventDefault());
+    for (const type of ['click', 'auxclick']) document.addEventListener(type, (event) => event.preventDefault());
   });
+  const setRandom = (value: number) => page.evaluate((value) => { Math.random = () => value; }, value);
+  // A middle click picks a target once the page has read the response, and never navigates this document.
+  const probe = [0.5, 0.25].find((value) => target(value) !== initial)!;
+  await setRandom(probe);
+  await expect(async () => {
+    await link.click({ button: 'middle' });
+    await expect(link).toHaveAttribute('href', target(probe), { timeout: 250 });
+  }).toPass();
   for (const value of [0, 0.999999]) {
-    await page.evaluate((value) => { Math.random = () => value; }, value);
-    // The page may still be reading the response on the first click.
-    await expect(async () => {
-      await link.click();
-      await expect(link).toHaveAttribute('href', `/events/${slugs[Math.floor(value * slugs.length)]}`, { timeout: 250 });
-    }).toPass();
+    await setRandom(value);
+    await link.click();
+    await expect(link).toHaveAttribute('href', target(value));
   }
+});
+
+test('a first click on Random entry waits for the index and opens the entry chosen then', async ({ page, request }) => {
+  test.skip(test.info().project.name === 'mobile', 'Random entry is in the desktop navigation rail');
+  const slugs = eventSlugs(await homeIndex(request));
+  let release!: () => void;
+  const held = new Promise<void>((resolve) => { release = resolve; });
+  await page.route('**/home-index.json', async (route) => { await held; await route.continue(); });
+  try {
+    await page.goto('/');
+    const link = randomLink(page);
+    const initial = await link.getAttribute('href');
+    const value = [0, 0.999999].find((value) => `/events/${slugs[Math.floor(value * slugs.length)]}` !== initial)!;
+    await page.evaluate((value) => { Math.random = () => value; }, value);
+    const requested = page.waitForRequest('**/home-index.json');
+    await link.click();
+    await requested;
+    expect(new URL(page.url()).pathname).toBe('/');
+    release();
+    await page.waitForURL(`**/events/${slugs[Math.floor(value * slugs.length)]}`);
+  } finally { release(); }
+});
+
+test('a first click on Random entry opens the build-time entry when the index fails', async ({ page }) => {
+  test.skip(test.info().project.name === 'mobile', 'Random entry is in the desktop navigation rail');
+  await page.route('**/home-index.json', (route) => route.abort());
+  await page.goto('/');
+  const link = randomLink(page);
+  const initial = (await link.getAttribute('href'))!;
+  await link.click();
+  await page.waitForURL(`**${initial}`);
 });
 
 test('a shorter entry from the index leaves the featured box its height', async ({ page }) => {
   let release!: () => void;
   const held = new Promise<void>((resolve) => { release = resolve; });
-  await page.clock.setFixedTime(new Date('2027-03-14T12:00:00'));
+  await page.clock.setFixedTime(new Date(`${await dayOutsideBuild(page)}T12:00:00`));
   await page.route('**/home-index.json', async (route) => {
     const response = await route.fetch();
     const index: HomeIndex = await response.json();

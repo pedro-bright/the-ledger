@@ -233,22 +233,31 @@ const stats = {
 
       document.addEventListener('DOMContentLoaded', function () {
         // The index is fetched when the reader reaches for the link, and the target is
-        // chosen on each click. Until the index arrives the link keeps its build-time target.
+        // chosen on each click. A plain click that comes before the index waits for it.
         const randomLink = document.querySelector('[data-home-random]');
         if (randomLink) {
           let slugs = [];
           function loadSlugs() {
-            loadIndex().then(function (index) {
+            return loadIndex().then(function (index) {
               slugs = Object.values(index.eventsByMonthDay).flat().map(function (event) { return event.slug; });
-            }).catch(function () { /* Keep the build-time target. */ });
+            }, function () { /* Keep the build-time target. */ });
           }
           function pickRandom() {
             if (slugs.length > 0) randomLink.href = '/events/' + slugs[Math.floor(Math.random() * slugs.length)];
+            return slugs.length > 0;
           }
           randomLink.addEventListener('pointerenter', loadSlugs);
           randomLink.addEventListener('focus', loadSlugs);
-          randomLink.addEventListener('click', pickRandom);
           randomLink.addEventListener('auxclick', pickRandom);
+          randomLink.addEventListener('click', function (event) {
+            // Clicks that open a new tab or window keep the browser's own handling.
+            if (pickRandom() || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+            event.preventDefault();
+            loadSlugs().then(function () {
+              pickRandom();
+              location.assign(randomLink.href);
+            });
+          });
         }
 
         // Read the displayed entry at click time so analytics follows the rotation.
