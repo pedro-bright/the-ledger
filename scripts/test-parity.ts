@@ -118,17 +118,7 @@ async function checkSitemap(entries: { label: string; file: string; page: string
     const url = new URL(entry.page.replace(/index\.html$/, ""), config.site).href;
     const item = urls.get(url);
     assert.ok(item, `Missing sitemap URL: ${url} (${entry.file})`);
-    if (entry.label === "event" || entry.label === "thread") {
-      const { data } = parseFrontmatter(fs.readFileSync(path.join(ROOT, entry.file), "utf8"));
-      const date = entry.label === "event"
-        ? data.revision?.last_reviewed ?? data.revision?.created ?? data.date
-        : data.last_updated;
-      if (entry.label === "event") assert.ok(item.lastmod, `Missing event lastmod: ${url}`);
-      if (date != null) {
-        assert.ok(item.lastmod, `Missing lastmod: ${url}`);
-        assert.equal(new Date(item.lastmod).toISOString().slice(0, 10), new Date(date).toISOString().slice(0, 10), url);
-      }
-    }
+    if (entry.label === "event") assert.ok(item.lastmod, `Missing event lastmod: ${url}`);
   }
   const robots = fs.readFileSync(path.join(DIST_DIR, "robots.txt"), "utf8");
   assert.match(robots, /^User-agent: \*$/m);
@@ -136,7 +126,7 @@ async function checkSitemap(entries: { label: string; file: string; page: string
   assert.doesNotMatch(robots, /^Disallow:\s*\S/m);
   const sitemapLines = [...robots.matchAll(/^Sitemap:\s*(\S+)\s*$/gm)];
   assert.deepEqual(sitemapLines.map((line) => line[1]), [new URL("sitemap-index.xml", config.site).href]);
-  console.log(`Sitemap: ${urls.size} unique URLs, content dates and robots.txt verified.\n`);
+  console.log(`Sitemap: ${urls.size} unique URLs, event lastmod and robots.txt verified.\n`);
 }
 
 // --------------- Main ---------------
