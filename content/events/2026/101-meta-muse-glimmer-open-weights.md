@@ -35,7 +35,7 @@ actors:
     role: commentator
 regions: [US]
 tags: [open-weights, apache-2-0, agentic-ai, local-inference, multimodal, meta-superintelligence-labs]
-threads: []
+threads: [open-vs-closed-weights]
 related: [meta-muse-spark-1-1, thinking-machines-inkling-open-weights, moonshot-kimi-k3-open-weights, anthropic-open-weights-policy-position]
 state: published
 revision:

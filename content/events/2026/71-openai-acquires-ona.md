@@ -26,7 +26,7 @@ actors:
     role: counterparty
 regions: [US, DE]
 tags: [acquisition, codex, agentic-ai, cloud-infrastructure, developer-tools, execution-environment]
-threads: []
+threads: [ai-agents-era]
 related: []
 state: published
 revision:

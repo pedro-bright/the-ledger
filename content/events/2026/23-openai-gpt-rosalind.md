@@ -24,7 +24,7 @@ actors:
     role: subject
 regions: [US]
 tags: [life-sciences, drug-discovery, genomics, domain-specific-models, trusted-access]
-threads: []
+threads: [ai-for-science]
 related: [openai-gpt-5-4-release]
 state: published
 revision:

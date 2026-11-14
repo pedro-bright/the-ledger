@@ -55,7 +55,7 @@ actors:
     role: context
 regions: [US]
 tags: [antitrust, litigation, ai-search, publishers, sherman-act, motion-to-dismiss]
-threads: []
+threads: [ai-copyright-wars]
 related: [google-ai-overviews-launch, nyt-tribune-v-perplexity-copyright]
 state: published
 revision:

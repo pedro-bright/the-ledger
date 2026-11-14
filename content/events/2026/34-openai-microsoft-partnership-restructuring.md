@@ -44,7 +44,7 @@ actors:
     role: executive
 regions: [US]
 tags: [microsoft-openai, exclusivity, agi-clause, multi-cloud, commercial-restructuring, partnership-governance, aws]
-threads: []
+threads: [openai-corporate-evolution]
 related: [openai-122b-round-852b]
 state: published
 revision:

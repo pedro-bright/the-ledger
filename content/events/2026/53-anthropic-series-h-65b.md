@@ -34,7 +34,7 @@ actors:
     role: counterparty
 regions: [US]
 tags: [funding, valuation, series-h, ipo-preparation, compute-infrastructure, revenue-growth]
-threads: []
+threads: [ai-valuation-cycle]
 related: [anthropic-series-g-380b, anthropic-amazon-aws-deal-2026, openai-ipo-confidential-filing]
 state: published
 revision:

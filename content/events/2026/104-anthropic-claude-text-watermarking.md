@@ -36,7 +36,7 @@ actors:
     role: related-party
 regions: [EU, US]
 tags: [watermarking, eu-ai-act, transparency, provenance, synthid, content-authentication]
-threads: []
+threads: [ai-governance-evolution]
 related: []
 state: published
 revision:

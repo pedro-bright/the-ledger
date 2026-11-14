@@ -24,7 +24,7 @@ actors:
     role: subject
 regions: [US]
 tags: [multi-agent-systems, red-teaming, collusion, agentic-ai, evaluations, emergent-behavior]
-threads: []
+threads: [frontier-safety-policies]
 related: [anthropic-cyber-evaluations-breach-three-organizations]
 state: published
 revision:

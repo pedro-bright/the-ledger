@@ -24,7 +24,7 @@ actors:
     role: subject
 regions: [CN]
 tags: [open-weights, mixture-of-experts, multimodal-models, model-release, long-context, chinese-ai]
-threads: []
+threads: [open-vs-closed-weights]
 related: [thinking-machines-inkling-open-weights]
 state: published
 revision:

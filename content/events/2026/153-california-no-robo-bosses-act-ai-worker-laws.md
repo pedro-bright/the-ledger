@@ -40,7 +40,7 @@ actors:
     role: advocate
 regions: [US]
 tags: [california, state-regulation, employment, automated-decision-systems, workplace-surveillance, newsom]
-threads: []
+threads: [ai-and-labor]
 related: [california-ai-auditor-registry-sb813-ab1405, newsom-executive-order-n-9-26-ai-kill-switch-oversight, california-sb53-frontier-ai-act]
 state: published
 revision:

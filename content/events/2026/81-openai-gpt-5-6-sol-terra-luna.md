@@ -30,7 +30,7 @@ actors:
     role: subject
 regions: [US]
 tags: [model-release, safety, over-agency, three-tier-pricing, preparedness-framework, agentic-ai]
-threads: []
+threads: [frontier-safety-policies]
 related: [openai-gpt-live-1-full-duplex-voice, openai-broadcom-jalapeno-chip]
 state: published
 revision:

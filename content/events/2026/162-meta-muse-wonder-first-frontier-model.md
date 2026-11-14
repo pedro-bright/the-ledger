@@ -37,7 +37,7 @@ actors:
     role: subject
 regions: [US]
 tags: [model-release, meta-superintelligence-labs, frontier-models, model-card, cbrn-risk, closed-weights]
-threads: []
+threads: [frontier-safety-policies]
 related: [meta-muse-spark-1-1, meta-muse-glimmer-open-weights]
 state: published
 revision:

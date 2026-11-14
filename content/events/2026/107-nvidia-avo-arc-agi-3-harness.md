@@ -33,7 +33,7 @@ actors:
     role: developer
 regions: [US]
 tags: [evaluations, agentic-ai, benchmarks, arc-agi, scaffolding, long-horizon-tasks]
-threads: []
+threads: [ai-agents-era]
 related: [anthropic-claude-opus-5-release, anthropic-multiagent-failure-modes]
 state: published
 revision:

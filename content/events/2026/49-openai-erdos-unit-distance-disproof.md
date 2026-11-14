@@ -24,7 +24,7 @@ actors:
     role: subject
 regions: [US]
 tags: [mathematics, discrete-geometry, reasoning-models, open-problems, combinatorics, autonomous-discovery]
-threads: []
+threads: [ai-for-science]
 related: []
 state: published
 revision:

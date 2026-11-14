@@ -42,7 +42,7 @@ actors:
     role: context
 regions: [UK]
 tags: [biosecurity, ai-for-science, public-institutions, compute-credits, government-funding]
-threads: []
+threads: [ai-for-science]
 related: [uk-aisi-regains-pre-release-access-after-us-hold, openai-gpt-rosalind, anthropic-biolab-claude-art-enzyme-discovery, google-deepmind-isomorphic-bioresilience, uk-ai-minister-cabinet-reorganization]
 state: published
 revision:

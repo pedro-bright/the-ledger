@@ -46,7 +46,7 @@ actors:
     role: context
 regions: [US]
 tags: [ipo, ai-chips, wafer-scale, cfius, national-security, infrastructure, openai-contract]
-threads: []
+threads: [ai-valuation-cycle]
 related: []
 state: published
 revision:

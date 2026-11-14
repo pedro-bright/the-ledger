@@ -30,7 +30,7 @@ actors:
     role: subject
 regions: [US]
 tags: [teen-safety, age-prediction, parental-controls, minors, content-moderation, product-segmentation]
-threads: []
+threads: [ai-companions-and-mental-health]
 related: [character-ai-minor-chat-ban, character-ai-google-teen-suicide-settlement]
 state: published
 revision:

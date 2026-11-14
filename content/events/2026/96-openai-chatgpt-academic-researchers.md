@@ -24,7 +24,7 @@ actors:
     role: subject
 regions: [US]
 tags: [academic-research, model-access, scientific-discovery, research-infrastructure, frontier-models]
-threads: []
+threads: [ai-for-science]
 related: [openai-gpt-rosalind, openai-trusted-access-cyber, openai-erdos-unit-distance-disproof]
 state: published
 revision:

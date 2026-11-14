@@ -32,7 +32,7 @@ actors:
     role: counterparty
 regions: [CN, US]
 tags: [open-weight, moe, price-compression, chinese-ai, huawei-ascend, mit-license, export-controls, agentic]
-threads: []
+threads: [open-vs-closed-weights, chip-export-controls]
 related: [deepseek-r1-distill-impact]
 state: published
 revision:

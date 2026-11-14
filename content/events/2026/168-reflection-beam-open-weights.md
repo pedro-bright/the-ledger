@@ -55,7 +55,7 @@ actors:
     role: investor
 regions: [US]
 tags: [open-weights, mixture-of-experts, apache-2-0, reinforcement-learning, coding-agents]
-threads: []
+threads: [open-vs-closed-weights]
 related: [meta-muse-spark-open-weights, thinking-machines-inkling-open-weights, qwen3-8-max-open-weights, meta-muse-glimmer-open-weights]
 state: published
 revision:
