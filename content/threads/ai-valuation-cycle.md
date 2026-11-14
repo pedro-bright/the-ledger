@@ -61,7 +61,7 @@ Amazon added a $5 billion investment, with up to $20 billion more tied to commer
 Four days later Google committed up to $40 billion, $10 billion of it in equity at about a $350 billion valuation and $30 billion contingent on undisclosed milestones ([Google commitment](/events/google-anthropic-40b-commitment)).
 Both deals fit the synthesis's account of strategic capital, with the added feature that equity flows to Anthropic and operational spending flows back to the investor as cloud fees ([Anthropic-AWS deal](/events/anthropic-amazon-aws-deal-2026)).
 
-Transactions involving coding tools bear on the synthesis's view that coding is the clearest single revenue driver.
+Transactions involving coding tools bear on the synthesis's view that coding is the clearest single revenue driver ([SpaceX-Cursor option](/events/spacex-cursor-acquisition-option); [Cognition round](/events/cognition-1b-round-26b)).
 SpaceX secured an option to acquire Cursor for $60 billion, with a $10 billion collaboration payment as the alternative, preempting a Cursor round at more than $50 billion ([SpaceX-Cursor option](/events/spacex-cursor-acquisition-option)).
 Cognition raised more than $1 billion at $26 billion post-money and reported a $492 million annualized run rate that had grown 50% month over month for six months ([Cognition round](/events/cognition-1b-round-26b)).
 On June 16, four trading days after its own IPO, SpaceX signed an all-stock merger agreement for Cursor at an implied $60 billion equity value, paying in its newly listed shares ([SpaceX-Cursor merger](/events/spacex-cursor-merger-agreement)).

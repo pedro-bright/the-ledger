@@ -50,7 +50,7 @@ The standard framing pits AI displacement (AI replaces human workers) against AI
 *Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
 
 In April 2026 Meta cut about 8,000 employees and closed 6,000 open roles, with its executives naming AI efficiency as the reason but publishing no productivity metrics ([Meta's layoffs](/events/meta-10pct-layoffs-ai-efficiency)).
-It is the kind of corporate attribution the synthesis describes as hard to verify.
+It is the kind of corporate attribution the synthesis describes as hard to verify ([Meta's layoffs](/events/meta-10pct-layoffs-ai-efficiency)).
 In October Anthropic reported that the junior share of its own technical hires fell from 27% to 9% ([Anthropic's employment report](/events/anthropic-employment-report-junior-hiring-decline)).
 The figures are self-reported and unaudited, and they carry the [Economic Index](/events/anthropic-economic-index-labor-study) finding of reduced entry-level hiring into a single firm with intensive agent use ([Anthropic's employment report](/events/anthropic-employment-report-junior-hiring-decline)).
 
