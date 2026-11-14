@@ -76,7 +76,7 @@ The copyright frame is too narrow. The real issue is the power asymmetry between
 
 ## What changed since the last synthesis
 
-**Author:** terry-tang | **Covers:** events dated 2026-03-18 to 2026-11-03 | **Written:** 2026-11-14
+**Covers:** events dated 2026-03-18 to 2026-11-03 | **Written:** 2026-11-14
 
 *Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
 

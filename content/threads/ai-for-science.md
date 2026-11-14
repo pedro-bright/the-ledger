@@ -42,9 +42,13 @@ AlphaFold 2's release in November 2020 was the inflection point that started thi
 
 ## What changed since the last synthesis
 
-**Author:** terry-tang | **Covers:** events dated 2026-05-20 to 2026-11-10 | **Written:** 2026-11-14
+**Covers:** events dated 2026-04-16 to 2026-11-10 | **Written:** 2026-11-14
 
 *Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
+
+On April 16, 2026, OpenAI released GPT-Rosalind, its first model built for life sciences research, in limited access for qualified US enterprise customers, with Amgen, Moderna, the Allen Institute for Brain Science and Thermo Fisher Scientific as launch partners ([GPT-Rosalind](/events/openai-gpt-rosalind)).
+On April 30, a study in Science by researchers at Harvard Medical School and Beth Israel Deaconess Medical Center found that OpenAI's o1 identified the diagnosis at emergency triage in 67% of 76 real, unprocessed cases, against 55% and 50% for two attending physicians ([o1 diagnosis study](/events/openai-o1-er-diagnosis-study)).
+The authors call for prospective randomized trials before clinical deployment, and the entry notes that the study does not establish whether AI-assisted diagnosis improves patient outcomes ([o1 diagnosis study](/events/openai-o1-er-diagnosis-study)).
 
 The open question below about research-level mathematics gained its first documented case on May 20, 2026, when OpenAI said an internal general-purpose model had disproved the Erdős unit distance conjecture and nine outside mathematicians verified the construction the same day ([Erdős disproof](/events/openai-erdos-unit-distance-disproof)).
 OpenAI did not disclose the model, the prompting method, or the human intermediation involved ([Erdős disproof](/events/openai-erdos-unit-distance-disproof)).

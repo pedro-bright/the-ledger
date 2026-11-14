@@ -66,7 +66,7 @@ AI capabilities are too strategically consequential to be withheld from democrat
 
 ## What changed since the last synthesis
 
-**Author:** terry-tang | **Covers:** events dated 2026-04-19 to 2026-06-05 | **Written:** 2026-11-14
+**Covers:** events dated 2026-04-19 to 2026-06-05 | **Written:** 2026-11-14
 
 *Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
 

@@ -47,7 +47,7 @@ The video game agreement's focus on voice and likeness reflects where AI capabil
 
 ## What changed since the last synthesis
 
-**Author:** terry-tang | **Covers:** events dated 2026-10-06 | **Written:** 2026-11-14
+**Covers:** events dated 2026-10-06 | **Written:** 2026-11-14
 
 *Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
 

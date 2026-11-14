@@ -90,7 +90,7 @@ Open-weight releases from Meta and DeepSeek serve the strategic interests of the
 
 ## What changed since the last synthesis
 
-**Author:** terry-tang | **Covers:** events dated 2026-04-24 to 2026-10-29 | **Written:** 2026-11-14
+**Covers:** events dated 2026-04-24 to 2026-10-29 | **Written:** 2026-11-14
 
 *Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
 

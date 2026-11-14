@@ -51,7 +51,7 @@ Late 2025 produced the most consequential empirical findings of the thread. Anth
 
 ## What changed since the last synthesis
 
-**Author:** terry-tang | **Covers:** events dated 2026-05-05 to 2026-11-09 | **Written:** 2026-11-14
+**Covers:** events dated 2026-05-05 to 2026-11-09 | **Written:** 2026-11-14
 
 *Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
 

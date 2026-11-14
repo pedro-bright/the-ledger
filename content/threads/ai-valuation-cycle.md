@@ -49,9 +49,12 @@ Sovereign and strategic capital has been the demand accelerant that has pushed v
 
 ## What changed since the last synthesis
 
-**Author:** terry-tang | **Covers:** events dated 2026-04-20 to 2026-10-29 | **Written:** 2026-11-14
+**Covers:** events dated 2026-04-17 to 2026-10-29 | **Written:** 2026-11-14
 
 *Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
+
+On April 17, 2026, Cerebras Systems filed publicly for a Nasdaq IPO, its second attempt after a national security review of a minority investor blocked its 2024 filing, reporting $510 million in 2025 revenue and a $10 billion commercial contract with OpenAI ([Cerebras IPO filing](/events/cerebras-ipo-filing-2026)).
+The entry records it as the first AI chip infrastructure company other than NVIDIA to reach US public markets in the current cycle ([Cerebras IPO filing](/events/cerebras-ipo-filing-2026)).
 
 In the week after the last synthesis, Anthropic's two largest cloud suppliers enlarged their equity positions ([Google commitment](/events/google-anthropic-40b-commitment)).
 Amazon added a $5 billion investment, with up to $20 billion more tied to commercial milestones, while Anthropic committed to spend more than $100 billion on AWS over the next decade ([Anthropic-AWS deal](/events/anthropic-amazon-aws-deal-2026)).
