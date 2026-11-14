@@ -12,7 +12,7 @@ actors:
     role: executive
 regions: [US]
 tags: [corporate-governance, nonprofit-conversion, restructuring]
-threads: [scaling-laws-debate]
+threads: [scaling-laws-debate, openai-corporate-evolution]
 sources:
   - url: https://www.reuters.com/technology/artificial-intelligence/openai-remove-non-profit-control-give-sam-altman-equity-2024-09-25/
     title: "Exclusive: OpenAI to remove non-profit control and give Sam Altman equity"

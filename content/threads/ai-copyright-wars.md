@@ -11,6 +11,7 @@ contestation:
   challenge_window: open
 last_updated: 2026-03-08
 events:
+  - andersen-v-stability-ai-artists-lawsuit
   - nyt-openai-lawsuit
   - authors-guild-ai-lawsuits
   - sora-announcement

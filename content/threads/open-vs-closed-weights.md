@@ -11,6 +11,7 @@ contestation:
   challenge_window: open
 last_updated: 2026-03-08
 events:
+  - meta-llama-research-release
   - meta-llama-2-release
   - mistral-7b-release
   - meta-llama-3-release

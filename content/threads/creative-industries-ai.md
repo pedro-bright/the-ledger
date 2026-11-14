@@ -11,6 +11,7 @@ contestation:
   challenge_window: open
 last_updated: 2026-04-19
 events:
+  - wga-strike-ai-demands
   - sag-aftra-video-game-strike-end
 controversies:
   - ai-training-copyright
