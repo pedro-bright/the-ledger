@@ -11,6 +11,7 @@ contestation:
   challenge_window: open
 last_updated: 2026-04-19
 events:
+  - new-hampshire-biden-ai-robocall
   - germany-bundestag-ai-disinformation
   - canada-carney-deepfake-election
   - take-it-down-act-signed

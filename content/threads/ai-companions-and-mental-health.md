@@ -11,6 +11,7 @@ contestation:
   challenge_window: open
 last_updated: 2026-04-19
 events:
+  - garcia-v-character-ai-wrongful-death-suit
   - character-ai-minor-chat-ban
   - character-ai-google-teen-suicide-settlement
 ---

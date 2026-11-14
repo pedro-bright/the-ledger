@@ -11,6 +11,7 @@ contestation:
   challenge_window: open
 last_updated: 2026-04-19
 events:
+  - anthropic-responsible-scaling-policy-v1
   - anthropic-automated-researchers-sandbag
   - anthropic-circuit-tracing-biology-llm
   - openai-preparedness-framework-v2

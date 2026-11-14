@@ -11,6 +11,7 @@ contestation:
   challenge_window: open
 last_updated: 2026-04-19
 events:
+  - openai-nonprofit-restructuring
   - openai-40b-softbank-round
   - openai-nonprofit-retains-control
   - openai-10b-arr-milestone
