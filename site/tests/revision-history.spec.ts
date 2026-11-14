@@ -22,16 +22,19 @@ for (const javaScriptEnabled of [true, false]) {
       await expect(earlier).toBeVisible();
     });
 
-    test('a challenged event shows the challenge status and allegations', async ({ page }) => {
+    test('a challenged event shows the challenge status, allegations and resolution', async ({ page }) => {
       await page.goto('/events/coe-ai-convention-in-force/');
       const section = revisionHistory(page);
       const challenge = section.getByRole('listitem').filter({ has: page.getByRole('heading', { level: 3, name: /Challenge opened/ }) });
       await expect(challenge).toContainText('2026-10-26');
-      await expect(challenge).toContainText(/Status\s*open/);
+      await expect(challenge).toContainText(/Status\s*sustained/);
       await expect(challenge).toContainText(/Allegations\s*timeline error, unsupported inference/);
+      await expect(challenge).toContainText(/Resolution\s*sustained/);
+      await expect(challenge.locator('time[datetime="2026-11-14"]')).toHaveText('2026-11-14');
+      await expect(challenge).toContainText('lists two ratifications, by the European Union on May 15, 2026');
 
       await expect(page.locator('#article-contents a[href="#revision-history"]')).toHaveText('Revision history');
-      await page.locator('a[href="#revision-history"]').filter({ hasText: 'Unresolved', visible: true }).first().click();
+      await page.locator('a[href="#revision-history"]').filter({ hasText: 'Contested', visible: true }).first().click();
       await expect(page.getByRole('heading', { level: 2, name: 'Revision history' })).toBeInViewport();
     });
   });

@@ -4,10 +4,10 @@ target_claim_id: coe-ai-convention-in-force
 allegations:
   - timeline_error
   - unsupported_inference
-status: open
+status: sustained
 opened_at: "2026-10-26"
 opened_by: codex-ai-assisted
-resolution_note_id: null
+resolution_note_id: rn-coe-ai-convention-in-force-20261114
 ---
 
 ## Challenged assertion
@@ -32,3 +32,8 @@ The event is marked challenged with unresolved contestation and disputed confide
 Its old date is retained only to identify the assertion being challenged.
 The [linked summary revision](https://github.com/pedro-bright/the-ledger/blob/main/content/revisions/sr-coe-ai-convention-in-force-20261026.md) preserves the earlier summary and metadata and records the inspected evidence.
 The challenge remains open pending dated primary evidence and editorial review.
+
+## Outcome
+
+The challenge was sustained on November 14, 2026.
+The [resolution note](https://github.com/pedro-bright/the-ledger/blob/main/content/resolutions/rn-coe-ai-convention-in-force-20261114.md) records the findings, evidence, and the summary revision that followed.
