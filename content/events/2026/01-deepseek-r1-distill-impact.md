@@ -23,21 +23,36 @@ sources:
     date: '2025-01-22'
     accessed: '2026-10-26'
     archive_url: https://web.archive.org/web/20261026162442/https://arxiv.org/abs/2501.12948v1
-state: challenged
+  - url: https://huggingface.co/blog/open-r1
+    title: 'Open-R1: a fully open reproduction of DeepSeek-R1'
+    type: primary_document
+    publisher: Hugging Face
+    date: '2025-01-28'
+    accessed: '2026-11-14'
+    archive_url: https://web.archive.org/web/20250306100821/https://huggingface.co/blog/open-r1
+  - url: https://www.open-thoughts.ai/blog/launch
+    title: Launching the Open Thoughts Project
+    type: primary_document
+    publisher: Open Thoughts
+    date: '2025-01-28'
+    accessed: '2026-11-14'
+    archive_url: https://web.archive.org/web/20250306123229/https://www.open-thoughts.ai/blog/launch
+state: published
 contestation:
-  status: unresolved
+  status: contested
   last_challenged: '2026-10-26'
 revision:
-  last_reviewed: 2026-10-26
+  last_reviewed: 2026-11-14
   draft_assistance: ai-assisted
   final_author: terry-tang
 ---
 
 ## Summary
 
-The claim of a distinct DeepSeek-R1 distillation adoption event on January 15, 2026 is under challenge.
-DeepSeek's January 2025 report documents six distilled models, but the listed evidence does not establish the asserted early-2026 community adoption wave or its precise date.
-The original date remains an identifier for the challenged assertion, not a verified milestone.
+This entry records a trend, not a dated event: no source supports a distinct DeepSeek-R1 distillation milestone on January 15, 2026.
+DeepSeek's R1 report, first posted January 22, 2025, released six smaller Qwen- and Llama-based models distilled from R1.
+Within a week, community projects began distilling R1 themselves: on January 28, 2025, Hugging Face announced Open-R1, whose first step was to replicate the R1-Distill models, and the Open Thoughts project wrote that with R1's release, reasoning demonstrations "can now be synthetically created at low cost and at scale."
+No dated source in this record measures the trend's size or places a peak in early 2026, and the date retained here identifies the original assertion only.
 
 ## Editorial challenge, October&nbsp;26,&nbsp;2026
 
@@ -48,7 +63,16 @@ A dated adoption dataset or contemporaneous reporting is needed before this can 
 The date is not replaced with the technique's 2025 release, which is already separately recorded.
 
 [Revision record with the prior summary and metadata](https://github.com/pedro-bright/the-ledger/blob/main/content/revisions/sr-deepseek-r1-distill-impact-20261026.md).
-[Open challenge](https://github.com/pedro-bright/the-ledger/blob/main/content/challenges/cc-deepseek-r1-distill-impact-20261026.md).
+[Challenge record](https://github.com/pedro-bright/the-ledger/blob/main/content/challenges/cc-deepseek-r1-distill-impact-20261026.md).
+
+## Challenge resolution, November&nbsp;14,&nbsp;2026
+
+The challenge was sustained.
+No source supports a dated event on January 15, 2026, and the community distillation of R1 that the original entry describes began in January 2025.
+The summary above was re-scoped as an attributed account of that trend.
+
+[Resolution note](https://github.com/pedro-bright/the-ledger/blob/main/content/resolutions/rn-deepseek-r1-distill-impact-20261114.md).
+[Revision record for the re-scoped summary](https://github.com/pedro-bright/the-ledger/blob/main/content/revisions/sr-deepseek-r1-distill-impact-20261114.md).
 
 The original narrative below is preserved as published; use the revised summary and this note for the corrected account.
 

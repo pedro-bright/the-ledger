@@ -137,7 +137,7 @@ test.describe('reading layout regressions', () => {
 
   const MARKERS = [
     { route: '/events/anthropic-dod-debate-2026', expected: ['Landmark', 'Medium confidence'] },
-    { route: '/events/deepseek-r1-distill-impact', expected: ['Major', 'Low confidence', 'Unresolved'] },
+    { route: '/events/deepseek-r1-distill-impact', expected: ['Major', 'Low confidence', 'Contested'] },
     { route: `/events/${SLUGS.event}`, expected: ['Landmark'] },
     { route: `/threads/${SLUGS.thread}`, expected: ['Active', 'Contested'] },
     { route: '/threads/ai-and-labor', expected: ['Active'] },

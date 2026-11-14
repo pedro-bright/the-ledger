@@ -4,7 +4,7 @@ title: Council of Europe AI Convention Entry into Force
 date: 2025-11-01
 category: policy
 significance: landmark
-confidence: disputed
+confidence: high
 actors:
   - id: council-of-europe
     role: subject
@@ -24,27 +24,28 @@ sources:
     title: Council of Europe Treaty Office — CETS 225 Signatures and Ratifications
     type: official
     publisher: Council of Europe
-    accessed: '2026-09-12'
-    archive_url: https://web.archive.org/web/20260422133913/https://www.coe.int/en/web/conventions/full-list;?module=signatures-by-treaty&treatynum=225
+    accessed: '2026-11-14'
+    archive_url: https://web.archive.org/web/20261107121727/https://www.coe.int/en/web/conventions/full-list?module=signatures-by-treaty&treatynum=225
   - url: https://www.europarl.europa.eu/doceo/document/A-10-2026-0007_EN.html
     title: European Parliament Report A10-0007/2026 — Recommendation on the Framework Convention on AI
     type: primary_document
     publisher: European Parliament
-state: challenged
+state: published
 contestation:
-  status: unresolved
+  status: contested
   last_challenged: '2026-10-26'
 revision:
-  last_reviewed: 2026-10-26
+  last_reviewed: 2026-11-14
   draft_assistance: ai-assisted
   final_author: terry-tang
 ---
 
 ## Summary
 
-The claim that the Council of Europe's AI Framework Convention entered into force on November 1, 2025 is under challenge.
-A source audit's September 12, 2026 reading of the Treaty Office chart found no entry-into-force date, and the inspected evidence does not establish the asserted UK, French, and Norwegian ratifications.
-The date retained in this entry identifies the original assertion and must not be read as a verified entry-into-force date.
+The Council of Europe's Framework Convention on Artificial Intelligence (CETS 225) did not enter into force on November 1, 2025.
+The Treaty Office chart, as of November 7, 2026, lists two ratifications, by the European Union on May 15, 2026 and by Bosnia and Herzegovina on October 28, 2026, against the five, including at least three Council of Europe member states, that entry into force requires.
+The United Kingdom and Norway signed the convention on September 5, 2024 but had not ratified it, and France had neither signed nor ratified it.
+The date retained in this entry identifies the original assertion and is not an entry-into-force date.
 
 ## Editorial challenge, October&nbsp;26,&nbsp;2026
 
@@ -57,7 +58,17 @@ This review does not infer the treaty's status after September 12, 2026 or an al
 A directly inspected, dated depositary record is required to resolve the claimed November 2025 event, country ratifications, and signature counts.
 
 [Revision record with the prior summary and metadata](https://github.com/pedro-bright/the-ledger/blob/main/content/revisions/sr-coe-ai-convention-in-force-20261026.md).
-[Open challenge](https://github.com/pedro-bright/the-ledger/blob/main/content/challenges/cc-coe-ai-convention-in-force-20261026.md).
+[Challenge record](https://github.com/pedro-bright/the-ledger/blob/main/content/challenges/cc-coe-ai-convention-in-force-20261026.md).
+
+## Challenge resolution, November&nbsp;14,&nbsp;2026
+
+The challenge was sustained.
+The Treaty Office chart for CETS 225, status as of November 7, 2026, gives no entry-into-force date and lists two of the five ratifications that entry into force requires.
+The United Kingdom and Norway had signed but not ratified, and France had neither signed nor ratified.
+The summary above was corrected accordingly.
+
+[Resolution note](https://github.com/pedro-bright/the-ledger/blob/main/content/resolutions/rn-coe-ai-convention-in-force-20261114.md).
+[Revision record for the corrected summary](https://github.com/pedro-bright/the-ledger/blob/main/content/revisions/sr-coe-ai-convention-in-force-20261114.md).
 
 The original narrative below is preserved as published; use the revised summary and this note for the corrected account.
 
