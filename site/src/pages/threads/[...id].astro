@@ -146,7 +146,7 @@ const subtitle = thread.core_question ? `— ${thread.core_question}` : undefine
 
     <Fragment slot="infobox">
       <Infobox title="Thread metadata">
-        <dl>
+        <dl class="thread-meta">
           {thread.status && <><dt>Status</dt><dd><span class={`status-chip status-chip--${thread.status}`}>{thread.status}</span></dd></>}
           {thread.contestation?.status && <><dt>Contestation</dt><dd><ContestationBadge status={thread.contestation.status} /></dd></>}
           {thread.started && <><dt>Started</dt><dd><time class="mono" datetime={thread.started}>{thread.started}</time></dd></>}
@@ -221,6 +221,12 @@ const subtitle = thread.core_question ? `— ${thread.core_question}` : undefine
 </Base>
 
 <style>
+  /* Cap the label column so "Synthesis updated" wraps and the contestation
+     badge keeps enough width to stay inside the 280px infobox. Only applies
+     while the infobox shows two columns (Infobox.astro stacks at <=260px). */
+  @container (min-width: 261px) {
+    :global(.wiki-infobox) dl.thread-meta { grid-template-columns: fit-content(45%) minmax(0, 1fr); }
+  }
   .thread-section { margin-top: 2rem; }
   .thread-notice { margin: 8px 0 0; font-family: var(--font-sans); font-size: var(--text-meta); color: var(--color-ink-muted); line-height: 1.45; }
   .thread-timeline,
