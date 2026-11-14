@@ -474,6 +474,14 @@ export function buildThreadEventMap(events: EventData[]): Map<string, EventData[
   return map;
 }
 
+// A thread's events: its own `events` list plus every event that declares the thread, oldest first.
+export function getThreadEvents(thread: ThreadData, events: EventData[]): EventData[] {
+  const listed = new Set(thread.events ?? []);
+  return events
+    .filter((e) => listed.has(e.id) || e.threads?.includes(thread.id))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+}
+
 // Build a map of actor IDs to their events
 export function buildActorEventMap(events: EventData[]): Map<string, EventData[]> {
   const map = new Map<string, EventData[]>();
