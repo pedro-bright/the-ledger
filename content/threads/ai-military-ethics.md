@@ -9,7 +9,7 @@ curator_scope: initial-synthesis
 contestation:
   status: contested
   challenge_window: open
-last_updated: 2026-03-08
+last_updated: 2026-11-14
 events:
   - openai-removes-military-ban
   - biden-executive-order-ai
@@ -24,7 +24,7 @@ controversies:
 
 ## Canonical Synthesis
 
-**Author:** terry-tang | **Last updated:** 2026-03-08
+**Author:** terry-tang | **Last updated:** 2026-11-14
 
 The question of whether frontier AI labs should collaborate with military and defense institutions has traced a clear and accelerating arc from 2017 to 2026. What began as a principled refusal — Google's withdrawal from Project Maven in 2018 after employee protests — has evolved into a far more complex landscape where economic incentives, national security imperatives, and geopolitical competition increasingly override ethical objections.
 
@@ -63,6 +63,21 @@ Collaboration with military institutions legitimizes the use of AI for warfare a
 AI capabilities are too strategically consequential to be withheld from democratic institutions. The relevant question is not whether AI will be used for military purposes — it will — but whether democratic nations will lead in military AI or cede that advantage to authoritarian states. Ethical abstention by Western AI labs doesn't prevent military AI; it merely ensures that the military AI that gets built reflects authoritarian rather than democratic values.
 
 **Proponents:** Defense establishment, national security hawks, some policy pragmatists.
+
+## What changed since the last synthesis
+
+**Author:** terry-tang | **Covers:** events dated 2026-04-19 to 2026-06-05 | **Written:** 2026-11-14
+
+*Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
+
+The first open question below, whether Anthropic's restrictive military policy would hold, was tested in the spring of 2026, and the policy held at a commercial cost ([classified network agreements](/events/dod-classified-network-ai-agreements)).
+On April 19, Axios reported that the National Security Agency, a Defense Department component, was using Anthropic's Claude Mythos Preview through Project Glasswing while the Pentagon maintained a supply chain risk designation against the company in court ([NSA use of Mythos](/events/nsa-mythos-access-dod-blacklist)).
+On May 1, the Department of War signed agreements with eight companies, including OpenAI, Google, and Microsoft, to deploy AI on classified IL6 and IL7 networks, and Anthropic was excluded after refusing to remove contract terms barring use of Claude for autonomous weapons development and domestic mass surveillance ([classified network agreements](/events/dod-classified-network-ai-agreements)).
+The dispute behind that exclusion is recorded in the [February 2026 Anthropic and Department of War entry](/events/anthropic-dod-debate-2026), which an October 2026 editorial correction narrowed to those two exceptions.
+
+On June 5, President Trump signed NSPM-11, which rescinds the Biden administration's NSM-25, orders an update to the Pentagon's autonomous weapons directive within 90 days, and requires agencies to end contracts with AI companies that "repeatedly limit government use of their technology" ([NSPM-11](/events/trump-nspm-11-ai-national-security)).
+The memorandum does not name Anthropic, but news accounts read the termination clause as a response to that standoff, and it bears on the open question about acceptable-use policies: the administration now treats a vendor's use restrictions as grounds for ending a contract ([NSPM-11](/events/trump-nspm-11-ai-national-security)).
+Whether the memorandum's replacement for NSM-25's human oversight requirement preserves equivalent oversight in practice was not testable at signing, and its classified annex was not made public ([NSPM-11](/events/trump-nspm-11-ai-national-security)).
 
 ## Open Questions
 
