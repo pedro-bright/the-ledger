@@ -43,5 +43,6 @@ archive_url: https://web.archive.org/web/20261107121727/https://www.coe.int/en/w
 
 - `state`: `challenged` to `published`.
 - `contestation.status`: `unresolved` to `contested`.
+- `confidence`: `disputed` to `high`, because the corrected summary rests on the Treaty Office chart, the depositary's official record of the convention's status, and no cited source disagrees with it.
 - The Treaty Office source now points to the November 7, 2026 archived chart, accessed November 14, 2026.
 - `revision.last_reviewed`: 2026-10-26 to 2026-11-14.

@@ -22,7 +22,7 @@ const config: Record<
     color: '#92400E',
     bg: '#FEF3C7',
     border: '#F2D888',
-    hint: 'At least one formal challenge is open against this claim.',
+    hint: 'At least one formal challenge has been filed against this claim.',
   },
   superseded: {
     label: 'Superseded',

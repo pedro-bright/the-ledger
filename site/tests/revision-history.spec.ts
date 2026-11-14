@@ -34,7 +34,10 @@ for (const javaScriptEnabled of [true, false]) {
       await expect(challenge).toContainText('lists two ratifications, by the European Union on May 15, 2026');
 
       await expect(page.locator('#article-contents a[href="#revision-history"]')).toHaveText('Revision history');
-      await page.locator('a[href="#revision-history"]').filter({ hasText: 'Contested', visible: true }).first().click();
+      await expect(page.getByText('Disputed', { exact: true })).toHaveCount(0);
+      const contested = page.locator('a[href="#revision-history"]').filter({ hasText: 'Contested', visible: true }).first();
+      await expect(contested.locator('[title]')).toHaveAttribute('title', 'At least one formal challenge has been filed against this claim.');
+      await contested.click();
       await expect(page.getByRole('heading', { level: 2, name: 'Revision history' })).toBeInViewport();
     });
   });

@@ -93,8 +93,8 @@ The dimensions are independent and can be queried in combination. Some informati
 
 | Reader View | Simplified Badge | Criteria |
 |-------------|-----------------|----------|
-| "Established" | ✓ | Corroborated + editorially accepted + unchallenged/resolved |
-| "Contested" | ⚡ | Any active challenge or dispute |
+| "Established" | ✓ | Corroborated + editorially accepted + unchallenged |
+| "Contested" | ⚡ | At least one formal challenge filed, whether open or resolved |
 | "Emerging" | ○ | Published but not yet fully corroborated |
 | "Superseded" | ↻ | Temporal status is superseded |
 | "Retracted" | ✗ | Temporal status is retracted |

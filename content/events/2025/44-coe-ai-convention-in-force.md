@@ -4,7 +4,7 @@ title: Council of Europe AI Convention Entry into Force
 date: 2025-11-01
 category: policy
 significance: landmark
-confidence: disputed
+confidence: high
 actors:
   - id: council-of-europe
     role: subject
