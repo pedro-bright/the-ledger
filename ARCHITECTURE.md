@@ -824,6 +824,8 @@ claim_evidence:
 
 The original "Retrospective" concept carried too many semantic loads. It is now split into **4 distinct artifacts**, each with a single purpose:
 
+The `target_claim_id` and `target_summary_id` values in the 14.1 and 14.2 examples show the planned claim-level model: `scripts/validate.ts` currently accepts only an existing event or synthesis id as a target, so a record copied from these examples fails validation until claim-level targets exist.
+
 ### 14.1 Challenge Case
 
 Formal contestation of a specific claim. Creates a procedural record.
