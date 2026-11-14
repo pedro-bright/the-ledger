@@ -7,7 +7,7 @@ import { anchorSections } from '../../lib/markdown';
 // With a `lead` slot, the metadata disclosure follows the lead and starts closed on phones; on
 // desktop the script below moves it before the lead and opens it, so it floats beside the text.
 // Without a `lead` slot, the infobox floats directly in the body.
-// Page provides `markers`, `infobox`, `lead`, default body, `references`, `seeAlso`, `footer` via slots.
+// Page provides `markers`, `infobox`, `lead`, default body, `revisions`, `references`, `seeAlso`, `footer` via slots.
 interface Props {
   title: string;
   subtitle?: string;
@@ -31,9 +31,13 @@ const hasFooter = Astro.slots.has('footer');
 const usedAnchors = new Set<string>();
 const lead = anchorSections(hasLead ? await Astro.slots.render('lead') : '', usedAnchors);
 const body = anchorSections(await Astro.slots.render('default'), usedAnchors);
+// A conditional slot counts as present even when it renders nothing, so test its output.
+const revisions = Astro.slots.has('revisions') ? (await Astro.slots.render('revisions')).trim() : '';
+const hasRevisions = revisions !== '';
 const sections = [...lead.sections, ...body.sections].filter(({ level }) => level === 2);
 const articleWords = articleText.replace(/<[^>]*>/g, ' ').trim().split(/\s+/).length;
 const isLong = sections.length >= 3 && articleWords >= 600;
+if (hasRevisions) sections.push({ id: 'revision-history', title: 'Revision history', level: 2 });
 if (hasReferences) sections.push({ id: 'refs-head', title: 'References', level: 2 });
 if (hasSeeAlso) sections.push({ id: 'see-also-head', title: 'See also', level: 2 });
 ---
@@ -85,6 +89,13 @@ if (hasSeeAlso) sections.push({ id: 'see-also-head', title: 'See also', level: 2
       <Fragment set:html={body.content} />
     </div>
   </div>
+
+  {hasRevisions && (
+    <section class="wiki-article__revisions" aria-labelledby="revision-history">
+      <h2 id="revision-history" class="wiki-article__h2">Revision history</h2>
+      <Fragment set:html={revisions} />
+    </section>
+  )}
 
   {hasReferences && (
     <section class="wiki-article__references" aria-labelledby="refs-head">
@@ -309,6 +320,7 @@ if (hasSeeAlso) sections.push({ id: 'see-also-head', title: 'See also', level: 2
     padding-bottom: 0.375rem;
     border-bottom: 1px solid var(--color-rule);
   }
+  .wiki-article__revisions,
   .wiki-article__references {
     margin-top: 2.5rem;
   }

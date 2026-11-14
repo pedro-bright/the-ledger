@@ -12,11 +12,15 @@ import { SLUGS } from './_slugs';
  *    the canvas, so no canvas-specific exclusions are needed today.
  *  - No rules are disabled. If this becomes flaky on `color-contrast` after a
  *    visual design change, narrow the exclusion and document it here.
+ *  - The revised-event route checks only its revision history: the GPT-5 entry's
+ *    infobox actor list already fails `link-in-text-block` on its own.
  */
 
-const ROUTES: Array<{ path: string; label: string }> = [
+const ROUTES: Array<{ path: string; label: string; include?: string }> = [
   { path: '/', label: 'home' },
   { path: `/events/${SLUGS.event}`, label: 'event' },
+  { path: '/events/openai-gpt-5-release', label: 'revised-event', include: '.wiki-article__revisions' },
+  { path: '/events/coe-ai-convention-in-force', label: 'challenged-event' },
   { path: '/threads', label: 'threads-index' },
   { path: `/threads/${SLUGS.thread}`, label: 'thread-detail' },
   { path: '/controversies', label: 'controversies-index' },
@@ -32,7 +36,7 @@ test.describe('a11y (axe)', () => {
     test.skip(testInfo.project.name !== 'chromium', 'desktop only');
   });
 
-  for (const { path, label } of ROUTES) {
+  for (const { path, label, include } of ROUTES) {
     test(`${label} — no serious/critical violations`, async ({ page }) => {
       await page.goto(path);
       // Wait a tick for hydration on routes with client components (Explorer, Graph).
@@ -43,9 +47,12 @@ test.describe('a11y (axe)', () => {
         await page.locator('#explorer-search').waitFor({ state: 'visible' });
       }
 
-      const result = await new AxeBuilder({ page })
-        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-        .analyze();
+      const builder = new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']);
+      if (include) {
+        await expect(page.locator(include)).toBeVisible();
+        builder.include(include);
+      }
+      const result = await builder.analyze();
 
       const serious = result.violations.filter(
         (v) => v.impact === 'serious' || v.impact === 'critical',

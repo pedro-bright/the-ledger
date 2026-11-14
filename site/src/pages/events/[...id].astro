@@ -8,7 +8,9 @@ import SignificanceFlag from '../../components/wiki/SignificanceFlag.astro';
 import ConfidenceBadge from '../../components/ConfidenceBadge';
 import ContestationBadge from '../../components/ContestationBadge';
 import SignificanceHistory from '../../components/SignificanceHistory';
-import { loadEvents, loadThreads, loadActors, splitArticleLead } from '../../lib/content';
+import {
+  loadEvents, loadThreads, loadActors, loadSummaryRevisions, loadChallenges, loadResolutions, splitArticleLead,
+} from '../../lib/content';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -68,6 +70,18 @@ const hasSigHistory = event.significance_history && event.significance_history.l
 const description = `${event.title} — ${event.date}`;
 const { created, last_reviewed: reviewed, final_author: finalAuthor } = event.revision ?? {};
 const lastReviewed = reviewed && finalAuthor !== 'pedro-bright' && (!created || reviewed > created) ? reviewed : undefined;
+
+// Correction records that concern this event, oldest first; a challenge precedes a revision made the same day.
+const resolutions = loadResolutions();
+const challengeRecords = loadChallenges()
+  .filter((c) => c.target_claim_id === event.id)
+  .map((c) => ({ kind: 'challenge' as const, date: c.opened_at, challenge: c, resolution: resolutions.find((r) => r.case_id === c.id) }));
+const revisionRecords = loadSummaryRevisions()
+  .filter((r) => r.target_summary_id === event.id)
+  .map((r) => ({ kind: 'revision' as const, date: r.created_at, revision: r }));
+const records = [...challengeRecords, ...revisionRecords].sort((a, b) => (a.date ?? '').localeCompare(b.date ?? ''));
+const plainWords = (value: string) => value.replace(/_/g, ' ');
+const contestationHref = records.length > 0 ? '#revision-history' : undefined;
 ---
 
 <Base title={event.title} description={description} layout="article">
@@ -155,7 +169,9 @@ const lastReviewed = reviewed && finalAuthor !== 'pedro-bright' && (!created || 
     <Fragment slot="markers">
       <SignificanceFlag level={event.significance} />
       <ConfidenceBadge level={event.confidence} />
-      {event.contestation?.status !== 'uncontested' && <ContestationBadge status={event.contestation?.status} />}
+      {event.contestation?.status !== 'uncontested' && (contestationHref && event.contestation?.status
+        ? <a href={contestationHref}><ContestationBadge status={event.contestation.status} /></a>
+        : <ContestationBadge status={event.contestation?.status} />)}
     </Fragment>
 
     <Fragment slot="infobox">
@@ -167,7 +183,16 @@ const lastReviewed = reviewed && finalAuthor !== 'pedro-bright' && (!created || 
           <dd><a href={`/explore?cat=${event.category}`}><CategoryTag category={event.category} /></a></dd>
           {event.significance && <><dt>Significance</dt><dd><SignificanceFlag level={event.significance} /></dd></>}
           {event.confidence && event.confidence !== 'high' && <><dt>Confidence</dt><dd><ConfidenceBadge level={event.confidence} /></dd></>}
-          {event.contestation?.status && <><dt>Contestation</dt><dd><ContestationBadge status={event.contestation.status} /></dd></>}
+          {event.contestation?.status && (
+            <>
+              <dt>Contestation</dt>
+              <dd>
+                {contestationHref
+                  ? <a href={contestationHref}><ContestationBadge status={event.contestation.status} /></a>
+                  : <ContestationBadge status={event.contestation.status} />}
+              </dd>
+            </>
+          )}
           {event.state && <><dt>State</dt><dd>{event.state}</dd></>}
           {event.actors && event.actors.length > 0 && (
             <>
@@ -227,6 +252,60 @@ const lastReviewed = reviewed && finalAuthor !== 'pedro-bright' && (!created || 
         <h2 class="wiki-article__h2">Significance history</h2>
         <SignificanceHistory history={event.significance_history} />
       </section>
+    )}
+
+    {records.length > 0 && (
+      <Fragment slot="revisions">
+        <ol class="revision-log">
+          {records.map((record) => record.kind === 'revision' ? (
+            <li class="revision-log__entry">
+              <h3 class="revision-log__title">
+                Summary revised
+                {record.date && <time class="revision-log__date" datetime={record.date}>{record.date}</time>}
+              </h3>
+              <dl class="revision-log__fields">
+                <dt>Reason</dt>
+                <dd>{record.revision.reason}</dd>
+                {record.revision.new_version && <><dt>Revised summary</dt><dd>{record.revision.new_version}</dd></>}
+                {record.revision.prior_version && (
+                  <>
+                    <dt>Earlier summary</dt>
+                    <dd>
+                      <details class="revision-log__earlier">
+                        <summary>Show the earlier summary</summary>
+                        <p>{record.revision.prior_version}</p>
+                      </details>
+                    </dd>
+                  </>
+                )}
+              </dl>
+            </li>
+          ) : (
+            <li class="revision-log__entry">
+              <h3 class="revision-log__title">
+                Challenge opened
+                {record.date && <time class="revision-log__date" datetime={record.date}>{record.date}</time>}
+              </h3>
+              <dl class="revision-log__fields">
+                <dt>Status</dt>
+                <dd>{plainWords(record.challenge.status)}</dd>
+                <dt>Allegations</dt>
+                <dd>{record.challenge.allegations.map(plainWords).join(', ')}</dd>
+                {record.resolution && (
+                  <>
+                    <dt>Resolution</dt>
+                    <dd>
+                      {plainWords(record.resolution.disposition)}
+                      {record.resolution.issued_at && <>, issued <time class="revision-log__date" datetime={record.resolution.issued_at}>{record.resolution.issued_at}</time></>}
+                      <ul>{record.resolution.findings.map((finding) => <li>{finding}</li>)}</ul>
+                    </dd>
+                  </>
+                )}
+              </dl>
+            </li>
+          ))}
+        </ol>
+      </Fragment>
     )}
 
     <!-- References -->
@@ -375,6 +454,41 @@ const lastReviewed = reviewed && finalAuthor !== 'pedro-bright' && (!created || 
   .epistemic-key__term--major { color: #0A4D82; }
   .epistemic-key__term--notable { color: #5C564D; }
   .epistemic-key dd { margin: 2px 0 0; font-size: var(--text-meta); color: var(--color-ink-mid); line-height: 1.45; }
+
+  .revision-log { list-style: none; margin: 0; padding: 0; }
+  .revision-log__entry { padding: 14px 0 16px; border-bottom: 1px solid var(--color-rule); }
+  .revision-log__entry:first-child { padding-top: 4px; }
+  .revision-log__entry:last-child { border-bottom: none; }
+  .revision-log__title {
+    margin: 0 0 10px; font-family: var(--font-sans); font-size: var(--text-label); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.04em; color: var(--color-ink); line-height: 1.4;
+  }
+  .revision-log__date {
+    margin-left: 8px; font-family: var(--font-mono); font-weight: 400; text-transform: none; letter-spacing: 0;
+    color: var(--color-ink-faint);
+  }
+  .revision-log__fields { margin: 0; }
+  .revision-log__fields dt {
+    margin-top: 10px; font-family: var(--font-sans); font-size: var(--text-label); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.04em; color: var(--color-ink-muted); line-height: 1.4;
+  }
+  .revision-log__fields dt:first-child { margin-top: 0; }
+  .revision-log__fields dd {
+    margin: 2px 0 0; max-width: 68ch; font-family: var(--font-serif); font-size: 0.9375rem;
+    color: var(--color-ink-mid); line-height: 1.6;
+  }
+  .revision-log__fields dd ul { margin: 4px 0 0; padding-left: 1.25rem; }
+  .revision-log__earlier > summary {
+    cursor: pointer; font-family: var(--font-sans); font-size: var(--text-meta); color: var(--color-wiki-link);
+    line-height: 1.45;
+  }
+  .revision-log__earlier > summary:hover { text-decoration: underline; }
+  .revision-log__earlier p { margin: 6px 0 0; padding-left: 12px; border-left: 3px solid var(--color-rule-strong); }
+  @media print {
+    .revision-log__earlier > summary { display: none; }
+    .revision-log__earlier::details-content { content-visibility: visible; display: block; block-size: auto; }
+    .revision-log__earlier p { margin-top: 0; }
+  }
 
   .ref-meta { color: var(--color-ink-mid); }
   .ref-date { font-size: var(--text-meta); color: var(--color-ink-faint); line-height: 1.45; }

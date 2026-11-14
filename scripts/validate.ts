@@ -337,11 +337,22 @@ function validateAll(): ValidationError[] {
     }
 
     if (file.type === "challenge") {
-      // target_claim_id could reference events or specific claims
       const target = file.data.target_claim_id as string | undefined;
       if (target && !ids.event.has(target) && !ids.synthesis.has(target)) {
-        // It's OK — could be a claim ID within an event. Just warn.
-        // We don't enforce this strictly since claim IDs are embedded.
+        errors.push({
+          file: file.relativePath,
+          message: `Challenge target not found: "${target}"`,
+        });
+      }
+    }
+
+    if (file.type === "revision") {
+      const target = file.data.target_summary_id as string | undefined;
+      if (target && !ids.event.has(target) && !ids.synthesis.has(target)) {
+        errors.push({
+          file: file.relativePath,
+          message: `Revision target not found: "${target}"`,
+        });
       }
     }
 
