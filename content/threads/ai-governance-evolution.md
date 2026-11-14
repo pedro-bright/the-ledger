@@ -69,13 +69,13 @@ Globally, the competitive pressure dynamic had become self-reinforcing: each jur
 
 *Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
 
-In May and June the US executive branch built a voluntary pre-release review arrangement.
+In May and June the US executive branch built a voluntary pre-release review arrangement ([CAISI agreements](/events/caisi-frontier-ai-testing-expansion); [signed order](/events/trump-ai-cybersecurity-eo-signed)).
 On May 5, 2026, CAISI signed pre-deployment evaluation agreements with Google DeepMind, Microsoft, and xAI, bringing five frontier developers under voluntary arrangements that create no obligation to act on the findings ([CAISI agreements](/events/caisi-frontier-ai-testing-expansion)).
 The archive entry notes that this partly complicates the reading of the [2025 renaming](/events/us-aisi-renamed-caisi) as the end of federal frontier evaluation ([CAISI agreements](/events/caisi-frontier-ai-testing-expansion)).
 On May 21, President Trump cancelled the signing of an order setting up a voluntary review window of up to 90 days, saying it "could have been a blocker," after David Sacks, Elon Musk, and Mark Zuckerberg had spoken with him ([cancelled order](/events/trump-ai-cybersecurity-eo-cancelled)).
 On June 2 he signed a modified order with a 30-day voluntary window, a Treasury-led clearinghouse in place of NIST, and no mandatory review ([signed order](/events/trump-ai-cybersecurity-eo-signed)).
 
-Congress produced proposals that point in several directions.
+Congress produced proposals that point in several directions ([discussion draft](/events/great-american-ai-act-discussion-draft); [AI Kill Switch Act](/events/ai-kill-switch-act-introduced); [superintelligence ban proposal](/events/sanders-casar-ban-artificial-superintelligence-act)).
 On June 4, a bipartisan House discussion draft of the Great American AI Act proposed three years of preemption of state laws on model development, paired with mandatory third-party audits of large developers; the archive rates confidence in this entry as medium, and the draft had not been introduced ([discussion draft](/events/great-american-ai-act-discussion-draft)).
 It offers a legislative route to the preemption the earlier synthesis traced through the [March 2026 framework](/events/trump-national-ai-legislative-framework), but with audit duties attached ([discussion draft](/events/great-american-ai-act-discussion-draft)).
 On July 23, the bipartisan AI Kill Switch Act proposed that large providers keep the ability to shut their systems down and that DHS, through CISA, could order intervention after catastrophic or loss-of-control incidents ([AI Kill Switch Act](/events/ai-kill-switch-act-introduced)).
@@ -89,18 +89,18 @@ California created auditing institutions without mandating audits: SB 813 and AB
 Newsom's Executive Order N-9-26 then requested recommendations by November 16, 2026 on onsite auditors in frontier labs and a verified kill switch, without changing any legal obligation ([Executive Order N-9-26](/events/newsom-executive-order-n-9-26-ai-kill-switch-oversight)).
 These entries complicate the earlier expectation that federal preemption would close the main path to binding rules, since states continued to act while the federal government declined to enact guardrails ([Florida motion](/events/florida-ag-temporary-injunction-motion-openai-model-development)).
 
-Developers took more public positions.
+Developers took more public positions ([pause call](/events/anthropic-coordinated-pause-call); [standards proposal](/events/openai-us-led-global-frontier-ai-standards-rsi)).
 Anthropic called on June 4 for a verifiable, multi-lab, multi-country mechanism to pause frontier development, conditioned on peers acting too ([pause call](/events/anthropic-coordinated-pause-call)), and by July 21 had committed $40 million to the advocacy group Public First Action, restricted to education and policy work ([Public First Action funding](/events/anthropic-public-first-action-funding)).
 More than 100 companies signed an OpenAI-convened letter on August 27 warning of near-term AI-enabled cyberattacks, with no binding commitments ([cyber defense letter](/events/collective-action-cyber-defense-letter)).
 On September 21, OpenAI proposed US-led global standards for frontier AI, including recursive self-improvement, through CAISI and the safety institute network, and ruled out licensing or mandatory prerelease review ([standards proposal](/events/openai-us-led-global-frontier-ai-standards-rsi)).
 On November 5 it published voluntary commitments for its data centers and asked lawmakers to make similar terms binding on all developers ([National Community Compact](/events/openai-national-community-compact-data-centers)).
 
-EU obligations began to shape products, which bears on the open question of whether companies would comply globally or ship separate EU versions.
+EU obligations began to shape products, which bears on the open question of whether companies would comply globally or ship separate EU versions ([Claude watermarking](/events/anthropic-claude-text-watermarking); [textGrain watermarking](/events/openai-eu-text-watermarking-textgrain)).
 Anthropic applied an AI Act text watermark to Claude output worldwide because it could not yet scope it by region ([Claude watermarking](/events/anthropic-claude-text-watermarking)), while OpenAI applied its watermark to ChatGPT and Codex text in the EU only and published tests in which replacing 10 percent of words with synonyms cut detection from about 92 to 66 percent ([textGrain watermarking](/events/openai-eu-text-watermarking-textgrain)).
 On August 31, the Commission designated ChatGPT a very large online search engine under the Digital Services Act, the first such designation of a generative AI chatbot ([DSA designation](/events/eu-designates-chatgpt-vlose-dsa)).
 The archive's entry on the June US order records the EU finalizing Omnibus amendments that extended high-risk deadlines that same week, consistent with the [delay](/events/eu-digital-omnibus-ai-proposal) the earlier synthesis described ([signed order](/events/trump-ai-cybersecurity-eo-signed)).
 
-Internationally, the Phase 5 trend toward lighter rules reached a multilateral text.
+Internationally, the Phase 5 trend toward lighter rules reached a multilateral text ([Carolina Principles](/events/g20-innovation-ministerial-carolina-principles)).
 On September 2, all G20 members, including the EU and China, adopted the Carolina Principles, which favor existing sector-specific regulation and limit new rules to what existing frameworks cannot address; the archive entry describes the result as a shared vocabulary without an implementation body ([Carolina Principles](/events/g20-innovation-ministerial-carolina-principles)).
 The UK gave its AI minister, Kanishka Narayan, attendance at Cabinet on July 20 as it abolished the Department for Science, Innovation and Technology ([UK reorganization](/events/uk-ai-minister-cabinet-reorganization)).
 On October 12, Narayan confirmed that the UK AI Security Institute had regained pre-release access to frontier models after reported US instructions to withhold them; the archive rates confidence as medium because no US statement has been published, and the access still rests on voluntary agreements ([AISI access](/events/uk-aisi-regains-pre-release-access-after-us-hold)).

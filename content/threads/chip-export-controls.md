@@ -73,7 +73,7 @@ The real significance of chip export controls is not denial of China's AI capabi
 
 *Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
 
-The one new entry adds training evidence to the substitution record described above.
+The one [new entry](/events/deepseek-v4-pro-release) adds training evidence to the substitution record described above.
 [DeepSeek-V4-Pro](/events/deepseek-v4-pro-release), released in April 2026, was trained in part on Huawei Ascend 950 chips in "Supernode" clusters, which the entry describes as the first publicly confirmed case of a frontier-adjacent model trained on Chinese domestic silicon under US export controls.
 The [entry](/events/deepseek-v4-pro-release) reports V4-Pro at 80.6% on SWE-bench Verified against 87.6% for Claude Opus 4.7 and 89.1% for GPT-5.5, and argues that the control regime has not prevented Chinese frontier development and has instead accelerated domestic chip adoption for AI workloads.
 The earlier [Ascend 910C mass shipment](/events/huawei-ascend-910c-mass-shipment) recorded Huawei supplying accelerators after the H20 restrictions; V4-Pro is the archive's first record of Ascend hardware used to train a model of this class, which bears on the open question of when Huawei's roadmap makes denial moot.

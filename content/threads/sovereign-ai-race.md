@@ -66,7 +66,7 @@ Neither full sovereignty nor US alignment is the terminal state. The sovereign A
 
 *Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
 
-The new entries extend the thread from national compute programs to model companies backed by governments.
+The new entries extend the thread from national compute programs to model companies backed by governments ([Cohere Series E](/events/cohere-series-e-canada-equity-stake); [DeepSeek's first external round](/events/deepseek-first-external-funding)).
 In April, [Cohere agreed to acquire Aleph Alpha](/events/cohere-aleph-alpha-merger) at a combined value of about $20 billion, with Schwarz Group financing and the endorsement of the Canadian and German digital ministers.
 In September, [Mistral raised €3 billion](/events/mistral-series-d-3b-samsung) in a Samsung-led round to build what it called a "sovereign AI layer."
 In October, [Cohere closed the first tranche of a Series E](/events/cohere-series-e-canada-equity-stake) targeting up to C$7 billion, with Canada taking an equity stake of up to C$1.6 billion tied to Canadian jobs, compute and headquarters.
