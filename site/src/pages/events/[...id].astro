@@ -97,7 +97,13 @@ const plainWords = (value: string) => value.replace(/_/g, ' ');
 const contestationHref = records.length > 0 ? '#revision-history' : undefined;
 ---
 
-<Base title={event.title} description={description} layout="article">
+<Base
+  title={event.title}
+  description={description}
+  image={`/og/events/${event.slug}.png`}
+  imageAlt={`${event.title}, ${event.date}. An entry in The Ledger.`}
+  layout="article"
+>
   <!-- LEFT RAIL -->
   <Fragment slot="leftRail">
     <RailSection title="Navigate">

@@ -27,6 +27,7 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  imageAlt?: string;
   type?: string;
   /**
    * Layout variant.
@@ -37,7 +38,7 @@ interface Props {
   layout?: 'article' | 'index' | 'full';
 }
 
-const { title, description, image, type, layout = 'index' } = Astro.props;
+const { title, description, image, imageAlt, type, layout = 'index' } = Astro.props;
 const pageTitle = !title || title === 'The Ledger'
   ? 'The Ledger — A durable historical record of AI'
   : `${title} — The Ledger`;
@@ -57,7 +58,7 @@ const hasRightRail = Astro.slots.has('rightRail');
     <title>{pageTitle}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title="The Ledger" href="/feed.xml" />
-    <SEO title={pageTitle} description={description} image={image} type={type} />
+    <SEO title={pageTitle} description={description} image={image} imageAlt={imageAlt} type={type} />
     <PostHog />
   </head>
   <body class="min-h-screen flex flex-col bg-page-bg text-ink">
