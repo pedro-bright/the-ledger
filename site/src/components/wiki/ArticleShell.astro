@@ -25,6 +25,7 @@ const { title, subtitle, breadcrumb = [], articleText = '', lastModified, lastRe
 const hasMarkers = Astro.slots.has('markers');
 const hasInfobox = Astro.slots.has('infobox');
 const hasLead = Astro.slots.has('lead');
+const hasReferences = Astro.slots.has('references');
 const hasFooter = Astro.slots.has('footer');
 const usedAnchors = new Set<string>();
 const lead = anchorSections(hasLead ? await Astro.slots.render('lead') : '', usedAnchors);
@@ -32,8 +33,6 @@ const body = anchorSections(await Astro.slots.render('default'), usedAnchors);
 // A conditional slot counts as present even when it renders nothing, so test its output.
 const revisions = Astro.slots.has('revisions') ? (await Astro.slots.render('revisions')).trim() : '';
 const hasRevisions = revisions !== '';
-const references = Astro.slots.has('references') ? (await Astro.slots.render('references')).trim() : '';
-const hasReferences = references !== '';
 const seeAlso = Astro.slots.has('seeAlso') ? (await Astro.slots.render('seeAlso')).trim() : '';
 const hasSeeAlso = seeAlso !== '';
 const sections = [...lead.sections, ...body.sections].filter(({ level }) => level === 2);
@@ -102,7 +101,7 @@ if (hasSeeAlso) sections.push({ id: 'see-also-head', title: 'See also', level: 2
   {hasReferences && (
     <section class="wiki-article__references" aria-labelledby="refs-head">
       <h2 id="refs-head" class="wiki-article__h2">References</h2>
-      <Fragment set:html={references} />
+      <slot name="references" />
     </section>
   )}
 
