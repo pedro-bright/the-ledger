@@ -101,6 +101,62 @@ export interface ControversyData {
   slug: string;
 }
 
+/** A summary revision record (`schema/revision.schema.json`). */
+export interface SummaryRevision {
+  id: string;
+  target_summary_id: string;
+  prior_version?: string;
+  new_version?: string;
+  reason: string;
+  changed_claim_ids?: string[];
+  triggered_by_case_id?: string | null;
+  author?: string;
+  created_at?: string;
+}
+
+/** A challenge case record (`schema/challenge.schema.json`). */
+export interface ChallengeCase {
+  id: string;
+  target_claim_id: string;
+  allegations: Array<
+    | 'misquote'
+    | 'context_omission'
+    | 'overstatement'
+    | 'unsupported_inference'
+    | 'category_error'
+    | 'source_misattribution'
+    | 'timeline_error'
+    | 'duplication'
+  >;
+  status: 'open' | 'under_review' | 'sustained' | 'dismissed' | 'partially_sustained';
+  opened_at?: string;
+  opened_by?: string;
+  resolution_note_id?: string | null;
+}
+
+/** A resolution note for a challenge case (`schema/resolution.schema.json`). */
+export interface ResolutionNote {
+  id: string;
+  case_id: string;
+  disposition: 'upheld' | 'rejected' | 'mixed' | 'deferred' | 'sustained';
+  findings: string[];
+  actions: Array<{
+    type:
+      | 'claim_status_changed'
+      | 'summary_revision_created'
+      | 'interpretive_memo_attached'
+      | 'event_state_changed'
+      | 'no_action';
+    claim_id?: string;
+    from?: Record<string, unknown>;
+    to?: Record<string, unknown>;
+    summary_revision_id?: string;
+    memo_id?: string;
+  }>;
+  decided_by?: string[];
+  issued_at?: string;
+}
+
 // ─── Content directory root ───────────────────────────────────
 
 const CONTENT_DIR = path.resolve(
@@ -328,6 +384,42 @@ export function loadActors(): Actor[] {
   }
 
   return actors;
+}
+
+/** Read the frontmatter of every record in a flat content directory. */
+function loadRecords(dirName: string): Array<Record<string, any>> {
+  const dir = path.join(CONTENT_DIR, dirName);
+  const records: Array<Record<string, any>> = [];
+  for (const file of safeReadDir(dir)) {
+    if (!file.endsWith('.md')) continue;
+    try {
+      records.push(parseFrontmatter(fs.readFileSync(path.join(dir, file), 'utf-8')).data);
+    } catch (e) {
+      console.warn(`Failed to parse ${dirName} file ${file}:`, e);
+    }
+  }
+  return records;
+}
+
+export function loadSummaryRevisions(): SummaryRevision[] {
+  return loadRecords('revisions').map((data) => ({
+    ...(data as SummaryRevision),
+    created_at: data.created_at ? isoDate(data.created_at) : undefined,
+  }));
+}
+
+export function loadChallenges(): ChallengeCase[] {
+  return loadRecords('challenges').map((data) => ({
+    ...(data as ChallengeCase),
+    opened_at: data.opened_at ? isoDate(data.opened_at) : undefined,
+  }));
+}
+
+export function loadResolutions(): ResolutionNote[] {
+  return loadRecords('resolutions').map((data) => ({
+    ...(data as ResolutionNote),
+    issued_at: data.issued_at ? isoDate(data.issued_at) : undefined,
+  }));
 }
 
 // ─── Derived data ─────────────────────────────────────────────
