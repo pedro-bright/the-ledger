@@ -34,7 +34,12 @@ for (const javaScriptEnabled of [true, false]) {
       await expect(challenge).toContainText('lists two ratifications, by the European Union on May 15, 2026');
 
       await expect(page.locator('#article-contents a[href="#revision-history"]')).toHaveText('Revision history');
-      await expect(page.getByText('Disputed', { exact: true })).toHaveCount(0);
+      for (const label of ['Medium confidence', 'Low confidence', 'Disputed']) {
+        await expect(page.getByText(label, { exact: true })).toHaveCount(0);
+      }
+      const infoboxTerms = page.locator('.wiki-infobox dt');
+      await expect(infoboxTerms.filter({ hasText: 'Significance' })).toHaveCount(1);
+      await expect(infoboxTerms.filter({ hasText: 'Confidence' })).toHaveCount(0);
       const contested = page.locator('a[href="#revision-history"]').filter({ hasText: 'Contested', visible: true }).first();
       await expect(contested.locator('[title]')).toHaveAttribute('title', 'At least one formal challenge has been filed against this claim.');
       await contested.click();
