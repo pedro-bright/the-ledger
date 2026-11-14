@@ -31,6 +31,7 @@ const ROUTES: Array<{ path: string; label: string; include?: string }> = [
   { path: '/graph', label: 'graph' },
   { path: '/about', label: 'about' },
   { path: '/privacy', label: 'privacy' },
+  { path: '/corrections', label: 'corrections' },
 ];
 
 test.describe('a11y (axe)', () => {

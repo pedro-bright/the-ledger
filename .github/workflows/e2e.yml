@@ -60,6 +60,9 @@ jobs:
       - name: Run CSS browser floor check
         run: npm run test:css-floor
 
+      - name: Run corrections page unit test
+        run: npm run test:corrections
+
       - name: Run Playwright tests
         working-directory: site
         run: |
