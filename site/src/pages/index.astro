@@ -11,7 +11,7 @@ import {
   loadControversies,
   loadActors,
   getCategories,
-  buildThreadEventMap,
+  getThreadEvents,
 } from '../lib/content';
 import { buildHomeIndex, buildHomeWindow } from '../lib/home';
 
@@ -20,7 +20,6 @@ const threads = loadThreads();
 const controversies = loadControversies();
 const actors = loadActors();
 const categories = getCategories();
-const threadEventMap = buildThreadEventMap(events);
 
 // ─── Dates ────────────────────────────────────────────────────
 // Parse ISO date as a local-date (not UTC midnight) so the visible label
@@ -52,13 +51,10 @@ const featuredDateLabel = featured
 const recentEvents = events.slice(0, 10);
 
 // ─── Ongoing threads ──────────────────────────────────────────
-const threadSummaries = threads.map((t) => {
-  const list = threadEventMap.get(t.id) || [];
-  return {
-    ...t,
-    eventCount: t.events?.length || list.length,
-  };
-});
+const threadSummaries = threads.map((t) => ({
+  ...t,
+  eventCount: getThreadEvents(t, events).length,
+}));
 const activeThreads = threadSummaries
   .filter((t) => t.status === 'active')
   .sort((a, b) => b.eventCount - a.eventCount);
