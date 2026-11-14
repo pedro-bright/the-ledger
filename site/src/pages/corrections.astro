@@ -1,0 +1,170 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/wiki/PageHeader.astro';
+import RailSection from '../components/wiki/RailSection.astro';
+import { loadEvents, loadSummaryRevisions, loadChallenges, loadResolutions } from '../lib/content';
+
+const events = new Map(loadEvents().map((e) => [e.id, e]));
+const revisions = loadSummaryRevisions();
+const challenges = loadChallenges();
+const resolutions = loadResolutions();
+
+const plainWords = (value: string) => value.replace(/_/g, ' ');
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+
+function eventFor(id: string) {
+  const event = events.get(id);
+  if (!event) throw new Error(`Correction record targets unknown event ${id}`);
+  return event;
+}
+
+// Same-day records list resolutions, then revisions, then challenges: the reverse of the
+// event page's oldest-first order, where a challenge precedes a revision made the same day.
+const records = [
+  ...resolutions.map((r) => {
+    const challenge = challenges.find((c) => c.id === r.case_id);
+    if (!challenge) throw new Error(`Resolution ${r.id} names unknown challenge ${r.case_id}`);
+    return {
+      order: 0,
+      kind: 'Challenge resolved',
+      date: r.issued_at,
+      event: eventFor(challenge.target_claim_id),
+      reason: [`Disposition: ${plainWords(r.disposition)}.`, ...r.findings].join(' '),
+    };
+  }),
+  ...revisions.map((r) => ({
+    order: 1,
+    kind: 'Summary revision',
+    date: r.created_at,
+    event: eventFor(r.target_summary_id),
+    reason: r.reason,
+  })),
+  ...challenges.map((c) => ({
+    order: 2,
+    kind: 'Challenge opened',
+    date: c.opened_at,
+    event: eventFor(c.target_claim_id),
+    reason: `Alleges ${c.allegations.map(plainWords).join(', ')}.`,
+  })),
+].sort((a, b) =>
+  (b.date ?? '').localeCompare(a.date ?? '') || a.order - b.order || a.event.title.localeCompare(b.event.title));
+
+const resolvedIds = new Set(resolutions.map((r) => r.case_id));
+const openChallenges = challenges.filter((c) => !resolvedIds.has(c.id)).length;
+---
+
+<Base
+  layout="index"
+  title="Corrections and challenges"
+  description="Every correction to a published entry in The Ledger and every formal challenge, newest first."
+>
+  <Fragment slot="leftRail">
+    <RailSection title="Navigate">
+      <ul class="rail-list">
+        <li><a href="/">Main page</a></li>
+        <li><a href="/explore">Timeline</a></li>
+        <li><a href="/threads">Threads</a></li>
+        <li><a href="/controversies">Controversies</a></li>
+        <li><a href="/actors">Actors</a></li>
+        <li><a href="/about">About the ledger</a></li>
+      </ul>
+    </RailSection>
+  </Fragment>
+
+  <PageHeader
+    eyebrow="§ Corrections"
+    title="Corrections and challenges"
+    subtitle="Every correction to a published entry and every formal challenge, in the order they were recorded."
+  />
+
+  <p class="corrections-stats font-mono">
+    <span>{plural(revisions.length, 'summary revision')}</span>
+    <span class="corrections-stats__sep" aria-hidden="true">·</span>
+    <span>{plural(openChallenges, 'open challenge')}</span>
+    <span class="corrections-stats__sep" aria-hidden="true">·</span>
+    <span>{plural(resolutions.length, 'resolved challenge')}</span>
+  </p>
+
+  <ol class="wiki-list-dated corrections-list">
+    {records.map((record) => (
+      <li class="corrections-row">
+        <span class="date">{record.date && <time datetime={record.date}>{record.date}</time>}</span>
+        <div class="corrections-row__body">
+          <p class="corrections-row__head">
+            <span class="corrections-row__kind">{record.kind}</span>
+            <a href={`/events/${record.event.slug}#revision-history`}>{record.event.title}</a>
+          </p>
+          <p class="corrections-row__reason">{record.reason}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+</Base>
+
+<style>
+  .corrections-stats {
+    font-size: var(--text-meta);
+    color: var(--color-ink-faint);
+    letter-spacing: 0.04em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: -14px 0 24px;
+    line-height: 1.45;
+  }
+  .corrections-stats__sep { color: var(--color-rule-strong); }
+
+  .corrections-list > li.corrections-row {
+    flex-wrap: nowrap;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px dotted var(--color-rule);
+  }
+  .corrections-list > li.corrections-row:last-child { border-bottom: none; }
+  .corrections-row__body {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .corrections-row__head {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 0.9375rem;
+    line-height: 1.45;
+  }
+  .corrections-row__kind {
+    margin-right: 8px;
+    font-family: var(--font-sans);
+    font-size: var(--text-label);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-ink-muted);
+    white-space: nowrap;
+  }
+  .corrections-row__head a { color: var(--color-wiki-link); }
+  .corrections-row__head a:visited { color: var(--color-wiki-link-visited); }
+  .corrections-row__head a:hover { text-decoration: underline; }
+  .corrections-row__reason {
+    margin: 4px 0 0;
+    max-width: 68ch;
+    font-family: var(--font-serif);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-ink-mid);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+  }
+
+  @media (max-width: 600px) {
+    .corrections-stats { flex-direction: column; gap: 2px; }
+    .corrections-stats__sep { display: none; }
+    .corrections-list > li.corrections-row {
+      flex-wrap: wrap;
+      row-gap: 2px;
+    }
+    .corrections-row__body { flex-basis: 100%; }
+  }
+</style>

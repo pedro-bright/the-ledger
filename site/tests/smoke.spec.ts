@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import { test, expect } from '@playwright/test';
 import { SLUGS } from './_slugs';
 
@@ -24,6 +26,8 @@ test.describe('smoke', () => {
     await expect(page.locator('header.wiki-masthead')).toBeVisible();
     await expect(page.locator('nav.wiki-nav')).toBeVisible();
     await expect(page.locator('footer.wiki-footer')).toBeVisible();
+    await expect(page.locator('footer.wiki-footer').getByRole('link', { name: 'Corrections', exact: true }))
+      .toHaveAttribute('href', '/corrections');
   }
 
   async function expectLightBg(page: import('@playwright/test').Page) {
@@ -140,6 +144,43 @@ test.describe('smoke', () => {
     const response = await page.goto('/about');
     expect(response?.status()).toBe(200);
     await expect(page.locator('h1')).toContainText('About');
+    await expect(page.locator('.about-prose').getByRole('link', { name: 'corrections page' }))
+      .toHaveAttribute('href', '/corrections');
+    await expectChrome(page);
+  });
+
+  test('corrections: lists every revision, challenge and resolution, newest first', async ({ page, request }) => {
+    const contentDir = path.join(__dirname, '..', '..', 'content');
+    const count = (dir: string) => fs.readdirSync(path.join(contentDir, dir)).filter((f) => f.endsWith('.md')).length;
+    const revisions = count('revisions');
+    const challenges = count('challenges');
+    const resolutions = count('resolutions');
+
+    const response = await page.goto('/corrections');
+    expect(response?.status()).toBe(200);
+    await expect(page.locator('h1')).toHaveText('Corrections and challenges');
+    const stats = page.locator('.corrections-stats');
+    await expect(stats).toContainText(new RegExp(`\\b${revisions} summary revisions?\\b`));
+    await expect(stats).toContainText(new RegExp(`\\b${challenges - resolutions} open challenges?\\b`));
+    await expect(stats).toContainText(new RegExp(`\\b${resolutions} resolved challenges?\\b`));
+
+    const rows = page.locator('.corrections-list > li');
+    await expect(rows).toHaveCount(revisions + challenges + resolutions);
+    await expect(rows.filter({ hasText: 'Summary revision' })).toHaveCount(revisions);
+    await expect(rows.filter({ hasText: 'Challenge opened' })).toHaveCount(challenges);
+    await expect(rows.filter({ hasText: 'Challenge resolved' })).toHaveCount(resolutions);
+
+    const dates = await rows.locator('time').evaluateAll((els) => els.map((el) => el.getAttribute('datetime') ?? ''));
+    expect(dates).toEqual([...dates].sort().reverse());
+
+    const hrefs = await rows.locator('a').evaluateAll((els) => els.map((el) => el.getAttribute('href') ?? ''));
+    expect(hrefs).toHaveLength(revisions + challenges + resolutions);
+    for (const href of new Set(hrefs)) {
+      expect(href).toMatch(/^\/events\/[^#]+#revision-history$/);
+      const target = await request.get(href.split('#')[0]);
+      expect(target.status(), href).toBe(200);
+      expect(await target.text(), href).toContain('id="revision-history"');
+    }
     await expectChrome(page);
   });
 

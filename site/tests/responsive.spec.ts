@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { SLUGS } from './_slugs';
 
 /**
- * Responsive tests: visit 4 representative pages at 3 viewports and assert
+ * Responsive tests: visit 5 representative pages at 3 viewports and assert
  *  - no horizontal scroll,
  *  - masthead is visible,
  *  - right-rail / floated-infobox behaviour matches the 1024px and 780px breakpoints
@@ -12,7 +12,7 @@ import { SLUGS } from './_slugs';
  * the mobile project would just repeat work.
  */
 
-const ROUTES = ['/', `/events/${SLUGS.event}`, '/explore', '/graph'];
+const ROUTES = ['/', `/events/${SLUGS.event}`, '/explore', '/graph', '/corrections'];
 
 const VIEWPORTS = [
   { label: 'mobile', width: 375, height: 667 },
