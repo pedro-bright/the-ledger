@@ -65,7 +65,7 @@ Globally, the competitive pressure dynamic had become self-reinforcing: each jur
 
 ## What changed since the last synthesis
 
-**Author:** terry-tang | **Covers:** events dated 2026-05-05 to 2026-11-05 | **Written:** 2026-11-14
+**Covers:** events dated 2026-05-05 to 2026-11-05 | **Written:** 2026-11-14
 
 *Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
 

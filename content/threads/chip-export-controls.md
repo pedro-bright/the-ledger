@@ -69,7 +69,7 @@ The real significance of chip export controls is not denial of China's AI capabi
 
 ## What changed since the last synthesis
 
-**Author:** terry-tang | **Covers:** events dated 2026-04-24 | **Written:** 2026-11-14
+**Covers:** events dated 2026-04-24 | **Written:** 2026-11-14
 
 *Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
 
