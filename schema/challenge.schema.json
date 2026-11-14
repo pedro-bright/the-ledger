@@ -12,7 +12,7 @@
     },
     "target_claim_id": {
       "type": "string",
-      "description": "ID of the claim or event being challenged."
+      "description": "ID of the event or synthesis being challenged."
     },
     "allegations": {
       "type": "array",

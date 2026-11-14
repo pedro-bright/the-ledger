@@ -606,11 +606,11 @@ Three views over the same data, serving different needs:
 - Summary (canonical) at top
 - Full narrative + sources sidebar
 - **Reinterpretation banner** (visually unavoidable) if retrospectives exist
-- Contestation badge
+- Contestation badge, linked to the revision history when the event has one
 - Significance history shown if upgraded
 - "Part of thread: [link]" navigation
 - "This record last reviewed [date]" in the footer, omitted on automatic daily scan entries and when `last_reviewed` is not later than `created`
-- "View history" expandable (ledger layer)
+- "Revision history" section between the body and the references, omitted when no records target the event: summary revisions with the date, reason, revised summary, and the earlier summary in a disclosure; challenges with the date opened, status, allegation types, and resolution
 
 ### Thread Pages
 - **Signed canonical synthesis at top** (current best reading)
