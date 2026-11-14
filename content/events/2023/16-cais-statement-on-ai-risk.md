@@ -39,7 +39,7 @@ actors:
     role: signatory
   - id: dario-amodei
     role: signatory
-regions: [GLOBAL]
+regions: [global]
 tags: [ai-risk, extinction-risk, open-letter, statement, existential-risk]
 threads: [ai-governance-evolution]
 related: [fli-pause-giant-ai-experiments-letter, ai-safety-summit-bletchley]

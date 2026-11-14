@@ -26,7 +26,7 @@ actors:
     role: signatory
   - id: openai
     role: context
-regions: [US, GLOBAL]
+regions: [US, global]
 tags: [open-letter, pause, ai-risk, moratorium, frontier-ai, gpt-4]
 threads: [frontier-safety-policies, ai-governance-evolution]
 related: [gpt-4-release, cais-statement-on-ai-risk, anthropic-coordinated-pause-call]

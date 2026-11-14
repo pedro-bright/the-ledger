@@ -36,7 +36,7 @@ actors:
     role: organizer
   - id: openai
     role: organizer
-regions: [US, GLOBAL]
+regions: [US, global]
 tags: [industry-body, self-regulation, frontier-ai, safety-research, information-sharing, voluntary-commitments]
 threads: [frontier-safety-policies]
 related: [white-house-voluntary-ai-commitments, ai-safety-summit-bletchley, anthropic-responsible-scaling-policy-v1]
