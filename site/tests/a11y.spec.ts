@@ -21,6 +21,8 @@ const ROUTES: Array<{ path: string; label: string; include?: string }> = [
   { path: `/events/${SLUGS.event}`, label: 'event' },
   { path: '/events/openai-gpt-5-release', label: 'revised-event', include: '.wiki-article__revisions' },
   { path: '/events/coe-ai-convention-in-force', label: 'challenged-event' },
+  { path: '/events/claude-2-release', label: 'threaded-event' },
+  { path: '/events/anthropic-rsp-v3', label: 'cited-event' },
   { path: '/threads', label: 'threads-index' },
   { path: `/threads/${SLUGS.thread}`, label: 'thread-detail' },
   { path: '/controversies', label: 'controversies-index' },

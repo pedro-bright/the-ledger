@@ -10,6 +10,7 @@ import ContestationBadge from '../../components/ContestationBadge';
 import SignificanceHistory from '../../components/SignificanceHistory';
 import {
   loadEvents, loadThreads, loadActors, loadSummaryRevisions, loadChallenges, loadResolutions, splitArticleLead,
+  getThreadEvents,
 } from '../../lib/content';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -34,13 +35,25 @@ const threadMap = new Map(threads.map((t) => [t.id, t]));
 // Linked threads for this event.
 const linkedThreads = (event.threads || []).map((id: string) => threadMap.get(id)).filter(Boolean);
 
-// Related = union of explicit `related` + events sharing a thread. Dedupe, cap 8.
-const relatedIds = new Set<string>(event.related || []);
-for (const t of linkedThreads) for (const eId of (t?.events || [])) if (eId !== event.id) relatedIds.add(eId);
-const relatedEvents = Array.from(relatedIds)
-  .map((id) => eventMap.get(id)).filter(Boolean)
-  .sort((a, b) => new Date(b!.date).getTime() - new Date(a!.date).getTime())
-  .slice(0, 8) as typeof allEvents;
+// Earlier and later entries in each thread this event belongs to.
+const threadNav = threads.flatMap((thread) => {
+  const members = getThreadEvents(thread, allEvents);
+  const i = members.findIndex((e) => e.id === event.id);
+  const earlier = members[i - 1];
+  const later = members[i + 1];
+  return i !== -1 && (earlier || later) ? [{ thread, earlier, later }] : [];
+});
+
+// See also = this event's own `related` entries, then entries whose `related` cites it; newest first, cap 8 in total.
+const ownRelated = [...new Set(event.related ?? [])]
+  .map((id) => eventMap.get(id))
+  .filter((e): e is (typeof allEvents)[number] => !!e && e.id !== event.id)
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .slice(0, 8);
+const ownRelatedIds = new Set(ownRelated.map((e) => e.id));
+const referencedBy = allEvents
+  .filter((e) => e.id !== event.id && !ownRelatedIds.has(e.id) && e.related?.includes(event.id))
+  .slice(0, 8 - ownRelated.length);
 
 // Sister events in the same category, capped at 5.
 const sisterEvents = allEvents.filter((e) => e.category === event.category && e.id !== event.id).slice(0, 5);
@@ -230,6 +243,28 @@ const contestationHref = records.length > 0 ? '#revision-history' : undefined;
     <!-- Rendered markdown body -->
     <Fragment set:html={article.body} />
 
+    {threadNav.map(({ thread, earlier, later }) => (
+      <nav class="thread-nav" aria-label={`${thread.title} thread`}>
+        <a class="thread-nav__thread" href={`/threads/${thread.slug}`}>{thread.title}</a>
+        <div class="thread-nav__steps">
+          {earlier && (
+            <p class="thread-nav__step">
+              <span class="thread-nav__label">Earlier in this thread</span>
+              <a href={`/events/${earlier.slug}`}>{earlier.title}</a>
+              <time class="thread-nav__date font-mono" datetime={earlier.date}>{earlier.date}</time>
+            </p>
+          )}
+          {later && (
+            <p class="thread-nav__step thread-nav__step--later">
+              <span class="thread-nav__label">Later in this thread</span>
+              <a href={`/events/${later.slug}`}>{later.title}</a>
+              <time class="thread-nav__date font-mono" datetime={later.date}>{later.date}</time>
+            </p>
+          )}
+        </div>
+      </nav>
+    ))}
+
     {/* Mobile-only epistemic key — right rail is hidden below 780px. */}
     <details class="mobile-epistemic-key" aria-label="Epistemic key">
       <summary>§ How to read the metadata</summary>
@@ -339,16 +374,31 @@ const contestationHref = records.length > 0 ? '#revision-history' : undefined;
     )}
 
     <!-- See also -->
-    {relatedEvents.length > 0 && (
+    {(ownRelated.length > 0 || referencedBy.length > 0) && (
       <Fragment slot="seeAlso">
-        <ul>
-          {relatedEvents.map((e) => (
-            <li>
-              <a href={`/events/${e.slug}`}>{e.title}</a>
-              <time class="see-also__date font-mono" datetime={e.date}> — {e.date}</time>
-            </li>
-          ))}
-        </ul>
+        {ownRelated.length > 0 && (
+          <ul>
+            {ownRelated.map((e) => (
+              <li>
+                <a href={`/events/${e.slug}`}>{e.title}</a>
+                <time class="see-also__date font-mono" datetime={e.date}> — {e.date}</time>
+              </li>
+            ))}
+          </ul>
+        )}
+        {referencedBy.length > 0 && (
+          <>
+            <h3 class="see-also__label" id="referenced-by">Referenced by</h3>
+            <ul aria-labelledby="referenced-by">
+              {referencedBy.map((e) => (
+                <li>
+                  <a href={`/events/${e.slug}`}>{e.title}</a>
+                  <time class="see-also__date font-mono" datetime={e.date}> — {e.date}</time>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
       </Fragment>
     )}
   </ArticleShell>
@@ -501,4 +551,30 @@ const contestationHref = records.length > 0 ? '#revision-history' : undefined;
   }
   .ref-archive:hover { color: var(--color-wiki-link); }
   .see-also__date { color: var(--color-ink-faint); font-size: var(--text-meta); font-style: normal; line-height: 1.45; }
+  .see-also__label {
+    margin: 14px 0 6px; font-family: var(--font-sans); font-size: var(--text-label); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.04em; color: var(--color-ink-muted); line-height: 1.4;
+  }
+  .see-also__label:first-child { margin-top: 0; }
+
+  .thread-nav { margin: 2rem 0 0; padding: 12px 0 14px; border-top: 1px solid var(--color-rule); border-bottom: 1px solid var(--color-rule); }
+  .thread-nav + .thread-nav { margin-top: 0; border-top: none; }
+  .thread-nav__thread { display: inline-block; font-family: var(--font-sans); font-size: var(--text-meta); line-height: 1.45; }
+  .thread-nav__steps { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; margin-top: 8px; }
+  .thread-nav__step { margin: 0; min-width: 0; font-size: 0.9375rem; line-height: 1.45; overflow-wrap: anywhere; }
+  .thread-nav__step--later { grid-column: 2; text-align: right; }
+  .thread-nav__label,
+  .thread-nav__date { display: block; }
+  .thread-nav__label {
+    font-family: var(--font-sans); font-size: var(--text-label); font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.04em; color: var(--color-ink-muted); line-height: 1.4; margin-bottom: 2px;
+  }
+  .thread-nav__date { margin-top: 2px; font-size: var(--text-meta); color: var(--color-ink-faint); line-height: 1.45; }
+  @media (max-width: 520px) {
+    .thread-nav__steps { grid-template-columns: 1fr; }
+    .thread-nav__step--later { grid-column: auto; text-align: left; }
+  }
+  @media print {
+    .thread-nav { display: none; }
+  }
 </style>
