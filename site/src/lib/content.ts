@@ -460,20 +460,6 @@ export function getSignificanceOrder(sig?: string): number {
   }
 }
 
-// Build a map of thread IDs to their events
-export function buildThreadEventMap(events: EventData[]): Map<string, EventData[]> {
-  const map = new Map<string, EventData[]>();
-  for (const event of events) {
-    if (event.threads) {
-      for (const threadId of event.threads) {
-        if (!map.has(threadId)) map.set(threadId, []);
-        map.get(threadId)!.push(event);
-      }
-    }
-  }
-  return map;
-}
-
 // A thread's events: its own `events` list plus every event that declares the thread, oldest first.
 export function getThreadEvents(thread: ThreadData, events: EventData[]): EventData[] {
   const listed = new Set(thread.events ?? []);

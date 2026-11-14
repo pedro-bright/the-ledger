@@ -4,7 +4,8 @@
  * piece of content has a corresponding static page, that the sitemap lists
  * each event, thread, controversy and actor page exactly once with a lastmod
  * on every event, and that robots.txt names the sitemap index. Exits 1 if any
- * of these checks fails.
+ * of these checks fails. It also checks that each thread page's event timeline
+ * links every event that declares the thread.
  */
 
 import fs from "node:fs";
@@ -133,6 +134,28 @@ async function checkSitemap(entries: { label: string; file: string; page: string
   console.log(`Sitemap: ${urls.size} unique URLs, event lastmod and robots.txt verified.\n`);
 }
 
+// Thread pages whose event timeline is missing a link to an event that declares the thread.
+function checkThreadTimelines(): string[] {
+  const declared = new Map<string, string[]>();
+  for (const file of walkDir(path.join(CONTENT_DIR, "events"), (name) => name.endsWith(".md"))) {
+    const { data } = parseFrontmatter(fs.readFileSync(file, "utf-8"));
+    const { id, threads } = data as { id?: unknown; threads?: unknown };
+    if (typeof id !== "string" || !Array.isArray(threads)) continue;
+    for (const thread of threads) declared.set(thread, [...(declared.get(thread) ?? []), id]);
+  }
+  const unlinked: string[] = [];
+  for (const [thread, ids] of declared) {
+    const page = path.join("threads", thread, "index.html");
+    // A missing thread page is reported by the page check.
+    if (!existsHtml(page)) continue;
+    const html = fs.readFileSync(path.join(DIST_DIR, page), "utf-8");
+    const timeline = html.match(/>Event timeline<\/h2>([\s\S]*?)<\/section>/)?.[1] ?? "";
+    const linked = new Set([...timeline.matchAll(/href="\/events\/([^"/]+)\/?"/g)].map((m) => m[1]));
+    for (const id of ids) if (!linked.has(id)) unlinked.push(`${thread}: ${id}`);
+  }
+  return unlinked;
+}
+
 // --------------- Main ---------------
 
 async function main() {
@@ -249,7 +272,14 @@ async function main() {
     console.log("");
   }
 
-  if (missing.length === 0 && malformed.length === 0) {
+  const unlinked = checkThreadTimelines();
+  if (unlinked.length > 0) {
+    console.log(`Thread timelines missing a declaring event: ${unlinked.length}`);
+    for (const u of unlinked) console.log(`  ${u}`);
+    console.log("");
+  }
+
+  if (missing.length === 0 && malformed.length === 0 && unlinked.length === 0) {
     await checkSitemap(checks);
     console.log("OK: every content item has a static page and all top-level routes built.");
     process.exit(0);

@@ -2,16 +2,15 @@
 import Base from '../../layouts/Base.astro';
 import PageHeader from '../../components/wiki/PageHeader.astro';
 import RailSection from '../../components/wiki/RailSection.astro';
-import { loadThreads, loadEvents, buildThreadEventMap } from '../../lib/content';
+import { loadThreads, loadEvents, getThreadEvents } from '../../lib/content';
 
 const threads = loadThreads();
 const events = loadEvents();
-const threadEventMap = buildThreadEventMap(events);
 
 type EnrichedThread = ReturnType<typeof enrich>;
 function enrich(t: (typeof threads)[number]) {
-  const evts = threadEventMap.get(t.id) || [];
-  const eventCount = t.events?.length || evts.length;
+  const evts = getThreadEvents(t, events);
+  const eventCount = evts.length;
   // Last updated = max of explicit `last_updated` or latest event date in thread.
   let latestTs = t.last_updated ? new Date(t.last_updated).getTime() : 0;
   for (const e of evts) {

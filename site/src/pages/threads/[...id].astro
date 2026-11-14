@@ -5,7 +5,7 @@ import Infobox from '../../components/wiki/Infobox.astro';
 import RailSection from '../../components/wiki/RailSection.astro';
 import EventRow from '../../components/wiki/EventRow.astro';
 import ContestationBadge from '../../components/ContestationBadge';
-import { loadThreads, loadEvents, loadControversies, buildThreadEventMap, splitArticleLead } from '../../lib/content';
+import { loadThreads, loadEvents, loadControversies, getThreadEvents, splitArticleLead } from '../../lib/content';
 
 export function getStaticPaths() {
   const threads = loadThreads();
@@ -20,13 +20,9 @@ const article = splitArticleLead(thread.htmlContent);
 const allEvents = loadEvents();
 const allThreads = loadThreads();
 const allControversies = loadControversies();
-const threadEventMap = buildThreadEventMap(allEvents);
 
 // Linked events, chronological.
-const sortByDate = (a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime();
-const linkedEvents = thread.events
-  ? allEvents.filter((e) => thread.events!.includes(e.id)).sort(sortByDate)
-  : (threadEventMap.get(thread.id) || []).slice().sort(sortByDate);
+const linkedEvents = getThreadEvents(thread, allEvents);
 
 const linkedControversies = thread.controversies
   ? allControversies.filter((c) => thread.controversies!.includes(c.id))
@@ -43,13 +39,8 @@ const curatorOtherThreads = thread.curator
   : [];
 const otherActiveThreads = allThreads.filter((t) => t.status === 'active' && t.id !== thread.id).slice(0, 5);
 
-// Last updated = max of explicit + event dates.
-let lastUpdatedTs = thread.last_updated ? new Date(thread.last_updated).getTime() : 0;
-for (const e of linkedEvents) {
-  const t = new Date(e.date).getTime();
-  if (!Number.isNaN(t) && t > lastUpdatedTs) lastUpdatedTs = t;
-}
-const lastUpdatedIso = lastUpdatedTs > 0 ? new Date(lastUpdatedTs).toISOString().slice(0, 10) : undefined;
+// Entries dated after the synthesis was last revised.
+const newerEntries = thread.last_updated ? linkedEvents.filter((e) => e.date > thread.last_updated!).length : 0;
 
 const sourcePath = `content/threads/${thread.slug}.md`;
 const breadcrumb = [
@@ -159,8 +150,11 @@ const subtitle = thread.core_question ? `— ${thread.core_question}` : undefine
           {thread.status && <><dt>Status</dt><dd><span class={`status-chip status-chip--${thread.status}`}>{thread.status}</span></dd></>}
           {thread.contestation?.status && <><dt>Contestation</dt><dd><ContestationBadge status={thread.contestation.status} /></dd></>}
           {thread.started && <><dt>Started</dt><dd><time class="mono" datetime={thread.started}>{thread.started}</time></dd></>}
-          {(lastUpdatedIso || thread.last_updated) && (
-            <><dt>Last updated</dt><dd><time class="mono" datetime={lastUpdatedIso || thread.last_updated}>{lastUpdatedIso || thread.last_updated}</time></dd></>
+          {thread.last_updated && (
+            <><dt>Synthesis updated</dt><dd><time class="mono" datetime={thread.last_updated}>{thread.last_updated}</time></dd></>
+          )}
+          {lastEvent && (
+            <><dt>Latest entry</dt><dd><time class="mono" datetime={lastEvent.date}>{lastEvent.date}</time></dd></>
           )}
           {thread.curator && <><dt>Curator</dt><dd><a href="/about">{thread.curator}</a></dd></>}
           {thread.curator_scope && <><dt>Scope</dt><dd>{thread.curator_scope}</dd></>}
@@ -178,6 +172,11 @@ const subtitle = thread.core_question ? `— ${thread.core_question}` : undefine
     {linkedEvents.length > 0 && (
       <section class="thread-section">
         <h2 class="wiki-article__h2">Event timeline</h2>
+        {newerEntries > 0 && (
+          <p class="thread-notice">
+            {newerEntries === 1 ? '1 entry is' : `${newerEntries} entries are`} dated after this synthesis was last updated on <time class="font-mono" datetime={thread.last_updated}>{thread.last_updated}</time>.
+          </p>
+        )}
         <ul class="thread-timeline">
           {linkedEvents.map((e) => (
             <EventRow event={e} />
@@ -223,6 +222,7 @@ const subtitle = thread.core_question ? `— ${thread.core_question}` : undefine
 
 <style>
   .thread-section { margin-top: 2rem; }
+  .thread-notice { margin: 8px 0 0; font-family: var(--font-sans); font-size: var(--text-meta); color: var(--color-ink-muted); line-height: 1.45; }
   .thread-timeline,
   .controversy-list { list-style: none; padding: 0; margin: 12px 0 0; }
   .controversy-list li {
