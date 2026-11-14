@@ -11,14 +11,9 @@ type EnrichedThread = ReturnType<typeof enrich>;
 function enrich(t: (typeof threads)[number]) {
   const evts = getThreadEvents(t, events);
   const eventCount = evts.length;
-  // Last updated = max of explicit `last_updated` or latest event date in thread.
-  let latestTs = t.last_updated ? new Date(t.last_updated).getTime() : 0;
-  for (const e of evts) {
-    const et = new Date(e.date).getTime();
-    if (!Number.isNaN(et) && et > latestTs) latestTs = et;
-  }
-  const lastUpdated = latestTs > 0 ? new Date(latestTs).toISOString().slice(0, 10) : undefined;
-  return { ...t, eventCount, lastUpdated };
+  // Latest entry = date of the newest event in the thread (getThreadEvents is date-ordered).
+  const latestEntry = evts[evts.length - 1]?.date;
+  return { ...t, eventCount, latestEntry };
 }
 
 const allEnriched: EnrichedThread[] = threads.map(enrich);
@@ -87,7 +82,7 @@ const dormant = allEnriched.filter((t) => t.status !== 'active');
                 <th scope="col">Thread</th>
                 <th scope="col" class="threads-table__col-curator">Curator</th>
                 <th scope="col" class="threads-table__col-count">Events</th>
-                <th scope="col" class="threads-table__col-date">Updated</th>
+                <th scope="col" class="threads-table__col-date">Latest entry</th>
               </tr>
             </thead>
             <tbody>
@@ -102,7 +97,7 @@ const dormant = allEnriched.filter((t) => t.status !== 'active');
                   <td class="threads-table__curator">{t.curator || '—'}</td>
                   <td class="threads-table__count font-mono">{t.eventCount}</td>
                   <td class="threads-table__date font-mono">
-                    {t.lastUpdated ? <time datetime={t.lastUpdated}>{t.lastUpdated}</time> : '—'}
+                    {t.latestEntry ? <time datetime={t.latestEntry}>{t.latestEntry}</time> : '—'}
                   </td>
                 </tr>
               ))}
@@ -123,7 +118,7 @@ const dormant = allEnriched.filter((t) => t.status !== 'active');
                 <th scope="col">Thread</th>
                 <th scope="col" class="threads-table__col-curator">Curator</th>
                 <th scope="col" class="threads-table__col-count">Events</th>
-                <th scope="col" class="threads-table__col-date">Updated</th>
+                <th scope="col" class="threads-table__col-date">Latest entry</th>
               </tr>
             </thead>
             <tbody>
@@ -138,7 +133,7 @@ const dormant = allEnriched.filter((t) => t.status !== 'active');
                   <td class="threads-table__curator">{t.curator || '—'}</td>
                   <td class="threads-table__count font-mono">{t.eventCount}</td>
                   <td class="threads-table__date font-mono">
-                    {t.lastUpdated ? <time datetime={t.lastUpdated}>{t.lastUpdated}</time> : '—'}
+                    {t.latestEntry ? <time datetime={t.latestEntry}>{t.latestEntry}</time> : '—'}
                   </td>
                 </tr>
               ))}
@@ -295,7 +290,7 @@ const dormant = allEnriched.filter((t) => t.status !== 'active');
       color: var(--color-ink-faint);
     }
     .threads-table__date::before {
-      content: 'Updated: ';
+      content: 'Latest entry: ';
       color: var(--color-ink-faint);
     }
     .threads-table__count,
