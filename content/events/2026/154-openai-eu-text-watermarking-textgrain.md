@@ -45,7 +45,7 @@ actors:
     role: context
 regions: [EU, US]
 tags: [watermarking, eu-ai-act, transparency, provenance, content-authentication, textgrain]
-threads: []
+threads: [ai-governance-evolution]
 related: [anthropic-claude-text-watermarking, eu-ai-act-gpai-obligations-force]
 state: published
 revision:

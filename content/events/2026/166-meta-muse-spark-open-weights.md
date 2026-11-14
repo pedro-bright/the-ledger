@@ -54,7 +54,7 @@ actors:
     role: partner
 regions: [US]
 tags: [open-weights, mixture-of-experts, agentic-coding, local-inference, model-licensing, meta-superintelligence-labs]
-threads: []
+threads: [open-vs-closed-weights]
 related: [meta-muse-glimmer-open-weights, meta-muse-wonder-first-frontier-model, meta-muse-spark-1-1, thinking-machines-inkling-open-weights, moonshot-kimi-k3-open-weights, qwen3-8-max-open-weights, glm-5-3-safety-delayed-open-weights]
 state: published
 revision:

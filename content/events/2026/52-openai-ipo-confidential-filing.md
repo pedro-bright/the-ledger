@@ -29,7 +29,7 @@ actors:
     role: counterparty
 regions: [US]
 tags: [ipo, sec-filing, public-markets, corporate-governance, valuation]
-threads: []
+threads: [openai-corporate-evolution, ai-valuation-cycle]
 related: [openai-122b-round-852b, openai-microsoft-partnership-restructuring]
 state: published
 revision:

@@ -31,7 +31,7 @@ actors:
     role: subject
 regions: [US]
 tags: [ai-workforce-displacement, layoffs, restructuring, ai-capex, technology-employment, efficiency]
-threads: []
+threads: [ai-and-labor]
 related: []
 state: published
 revision:

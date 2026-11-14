@@ -63,7 +63,7 @@ actors:
     role: context
 regions: [US]
 tags: [ai-music, streaming-fraud, sentencing, wire-fraud, federal-prosecution, royalties]
-threads: []
+threads: [creative-industries-ai]
 related: [umg-udio-settlement-licensed-music, warner-music-suno-settlement]
 state: published
 revision:

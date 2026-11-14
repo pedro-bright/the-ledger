@@ -52,7 +52,7 @@ actors:
     role: related-party
 regions: [US]
 tags: [whistleblowing, third-party-evaluation, embedded-evaluators, cot-monitorability, independent-oversight, frontier-labs]
-threads: []
+threads: [frontier-safety-policies]
 related: [openai-third-party-assessment-priorities-principles, anthropic-accenture-embedded-evaluator, openai-hugging-face-incident-postmortem, pachocki-alien-mind-voluntary-slowdown, christiano-joins-openai-foundation-board-ssc, coxon-anthropic-resignation-superintelligence-warning]
 state: published
 revision:

@@ -45,7 +45,7 @@ actors:
     role: commentator
 regions: [US]
 tags: [ai-infrastructure, compute-financing, private-capital, data-centers, memorandum-of-understanding, asset-class]
-threads: []
+threads: [ai-valuation-cycle]
 related: [alphabet-84b-equity-raise-ai-infrastructure, openai-50b-compute-2026-disclosure, openai-project-camellia, anthropic-terawulf-kentucky-lease]
 state: published
 revision:

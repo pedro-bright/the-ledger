@@ -30,7 +30,7 @@ actors:
     role: related-party
 regions: [US]
 tags: [acquisition, sdk, mcp, developer-tooling, agentic-ai, infrastructure, toolchain]
-threads: []
+threads: [ai-agents-era]
 related: []
 state: published
 revision:

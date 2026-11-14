@@ -42,7 +42,7 @@ actors:
     role: commentator
 regions: [DE, CA, EU]
 tags: [sovereign-ai, enterprise-ai, m-and-a, digital-sovereignty, eu-ai-act, transatlantic, schwarz-group]
-threads: []
+threads: [sovereign-ai-race]
 related: []
 state: published
 revision:
