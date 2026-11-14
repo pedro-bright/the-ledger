@@ -3,51 +3,14 @@ import Base from '../layouts/Base.astro';
 import PageHeader from '../components/wiki/PageHeader.astro';
 import RailSection from '../components/wiki/RailSection.astro';
 import { loadEvents, loadSummaryRevisions, loadChallenges, loadResolutions } from '../lib/content';
+import { buildCorrectionRecords } from '../lib/corrections';
 
-const events = new Map(loadEvents().map((e) => [e.id, e]));
 const revisions = loadSummaryRevisions();
 const challenges = loadChallenges();
 const resolutions = loadResolutions();
+const records = buildCorrectionRecords({ events: loadEvents(), revisions, challenges, resolutions });
 
-const plainWords = (value: string) => value.replace(/_/g, ' ');
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
-
-function eventFor(id: string) {
-  const event = events.get(id);
-  if (!event) throw new Error(`Correction record targets unknown event ${id}`);
-  return event;
-}
-
-// Same-day records list resolutions, then revisions, then challenges: the reverse of the
-// event page's oldest-first order, where a challenge precedes a revision made the same day.
-const records = [
-  ...resolutions.map((r) => {
-    const challenge = challenges.find((c) => c.id === r.case_id);
-    if (!challenge) throw new Error(`Resolution ${r.id} names unknown challenge ${r.case_id}`);
-    return {
-      order: 0,
-      kind: 'Challenge resolved',
-      date: r.issued_at,
-      event: eventFor(challenge.target_claim_id),
-      reason: [`Disposition: ${plainWords(r.disposition)}.`, ...r.findings].join(' '),
-    };
-  }),
-  ...revisions.map((r) => ({
-    order: 1,
-    kind: 'Summary revision',
-    date: r.created_at,
-    event: eventFor(r.target_summary_id),
-    reason: r.reason,
-  })),
-  ...challenges.map((c) => ({
-    order: 2,
-    kind: 'Challenge opened',
-    date: c.opened_at,
-    event: eventFor(c.target_claim_id),
-    reason: `Alleges ${c.allegations.map(plainWords).join(', ')}.`,
-  })),
-].sort((a, b) =>
-  (b.date ?? '').localeCompare(a.date ?? '') || a.order - b.order || a.event.title.localeCompare(b.event.title));
 
 const resolvedIds = new Set(resolutions.map((r) => r.case_id));
 const openChallenges = challenges.filter((c) => !resolvedIds.has(c.id)).length;
@@ -92,7 +55,9 @@ const openChallenges = challenges.filter((c) => !resolvedIds.has(c.id)).length;
         <div class="corrections-row__body">
           <p class="corrections-row__head">
             <span class="corrections-row__kind">{record.kind}</span>
-            <a href={`/events/${record.event.slug}#revision-history`}>{record.event.title}</a>
+            {record.target.kind === 'event'
+              ? <a href={record.target.href}>{record.target.title}</a>
+              : <span>Synthesis <code class="corrections-row__target font-mono">{record.target.title}</code></span>}
           </p>
           <p class="corrections-row__reason">{record.reason}</p>
         </div>
@@ -144,6 +109,10 @@ const openChallenges = challenges.filter((c) => !resolvedIds.has(c.id)).length;
   .corrections-row__head a { color: var(--color-wiki-link); }
   .corrections-row__head a:visited { color: var(--color-wiki-link-visited); }
   .corrections-row__head a:hover { text-decoration: underline; }
+  .corrections-row__target {
+    font-size: 0.8125rem;
+    color: var(--color-ink-mid);
+  }
   .corrections-row__reason {
     margin: 4px 0 0;
     max-width: 68ch;
