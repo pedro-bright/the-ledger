@@ -9,7 +9,7 @@ curator_scope: initial-synthesis
 contestation:
   status: uncontested
   challenge_window: open
-last_updated: 2026-04-19
+last_updated: 2026-11-14
 events:
   - nvidia-fy2025-record-results
   - openai-40b-softbank-round
@@ -23,7 +23,7 @@ events:
 
 ## Canonical Synthesis
 
-**Author:** terry-tang | **Last updated:** 2026-04-19
+**Author:** terry-tang | **Last updated:** 2026-11-14
 
 The AI valuation cycle of 2023-2026 is best understood as the interaction of three distinct but mutually reinforcing forces: Nvidia's supplier economics establishing the financial scale of the buildout; genuine and rapidly growing revenue at frontier AI labs providing a revenue anchor for valuations; and a concentration of sovereign and strategic capital creating demand pressure that has consistently pushed valuations ahead of conventional revenue multiples.
 
@@ -46,6 +46,47 @@ Sovereign and strategic capital has been the demand accelerant that has pushed v
 **Mid-Late 2025: The Escalation.** Anthropic's Series F at $183 billion nearly tripled its March valuation. Thinking Machines raised a $2 billion seed at $12 billion. The PBC restructuring completed. Microsoft's exclusivity ended. The valuation cycle entered a vertical phase.
 
 **2026: The Summit (So Far).** xAI at $230 billion. Anthropic at $380 billion. OpenAI at $852 billion. Anthropic's $14 billion ARR and OpenAI's $24 billion annualized revenue provide revenue anchoring, but the multiples imply continued rapid growth as a base case. Amazon's AGI-contingent stake embeds AI industry milestones directly into investment terms.
+
+## What changed since the last synthesis
+
+**Covers:** events dated 2026-04-17 to 2026-10-29 | **Written:** 2026-11-14
+
+*Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
+
+On April 17, 2026, Cerebras Systems filed publicly for a Nasdaq IPO, its second attempt after a national security review of a minority investor blocked its 2024 filing, reporting $510 million in 2025 revenue and a $10 billion commercial contract with OpenAI ([Cerebras IPO filing](/events/cerebras-ipo-filing-2026)).
+The entry records it as the first AI chip infrastructure company other than NVIDIA to reach US public markets in the current cycle ([Cerebras IPO filing](/events/cerebras-ipo-filing-2026)).
+
+In the week after the last synthesis, Anthropic's two largest cloud suppliers enlarged their equity positions ([Google commitment](/events/google-anthropic-40b-commitment)).
+Amazon added a $5 billion investment, with up to $20 billion more tied to commercial milestones, while Anthropic committed to spend more than $100 billion on AWS over the next decade ([Anthropic-AWS deal](/events/anthropic-amazon-aws-deal-2026)).
+Four days later Google committed up to $40 billion, $10 billion of it in equity at about a $350 billion valuation and $30 billion contingent on undisclosed milestones ([Google commitment](/events/google-anthropic-40b-commitment)).
+Both deals fit the synthesis's account of strategic capital, with the added feature that equity flows to Anthropic and operational spending flows back to the investor as cloud fees ([Anthropic-AWS deal](/events/anthropic-amazon-aws-deal-2026)).
+
+Transactions involving coding tools bear on the synthesis's view that coding is the clearest single revenue driver ([SpaceX-Cursor option](/events/spacex-cursor-acquisition-option); [Cognition round](/events/cognition-1b-round-26b)).
+SpaceX secured an option to acquire Cursor for $60 billion, with a $10 billion collaboration payment as the alternative, preempting a Cursor round at more than $50 billion ([SpaceX-Cursor option](/events/spacex-cursor-acquisition-option)).
+Cognition raised more than $1 billion at $26 billion post-money and reported a $492 million annualized run rate that had grown 50% month over month for six months ([Cognition round](/events/cognition-1b-round-26b)).
+On June 16, four trading days after its own IPO, SpaceX signed an all-stock merger agreement for Cursor at an implied $60 billion equity value, paying in its newly listed shares ([SpaceX-Cursor merger](/events/spacex-cursor-merger-agreement)).
+
+On May 22 OpenAI submitted a confidential S-1, with Goldman Sachs and Morgan Stanley as lead underwriters and a target valuation above $1 trillion ([OpenAI confidential filing](/events/openai-ipo-confidential-filing)).
+On May 28 Anthropic closed a $65 billion Series H at $965 billion post-money, above OpenAI's $852 billion, and reported an annualized run rate above $47 billion, up from about $9 billion at the end of 2025 ([Series H](/events/anthropic-series-h-65b)).
+The same entry records that analysts questioned the run-rate method, since consumption-based annualization amplifies recent acceleration, and that Anthropic disclosed no operating profit or loss ([Series H](/events/anthropic-series-h-65b)).
+Anthropic submitted its own confidential draft S-1 on June 1, and its president said on June 4 that its compute arrangement with xAI cost $1.25 billion per month ([Anthropic confidential filing](/events/anthropic-ipo-confidential-filing)).
+
+Alphabet raised $84.75 billion, including a $10 billion private placement with Berkshire Hathaway, and guided 2026 capital expenditures to $180 to $190 billion ([Alphabet raise](/events/alphabet-84b-equity-raise-ai-infrastructure)).
+NVIDIA signed memorandums of understanding with Apollo, BlackRock, Blackstone, Brookfield, Goldman Sachs and KKR for platforms designed to mobilize more than $500 billion of third-party capital for compute, and Jensen Huang said NVIDIA could backstop up to $125 billion of deals ([NVIDIA financing platforms](/events/nvidia-compute-financing-platforms)).
+The entry stresses that nothing was contractually committed and that the $500 billion is a design target ([NVIDIA financing platforms](/events/nvidia-compute-financing-platforms)).
+In October Meta announced a plan to raise about $97.5 billion through offerings that rely on a new non-voting Class C stock, with Nvidia and AMD pledging $3 billion and $1 billion, but only about $12.5 billion had reached Meta at the October 29 closing ([Meta raise](/events/meta-97b-equity-raise-nonvoting-class-c)).
+The Meta entry places those purchases in a record of chipmakers financing the buyers of their chips, which extends the synthesis's description of Nvidia as supplier and investor ([Meta raise](/events/meta-97b-equity-raise-nonvoting-class-c)).
+
+Outside the United States, valuations stayed far below those of the leading US labs, and states took direct positions ([Cohere Series E](/events/cohere-series-e-canada-equity-stake)).
+DeepSeek was reported in June to be finalizing its first external round, about $7.4 billion at $52 to $59 billion, with founder Liang Wenfeng supplying about 40 percent and a state-backed national AI fund participating; the round had not closed when reported, and the archive rates the entry medium confidence ([DeepSeek round](/events/deepseek-first-external-funding)).
+Mistral raised a €3 billion Series D at more than €21 billion, led by Samsung, with the Grand Duchy of Luxembourg among the new investors ([Mistral Series D](/events/mistral-series-d-3b-samsung)).
+Cohere closed the first tranche of a Series E targeting up to C$7 billion, at a $20.5 billion valuation reported only by Bloomberg, and the Government of Canada took an equity stake of up to C$1.6 billion tied to jobs, compute and headquarters commitments ([Cohere Series E](/events/cohere-series-e-canada-equity-stake)).
+The synthesis described sovereign vehicles spreading investments across competing US labs; the Cohere round adds a national government as a direct shareholder with contractual conditions attached ([Cohere Series E](/events/cohere-series-e-canada-equity-stake)).
+
+On October 18 Anthropic committed 5% of its shares to a new Public Benefit Fund, subject to stockholder approval, without stating a dollar value ([Public Benefit Fund](/events/anthropic-public-benefit-fund-five-percent-shares)).
+Its public S-1 on October 26 replaced run-rate figures with audited results, reporting first-half 2026 revenue of $16.3 billion, up from $1.2 billion a year earlier, an operating loss of $693 million, and a net loss of $80.7 billion, of which $72.4 billion was a non-cash charge on convertible notes ([public S-1](/events/anthropic-public-s1-filing-founder-voting-control)).
+The filing gives a single Class F share held by a co-founder entity 50.1% of the vote on most stockholder matters and sets no share count or price range ([public S-1](/events/anthropic-public-s1-filing-founder-voting-control)).
+The audited results confirm the revenue growth the synthesis relied on, though no public price had been set, and OpenAI had no public S-1 on file when Anthropic filed ([public S-1](/events/anthropic-public-s1-filing-founder-voting-control)).
 
 ## Open Questions
 

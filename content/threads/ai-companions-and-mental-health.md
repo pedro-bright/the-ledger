@@ -9,7 +9,7 @@ curator_scope: initial-synthesis
 contestation:
   status: uncontested
   challenge_window: open
-last_updated: 2026-04-19
+last_updated: 2026-11-14
 events:
   - garcia-v-character-ai-wrongful-death-suit
   - character-ai-minor-chat-ban
@@ -18,7 +18,7 @@ events:
 
 ## Canonical Synthesis
 
-**Author:** terry-tang | **Last updated:** 2026-04-19
+**Author:** terry-tang | **Last updated:** 2026-11-14
 
 AI companion platforms represent a genuinely novel category of consumer product: interactive software that forms parasocial relationships with users, designed to maximize engagement through emotional responsiveness. For most adults, these products exist at the intersection of entertainment and social substitution. For vulnerable populations — particularly adolescents and individuals in mental health crisis — they present risks that consumer product law, platform liability doctrine, and mental health regulation have not yet been designed to address.
 
@@ -47,6 +47,17 @@ Character.AI's under-18 ban relies on age-assurance mechanisms that are well-und
 ### The engagement design problem
 
 Neither the under-18 ban nor the settlements addressed the underlying design question: Character.AI's engagement mechanics were built to maximize emotional attachment, which is precisely what makes the product compelling and what generates the risks it poses for vulnerable users. Restricting who can access the product is a harm-reduction measure; it is not a product design change. Whether AI companion platforms can deliver their core user value without the engagement mechanics that generate harm remains unaddressed.
+
+## What changed since the last synthesis
+
+**Covers:** events dated 2026-08-18 to 2026-10-12 | **Written:** 2026-11-14
+
+*Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
+
+On August 18, 2026, OpenAI began rolling out ChatGPT for Teens, a separate product for users aged 13 to 17 with tighter content rules and parental controls, assigned by stated age or by an age-prediction model whose accuracy OpenAI has not published ([ChatGPT for Teens](/events/openai-chatgpt-for-teens)).
+Where [Character.AI's ban](/events/character-ai-minor-chat-ban) removed minors from open-ended chat, OpenAI keeps them in a parallel version, so the synthesis's age-gating question now applies to a behavioral classifier as well ([ChatGPT for Teens](/events/openai-chatgpt-for-teens)).
+On October 12 Character Technologies, the company behind Character.AI, filed for Chapter 11 with Disney as a $20 million stalking-horse bidder, citing "legal, regulatory, and operational headwinds" and saying the platform would be wound down if no viable bid emerged ([Character.AI's bankruptcy](/events/character-ai-chapter-11-disney-stalking-horse)).
+The effect of the filing on pending suits in Kentucky and Pennsylvania had not been reported, so it does not yet settle the synthesis's questions on Section 230 or design liability ([Character.AI's bankruptcy](/events/character-ai-chapter-11-disney-stalking-horse)).
 
 ## Open Questions
 

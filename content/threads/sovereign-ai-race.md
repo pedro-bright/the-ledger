@@ -9,7 +9,7 @@ curator_scope: initial-synthesis
 contestation:
   status: uncontested
   challenge_window: open
-last_updated: 2026-04-19
+last_updated: 2026-11-14
 events:
   - eu-investai-ai-gigafactories
   - tsmc-arizona-100b-investment
@@ -20,7 +20,7 @@ events:
 
 ## Canonical Synthesis
 
-**Author:** terry-tang | **Last updated:** 2026-04-19
+**Author:** terry-tang | **Last updated:** 2026-11-14
 
 The sovereign AI race is the scramble by nations outside the US-China frontier to ensure that artificial intelligence does not become a dependency rather than a capability — that the critical infrastructure of the intelligence era is domestically controlled or reliably allied rather than leased from a foreign hyperscaler.
 
@@ -59,6 +59,22 @@ For nations aligned with the US, sovereignty is less important than access. Part
 Neither full sovereignty nor US alignment is the terminal state. The sovereign AI race is producing a multi-polar AI landscape in which several regional clusters — US-aligned, China-aligned, and genuinely non-aligned — develop distinct AI capabilities and governance frameworks. This fragmentation may reduce global coordination capacity on AI safety while increasing resilience against single-point-of-failure dependencies.
 
 **Proponents:** Geopolitical analysts, some EU strategists, non-aligned movement successor states.
+
+## What changed since the last synthesis
+
+**Covers:** events dated 2026-04-24 to 2026-10-29 | **Written:** 2026-11-14
+
+*Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
+
+The new entries extend the thread from national compute programs to model companies backed by governments ([Cohere Series E](/events/cohere-series-e-canada-equity-stake); [DeepSeek's first external round](/events/deepseek-first-external-funding)).
+In April, [Cohere agreed to acquire Aleph Alpha](/events/cohere-aleph-alpha-merger) at a combined value of about $20 billion, with Schwarz Group financing and the endorsement of the Canadian and German digital ministers.
+In September, [Mistral raised €3 billion](/events/mistral-series-d-3b-samsung) in a Samsung-led round to build what it called a "sovereign AI layer."
+In October, [Cohere closed the first tranche of a Series E](/events/cohere-series-e-canada-equity-stake) targeting up to C$7 billion, with Canada taking an equity stake of up to C$1.6 billion tied to Canadian jobs, compute and headquarters.
+The same day, Mistral published the weights of [Mistral Large 4](/events/mistral-large-4-open-weights), trained in its own European data centers on NVIDIA Grace Blackwell GPUs.
+
+These entries confirm the synthesis's model-sovereignty and governance-sovereignty concerns, and the [Large 4](/events/mistral-large-4-open-weights) training record bears on the first open question below, since Europe-based compute still ran on NVIDIA hardware.
+On the Chinese side, [DeepSeek's first external round](/events/deepseek-first-external-funding), reported at about $7.4 billion and recorded at medium confidence because it had not closed, included China's state-backed National AI Industry Investment Fund.
+The [Mistral](/events/mistral-series-d-3b-samsung) and [Cohere](/events/cohere-series-e-canada-equity-stake) valuations, at roughly $24 billion and $20.5 billion, remain far below those of the leading US laboratories.
 
 ## Open Questions
 

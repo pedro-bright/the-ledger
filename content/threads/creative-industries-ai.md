@@ -9,7 +9,7 @@ curator_scope: initial-synthesis
 contestation:
   status: uncontested
   challenge_window: open
-last_updated: 2026-04-19
+last_updated: 2026-11-14
 events:
   - wga-strike-ai-demands
   - sag-aftra-video-game-strike-end
@@ -19,7 +19,7 @@ controversies:
 
 ## Canonical Synthesis
 
-**Author:** terry-tang | **Last updated:** 2026-04-19
+**Author:** terry-tang | **Last updated:** 2026-11-14
 
 The creative industries have been the canary in the AI coal mine since 2022 — the first sector to experience mass commercial AI displacement at scale, the first to organize collective resistance, and the first to win (and then test) negotiated AI consent frameworks. By 2026, a three-year arc of strikes, settlements, and licensing deals has produced a patchwork of contractual protections with inconsistent coverage and untested enforcement.
 
@@ -44,6 +44,18 @@ The music label settlements with Udio and Suno were reached before any court rul
 ### The evolving voice-and-likeness regime
 
 The video game agreement's focus on voice and likeness reflects where AI capability is most immediately threatening to performing arts workers: not writing replacement (addressed in 2023) but synthetic performance replacement. As video generation improves, the next frontier is full synthetic performance — AI-generated screen performances that do not require actors at all. The current consent frameworks cover replicas of real performers; they do not yet address whether studios can train synthetic performer models that approximate human performance without being replicas of specific individuals.
+
+## What changed since the last synthesis
+
+**Covers:** events dated 2026-10-06 | **Written:** 2026-11-14
+
+*Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
+
+On October 6, 2026, Judge John G. Koeltl sentenced Michael Smith to 18 months in prison in what federal prosecutors called the Justice Department's first criminal case of AI-assisted music streaming fraud, in which Smith used AI-generated songs and bot accounts to collect streaming royalties ([Smith sentencing](/events/michael-smith-ai-music-streaming-fraud-sentence)).
+The charge concerned the fake streams; the AI-generated tracks spread those streams across enough songs to avoid detection, and the defense argued that making music with AI and uploading it is lawful ([Smith sentencing](/events/michael-smith-ai-music-streaming-fraud-sentence)).
+The case adds a royalty-pool harm to the displacement concerns in the existing synthesis: prosecutors quoted the Mechanical Licensing Collective saying such fraud "redirects a portion of the existing royalty pool from every single legitimate rightsholder to fraudsters" ([Smith sentencing](/events/michael-smith-ai-music-streaming-fraud-sentence)).
+It leaves the treatment of AI-generated tracks to platform policy and to label settlements such as [Universal Music Group's with Udio](/events/umg-udio-settlement-licensed-music) and [Warner Music Group's with Suno](/events/warner-music-suno-settlement), the licensing model whose stability the open questions below ask about ([Smith sentencing](/events/michael-smith-ai-music-streaming-fraud-sentence)).
+The 18-month term was less than half the bottom of the Guidelines range, and whether it changes the economics of streaming fraud is not known ([Smith sentencing](/events/michael-smith-ai-music-streaming-fraud-sentence)).
 
 ## Open Questions
 

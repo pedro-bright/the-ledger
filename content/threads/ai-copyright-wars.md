@@ -9,7 +9,7 @@ curator_scope: initial-synthesis
 contestation:
   status: contested
   challenge_window: open
-last_updated: 2026-03-08
+last_updated: 2026-11-14
 events:
   - andersen-v-stability-ai-artists-lawsuit
   - nyt-openai-lawsuit
@@ -34,7 +34,7 @@ controversies:
 
 ## Canonical Synthesis
 
-**Author:** terry-tang | **Last updated:** 2026-03-08
+**Author:** terry-tang | **Last updated:** 2026-11-14
 
 The AI copyright wars are the legal dimension of a fundamental question about the generative AI era: who owns the value that AI creates from human creativity? By 2026, this question remains unresolved by courts but has already been substantially resolved by economics — AI companies trained on copyrighted material first and are now litigating from a position of accomplished fact.
 
@@ -73,6 +73,28 @@ Training on copyrighted material without permission or compensation is theft at 
 The copyright frame is too narrow. The real issue is the power asymmetry between AI companies and individual creators. Even if courts rule in creators' favor, the practical challenges of enforcing copyright against AI training are enormous. What's needed is not just legal rights but structural reforms: data dividends, collective bargaining for creators, public-interest AI models trained on licensed data, and regulatory frameworks that address the economic displacement directly rather than through copyright doctrine alone.
 
 **Proponents:** Digital rights organizations, labor advocates, some legal scholars, public-interest technologists.
+
+## What changed since the last synthesis
+
+**Covers:** events dated 2026-03-18 to 2026-11-03 | **Written:** 2026-11-14
+
+*Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
+
+On March 18, 2026, the UK government confirmed that it would not create a text and data mining exception with a rights-holder opt-out, leaving AI training under existing copyright law and relying on voluntary licensing while reserving the option to legislate ([UK drops TDM opt-out](/events/uk-drops-tdm-opt-out-ai-copyright)).
+On May 1, the Academy of Motion Picture Arts and Sciences made AI-generated performances and AI-authored screenplays ineligible for the 99th Academy Awards, requiring performances "demonstrably performed by humans with their consent" without defining where AI assistance ends ([Oscar eligibility rules](/events/ampas-oscars-ai-eligibility-rules)).
+Neither decision created new law: the UK left the licensing question below to the market, and the Academy addressed performer consent through award eligibility ([UK drops TDM opt-out](/events/uk-drops-tdm-opt-out-ai-copyright), [Oscar eligibility rules](/events/ampas-oscars-ai-eligibility-rules)).
+
+On September 1, the Justice Department filed a non-binding statement of interest asking Judge Sidney Stein, who presides over the OpenAI multidistrict litigation, to hold that training is fair use and to reject the "market dilution" theory of Kadrey v. Meta, the federal government's first formal position in these suits ([DOJ statement of interest](/events/doj-statement-of-interest-openai-fair-use)).
+The brief relies on Judge William Alsup's June 2025 Bartz v. Anthropic ruling, which the existing synthesis does not record, and does not address acquisition, the stage that led to the $1.5 billion Bartz settlement ([DOJ statement of interest](/events/doj-statement-of-interest-openai-fair-use)).
+Three days later, The Seattle Times and Newsday sued OpenAI and Microsoft outside the MDL, answering the government's argument that licensing would subsidize legacy media with a pleaded licensing market and industry data on a fall of about 47% in search referrals to mid-sized regional publishers ([Seattle Times and Newsday v. OpenAI](/events/seattle-times-newsday-v-openai-microsoft)).
+On September 17, the news plaintiffs' unredacted summary-judgment brief quoted internal Microsoft documents calling large-model training "the largest theft of labor in human history," though the quotations are the plaintiffs' selection and most exhibits remain sealed ([unredacted summary-judgment brief](/events/news-plaintiffs-unredacted-summary-judgment-brief-openai-microsoft)).
+
+On September 30, Judge Amit Mehta dismissed the Chegg and Penske Media antitrust suits over Google's AI Overviews, saying any gap in the law was for Congress or regulators, without deciding any copyright question ([Chegg and Penske dismissal](/events/google-chegg-penske-ai-overviews-antitrust-dismissal)).
+On October 30, OpenAI, Google, Microsoft, and Anthropic said they would honor a shared robots.txt token for AI training preferences, which carries no enforcement mechanism, excludes grounding, and had been implemented by only one of the four ([shared robots.txt signal](/events/shared-robots-txt-ai-training-signal)).
+On November 2, the New York Times and three Tribune papers sued Brave, describing its search API as a supplier of scraped news to AI companies that are not defendants ([NYT and Tribune papers v. Brave](/events/nyt-tribune-papers-v-brave-search-index)).
+On November 3, Advocate General Maciej Szpunar advised the Court of Justice of the European Union, in its first generative AI case, that a chatbot reusing a news article retrieved in real time can infringe press publishers' rights, while describing training as "as a rule" permitted under the text and data mining exception ([CJEU Advocate General opinion](/events/cjeu-advocate-general-like-company-v-google-chatbot-press-rights)).
+That opinion and the robots.txt signal both treat retrieval for live answers separately from training, a distinction the existing synthesis does not draw ([CJEU Advocate General opinion](/events/cjeu-advocate-general-like-company-v-google-chatbot-press-rights), [shared robots.txt signal](/events/shared-robots-txt-ai-training-signal)).
+The opinion does not bind the court, and Judge Stein had not ruled on the summary-judgment motions, so the first open question below remains open ([CJEU Advocate General opinion](/events/cjeu-advocate-general-like-company-v-google-chatbot-press-rights), [unredacted summary-judgment brief](/events/news-plaintiffs-unredacted-summary-judgment-brief-openai-microsoft)).
 
 ## Open Questions
 

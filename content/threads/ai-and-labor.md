@@ -9,7 +9,7 @@ curator_scope: initial-synthesis
 contestation:
   status: uncontested
   challenge_window: open
-last_updated: 2026-04-19
+last_updated: 2026-11-14
 events:
   - klarna-ai-customer-service-reversal
   - anthropic-economic-index-labor-study
@@ -17,7 +17,7 @@ events:
 
 ## Canonical Synthesis
 
-**Author:** terry-tang | **Last updated:** 2026-04-19
+**Author:** terry-tang | **Last updated:** 2026-11-14
 
 The AI labor displacement debate entered a new phase in 2025-2026: from theoretical projection to empirical measurement. The preceding years had been dominated by competing claims — corporate announcements of workforce reductions attributed to AI, academic studies projecting occupational exposure, think-tank estimates of jobs-at-risk counts ranging from 14% to 85% of the workforce depending on methodology. By early 2026, two data points arrived that complicated both the displacement narrative and its inverse: the Klarna reversal, which showed real limits to AI customer service automation, and the Anthropic Economic Index, which showed observed AI task exposure running at roughly one-third of theoretical projections.
 
@@ -42,6 +42,20 @@ The Anthropic Economic Index found reduced entry-level hiring in high-exposure o
 ### Augmentation vs. displacement: a false dichotomy?
 
 The standard framing pits AI displacement (AI replaces human workers) against AI augmentation (AI makes human workers more productive). The Klarna case suggests a third category: AI automation that reduces headcount and produces lower-quality outcomes — neither replacement nor augmentation, but degradation of service quality for cost reduction. This may be the most common real-world outcome in customer-facing service roles where quality is harder to measure than volume.
+
+## What changed since the last synthesis
+
+**Covers:** events dated 2026-04-23 to 2026-10-18 | **Written:** 2026-11-14
+
+*Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
+
+In April 2026 Meta cut about 8,000 employees and closed 6,000 open roles, with its executives naming AI efficiency as the reason but publishing no productivity metrics ([Meta's layoffs](/events/meta-10pct-layoffs-ai-efficiency)).
+It is the kind of corporate attribution the synthesis describes as hard to verify ([Meta's layoffs](/events/meta-10pct-layoffs-ai-efficiency)).
+In October Anthropic reported that the junior share of its own technical hires fell from 27% to 9% ([Anthropic's employment report](/events/anthropic-employment-report-junior-hiring-decline)).
+The figures are self-reported and unaudited, and they carry the [Economic Index](/events/anthropic-economic-index-labor-study) finding of reduced entry-level hiring into a single firm with intensive agent use ([Anthropic's employment report](/events/anthropic-employment-report-junior-hiring-decline)).
+
+On September 30 California Governor Gavin Newsom signed SB 947, the No Robo Bosses Act, which bars employers from relying solely on automated decision systems to fire or discipline workers, and SB 951, which requires disclosure when a mass layoff is caused by an AI system ([California worker laws](/events/california-no-robo-bosses-act-ai-worker-laws)).
+On October 18 Anthropic committed 5% of its shares, subject to stockholder approval, to a public benefit fund that named instability for workers as one area it could address, without publishing the fund's governance terms ([public benefit fund](/events/anthropic-public-benefit-fund-five-percent-shares)).
 
 ## Open Questions
 
