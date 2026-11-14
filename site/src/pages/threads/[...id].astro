@@ -54,6 +54,8 @@ const subtitle = thread.core_question ? `— ${thread.core_question}` : undefine
 <Base
   title={thread.title}
   description={thread.core_question || `Thread: ${thread.title}`}
+  image={`/og/threads/${thread.slug}.png`}
+  imageAlt={`${thread.title}. A thread in The Ledger.`}
   layout="article"
 >
   <!-- LEFT RAIL -->

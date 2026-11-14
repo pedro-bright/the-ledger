@@ -63,6 +63,9 @@ jobs:
       - name: Run corrections page unit test
         run: npm run test:corrections
 
+      - name: Check preview card images
+        run: npm run test:og
+
       - name: Run Playwright tests
         working-directory: site
         run: |

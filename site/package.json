@@ -17,8 +17,10 @@
     "@astrojs/sitemap": "^3.7.4",
     "@fontsource-variable/fraunces": "^5.2.9",
     "@fontsource-variable/source-serif-4": "^5.2.9",
+    "@fontsource/fraunces": "^5.3.0",
     "@fontsource/inter": "^5.2.8",
     "@fontsource/jetbrains-mono": "^5.2.8",
+    "@resvg/resvg-js": "^2.6.2",
     "astro": "^7.4.4",
     "autoprefixer": "^10.4.27",
     "d3-force-3d": "^3.0.6",
@@ -29,6 +31,7 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-force-graph-2d": "^1.29.1",
+    "satori": "^0.63.2",
     "tailwindcss": "^3.4.19"
   },
   "devDependencies": {
