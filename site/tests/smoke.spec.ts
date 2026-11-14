@@ -222,8 +222,8 @@ test('automatic scan entries do not claim a human review', async ({ page }) => {
 test('thread footers report the thread modification date instead of a linked event date', async ({ page }) => {
   await page.goto('/threads/ai-copyright-wars');
   const footer = page.locator('.wiki-article__lastmod');
-  await expect(footer).toContainText('This record last modified 2026-03-08.');
-  await expect(footer.locator('time')).toHaveAttribute('datetime', '2026-03-08');
+  await expect(footer).toContainText('This record last modified 2026-11-14.');
+  await expect(footer.locator('time')).toHaveAttribute('datetime', '2026-11-14');
 });
 
 test('utility links describe their destinations', async ({ page }) => {
