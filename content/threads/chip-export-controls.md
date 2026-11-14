@@ -9,7 +9,7 @@ curator_scope: initial-synthesis
 contestation:
   status: uncontested
   challenge_window: open
-last_updated: 2026-04-19
+last_updated: 2026-11-14
 events:
   - nvidia-h20-export-license-restriction
   - trump-rescinds-ai-diffusion-rule
@@ -21,7 +21,7 @@ events:
 
 ## Canonical Synthesis
 
-**Author:** terry-tang | **Last updated:** 2026-04-19
+**Author:** terry-tang | **Last updated:** 2026-11-14
 
 The chip export controls saga is the story of how the United States attempted to weaponize the semiconductor supply chain against China's AI ambitions — and how that attempt has evolved, repeatedly, through policy reversals, informal deals, diplomatic pressures, and the stubborn reality of industrial substitution.
 
@@ -66,6 +66,18 @@ The revenue-share deal and the pattern of ban-and-reversal suggest that chip con
 The real significance of chip export controls is not denial of China's AI capabilities but acceleration of US domestic semiconductor manufacturing. TSMC's $165 billion Arizona commitment, the CHIPS Act investments, and the TSMC process node advantage are the durable outcomes. The controls create the political justification for industrial policy that market mechanisms alone would not have produced.
 
 **Proponents:** Industrial policy advocates, semiconductor industry analysts, some CHIPS Act architects.
+
+## What changed since the last synthesis
+
+**Author:** terry-tang | **Covers:** events dated 2026-04-24 | **Written:** 2026-11-14
+
+*Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
+
+The one new entry adds training evidence to the substitution record described above.
+[DeepSeek-V4-Pro](/events/deepseek-v4-pro-release), released in April 2026, was trained in part on Huawei Ascend 950 chips in "Supernode" clusters, which the entry describes as the first publicly confirmed case of a frontier-adjacent model trained on Chinese domestic silicon under US export controls.
+The [entry](/events/deepseek-v4-pro-release) reports V4-Pro at 80.6% on SWE-bench Verified against 87.6% for Claude Opus 4.7 and 89.1% for GPT-5.5, and argues that the control regime has not prevented Chinese frontier development and has instead accelerated domestic chip adoption for AI workloads.
+The earlier [Ascend 910C mass shipment](/events/huawei-ascend-910c-mass-shipment) recorded Huawei supplying accelerators after the H20 restrictions; V4-Pro is the archive's first record of Ascend hardware used to train a model of this class, which bears on the open question of when Huawei's roadmap makes denial moot.
+The [V4-Pro entry](/events/deepseek-v4-pro-release) leaves unknown the training cost and duration on Ascend hardware compared with NVIDIA equivalents, and whether the remaining gap to GPT-5.5 reflects architecture or training resources.
 
 ## Open Questions
 
