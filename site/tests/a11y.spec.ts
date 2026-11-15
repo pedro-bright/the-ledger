@@ -53,6 +53,8 @@ test.describe('a11y (axe)', () => {
       if (path.startsWith('/search?')) {
         await page.getByRole('button', { name: /^Policy\b/, pressed: true }).waitFor();
         await page.locator('.search-result').first().waitFor();
+        // A chip that would list no entries is muted, and must still pass.
+        await page.locator('[data-search-filter][aria-disabled="true"]').first().waitFor();
       }
       if (path === '/explore') {
         await page.locator('#explorer-search').waitFor({ state: 'visible' });

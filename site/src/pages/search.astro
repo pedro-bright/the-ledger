@@ -89,7 +89,7 @@ const chip =
         <div class="flex flex-wrap items-baseline gap-2" role="group" aria-labelledby="search-filters-cat">
           <span id="search-filters-cat" class="label-eyebrow mr-1">Category</span>
           {categories.map(({ id, label }) => (
-            <button type="button" class={chip} data-search-filter="cat" value={id} data-label={label} aria-pressed="false" hidden>
+            <button type="button" class={chip} data-search-filter="cat" value={id} data-label={label} aria-pressed="false">
               <span aria-hidden="true" class={`inline-block w-1.5 h-1.5 rounded-full ${pip[id]}`}></span>
               <span>{label}</span>
               <span class="search-filters__count font-mono tabular-nums"></span>
@@ -103,7 +103,7 @@ const chip =
             <span class="search-filters__count font-mono tabular-nums"></span>
           </button>
           {years.map((year) => (
-            <button type="button" class={`${chip} font-mono tabular-nums`} data-search-filter="year" value={year} aria-pressed="false" hidden>
+            <button type="button" class={`${chip} font-mono tabular-nums`} data-search-filter="year" value={year} aria-pressed="false">
               <span>{year}</span>
               <span class="search-filters__count"></span>
             </button>
@@ -219,12 +219,13 @@ const chip =
     for (const chip of yearChips) chip.setAttribute('aria-pressed', String(chip.value === year));
   }
 
-  // A chip that would list no entries is hidden, unless it is pressed or has focus.
+  // A chip that would list no entries is disabled, unless it is pressed, so that it can be released.
   function countChips(chipsOfFilter: HTMLButtonElement[], counts: Record<string, number>) {
     for (const chip of chipsOfFilter) {
       const count = counts[chip.value] ?? 0;
       chip.querySelector('.search-filters__count')!.textContent = String(count);
-      chip.hidden = count === 0 && chip.getAttribute('aria-pressed') === 'false' && chip !== document.activeElement;
+      if (count === 0 && chip.getAttribute('aria-pressed') === 'false') chip.setAttribute('aria-disabled', 'true');
+      else chip.removeAttribute('aria-disabled');
     }
   }
 
@@ -303,6 +304,8 @@ const chip =
     let first: HTMLElement[][] = groups.map(() => []);
     // The entries for the term before the category and year filters.
     let entries = 0;
+    let categoryCounts: Record<string, number> = {};
+    let yearCounts: Record<string, number> = {};
     let failed = false;
     if (term) {
       try {
@@ -319,8 +322,8 @@ const chip =
         first = await Promise.all(results.map((matches, i) => rows(matches.slice(0, STEP), groups[i].type)));
         found = results;
         entries = unfiltered.results.length;
-        countChips(categoryChips, byCategory.filters.category ?? {});
-        countChips(yearChips, { ...byYear.filters.year, '': byYear.results.length });
+        categoryCounts = byCategory.filters.category ?? {};
+        yearCounts = { ...byYear.filters.year, '': byYear.results.length };
       } catch {
         failed = true;
       }
@@ -336,6 +339,8 @@ const chip =
       group.list.replaceChildren(...first[i]);
       updateMore(group);
     });
+    countChips(categoryChips, categoryCounts);
+    countChips(yearChips, yearCounts);
     filterPanel.hidden = entries === 0;
     noEntries.hidden = !(entries > 0 && found[groups.findIndex(({ type }) => type === 'event')].length === 0);
     const total = found.reduce((sum, results) => sum + results.length, 0);
@@ -380,6 +385,7 @@ const chip =
   let timer: number | undefined;
   for (const chip of chips) {
     chip.addEventListener('click', () => {
+      if (chip.getAttribute('aria-disabled') === 'true') return;
       if (chip.dataset.searchFilter === 'cat') {
         categories = categories.includes(chip.value)
           ? categories.filter((id) => id !== chip.value)
@@ -485,10 +491,16 @@ const chip =
     line-height: 1.45;
     color: var(--color-ink-faint);
   }
-  /* The display classes would otherwise show a hidden panel or chip. */
-  .search-filters[hidden],
-  .search-filters button[hidden] {
+  /* The display classes would otherwise show a hidden panel. */
+  .search-filters[hidden] {
     display: none;
+  }
+  /* A chip that would list no entries. */
+  .search-filters button[aria-disabled='true'] {
+    border-style: dashed;
+    border-color: var(--color-rule-strong);
+    color: var(--color-ink-faint);
+    cursor: default;
   }
   .search-filters__count {
     color: var(--color-ink-faint);

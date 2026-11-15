@@ -390,10 +390,18 @@ test.describe('entry filters', () => {
     return {
       ...(await shown(page)),
       chips: await filters(page).getByRole('button').evaluateAll((buttons) =>
-        buttons.filter((button) => !(button as HTMLElement).hidden)
-          .map((button) => `${button.textContent!.replace(/\s+/g, ' ').trim()} ${button.getAttribute('aria-pressed')}`)),
+        buttons.map((button) => [
+          button.textContent!.replace(/\s+/g, ' ').trim(),
+          button.getAttribute('aria-pressed'),
+          button.getAttribute('aria-disabled'),
+        ].join(' '))),
     };
   }
+
+  /** The name of each chip in order, without its count. */
+  const chipNames = (page: Page) =>
+    filters(page).getByRole('button').evaluateAll((buttons) =>
+      buttons.map((button) => button.querySelector('span:not([aria-hidden]):not(.search-filters__count)')!.textContent));
 
   test('a category and a year leave only the entries that match both, in their order', async ({ page }) => {
     test.skip(test.info().project.name !== 'chromium', 'the results do not vary by viewport');
@@ -437,6 +445,86 @@ test.describe('entry filters', () => {
     await expect(status(opened)).toHaveText(expected.status!);
     await expect(field(opened)).toHaveValue('OpenAI');
     expect(await shownWithChips(opened)).toEqual(expected);
+  });
+
+  test('every category and year chip stays in place as filters are chosen', async ({ page }) => {
+    await page.goto('/search?q=OpenAI');
+    await expect(group(page, 'Events').getByRole('listitem')).toHaveCount(10);
+    const before = await chipNames(page);
+    // The years follow All, newest first.
+    const years = before.slice(before.indexOf('All') + 1);
+    expect(years).toEqual([...years].sort().reverse());
+
+    await chip(page, 'Category', 'Policy').click();
+    await chip(page, 'Year', '2025').click();
+    await expect(status(page)).toHaveText(/limited to Policy in 2025$/);
+    expect(await chipNames(page)).toEqual(before);
+    for (const button of await filters(page).getByRole('button').all()) await expect(button).toBeVisible();
+  });
+
+  test('a chip that would list no entries does nothing, and a pressed chip can always be released', async ({ page }) => {
+    await page.goto('/search?q=OpenAI&cat=policy&year=2025');
+    await expect(status(page)).toHaveText(/limited to Policy in 2025$/);
+    const zero = filters(page).locator('button[aria-disabled="true"]').first();
+    await expect(zero.locator('.search-filters__count')).toHaveText('0');
+    await expect(zero).toHaveAttribute('aria-pressed', 'false');
+    await expect(filters(page).locator('button[aria-pressed="true"][aria-disabled]')).toHaveCount(0);
+    const before = await shownWithChips(page);
+    const url = page.url();
+
+    await zero.focus();
+    await page.keyboard.press('Enter');
+    await page.keyboard.press('Space');
+    await zero.click({ force: true });
+    await expect(zero).toBeFocused();
+    await expect(zero).toHaveAttribute('aria-pressed', 'false');
+    expect(page.url()).toBe(url);
+    expect(await shownWithChips(page)).toEqual(before);
+  });
+
+  test('the chip counts follow the latest search when an earlier one finishes after it', async ({ page }) => {
+    // A stand-in for the Pagefind module whose rows for "slow" wait until the test releases them.
+    await page.route('**/pagefind/pagefind.js', (route) => route.fulfill({
+      contentType: 'text/javascript',
+      body: `
+        let open;
+        const gate = new Promise((resolve) => { open = resolve; });
+        globalThis.releaseSlow = open;
+        globalThis.slowDone = 0;
+        const result = (term) => ({ data: async () => {
+          if (term === 'slow') { await gate; globalThis.slowDone += 1; }
+          return {
+            url: '/events/stand-in-' + term + '/',
+            excerpt: 'A <mark>stand-in</mark> result.',
+            meta: { title: 'Stand-in ' + term, date: '2024-01-01' },
+            filters: { category: ['policy'] },
+          };
+        } });
+        export const options = async () => {};
+        export const init = async () => {};
+        export const filters = async () => ({});
+        export const search = async (term, { filters }) => {
+          const count = term === 'slow' ? 7 : 3;
+          return {
+            results: filters.type === 'event' ? [result(term)] : [],
+            filters: { category: { policy: count }, year: { 2024: count } },
+          };
+        };
+      `,
+    }));
+    await page.goto('/search');
+    await field(page).fill('slow');
+    await expect(page).toHaveURL(/\?q=slow$/);
+    await field(page).fill('fast');
+    await expect(status(page)).toHaveText('1 result for “fast”');
+    await expect(chip(page, 'Category', 'Policy')).toHaveText('Policy 3');
+
+    await page.evaluate(() => (globalThis as unknown as { releaseSlow: () => void }).releaseSlow());
+    await page.waitForFunction(() => (globalThis as unknown as { slowDone: number }).slowDone > 0);
+    await page.evaluate(() => new Promise((resolve) => setTimeout(resolve, 50)));
+    expect(await chip(page, 'Category', 'Policy').textContent()).toMatch(/^\s*Policy\s*3\s*$/);
+    expect(await chip(page, 'Year', '2024').textContent()).toMatch(/^\s*2024\s*3\s*$/);
+    await expect(status(page)).toHaveText('1 result for “fast”');
   });
 
   test('the chips are toggle buttons that work from the keyboard, and the count is announced', async ({ page }) => {
