@@ -217,6 +217,28 @@ test.describe('smoke', () => {
 });
 
 
+test('home lists the five most recently added entries with the day each was added', async ({ page }) => {
+  const eventsDir = path.join(__dirname, '..', '..', 'content', 'events');
+  const day = (value: unknown) => (value instanceof Date ? value.toISOString() : String(value)).slice(0, 10);
+  const entries = fs.readdirSync(eventsDir, { recursive: true })
+    .map(String)
+    .filter((file) => file.endsWith('.md'))
+    .map((file) => parseFrontmatter(fs.readFileSync(path.join(eventsDir, file), 'utf8')).data)
+    .map((data) => ({ href: `/events/${data.id}`, added: day(data.revision.created), date: day(data.date) }))
+    .sort((a, b) => b.added.localeCompare(a.added) || b.date.localeCompare(a.date))
+    .slice(0, 5);
+
+  await page.goto('/');
+  const rows = page.locator('.rail-block:has(> h4:text-is("Recently added")) li');
+  await expect(rows).toHaveCount(5);
+  expect(await rows.evaluateAll((els) => els.map((el) => ({
+    href: el.querySelector('a')?.getAttribute('href'),
+    added: el.querySelector('time')?.textContent,
+  })))).toEqual(entries.map(({ href, added }) => ({ href, added })));
+  await expect(page.locator('.rail-block:has(> h4:text-is("Recently added")) time').first())
+    .toHaveCSS('font-family', /JetBrains Mono/);
+});
+
 test('event provenance distinguishes review dates from event dates', async ({ page }) => {
   await page.goto('/events/anthropic-dod-debate-2026');
   const footer = page.locator('.wiki-article__lastmod');
@@ -291,7 +313,7 @@ test.describe('page metadata', () => {
       '@type': 'Article',
       headline: data.title,
       description,
-      datePublished: '2023-03-14',
+      datePublished: '2026-03-08',
       temporalCoverage: '2023-03-14',
       isPartOf: [{ '@type': 'CreativeWork', url: 'https://the-ledger.net/threads/scaling-laws-debate/' }],
       publisher: { '@type': 'Organization', name: 'The Ledger' },

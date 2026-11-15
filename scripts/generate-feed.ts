@@ -1,6 +1,7 @@
 #!/usr/bin/env tsx
 /**
- * generate-feed.ts — Generate RSS/Atom XML feed from events sorted by date.
+ * generate-feed.ts — Generate RSS/Atom XML feeds of the events most recently
+ * added to the ledger.
  */
 
 import fs from "node:fs";
@@ -16,11 +17,16 @@ const SITE_URL = "https://the-ledger.net";
 const FEED_TITLE = "The Ledger — An Epistemic Ledger of AI History";
 const FEED_DESCRIPTION =
   "Tracking how understanding of AI history changes over time. Events, threads, and evolving interpretations.";
+const FEED_LIMIT = 60;
 
 interface FeedEvent {
   id: string;
   title: string;
   date: string;
+  /** The day the entry was added to the ledger (`revision.created`). */
+  added: string;
+  /** The day the entry was last reviewed, or the day it was added. */
+  updated: string;
   category: string;
   summary: string;
   significance?: string;
@@ -42,13 +48,18 @@ function walkDir(dir: string): string[] {
 
 function extractSummary(content: string): string {
   // Extract the Summary section content, or first paragraph
-  const summaryMatch = content.match(/## Summary\s*\n([\s\S]*?)(?=\n## |\n---|\Z)/);
+  const summaryMatch = content.match(/## Summary\s*\n([\s\S]*?)(?=\n## |\n---|$)/);
   if (summaryMatch) {
     return summaryMatch[1].trim().slice(0, 500);
   }
   // Fallback: first non-empty paragraph
   const lines = content.split("\n").filter((l) => l.trim() && !l.startsWith("#"));
   return lines.slice(0, 3).join(" ").trim().slice(0, 500);
+}
+
+// YAML reads an unquoted date as a Date and a quoted one as a string.
+function isoDate(value: unknown): string {
+  return value instanceof Date ? value.toISOString().slice(0, 10) : String(value).slice(0, 10);
 }
 
 function escapeXml(str: string): string {
@@ -73,12 +84,16 @@ function main() {
 
       if (!data.id || !data.title || !data.date) continue;
 
+      const date = isoDate(data.date);
+      const added = data.revision?.created ? isoDate(data.revision.created) : date;
       events.push({
         id: String(data.id),
         title: String(data.title),
-        date: String(data.date),
+        date,
+        added,
+        updated: data.revision?.last_reviewed ? isoDate(data.revision.last_reviewed) : added,
         category: String(data.category ?? ""),
-        summary: extractSummary(content),
+        summary: `Event date: ${date}. ${extractSummary(content)}`,
         significance: data.significance ? String(data.significance) : undefined,
       });
     } catch {
@@ -86,20 +101,22 @@ function main() {
     }
   }
 
-  // Sort by date descending (newest first)
-  events.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  // Newest additions first, then the latest event among entries added the same day.
+  events.sort((a, b) => b.added.localeCompare(a.added) || b.date.localeCompare(a.date));
+  const entries = events.slice(0, FEED_LIMIT);
 
-  const now = new Date().toISOString();
-  const latestDate = events.length > 0 ? new Date(events[0].date).toISOString() : now;
+  const latestUpdate = entries.reduce((latest, e) => (e.updated > latest ? e.updated : latest), "");
+  const feedUpdated = latestUpdate ? new Date(latestUpdate).toISOString() : new Date().toISOString();
 
   // Generate Atom feed
-  const atomEntries = events
+  const atomEntries = entries
     .map(
       (e) => `  <entry>
     <id>${SITE_URL}/events/${escapeXml(e.id)}</id>
     <title>${escapeXml(e.title)}</title>
     <link href="${SITE_URL}/events/${escapeXml(e.id)}" rel="alternate"/>
-    <updated>${new Date(e.date).toISOString()}</updated>
+    <published>${new Date(e.added).toISOString()}</published>
+    <updated>${new Date(e.updated).toISOString()}</updated>
     <summary type="text">${escapeXml(e.summary)}</summary>
     <category term="${escapeXml(e.category)}"/>
     ${e.significance ? `<category term="significance:${escapeXml(e.significance)}"/>` : ""}
@@ -114,20 +131,20 @@ function main() {
   <subtitle>${escapeXml(FEED_DESCRIPTION)}</subtitle>
   <link href="${SITE_URL}" rel="alternate"/>
   <link href="${SITE_URL}/feed.xml" rel="self" type="application/atom+xml"/>
-  <updated>${latestDate}</updated>
+  <updated>${feedUpdated}</updated>
   <generator>The Ledger Feed Generator</generator>
 ${atomEntries}
 </feed>
 `;
 
   // Generate RSS 2.0 feed
-  const rssItems = events
+  const rssItems = entries
     .map(
       (e) => `    <item>
       <title>${escapeXml(e.title)}</title>
       <link>${SITE_URL}/events/${escapeXml(e.id)}</link>
       <guid isPermaLink="true">${SITE_URL}/events/${escapeXml(e.id)}</guid>
-      <pubDate>${new Date(e.date).toUTCString()}</pubDate>
+      <pubDate>${new Date(e.added).toUTCString()}</pubDate>
       <description>${escapeXml(e.summary)}</description>
       <category>${escapeXml(e.category)}</category>
     </item>`
@@ -154,7 +171,7 @@ ${rssItems}
   fs.writeFileSync(atomPath, atomFeed, "utf-8");
   fs.writeFileSync(rssPath, rssFeed, "utf-8");
 
-  console.log(`  Generated ${events.length} event entries.`);
+  console.log(`  Generated ${entries.length} of ${events.length} event entries.`);
   console.log(`  📄 Atom feed → feed.xml`);
   console.log(`  📄 RSS feed  → rss.xml\n`);
 }

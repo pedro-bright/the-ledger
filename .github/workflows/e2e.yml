@@ -100,6 +100,9 @@ jobs:
       - name: Check preview card images
         run: npm run test:og
 
+      - name: Check the feeds
+        run: npm run test:feed
+
       - name: Run Playwright tests
         working-directory: site
         run: |
