@@ -403,6 +403,34 @@ function validateAll(): ValidationError[] {
   return errors;
 }
 
+// --------------- GitHub Actions Reporting ---------------
+
+// Workflow command escaping: https://github.com/actions/toolkit/blob/main/packages/core/src/command.ts
+function escapeData(value: string): string {
+  return value.replace(/%/g, "%25").replace(/\r/g, "%0D").replace(/\n/g, "%0A");
+}
+
+function escapeProperty(value: string): string {
+  return escapeData(value).replace(/:/g, "%3A").replace(/,/g, "%2C");
+}
+
+function reportToGitHubActions(errors: ValidationError[]) {
+  const files = errors.map((err) => `content/${err.file.split(path.sep).join("/")}`);
+
+  // The Files tab only shows annotations that carry a line; line 1 puts the error at the top of the file.
+  errors.forEach((err, i) => {
+    console.log(`::error file=${escapeProperty(files[i])},line=1::${escapeData(err.message)}`);
+  });
+
+  const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+  if (!summaryPath) return;
+  const lines = errors.map((err, i) => `- \`${files[i]}\`: ${err.message.replace(/\s*\n\s*/g, " ")}`);
+  fs.appendFileSync(
+    summaryPath,
+    `### Content validation failed\n\n${errors.length} error(s):\n\n${lines.join("\n")}\n`,
+  );
+}
+
 // --------------- Main ---------------
 
 function main() {
@@ -420,6 +448,8 @@ function main() {
     console.log(`  ${err.file}`);
     console.log(`    → ${err.message}\n`);
   }
+
+  if (process.env.GITHUB_ACTIONS) reportToGitHubActions(errors);
 
   process.exit(1);
 }
