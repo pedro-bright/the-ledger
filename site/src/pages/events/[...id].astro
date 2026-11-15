@@ -13,6 +13,7 @@ import {
   getThreadEvents,
 } from '../../lib/content';
 import { metaDescription, plainParagraphs } from '../../lib/markdown';
+import { buildRevisionHistory } from '../../lib/revision-history';
 import { breadcrumbList, eventArticle } from '../../lib/structured-data';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -86,15 +87,11 @@ const description = metaDescription(plainParagraphs(event.content, 'Summary').jo
 const { created, last_reviewed: reviewed, final_author: finalAuthor } = event.revision ?? {};
 const lastReviewed = reviewed && finalAuthor !== 'pedro-bright' && (!created || reviewed > created) ? reviewed : undefined;
 
-// Correction records that concern this event, oldest first; a challenge precedes a revision made the same day.
-const resolutions = loadResolutions();
-const challengeRecords = loadChallenges()
-  .filter((c) => c.target_claim_id === event.id)
-  .map((c) => ({ kind: 'challenge' as const, date: c.opened_at, challenge: c, resolution: resolutions.find((r) => r.case_id === c.id) }));
-const revisionRecords = loadSummaryRevisions()
-  .filter((r) => r.target_summary_id === event.id)
-  .map((r) => ({ kind: 'revision' as const, date: r.created_at, revision: r }));
-const records = [...challengeRecords, ...revisionRecords].sort((a, b) => (a.date ?? '').localeCompare(b.date ?? ''));
+const records = buildRevisionHistory(event.id, {
+  challenges: loadChallenges(),
+  revisions: loadSummaryRevisions(),
+  resolutions: loadResolutions(),
+});
 const plainWords = (value: string) => value.replace(/_/g, ' ');
 const contestationHref = records.length > 0 ? '#revision-history' : undefined;
 
@@ -345,7 +342,7 @@ const sourceTipHref = issueFormHref({
                 )}
               </dl>
             </li>
-          ) : (
+          ) : record.kind === 'challenge' ? (
             <li class="revision-log__entry">
               <h3 class="revision-log__title">
                 Challenge opened
@@ -356,16 +353,19 @@ const sourceTipHref = issueFormHref({
                 <dd>{plainWords(record.challenge.status)}</dd>
                 <dt>Allegations</dt>
                 <dd>{record.challenge.allegations.map(plainWords).join(', ')}</dd>
-                {record.resolution && (
-                  <>
-                    <dt>Resolution</dt>
-                    <dd>
-                      {plainWords(record.resolution.disposition)}
-                      {record.resolution.issued_at && <>, issued <time class="revision-log__date" datetime={record.resolution.issued_at}>{record.resolution.issued_at}</time></>}
-                      <ul>{record.resolution.findings.map((finding) => <li>{finding}</li>)}</ul>
-                    </dd>
-                  </>
-                )}
+              </dl>
+            </li>
+          ) : (
+            <li class="revision-log__entry">
+              <h3 class="revision-log__title">
+                Challenge resolved
+                {record.date && <time class="revision-log__date" datetime={record.date}>{record.date}</time>}
+              </h3>
+              <dl class="revision-log__fields">
+                <dt>Disposition</dt>
+                <dd>{plainWords(record.resolution.disposition)}</dd>
+                <dt>Findings</dt>
+                <dd><ul>{record.resolution.findings.map((finding) => <li>{finding}</li>)}</ul></dd>
               </dl>
             </li>
           ))}
@@ -569,7 +569,7 @@ const sourceTipHref = issueFormHref({
     margin: 2px 0 0; max-width: 68ch; font-family: var(--font-serif); font-size: 0.9375rem;
     color: var(--color-ink-mid); line-height: 1.6;
   }
-  .revision-log__fields dd ul { margin: 4px 0 0; padding-left: 1.25rem; }
+  .revision-log__fields dd ul { margin: 4px 0 0; padding-left: 1.25rem; list-style: disc; }
   .revision-log__earlier > summary {
     cursor: pointer; font-family: var(--font-sans); font-size: var(--text-meta); color: var(--color-wiki-link);
     line-height: 1.45;

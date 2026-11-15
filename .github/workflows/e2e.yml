@@ -78,6 +78,9 @@ jobs:
       - name: Run corrections page unit test
         run: npm run test:corrections
 
+      - name: Run revision history unit test
+        run: npm run test:revision-history
+
       - name: Check preview card images
         run: npm run test:og
 

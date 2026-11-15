@@ -19,13 +19,14 @@
     "test:links": "tsx --test --test-concurrency=2 scripts/check-links.test.ts",
     "test:security": "tsx --test scripts/content-security.test.ts",
     "test:corrections": "tsx --test scripts/corrections.test.ts",
+    "test:revision-history": "tsx --test scripts/revision-history.test.ts",
     "test:og": "tsx --test scripts/og-images.test.ts",
     "test:parity": "tsx --test scripts/sitemap.test.ts && tsx scripts/test-parity.ts",
     "test:no-dark-leaks": "tsx scripts/test-no-dark-leaks.ts",
     "test:css-floor": "tsx scripts/test-css-floor.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "typecheck:site": "tsc --noEmit -p site/tsconfig.json",
-    "test:build": "npm run build-graph && npm run generate-feed && cd site && npm run build && cd .. && npm run test:parity && npm run test:no-dark-leaks && npm run test:css-floor && npm run test:dates && npm run test:security && npm run test:corrections && npm run test:og && npm run test:feed"
+    "test:build": "npm run build-graph && npm run generate-feed && cd site && npm run build && cd .. && npm run test:parity && npm run test:no-dark-leaks && npm run test:css-floor && npm run test:dates && npm run test:security && npm run test:corrections && npm run test:revision-history && npm run test:og && npm run test:feed"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
