@@ -65,7 +65,8 @@ npm run new-event -- --id example-event --date 2026-11-01 --category policy
 The command creates `content/events/<year>/<number>-<id>.md` with the required frontmatter and body headings.
 It uses the highest existing number in that year plus one, leaving gaps for open pull requests.
 The id must be unique and the category must be listed in the event schema.
-Fill in the title, source URL and source title, then write the body and run `npm run validate` before submitting.
+Fill in the title and sources, set `state`, `revision.draft_assistance` and `revision.final_author`, then write the body and run `npm run validate` before submitting.
+The [publication rules](#publication-rules) list what a new event must include.
 
 **AI assistance:** If you use AI tools to draft content, set `draft_assistance: ai-assisted` under `revision` in the frontmatter (`revision.draft_assistance`).
 This is a disclosure.
@@ -153,6 +154,24 @@ fix/typo-in-claude-3-event
 3. **Prose quality:** Is it clear, precise, and consistent with our [style guide](editorial/style-guide.md)?
 4. **Schema compliance:** Is the frontmatter complete and valid?
 5. **Neutrality of reporting / transparency of analysis:** Are factual claims separated from interpretation? Is analysis attributed?
+
+### Publication Rules
+
+`npm run validate` enforces these rules for every event whose `revision.created` is on or after `PUBLICATION_RULES_FROM` in `scripts/publication-rules.ts` (currently 2026-11-15).
+Events created before that date are not checked.
+Each violation names the file, the rule and the field, followed by the fix.
+
+| Rule | Requirement |
+|------|-------------|
+| revision record | `revision.last_reviewed`, `revision.final_author` and `revision.draft_assistance` are set. |
+| lifecycle state | `state` is set. |
+| source details | Every source has `publisher`, `date` and `accessed`. |
+| minimum sourcing | At least one source has type `official` or a type starting with `primary`, or the event has at least two sources. |
+| archived primary sources | Every source with type `official` or a type starting with `primary` has an `archive_url`. |
+| fixed archive capture | An `archive_url` on `web.archive.org` points to one capture with a 14-digit timestamp, such as `https://web.archive.org/web/20261115120000/<url>`. |
+| automatic entries are notable | When `revision.final_author` is `pedro-bright`, the account that publishes the automated daily scan, `significance` is `notable`. |
+
+The validator does not check whether two sources are independent or whether a publisher is credible; reviewers check those against the [evidence standards](editorial/evidence-standards.md).
 
 ---
 

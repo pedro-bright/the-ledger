@@ -1,7 +1,8 @@
 #!/usr/bin/env tsx
 /**
  * validate.ts — Read all content/ files, parse YAML frontmatter,
- * validate against JSON schemas, check cross-references.
+ * validate against JSON schemas, check cross-references and apply the
+ * publication rules to new events.
  */
 
 import fs from "node:fs";
@@ -10,6 +11,7 @@ import { fileURLToPath } from "node:url";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
 import { parseFrontmatter } from "./frontmatter.js";
+import { publicationRuleErrors } from "./publication-rules.js";
 import { loadYaml } from "./yaml.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -273,6 +275,12 @@ function validateAll(): ValidationError[] {
           file: file.relativePath,
           message: `end_date "${endDate}" is before date "${date}"`,
         });
+      }
+    }
+
+    if (file.type === "event") {
+      for (const message of publicationRuleErrors(file.data)) {
+        errors.push({ file: file.relativePath, message });
       }
     }
 

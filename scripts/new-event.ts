@@ -42,7 +42,7 @@ function main() {
     sources: [{ url: "", title: "" }],
     revision: { created: today, last_reviewed: today },
   }, "## Summary\n\n## What Happened\n\n## Why It Matters\n");
-  console.log(`Created ${path.relative(ROOT, filename)}. Fill in the title, source and body before submitting.`);
+  console.log(`Created ${path.relative(ROOT, filename)}. Fill in the title, sources, state, revision.draft_assistance, revision.final_author and body before submitting; CONTRIBUTING.md lists the publication rules.`);
 }
 
 runScaffold(main);
