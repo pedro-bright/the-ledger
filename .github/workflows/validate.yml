@@ -66,6 +66,9 @@ jobs:
       - name: Test Vercel output and analytics isolation
         run: npm run test:vercel
 
+      - name: Test scan watch
+        run: npm run test:scan-watch
+
       - name: Build relationship graph
         run: npm run build-graph
 

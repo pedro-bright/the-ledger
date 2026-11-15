@@ -8,9 +8,9 @@ const REPO = 'pedro-bright/the-ledger';
 // the script reads. Tests add a scan pull request or a tracking issue where they need one.
 const RECORDED = {
   openPulls: [
-    { number: 291, created_at: '2026-11-15T19:09:28Z', head: { ref: 'fm/rm-ledger-search-filters-and-entry-points', sha: 'c2293e6b15cb58e744756b49986485b57276e38a' } },
-    { number: 279, created_at: '2026-11-15T07:47:23Z', head: { ref: 'dependabot/npm_and_yarn/npm_and_yarn-2720852721', sha: '4123792c7413f5b31aa992109a5408402a38b41a' } },
-    { number: 247, created_at: '2026-11-15T05:23:42Z', head: { ref: 'dependabot/npm_and_yarn/typescript-6.0.3', sha: 'b0d312a3c964140899f2adb0bd8f70b71bb41e13' } },
+    { number: 291, created_at: '2026-11-15T19:09:28Z', head: { repo: { full_name: REPO }, ref: 'fm/rm-ledger-search-filters-and-entry-points', sha: 'c2293e6b15cb58e744756b49986485b57276e38a' } },
+    { number: 279, created_at: '2026-11-15T07:47:23Z', head: { repo: { full_name: REPO }, ref: 'dependabot/npm_and_yarn/npm_and_yarn-2720852721', sha: '4123792c7413f5b31aa992109a5408402a38b41a' } },
+    { number: 247, created_at: '2026-11-15T05:23:42Z', head: { repo: { full_name: REPO }, ref: 'dependabot/npm_and_yarn/typescript-6.0.3', sha: 'b0d312a3c964140899f2adb0bd8f70b71bb41e13' } },
   ],
   // Sorted by update time, as requested: #221 was updated after #185 merged.
   mergedSearch: {
@@ -39,7 +39,7 @@ const RECORDED = {
 };
 
 // A scan pull request opened on 14 November whose first browser test shard failed.
-const STUCK_SCAN_PULL = { number: 287, created_at: '2026-11-14T14:06:43Z', head: { ref: 'ledger/auto-scan/2026-11-14', sha: 'a'.repeat(40) } };
+const STUCK_SCAN_PULL = { number: 287, created_at: '2026-11-14T14:06:43Z', head: { repo: { full_name: REPO }, ref: 'ledger/auto-scan/2026-11-14', sha: 'a'.repeat(40) } };
 const STUCK_CHECK_RUNS = {
   total_count: 2,
   check_runs: [
@@ -47,8 +47,10 @@ const STUCK_CHECK_RUNS = {
     { name: 'Build and Parity', status: 'completed', conclusion: 'success' },
   ],
 };
+// A fork's pull request whose branch has the scan's name, open for two days.
+const FORK_PULL = { number: 290, created_at: '2026-11-13T12:00:00Z', head: { repo: { full_name: 'someone/the-ledger' }, ref: 'ledger/auto-scan/2026-11-13', sha: 'c'.repeat(40) } };
 // Today's scan pull request, still within its first day.
-const FRESH_SCAN_PULL = { number: 292, created_at: '2026-11-15T14:06:00Z', head: { ref: 'ledger/auto-scan/2026-11-15-b', sha: 'b'.repeat(40) } };
+const FRESH_SCAN_PULL = { number: 292, created_at: '2026-11-15T14:06:00Z', head: { repo: { full_name: REPO }, ref: 'ledger/auto-scan/2026-11-15-b', sha: 'b'.repeat(40) } };
 
 const SAME_DAY = new Date('2026-11-15T16:00:00Z');
 const EIGHT_DAYS_LATER = new Date('2026-11-23T16:00:00Z');
@@ -94,6 +96,12 @@ test('ignores a scan pull request opened less than 24 hours ago', async () => {
     now: SAME_DAY,
   });
   assert.deepEqual(writes, []);
+});
+
+test('ignores a pull request from a fork whose branch has the scan prefix', async () => {
+  const { writes, output } = await watch({ openPulls: [FORK_PULL], now: SAME_DAY });
+  assert.deepEqual(writes, []);
+  assert.match(output, /Open scan pull requests: none\./);
 });
 
 test('opens an issue for a scan pull request open more than 24 hours, with its failing checks', async () => {

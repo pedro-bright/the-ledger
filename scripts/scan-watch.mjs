@@ -110,7 +110,8 @@ export async function observe(request, repo) {
 
   const openPulls = await Promise.all(
     pulls
-      .filter((pull) => pull.head.ref.startsWith(BRANCH_PREFIX))
+      // A fork can name a branch like the scan's, so only this repository's branches count.
+      .filter((pull) => pull.head.repo?.full_name === repo && pull.head.ref.startsWith(BRANCH_PREFIX))
       .map(async (pull) => {
         const { check_runs: runs } = await request('GET', `/repos/${repo}/commits/${pull.head.sha}/check-runs?per_page=100`);
         return {
