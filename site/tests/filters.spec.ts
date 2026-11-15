@@ -110,6 +110,17 @@ test.describe('search navigation regressions', () => {
     expect(new URL(page.url()).searchParams.has('category')).toBe(false);
   });
 
+  test('a timeline keyword with no matching event links to the same keyword on search', async ({ page }) => {
+    const keyword = 'The Scaling Laws Debate: Will Bigger Always Mean Better?';
+    await page.goto(`/explore?q=${encodeURIComponent(keyword)}`);
+    await expect(page.locator('#explorer-search')).toHaveValue(keyword);
+    const link = page.getByRole('link', { name: `Search the whole archive for “${keyword}”` });
+    await expect(link).toHaveAttribute('href', `/search?q=${encodeURIComponent(keyword)}`);
+    await link.click();
+    await expect(page.getByRole('searchbox', { name: 'Search the ledger' })).toHaveValue(keyword);
+    await expect(page.getByRole('region', { name: /^Threads\b/ }).getByRole('link').first()).toHaveText(keyword);
+  });
+
   test('a timeline keyword link with no matching event offers the other indexes', async ({ page }) => {
     await page.goto(`/explore?q=${encodeURIComponent('The Scaling Laws Debate: Will Bigger Always Mean Better?')}`);
     await expect(page.locator('#explorer-search')).toHaveValue('The Scaling Laws Debate: Will Bigger Always Mean Better?');

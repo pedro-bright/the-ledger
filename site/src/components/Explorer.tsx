@@ -520,6 +520,13 @@ export default function Explorer({ events, categories }: Props) {
               <>Try dropping one filter — the most constraining combinations rarely return results.</>
             )}
           </p>
+          {search && (
+            <p className="text-sm font-sans mb-3">
+              <a href={`/search?q=${encodeURIComponent(search)}`} className="ph-no-capture text-wiki-link hover:underline">
+                Search the whole archive for “{search}”
+              </a>
+            </p>
+          )}
           <nav aria-label="Other indexes" className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm font-sans mb-5">
             <a href="/threads" className="text-wiki-link hover:underline">Threads</a>
             <a href="/controversies" className="text-wiki-link hover:underline">Controversies</a>

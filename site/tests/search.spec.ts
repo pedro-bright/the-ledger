@@ -249,8 +249,10 @@ test('the button for a single remaining result names one result', async ({ page 
       }) });
       export const options = async () => {};
       export const init = async () => {};
+      export const filters = async () => ({});
       export const search = async (term, { filters }) => ({
         results: filters.type === 'event' ? Array.from({ length: 11 }, (_, n) => result(n)) : [],
+        filters: {},
       });
     `,
   }));
@@ -364,6 +366,105 @@ test('results pass axe and fit a 375px screen', async ({ page }) => {
   const result = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
   const serious = result.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
   expect(serious.map((v) => `${v.id}: ${v.nodes.map((n) => n.target).join(', ')}`)).toEqual([]);
+});
+
+test.describe('entry filters', () => {
+  const chip = (page: Page, filter: string, name: string) =>
+    page.getByRole('group', { name: filter }).getByRole('button', { name: new RegExp(`^${name}\\b`) });
+  const filters = (page: Page) => page.getByRole('group', { name: 'Filter entries' });
+
+  /** Every result of a group, after Show more has added the rest. */
+  async function allLinks(page: Page, label: string) {
+    const more = group(page, label).locator('.search-group__more');
+    while (await more.isVisible()) {
+      const before = await group(page, label).getByRole('listitem').count();
+      await more.click();
+      await expect(group(page, label).getByRole('listitem')).not.toHaveCount(before);
+    }
+    return group(page, label).getByRole('listitem').getByRole('link')
+      .evaluateAll((links) => links.map((link) => link.getAttribute('href')!));
+  }
+
+  /** What the page shows, with the state and count of each chip. */
+  async function shownWithChips(page: Page) {
+    return {
+      ...(await shown(page)),
+      chips: await filters(page).getByRole('button').evaluateAll((buttons) =>
+        buttons.filter((button) => !(button as HTMLElement).hidden)
+          .map((button) => `${button.textContent!.replace(/\s+/g, ' ').trim()} ${button.getAttribute('aria-pressed')}`)),
+    };
+  }
+
+  test('a category and a year leave only the entries that match both, in their order', async ({ page }) => {
+    test.skip(test.info().project.name !== 'chromium', 'the results do not vary by viewport');
+    const { events } = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'dist', 'data', 'events.json'), 'utf8'));
+    const record = new Map((events as { id: string; category: string; date: string }[]).map((event) => [`/events/${event.id}`, event]));
+
+    await page.goto('/search?q=OpenAI');
+    await expect(group(page, 'Events').getByRole('listitem')).toHaveCount(10);
+    const unfiltered = await allLinks(page, 'Events');
+    const others = (await shown(page)).groups.filter(({ heading }) => !heading.startsWith('Events'));
+    const expected = unfiltered.filter((href) => record.get(href)!.category === 'policy' && record.get(href)!.date.startsWith('2025'));
+    expect(expected.length).toBeGreaterThan(0);
+
+    await chip(page, 'Category', 'Policy').click();
+    await expect(chip(page, 'Category', 'Policy')).toHaveAttribute('aria-pressed', 'true');
+    await expect(chip(page, 'Year', '2025')).toHaveText(`2025 ${expected.length}`);
+    await chip(page, 'Year', '2025').click();
+    await expect(page).toHaveURL(/\/search\/?\?q=OpenAI&cat=policy&year=2025$/);
+    await expect(group(page, 'Events').getByRole('heading').locator('span')).toHaveText(String(expected.length));
+
+    expect(await allLinks(page, 'Events')).toEqual(expected);
+    const total = others.reduce((sum, { heading }) => sum + Number(heading.match(/\d+$/)![0]), expected.length);
+    await expect(status(page)).toHaveText(`${total} results for “OpenAI”, with entries limited to Policy in 2025`);
+
+    // Threads, controversies and actors keep their results, and the page says so.
+    expect((await shown(page)).groups.filter(({ heading }) => !heading.startsWith('Events'))).toEqual(others);
+    await expect(filters(page)).toHaveAccessibleDescription('Threads, controversies and actors are not filtered.');
+    await expect(page.getByText('Threads, controversies and actors are not filtered.')).toBeVisible();
+  });
+
+  test('a link with a query, a category and a year shows the same results and chips', async ({ page }) => {
+    await page.goto('/search?q=OpenAI');
+    await expect(group(page, 'Events').getByRole('listitem')).toHaveCount(10);
+    await chip(page, 'Category', 'Policy').click();
+    await chip(page, 'Year', '2025').click();
+    await expect(status(page)).toHaveText(/limited to Policy in 2025$/);
+    const expected = await shownWithChips(page);
+
+    const opened = await page.context().newPage();
+    await opened.goto('/search?q=OpenAI&cat=policy&year=2025');
+    await expect(status(opened)).toHaveText(expected.status!);
+    await expect(field(opened)).toHaveValue('OpenAI');
+    expect(await shownWithChips(opened)).toEqual(expected);
+  });
+
+  test('the chips are toggle buttons that work from the keyboard, and the count is announced', async ({ page }) => {
+    await page.goto('/search?q=OpenAI');
+    await expect(group(page, 'Events').getByRole('listitem')).toHaveCount(10);
+    const policy = chip(page, 'Category', 'Policy');
+    const count = Number(await policy.locator('.search-filters__count').textContent());
+    await expect(policy).toHaveAttribute('aria-pressed', 'false');
+
+    await field(page).focus();
+    await page.keyboard.press('Tab');
+    await expect(chip(page, 'Category', 'Policy')).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(policy).toHaveAttribute('aria-pressed', 'true');
+    await expect(policy).toBeFocused();
+    await expect(group(page, 'Events').getByRole('heading').locator('span')).toHaveText(String(count));
+    await expect(status(page)).toHaveText(/^\d+ results for “OpenAI”, with entries limited to Policy$/);
+
+    await page.keyboard.press('Space');
+    await expect(policy).toHaveAttribute('aria-pressed', 'false');
+    await expect(status(page)).toHaveText(/^\d+ results for “OpenAI”$/);
+    await expect(page).toHaveURL(/\/search\/?\?q=OpenAI$/);
+  });
+});
+
+test('the 404 page links to search', async ({ page }) => {
+  await page.goto('/no-such-page');
+  await expect(page.getByRole('link', { name: 'Search for something specific' })).toHaveAttribute('href', '/search');
 });
 
 test('the field says how to match a phrase exactly', async ({ page }) => {
