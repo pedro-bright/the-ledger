@@ -115,7 +115,7 @@ Emotional goals: **confidence** (sourcing is solid), **curiosity** (threads invi
 Locked in — do not redesign without cause:
 - **Light mode, warm paper.** `page-bg` #FAFAF7, `ink` #14130F, `wiki-link` #0645AD, `wiki-surface` #F0EDE4, `rule` #E8E4DA. A dark-mode toggle is a deferred follow-up; the site must stay readable as its first commitment.
 - **Four-font system.** Fraunces (display, via `font-variation-settings` opsz 14, 36 and `--display-opsz`, which is 144 or 32 on phones, loaded as a variable font), Source Serif 4 (body reading, variable), Inter (UI chrome, nav, metadata labels and values), JetBrains Mono (dates, IDs, counts, tabular-nums). Each font has one clear role — don't collapse them. Fonts load via `@fontsource-variable` / `@fontsource` in `Base.astro`.
-- **Semantic tokens** live in `site/tailwind.config.mjs`: `page-bg`, `ink.{DEFAULT,dim,mid,muted,faint,soft}`, `rule.{DEFAULT,strong,double,utility}`, `wiki.{link,link-visited,link-hover,surface,surface-strong}`, `flag.{landmark,major,notable}-{bg,text}`, `status.{active,dormant}`. Legacy `ledger.*` aliases are remapped light for back-compat and will be removed in a follow-up cleanup.
+- **Semantic tokens** live in `site/tailwind.config.mjs`: `page-bg`, `ink.{DEFAULT,dim,mid,muted,faint,soft}`, `rule.{DEFAULT,strong,double,utility}`, `wiki.{link,link-visited,link-hover,surface,surface-strong}`, `flag.{landmark,major,notable}-{bg,text}`, `status.{active,dormant}`.
 - **Category colors** are tokens, not decoration: policy=indigo-700, models=amber-700, research=emerald-700, industry=violet-700, safety=red-700, culture=pink-700, open-source=cyan-700. All AA-contrast on page-bg. Always paired with text; never color-only.
 - **Significance scale**: Landmark (`#FDF2C5`/`#7A5A00`), Major (`#DBECF9`/`#0A4D82`), Notable (`#EDEAE3`/`#5C564D`). Use `<SignificanceFlag level="..." />`.
 - **Component vocabulary** in `site/src/components/wiki/`: Infobox, ArticleShell, FeaturedBox, EventRow, RailSection, PageHeader, SignificanceFlag, CategoryTag. Every detail and index page uses these; don't invent parallel patterns.
@@ -146,7 +146,7 @@ Anti-references — reject changes that make the site resemble any of these:
 
 - **Live:** https://the-ledger.net
 - **CI:** Push/PR to `main` triggers `validate.yml` (schema validation + graph build).
-  Every PR and every push to `main` also runs `e2e.yml`: validate, graph and feed build, site build, `npm run test:parity`, `npm run test:no-dark-leaks`, `npm run test:css-floor`, `npm run test:corrections`, `npm run test:og`, and Playwright in `site/`.
+  Every PR and every push to `main` also runs `e2e.yml`: validate, graph and feed build, site build, `npm run test:parity`, `npm run test:no-dark-leaks`, `npm run test:css-floor`, `npm run test:dates`, `npm run test:corrections`, `npm run test:og`, and Playwright in `site/`.
   Vercel's Git integration builds branch previews and deploys `main` to production using the root `vercel.json`.
   `npm run build:vercel` generates the graph and feeds, builds Astro, and emits static files with generated security headers through Build Output API v3 in `.vercel/output/`.
   Production builds read `PUBLIC_POSTHOG_PROJECT_TOKEN` and `PUBLIC_POSTHOG_HOST` from Vercel and print a build-log warning if either is missing; non-production builds remove both variables before building Astro.

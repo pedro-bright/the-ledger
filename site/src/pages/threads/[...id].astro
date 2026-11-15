@@ -1,4 +1,5 @@
 ---
+import { getISOYear } from '../../lib/dates';
 import Base from '../../layouts/Base.astro';
 import ArticleShell from '../../components/wiki/ArticleShell.astro';
 import Infobox from '../../components/wiki/Infobox.astro';
@@ -31,7 +32,7 @@ const linkedControversies = thread.controversies
 const firstEvent = linkedEvents[0];
 const lastEvent = linkedEvents[linkedEvents.length - 1];
 const spanYears = firstEvent && lastEvent
-  ? Math.max(1, new Date(lastEvent.date).getFullYear() - new Date(firstEvent.date).getFullYear() + 1)
+  ? Math.max(1, getISOYear(lastEvent.date) - getISOYear(firstEvent.date) + 1)
   : undefined;
 
 const curatorOtherThreads = thread.curator

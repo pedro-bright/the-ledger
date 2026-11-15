@@ -1,3 +1,4 @@
+import { getISOYear } from '../lib/dates';
 import React, { useEffect, useMemo, useState, type MouseEvent } from 'react';
 import { getSignificanceOrder } from '../lib/epistemic';
 
@@ -18,7 +19,6 @@ interface EventData {
 interface Category {
   id: string;
   label: string;
-  color: string;
 }
 
 interface Props {
@@ -168,7 +168,7 @@ export default function Explorer({ events, categories }: Props) {
   const availableYears = useMemo(() => {
     const years = new Set<number>();
     for (const e of events) {
-      const y = new Date(e.date).getFullYear();
+      const y = getISOYear(e.date);
       if (!Number.isNaN(y)) years.add(y);
     }
     return Array.from(years).sort((a, b) => b - a);
@@ -181,7 +181,7 @@ export default function Explorer({ events, categories }: Props) {
         return false;
       }
       if (selectedYear !== null) {
-        const eventYear = new Date(e.date).getFullYear();
+        const eventYear = getISOYear(e.date);
         if (eventYear !== selectedYear) return false;
       }
       if (search) {

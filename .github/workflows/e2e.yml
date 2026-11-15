@@ -60,6 +60,9 @@ jobs:
       - name: Run CSS browser floor check
         run: npm run test:css-floor
 
+      - name: Check ISO date years
+        run: npm run test:dates
+
       - name: Run corrections page unit test
         run: npm run test:corrections
 
