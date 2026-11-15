@@ -1,7 +1,7 @@
 import { getISOYear } from './dates';
 import fs from 'node:fs';
 import path from 'node:path';
-import yaml from 'js-yaml';
+import { load, YAML11_SCHEMA } from 'js-yaml';
 import { parseFrontmatter } from './frontmatter.mts';
 import { renderMarkdown } from './markdown';
 
@@ -185,9 +185,14 @@ function parseMarkdownFile(filePath: string): { data: Record<string, any>; conte
   return { data, content, htmlContent };
 }
 
+// js-yaml 5 defaults to the YAML 1.2 core schema; the YAML 1.1 schema keeps the
+// values that version 4 produced, such as dates and merge keys.
+export function parseYaml(raw: string): Record<string, any> {
+  return load(raw, { schema: YAML11_SCHEMA }) as Record<string, any>;
+}
+
 function parseYamlFile(filePath: string): Record<string, any> {
-  const raw = fs.readFileSync(filePath, 'utf-8');
-  return yaml.load(raw) as Record<string, any>;
+  return parseYaml(fs.readFileSync(filePath, 'utf-8'));
 }
 
 /**

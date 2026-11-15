@@ -10,7 +10,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseFrontmatter } from "./frontmatter.js";
-import yaml from "js-yaml";
+import { loadYaml } from "./yaml.js";
 import { getDomain } from "tldts";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -73,7 +73,7 @@ function contentFiles(args: string[]): string[] {
 
 export function extractUrls(filePath: string): LinkOccurrence[] {
   const raw = fs.readFileSync(filePath, "utf-8");
-  const data = /\.ya?ml$/.test(filePath) ? yaml.load(raw) : parseFrontmatter(raw).data;
+  const data = /\.ya?ml$/.test(filePath) ? loadYaml(raw) : parseFrontmatter(raw).data;
   const file = path.relative(CONTENT_DIR, filePath);
   const urls: LinkOccurrence[] = [];
 
