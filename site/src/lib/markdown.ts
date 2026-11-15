@@ -90,11 +90,6 @@ export function metaDescription(value: string, limit = 160): string {
   return `${cut.slice(0, cut.lastIndexOf(' ')).replace(/[\s,;:—–-]+$/, '')}…`;
 }
 
-/** The decoded text of an HTML fragment, with whitespace collapsed. */
-export function plainText(html: string): string {
-  return text(parseFragment(html)).replace(/\s+/g, ' ').trim();
-}
-
 /** Anchor actual heading nodes; markup-like text in attributes must remain inert. */
 export function anchorSections(html: string, used: Set<string>) {
   const fragment = parseFragment(html);

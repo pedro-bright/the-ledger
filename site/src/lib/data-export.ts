@@ -1,7 +1,5 @@
-import {
-  loadActors, loadControversies, loadEvents, loadThreads, splitArticleLead, type EventData,
-} from './content';
-import { plainText } from './markdown';
+import { loadActors, loadControversies, loadEvents, loadThreads } from './content';
+import { plainParagraphs } from './markdown';
 
 // Bump when a field is renamed or removed; adding a field does not need a bump.
 const SCHEMA_VERSION = 1;
@@ -19,11 +17,6 @@ const pageUrl = (section: string, id: string) => new URL(`/${section}/${id}/`, S
 function exportRecord<T extends { slug: string; content: string; htmlContent: string }>(item: T, section: string) {
   const { content, htmlContent, slug, ...fields } = item;
   return { ...fields, url: pageUrl(section, slug) };
-}
-
-/** The text of the entry's Summary section, the opening section of its page. */
-function summary(event: EventData): string {
-  return plainText(splitArticleLead(event.htmlContent).lead.replace(/^\s*<h2[^>]*>[\s\S]*?<\/h2>/, ''));
 }
 
 /** Wrap records in the shared envelope and serialize them. */
@@ -47,7 +40,7 @@ const csvField = (value: string) => (/[",\r\n]/.test(value) ? `"${value.replace(
 
 const events = loadEvents().map((event) => {
   const { url, ...fields } = exportRecord(event, 'events');
-  return { ...fields, summary: summary(event), url };
+  return { ...fields, summary: plainParagraphs(event.content, 'Summary').join(' '), url };
 });
 const actors = loadActors().map((actor) => ({ ...actor, url: pageUrl('actors', actor.id) }));
 const threads = loadThreads().map((thread) => exportRecord(thread, 'threads'));
