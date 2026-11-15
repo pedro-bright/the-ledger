@@ -195,6 +195,38 @@ function validateAll(): ValidationError[] {
     }
   }
 
+  const eventNumbers = new Map<string, string>();
+  for (const file of contentFiles) {
+    if (file.type !== "event") continue;
+    const filename = path.basename(file.path);
+    const match = /^(\d{2,3})-(.+)\.md$/.exec(filename);
+    if (!match || match[2] !== file.data.id) {
+      errors.push({
+        file: file.relativePath,
+        message: `Event filename must be <number>-<id>.md with a two or three digit number and id "${file.data.id}"`,
+      });
+    }
+    const year = path.basename(path.dirname(file.path));
+    if (typeof file.data.date === "string" && year !== file.data.date.slice(0, 4)) {
+      errors.push({
+        file: file.relativePath,
+        message: `Event year directory "${year}" must match date year "${file.data.date.slice(0, 4)}"`,
+      });
+    }
+    if (match) {
+      const key = `${year}/${Number(match[1])}`;
+      const previous = eventNumbers.get(key);
+      if (previous) {
+        errors.push({
+          file: file.relativePath,
+          message: `Duplicate event number ${match[1]} in ${year}: also used by ${previous}`,
+        });
+      } else {
+        eventNumbers.set(key, file.relativePath);
+      }
+    }
+  }
+
   // Second pass: schema validation + cross-reference checks
   for (const file of contentFiles) {
     // Skip perspectives (no schema — they're freeform editorial)

@@ -8,6 +8,8 @@
     "build:vercel": "node scripts/build-vercel.mjs",
     "test:vercel": "node --test scripts/vercel-output.test.mjs",
     "validate": "tsx scripts/validate.ts",
+    "new-event": "tsx scripts/new-event.ts",
+    "test:event-files": "tsx --test scripts/event-files.test.ts",
     "check-links": "tsx scripts/check-links.ts",
     "build-graph": "tsx scripts/build-graph.ts",
     "generate-feed": "tsx scripts/generate-feed.ts",

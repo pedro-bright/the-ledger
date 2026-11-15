@@ -32,6 +32,9 @@ jobs:
       - name: Run validation
         run: npm run validate
 
+      - name: Test event filenames and scaffold
+        run: npm run test:event-files
+
       - name: Test source checker
         run: npm run test:links
 

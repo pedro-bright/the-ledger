@@ -232,7 +232,7 @@ Body.
 
   withSandbox(
     {
-      "events/2026/01-poc.md": event(
+      "events/2026/01-zz-poc-event.md": event(
         "javascript:window.opener=null;document.title='POC_SOURCE_URL_RAN';alert(1)",
         "data:text/html,%3Cscript%3Edocument.title='POC_ARCHIVE_RAN'%3C/script%3E",
       ),
@@ -241,14 +241,14 @@ Body.
     (sandbox) => {
       const { status, output } = runScript(sandbox, "validate.ts");
       assert.equal(status, 1, output);
-      assert.match(output, /01-poc\.md/);
+      assert.match(output, /01-zz-poc-event\.md/);
       assert.match(output, /zz-poc-actor\.yml/);
     },
   );
 
   withSandbox(
     {
-      "events/2026/01-poc.md": event("https://example.com/poc", "https://example.com/poc-arc"),
+      "events/2026/01-zz-poc-event.md": event("https://example.com/poc", "https://example.com/poc-arc"),
       "actors/zz-poc-actor.yml": actor("https://example.com/"),
     },
     (sandbox) => {
