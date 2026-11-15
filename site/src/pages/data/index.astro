@@ -1,0 +1,85 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/wiki/PageHeader.astro';
+import { CSV_COLUMNS, dataFiles } from '../../lib/data-export';
+
+const notes: Record<string, string> = {
+  'events.json': 'One item per entry, newest first, with every frontmatter field of the entry: date, category, significance, confidence, contestation, actors with their roles, regions, tags, threads, related entries, sources and revision dates. Each item also has the plain text of its summary and the URL of its page.',
+  'events.csv': `One row per entry, newest first, with the columns ${CSV_COLUMNS.join(', ')}. Lists are joined with a vertical bar (|), and actors are given by id.`,
+  'actors.json': 'Every actor with its type, and its founding year, website and aliases where recorded. Entries name actors by id.',
+  'threads.json': 'Every thread with its status, start date, core question, curator and the ids of its entries in order. Syntheses are not included.',
+  'controversies.json': 'Every controversy with its thread, status, polarity and positions. Each position has its claim, proponents, sources and confidence.',
+};
+
+const formatSize = (bytes: number) => (bytes < 1024 * 1024
+  ? `${Math.max(1, Math.round(bytes / 1024))} KB`
+  : `${(bytes / (1024 * 1024)).toFixed(1)} MB`);
+const plural = (n: number) => `${n} record${n === 1 ? '' : 's'}`;
+---
+
+<Base layout="full" title="Data" description="The Ledger's events, actors, threads and controversies as JSON and CSV files.">
+  <PageHeader eyebrow="§ About the Ledger" title="Data" />
+
+  <article class="prose data-prose">
+    <p>
+      All records are available as JSON and CSV under
+      <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer license">CC BY-SA 4.0</a>.
+      Cite The Ledger and link the entry you use.
+    </p>
+
+    <h2 id="files">Files</h2>
+    <ul class="data-files">
+      {dataFiles.map((file) => (
+        <li class="data-file">
+          <a class="data-file__name font-mono" href={`/data/${file.name}`}>{file.name}</a>
+          <p class="data-file__meta font-mono">
+            {file.name.endsWith('.csv') ? 'CSV' : 'JSON'} · {formatSize(Buffer.byteLength(file.body))} · {plural(file.count)}
+          </p>
+          <p class="data-file__notes">{notes[file.name]}</p>
+        </li>
+      ))}
+    </ul>
+
+    <h2 id="format">Format</h2>
+    <p>
+      Each JSON file is an object with <code>schema_version</code>, <code>generated_at</code>,
+      <code>license</code> and <code>attribution</code>, and the records under a key named after the file.
+      Every record has the URL of its page in <code>url</code>, and dates in records are written as YYYY-MM-DD.
+    </p>
+    <p>
+      <code>schema_version</code> goes up when a field is renamed or removed; new fields can appear without a change.
+      The files are rebuilt each time the site is published.
+      The Markdown and YAML sources and their JSON Schemas are in the
+      <a href="https://github.com/pedro-bright/the-ledger" target="_blank" rel="noopener noreferrer">repository</a>.
+    </p>
+  </article>
+</Base>
+
+<style>
+  .data-prose {
+    margin: 0 auto;
+  }
+  .data-prose .data-files {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 1rem;
+  }
+  .data-file {
+    padding: 0.875rem 0;
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .data-file:first-child { padding-top: 0.25rem; }
+  .data-file__name {
+    font-size: 0.9375rem;
+  }
+  .data-prose .data-file__meta {
+    margin: 0.125rem 0 0.375rem;
+    font-size: var(--text-meta);
+    color: var(--color-ink-muted);
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .data-prose .data-file__notes {
+    margin: 0;
+  }
+</style>

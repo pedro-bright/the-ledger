@@ -149,6 +149,27 @@ test.describe('smoke', () => {
     await expect(page.locator('h1')).toContainText('About');
     await expect(page.locator('.about-prose').getByRole('link', { name: 'corrections page' }))
       .toHaveAttribute('href', '/corrections');
+    await expect(page.locator('.about-prose').getByRole('link', { name: 'data page' }))
+      .toHaveAttribute('href', '/data');
+    await expectChrome(page);
+  });
+
+  test('data: lists each export file, which serves with its content type', async ({ page, request }) => {
+    const response = await page.goto('/data');
+    expect(response?.status()).toBe(200);
+    await expect(page.locator('h1')).toHaveText('Data');
+    await expect(page.locator('.data-prose > p').first()).toHaveText(
+      'All records are available as JSON and CSV under CC BY-SA 4.0. Cite The Ledger and link the entry you use.',
+    );
+    const files = page.locator('.data-file__name');
+    await expect(files).toHaveText(['events.json', 'events.csv', 'actors.json', 'threads.json', 'controversies.json']);
+    for (const href of await files.evaluateAll((links) => links.map((link) => link.getAttribute('href')))) {
+      const file = await request.get(href!);
+      expect(file.status(), href!).toBe(200);
+      expect(file.headers()['content-type'], href!).toMatch(href!.endsWith('.csv') ? /^text\/csv/ : /^application\/json/);
+    }
+    await expect(page.locator('footer.wiki-footer').getByRole('link', { name: 'Data', exact: true }))
+      .toHaveAttribute('href', '/data');
     await expectChrome(page);
   });
 

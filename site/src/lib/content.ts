@@ -41,6 +41,7 @@ export interface Contestation {
 export interface Revision {
   created?: string;
   last_reviewed?: string;
+  draft_assistance?: 'ai-assisted' | 'human-only';
   final_author?: string;
 }
 
@@ -61,6 +62,7 @@ export interface EventData {
   sources?: Source[];
   significance_history?: SignificanceEntry[];
   state?: string;
+  claim_status?: Record<string, string>;
   revision?: Revision;
   content: string;
   htmlContent: string;
@@ -275,10 +277,12 @@ export function loadEvents(): EventData[] {
           sources: data.sources,
           significance_history: data.significance_history,
           state: data.state,
+          claim_status: data.claim_status,
           revision: data.revision?.created || data.revision?.last_reviewed
             ? {
                 created: data.revision.created ? isoDate(data.revision.created) : undefined,
                 last_reviewed: data.revision.last_reviewed ? isoDate(data.revision.last_reviewed) : undefined,
+                draft_assistance: data.revision.draft_assistance,
                 final_author: data.revision.final_author,
               }
             : undefined,
