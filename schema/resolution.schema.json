@@ -4,7 +4,7 @@
   "title": "Resolution Note",
   "description": "Formal disposition of a challenge case — records what changed in the ledger.",
   "type": "object",
-  "required": ["id", "case_id", "disposition", "findings", "actions"],
+  "required": ["id", "case_id", "disposition", "findings", "actions", "issued_at"],
   "properties": {
     "id": {
       "type": "string",
