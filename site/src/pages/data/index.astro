@@ -7,8 +7,11 @@ const notes: Record<string, string> = {
   'events.json': 'One item per entry, newest first, with every frontmatter field of the entry: date, category, significance, confidence, contestation, actors with their roles, regions, tags, threads, related entries, sources and revision dates. Each item also has the plain text of its summary and the URL of its page.',
   'events.csv': `One row per entry, newest first, with the columns ${CSV_COLUMNS.join(', ')}. Lists are joined with a vertical bar (|), and actors are given by id. The file starts with a byte-order mark so that Excel reads it correctly, and programs should read it as utf-8-sig or use the JSON.`,
   'actors.json': 'Every actor with its type, and its founding year, website and aliases where recorded. Entries name actors by id.',
-  'threads.json': 'Every thread with its status, start date, core question, curator and the ids of its entries in order. Syntheses are not included.',
+  'threads.json': 'Every thread with its status, start date, core question and curator, and the ids and number of the entries in its Event timeline, oldest first. Syntheses are not included.',
   'controversies.json': 'Every controversy with its thread, status, polarity and positions. Each position has its claim, proponents, sources and confidence.',
+  'revisions.json': 'Every summary revision with the entry it changes, the summary before and after, the reason, the challenge that led to it, its author and its date.',
+  'challenges.json': 'Every challenge to an entry with its allegations, status, opening date, who opened it and the resolution that closed it.',
+  'resolutions.json': 'Every challenge resolution with its challenge, disposition, findings, the actions taken, who decided it and its date.',
 };
 
 const formatSize = (bytes: number) => (bytes < 1024 * 1024
