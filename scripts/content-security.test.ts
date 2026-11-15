@@ -224,6 +224,8 @@ sources:
     title: A source
     type: official
     archive_url: "${archive}"
+revision:
+  created: "2026-10-01"
 ---
 
 ## Summary
