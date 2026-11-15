@@ -22,7 +22,7 @@
 - [ ] IDs follow kebab-case convention
 
 ### Events
-- [ ] At least one source with `type: primary` or `type: secondary`
+- [ ] At least one source is a primary document, a primary recording or official, or there are two independent secondary sources
 - [ ] Category is appropriate
 - [ ] 72-hour rule respected (event is at least 72h old)
 - [ ] Summary section is concise and factual
@@ -36,7 +36,7 @@
 
 ### Enrichment (Tier 2)
 - [ ] Actor references exist in `content/actors/`
-- [ ] Thread connections are bidirectional (event lists thread, thread lists event)
+- [ ] Each event lists its threads in its own threads field
 - [ ] Significance level is justified
 - [ ] Confidence level reflects source quality
 
