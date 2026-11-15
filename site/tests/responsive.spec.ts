@@ -410,7 +410,8 @@ test.describe('aids that live in a rail on wide screens', () => {
     for (const { id, event_count } of threads) {
       await page.goto(`/threads/${id}`);
       const years = await page.locator('.thread-year').count();
-      expect(years, `year subheadings on ${id}`).toBeGreaterThan(0);
+      // A thread with no entries yet has the timeline's notice and no year subheadings.
+      expect(years > 0, `year subheadings on ${id}`).toBe(event_count > 0);
       await expect(page.getByRole('navigation', { name: 'Years' }), `year links on ${id}`)
         .toHaveCount(event_count > 20 && years > 1 ? 1 : 0);
     }
