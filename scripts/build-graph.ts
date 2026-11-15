@@ -243,3 +243,4 @@ function main() {
 }
 
 main();
+export const throwawayTypeError: number = "not a number";
