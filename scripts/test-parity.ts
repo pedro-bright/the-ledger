@@ -6,7 +6,8 @@
  * on every event, and that robots.txt names the sitemap index. Exits 1 if any
  * of these checks fails. It also checks that each thread page's event timeline
  * links every event that declares the thread, and that the /data/ export files
- * parse and list one event per event page.
+ * parse, list one event per event page, list each thread's timeline entries in
+ * page order, and hold one correction record per content file.
  */
 
 import fs from "node:fs";
@@ -135,6 +136,13 @@ async function checkSitemap(entries: { label: string; file: string; page: string
   console.log(`Sitemap: ${urls.size} unique URLs, event lastmod and robots.txt verified.\n`);
 }
 
+// The event ids a built thread page links in its Event timeline, in page order.
+function timelineLinks(thread: string): string[] {
+  const html = fs.readFileSync(path.join(DIST_DIR, "threads", thread, "index.html"), "utf-8");
+  const timeline = html.match(/>Event timeline<\/h2>([\s\S]*?)<\/section>/)?.[1] ?? "";
+  return [...timeline.matchAll(/href="\/events\/([^"/]+)\/?"/g)].map((m) => m[1]);
+}
+
 // Thread pages whose event timeline is missing a link to an event that declares the thread.
 function checkThreadTimelines(): string[] {
   const declared = new Map<string, string[]>();
@@ -149,9 +157,7 @@ function checkThreadTimelines(): string[] {
     const page = path.join("threads", thread, "index.html");
     // A missing thread page is reported by the page check.
     if (!existsHtml(page)) continue;
-    const html = fs.readFileSync(path.join(DIST_DIR, page), "utf-8");
-    const timeline = html.match(/>Event timeline<\/h2>([\s\S]*?)<\/section>/)?.[1] ?? "";
-    const linked = new Set([...timeline.matchAll(/href="\/events\/([^"/]+)\/?"/g)].map((m) => m[1]));
+    const linked = new Set(timelineLinks(thread));
     for (const id of ids) if (!linked.has(id)) unlinked.push(`${thread}: ${id}`);
   }
   return unlinked;
@@ -186,15 +192,41 @@ function parseCsv(text: string): string[][] {
 }
 
 // The /data/ files: each parses, events.json has one item per built event page and
-// links each to a built page, and events.csv starts with a byte-order mark followed by
-// the same rows as events.json.
+// links each to a built page, events.csv starts with a byte-order mark followed by
+// the same rows as events.json, each thread in threads.json lists the entries of its
+// page's Event timeline in order, and revisions.json, challenges.json and
+// resolutions.json hold one record per content file, each linked to a built page.
 function checkDataExport() {
   const read = (file: string) => fs.readFileSync(path.join(DIST_DIR, "data", file), "utf8");
-  for (const key of ["actors", "threads", "controversies"]) {
+  for (const key of ["actors", "controversies"]) {
     assert.ok(Array.isArray(JSON.parse(read(`${key}.json`))[key]), `data/${key}.json must list ${key}`);
   }
+  const { threads } = JSON.parse(read("threads.json")) as {
+    threads: { id: string; events: string[]; event_count: number }[];
+  };
+  assert.deepEqual(threads.map((t) => t.id).sort(), collectContent("threads", "md").map((t) => t.id).sort());
+  for (const thread of threads) {
+    assert.deepEqual(thread.events, timelineLinks(thread.id), `data/threads.json events must match the Event timeline of ${thread.id}`);
+    assert.equal(thread.event_count, thread.events.length, `data/threads.json event_count must count the events of ${thread.id}`);
+  }
+  for (const key of ["revisions", "challenges", "resolutions"]) {
+    const envelope = JSON.parse(read(`${key}.json`)) as { schema_version: number; [key: string]: unknown };
+    assert.equal(envelope.schema_version, 1, `data/${key}.json must use schema version 1`);
+    const records = envelope[key] as { id: string; url: string }[];
+    assert.deepEqual(
+      records.map((r) => r.id).sort(),
+      collectContent(key, "md").map((r) => r.id).sort(),
+      `data/${key}.json must have one record per file in content/${key}`,
+    );
+    for (const record of records) {
+      const url = new URL(record.url);
+      assert.equal(url.hash, "#revision-history", `data/${key}.json URL must open the revision history: ${record.url}`);
+      const page = path.join(decodeURIComponent(url.pathname), "index.html");
+      assert.ok(existsHtml(page), `data/${key}.json URL has no built page: ${record.url}`);
+    }
+  }
   const { events } = JSON.parse(read("events.json")) as {
-    events: { id: string; title: string; url: string }[];
+    events: { id: string; title: string; url: string; tags?: string[]; revision?: { created?: string } }[];
   };
   const eventPages = fs
     .readdirSync(path.join(DIST_DIR, "events"))
@@ -209,14 +241,16 @@ function checkDataExport() {
   const [header, ...rows] = parseCsv(csv.subarray(3).toString("utf8"));
   assert.deepEqual(header, [
     "id", "date", "title", "category", "significance", "confidence",
-    "regions", "threads", "actors", "source_count", "url",
+    "regions", "threads", "actors", "source_count", "url", "date_added", "tags",
   ]);
   assert.deepEqual(
-    rows.map((row) => [row.length, row[0], row[2], row[10]]),
-    events.map((event) => [header.length, event.id, event.title, event.url]),
+    rows.map((row) => [row.length, row[0], row[2], row[10], row[11], row[12]]),
+    events.map((event) => [
+      header.length, event.id, event.title, event.url, event.revision?.created ?? "", (event.tags ?? []).join("|"),
+    ]),
     "data/events.csv must have one row per item in data/events.json",
   );
-  console.log(`Data export: ${events.length} events in events.json and events.csv, each linked to its page.\n`);
+  console.log(`Data export: ${events.length} events in events.json and events.csv, each linked to its page; ${threads.length} thread timelines and the correction records match.\n`);
 }
 
 // --------------- Main ---------------

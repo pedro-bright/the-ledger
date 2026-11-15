@@ -162,7 +162,10 @@ test.describe('smoke', () => {
       'All records are available as JSON and CSV under CC BY-SA 4.0. Cite The Ledger and link the entry you use.',
     );
     const files = page.locator('.data-file__name');
-    await expect(files).toHaveText(['events.json', 'events.csv', 'actors.json', 'threads.json', 'controversies.json']);
+    await expect(files).toHaveText([
+      'events.json', 'events.csv', 'actors.json', 'threads.json', 'controversies.json',
+      'revisions.json', 'challenges.json', 'resolutions.json',
+    ]);
     for (const href of await files.evaluateAll((links) => links.map((link) => link.getAttribute('href')))) {
       const file = await request.get(href!);
       expect(file.status(), href!).toBe(200);
