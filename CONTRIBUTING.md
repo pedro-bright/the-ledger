@@ -75,7 +75,7 @@ See [editorial/ai-assistance.md](editorial/ai-assistance.md).
 - [ ] All factual claims have sources
 - [ ] Analysis is labeled and separated from reporting
 - [ ] Dates are specific and verified
-- [ ] At least one source is primary or official
+- [ ] Sources meet the [evidence standards](editorial/evidence-standards.md)
 
 ---
 
