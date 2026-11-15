@@ -42,8 +42,11 @@ function policyFor(routes: HeaderRoute[], urlPath: string): string {
 }
 
 test.describe('security headers', () => {
-  test.beforeEach(({}, testInfo) => {
+  // Packaging the whole build takes longer under load, so it runs once with its own limit.
+  test.beforeAll(({}, testInfo) => {
     test.skip(testInfo.project.name !== 'chromium', 'desktop only');
+    test.setTimeout(60_000);
+    buildOutput();
   });
 
   test.afterAll(() => {

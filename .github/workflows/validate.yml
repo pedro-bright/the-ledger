@@ -9,10 +9,16 @@ on:
 permissions:
   contents: read
 
+# A newer push to a pull request cancels its older run; each run on main has its own group.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   validate:
     name: Schema & Cross-Reference Validation
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Checkout
