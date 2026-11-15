@@ -17,7 +17,7 @@ sources:
     type: official
   - url: https://www.nytimes.com/2023/10/30/us/politics/biden-ai-regulation.html
     title: "Biden Signs Sweeping Executive Order on AI"
-    type: secondary
+    type: secondary_reporting
 revision:
   created: 2026-03-08
 ---

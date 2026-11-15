@@ -16,10 +16,10 @@ threads: [open-vs-closed-weights, scaling-laws-debate]
 sources:
   - url: https://ai.meta.com/blog/meta-llama-3/
     title: "Introducing Meta Llama 3: The most capable openly available LLM to date"
-    type: primary
+    type: primary_document
   - url: https://github.com/meta-llama/llama3
     title: "Meta Llama 3 GitHub Repository"
-    type: primary
+    type: primary_document
 revision:
   created: 2026-03-08
 ---

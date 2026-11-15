@@ -14,10 +14,10 @@ threads: [scaling-laws-debate]
 sources:
   - url: https://www.reuters.com/technology/nvidia-overtakes-microsoft-worlds-most-valuable-company-2024-06-18/
     title: "Nvidia overtakes Microsoft as world's most valuable company"
-    type: secondary
+    type: secondary_reporting
   - url: https://www.nytimes.com/2024/06/18/technology/nvidia-most-valuable-company.html
     title: "Nvidia Overtakes Microsoft as World's Most Valuable Company"
-    type: secondary
+    type: secondary_reporting
 revision:
   created: 2026-03-08
 ---

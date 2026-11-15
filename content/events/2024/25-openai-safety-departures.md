@@ -16,10 +16,10 @@ threads: [scaling-laws-debate, ai-military-ethics]
 sources:
   - url: https://www.nytimes.com/2024/05/14/technology/ilya-sutskever-leaving-openai.html
     title: "Ilya Sutskever, OpenAI's Co-Founder and Chief Scientist, Departs"
-    type: secondary
+    type: secondary_reporting
   - url: https://www.vox.com/future-perfect/2024/5/17/24158403/openai-jan-leike-ilya-sutskever-superalignment-safety-concerns
     title: "Why OpenAI's safety team is falling apart"
-    type: secondary
+    type: secondary_reporting
 revision:
   created: 2026-03-08
 ---

@@ -19,7 +19,7 @@ sources:
     type: official
   - url: https://www.theverge.com/2024/6/10/24175405/apple-intelligence-wwdc-ai-features-siri-chatgpt
     title: "Apple Intelligence is the company's new generative AI offering"
-    type: secondary
+    type: secondary_reporting
 revision:
   created: 2026-03-08
 ---

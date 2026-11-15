@@ -20,13 +20,13 @@ threads: [scaling-laws-debate, ai-military-ethics]
 sources:
   - url: https://openai.com/index/announcing-the-stargate-project/
     title: "Announcing the Stargate Project"
-    type: primary
+    type: primary_document
   - url: https://www.nytimes.com/2025/01/21/technology/trump-ai-private-sector-investment.html
     title: "Trump Announces Up to $500 Billion in A.I. Infrastructure"
-    type: secondary
+    type: secondary_reporting
   - url: https://www.reuters.com/technology/trump-announce-private-sector-ai-infrastructure-investment-cbs-reports-2025-01-21/
     title: "Trump unveils $500 billion AI infrastructure investment"
-    type: secondary
+    type: secondary_reporting
 revision:
   created: 2026-03-08
 ---

@@ -13,7 +13,7 @@ tags: [personalization, memory, consumer-ai, privacy]
 sources:
   - url: https://openai.com/index/memory-and-new-controls-for-chatgpt/
     title: "Memory and new controls for ChatGPT"
-    type: primary
+    type: primary_document
 revision:
   created: 2026-03-08
 ---

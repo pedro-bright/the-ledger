@@ -14,10 +14,10 @@ threads: [open-vs-closed-weights, scaling-laws-debate]
 sources:
   - url: https://github.com/deepseek-ai/DeepSeek-V3
     title: DeepSeek-V3 GitHub Repository
-    type: primary
+    type: primary_document
   - url: https://arxiv.org/abs/2412.19437
     title: DeepSeek-V3 Technical Report
-    type: primary
+    type: primary_document
   - url: https://github.com/deepseek-ai/DeepSeek-V3/commit/4c2fdb8f55e049553b9f4f1a3241f86d739c8cf8
     title: Release DeepSeek-V3 (release commit, December 26, 2024)
     type: primary_document

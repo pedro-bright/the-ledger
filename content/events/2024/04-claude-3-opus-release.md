@@ -21,7 +21,7 @@ sources:
     archive_url: https://web.archive.org/web/20261022214738/https://www.anthropic.com/news/claude-3-family
   - url: https://www-cdn.anthropic.com/de8ba9b01c9ab7cbabf5c33b80b7bbc618857627/Model_Card_Claude_3.pdf
     title: 'The Claude 3 Model Family: Opus, Sonnet, and Haiku'
-    type: primary
+    type: primary_document
   - url: https://www.anthropic.com/news/claude-3-haiku
     title: 'Claude 3 Haiku: our fastest model yet'
     type: primary_document

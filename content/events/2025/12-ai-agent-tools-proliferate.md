@@ -18,10 +18,10 @@ threads: [scaling-laws-debate]
 sources:
   - url: https://openai.com/index/introducing-codex/
     title: "Introducing Codex"
-    type: primary
+    type: primary_document
   - url: https://www.anthropic.com/news/claude-code
     title: "Claude Code"
-    type: primary
+    type: primary_document
 revision:
   created: 2026-03-08
 ---

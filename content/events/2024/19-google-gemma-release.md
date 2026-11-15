@@ -14,10 +14,10 @@ threads: [open-vs-closed-weights]
 sources:
   - url: https://blog.google/technology/developers/gemma-open-models/
     title: "Gemma: Introducing new state-of-the-art open models"
-    type: primary
+    type: primary_document
   - url: https://deepmind.google/models/gemma/
     title: "Gemma - Google AI for Developers"
-    type: primary
+    type: primary_document
 revision:
   created: 2026-03-08
 ---

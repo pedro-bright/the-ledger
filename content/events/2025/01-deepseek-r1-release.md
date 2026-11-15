@@ -14,13 +14,13 @@ threads: [scaling-laws-debate, open-vs-closed-weights]
 sources:
   - url: https://github.com/deepseek-ai/DeepSeek-R1
     title: "DeepSeek-R1 GitHub Repository"
-    type: primary
+    type: primary_document
   - url: https://arxiv.org/abs/2501.12948
     title: "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning"
-    type: primary
+    type: primary_document
   - url: https://www.nytimes.com/2025/01/27/technology/deepseek-ai-china-chatbot.html
     title: "A Chatbot From China Is Sending Shock Waves Through Silicon Valley"
-    type: secondary
+    type: secondary_reporting
 revision:
   created: 2026-03-08
 ---

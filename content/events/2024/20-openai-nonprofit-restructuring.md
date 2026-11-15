@@ -16,10 +16,10 @@ threads: [scaling-laws-debate, openai-corporate-evolution]
 sources:
   - url: https://www.reuters.com/technology/artificial-intelligence/openai-remove-non-profit-control-give-sam-altman-equity-2024-09-25/
     title: "Exclusive: OpenAI to remove non-profit control and give Sam Altman equity"
-    type: secondary
+    type: secondary_reporting
   - url: https://www.nytimes.com/2024/09/25/technology/openai-plans-to-become-for-profit.html
     title: "OpenAI Plans to Become a For-Profit Company"
-    type: secondary
+    type: secondary_reporting
 revision:
   created: 2026-03-08
 ---

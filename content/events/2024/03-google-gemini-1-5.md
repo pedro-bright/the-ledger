@@ -14,10 +14,10 @@ threads: [scaling-laws-debate]
 sources:
   - url: https://blog.google/technology/ai/google-gemini-next-generation-model-february-2024/
     title: "Our next-generation model: Gemini 1.5"
-    type: primary
+    type: primary_document
   - url: https://arxiv.org/abs/2403.05530
     title: "Gemini 1.5: Unlocking multimodal understanding across millions of tokens of context"
-    type: primary
+    type: primary_document
 revision:
   created: 2026-03-08
 ---

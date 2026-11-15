@@ -17,10 +17,10 @@ sources:
     type: official
   - url: https://artificialintelligenceact.eu/
     title: "EU AI Act Explorer"
-    type: primary
+    type: primary_document
   - url: https://www.reuters.com/technology/eu-lawmakers-set-approve-worlds-first-comprehensive-ai-rules-2024-03-13/
     title: "EU lawmakers approve the world's first comprehensive AI rules"
-    type: secondary
+    type: secondary_reporting
 revision:
   created: 2026-03-08
 ---

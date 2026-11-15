@@ -17,7 +17,7 @@ threads: [scaling-laws-debate]
 sources:
   - url: https://openai.com/12-days/
     title: "12 Days of OpenAI"
-    type: primary
+    type: primary_document
 revision:
   created: 2026-03-08
 ---
