@@ -42,16 +42,33 @@ tags: [open-weight, moe, price-compression, chinese-ai, huawei-ascend, mit-licen
 threads: [open-vs-closed-weights, chip-export-controls]
 related: [deepseek-r1-distill-impact]
 state: published
+contestation:
+  status: contested
+  last_challenged: 2026-11-15
 revision:
   created: 2026-04-27
-  last_reviewed: 2026-04-27
+  last_reviewed: 2026-11-15
   draft_assistance: ai-assisted
   final_author: pedro-bright
 ---
 
 ## Summary
 
-On April 24, 2026 — one year after DeepSeek's V3 model destabilized AI market valuations across the United States — DeepSeek released DeepSeek-V4-Pro and DeepSeek-V4-Flash as open-weight production models under the MIT license. V4-Pro, with 1.6 trillion total parameters and 49 billion active per inference step, scored within 0.2 percentage points of Claude Opus 4.7 on SWE-bench Verified and outperformed it on LiveCodeBench, while offering API pricing at approximately one-seventh of comparable Western model rates. Training was conducted in part on Huawei Ascend 950 chips operating in "Supernode" cluster configurations — the first publicly confirmed instance of a frontier-adjacent model trained on Chinese domestic silicon operating under US export controls.
+On April 24, 2026 — one year after DeepSeek's V3 model destabilized AI market valuations across the United States — DeepSeek released DeepSeek-V4-Pro and DeepSeek-V4-Flash as open-weight production models under the MIT license.
+V4-Pro, with 1.6 trillion total parameters and 49 billion active per inference step, scored 80.6% on SWE-bench Verified, 0.2 percentage points below Claude Opus 4.6's 80.8% in DeepSeek's own comparison, and outperformed Opus 4.6 on LiveCodeBench, 93.5% to 88.8%, while offering API pricing at approximately one-seventh of comparable Western model rates.
+Training was conducted in part on Huawei Ascend 950 chips operating in "Supernode" cluster configurations — the first publicly confirmed instance of a frontier-adjacent model trained on Chinese domestic silicon operating under US export controls.
+
+## Correction, November&nbsp;15,&nbsp;2026
+
+The Summary above was corrected after a challenge to its benchmark comparison was sustained.
+The DeepSeek-V4-Pro model card, the entry's official source, compares V4-Pro with Claude Opus 4.6 and not with Claude Opus 4.7.
+In that comparison V4-Pro scores 80.6% on SWE-bench Verified against 80.8% for Claude Opus 4.6, and 93.5% on LiveCodeBench against 88.8% for Claude Opus 4.6.
+The narrative below is preserved as published and still contains the earlier errors: its LiveCodeBench comparison names Claude Opus 4.7 for the Opus 4.6 score, and its 0.2-point gap in Why It Matters is the gap to Claude Opus 4.6.
+Its SWE-bench Verified figures of 87.6% for Claude Opus 4.7 and 89.1% for GPT-5.5 do not appear in any of the entry's sources.
+
+[Challenge record](https://github.com/pedro-bright/the-ledger/blob/main/content/challenges/cc-deepseek-v4-pro-release-20261115.md).
+[Resolution note](https://github.com/pedro-bright/the-ledger/blob/main/content/resolutions/rn-deepseek-v4-pro-release-20261115.md).
+[Revision record with the prior summary and metadata](https://github.com/pedro-bright/the-ledger/blob/main/content/revisions/sr-deepseek-v4-pro-release-20261115.md).
 
 ## What Happened
 
