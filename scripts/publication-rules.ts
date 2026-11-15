@@ -20,11 +20,20 @@ const primaryOrOfficial = (source: Source) =>
 export function publicationRuleErrors(data: Record<string, unknown>): string[] {
   const revision = (data.revision ?? {}) as Record<string, unknown>;
   const created = revision.created;
-  if (typeof created !== "string" || created < PUBLICATION_RULES_FROM) return [];
+  const validCreated = typeof created === "string" && /^\d{4}-\d{2}-\d{2}$/.test(created);
+  if (validCreated && created < PUBLICATION_RULES_FROM) return [];
 
   const errors: string[] = [];
   const rule = (name: string, problem: string, fix: string) =>
     errors.push(`Publication rule "${name}": ${problem}. ${fix}`);
+
+  if (!validCreated) {
+    rule(
+      "revision record",
+      `revision.created is ${missing(created) ? "missing" : "not a YYYY-MM-DD date"}`,
+      "Add it as the YYYY-MM-DD date the entry was first drafted.",
+    );
+  }
 
   const revisionFixes: Record<string, string> = {
     last_reviewed: "Add it as the YYYY-MM-DD date the entry was last checked against its sources.",

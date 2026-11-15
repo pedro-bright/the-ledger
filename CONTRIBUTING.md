@@ -158,12 +158,13 @@ fix/typo-in-claude-3-event
 ### Publication Rules
 
 `npm run validate` enforces these rules for every event whose `revision.created` is on or after `PUBLICATION_RULES_FROM` in `scripts/publication-rules.ts` (currently 2026-11-15).
-Events created before that date are not checked.
+Events whose `revision.created` is a YYYY-MM-DD date before that date are not checked.
+An event without a valid `revision.created` is checked.
 Each violation names the file, the rule and the field, followed by the fix.
 
 | Rule | Requirement |
 |------|-------------|
-| revision record | `revision.last_reviewed`, `revision.final_author` and `revision.draft_assistance` are set. |
+| revision record | `revision.created` (as YYYY-MM-DD), `revision.last_reviewed`, `revision.final_author` and `revision.draft_assistance` are set. |
 | lifecycle state | `state` is set. |
 | source details | Every source has `publisher`, `date` and `accessed`. |
 | minimum sourcing | At least one source has type `official` or a type starting with `primary`, or the event has at least two sources. |

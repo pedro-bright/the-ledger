@@ -102,6 +102,35 @@ for (const field of ['last_reviewed', 'draft_assistance', 'final_author']) {
   });
 }
 
+const createdCases: Array<[string, (event: Event) => void]> = [
+  ['an event with no revision block', (event) => { delete event.revision; }],
+  ['a revision without created', (event) => { delete event.revision.created; }],
+  ['a revision.created that is not a string', (event) => { event.revision.created = 20261115; }],
+];
+for (const [name, change] of createdCases) {
+  test(`revision record rule requires revision.created on ${name}`, (t) => {
+    const failing = complete('missing-created');
+    change(failing);
+    const result = validate(t, [complete('complete-created'), failing]);
+    assert.equal(result.status, 1, result.output);
+    assertRejected(result.output, '02-missing-created.md', 'revision record', 'revision.created');
+    assertNotListed(result.output, '01-complete-created.md');
+  });
+}
+
+test('an event with no revision block is checked against every publication rule', (t) => {
+  const failing = complete('no-revision');
+  delete failing.revision;
+  failing.significance = 'major';
+  failing.sources[0].archive_url = 'https://web.archive.org/web/*/https://example.com/announcement';
+  const result = validate(t, [failing]);
+  assert.equal(result.status, 1, result.output);
+  for (const field of ['created', 'last_reviewed', 'draft_assistance', 'final_author']) {
+    assertRejected(result.output, '01-no-revision.md', 'revision record', `revision.${field}`);
+  }
+  assertRejected(result.output, '01-no-revision.md', 'fixed archive capture', 'sources[0].archive_url');
+});
+
 test('lifecycle state rule requires state', (t) => {
   const failing = complete('missing-state');
   delete failing.state;
