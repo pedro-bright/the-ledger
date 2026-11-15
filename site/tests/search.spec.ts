@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import { test, expect, type Page, type Route } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { SLUGS } from './_slugs';
@@ -9,11 +11,62 @@ import { SLUGS } from './_slugs';
 const HELP = 'Search every entry, thread, controversy and actor in the ledger.';
 const THREAD_TITLE = 'The Scaling Laws Debate: Will Bigger Always Mean Better?';
 
+/**
+ * The record a reader expects first in its group for each query.
+ * `known` names a query the ranking does not satisfy yet, and why; its test is expected to fail.
+ */
+const EXPECTED_FIRST: { query: string; group: string; first: string; known?: string }[] = [
+  // Entry names, whole and short.
+  { query: 'AI Safety Summit at Bletchley Park', group: 'Events', first: '/events/ai-safety-summit-bletchley' },
+  { query: 'GPT-4', group: 'Events', first: '/events/gpt-4-release' },
+  { query: 'DeepSeek R1', group: 'Events', first: '/events/deepseek-r1-release' },
+  { query: 'Llama 2', group: 'Events', first: '/events/meta-llama-2-release' },
+  { query: 'Claude Code', group: 'Events', first: '/events/anthropic-claude-code-ga' },
+  {
+    query: 'Biden executive order',
+    group: 'Events',
+    first: '/events/biden-executive-order-ai',
+    known: 'Both this entry and "Trump Revokes Biden\'s AI Executive Order" have all three words in their titles, and the shorter record ranks first.',
+  },
+  // Actor names.
+  { query: 'Anthropic', group: 'Actors', first: '/actors/anthropic' },
+  { query: 'OpenAI', group: 'Actors', first: `/actors/${SLUGS.actor}` },
+  { query: 'Geoffrey Hinton', group: 'Actors', first: '/actors/geoffrey-hinton' },
+  { query: 'Demis Hassabis', group: 'Actors', first: '/actors/demis-hassabis' },
+  { query: 'DeepSeek', group: 'Actors', first: '/actors/deepseek' },
+  { query: 'Google DeepMind', group: 'Actors', first: '/actors/google-deepmind' },
+  // Thread and controversy names.
+  { query: 'Deepfakes and Democracy', group: 'Threads', first: '/threads/deepfakes-and-democracy' },
+  { query: 'chip export controls', group: 'Threads', first: '/threads/chip-export-controls' },
+  { query: 'sovereign AI', group: 'Threads', first: '/threads/sovereign-ai-race' },
+  { query: 'scaling laws', group: 'Threads', first: `/threads/${SLUGS.thread}` },
+  { query: 'AGI timeline', group: 'Controversies', first: '/controversies/agi-timeline-disagreement' },
+  // A two-word topic.
+  { query: 'copyright lawsuits', group: 'Events', first: '/events/authors-guild-ai-lawsuits' },
+  // A quoted phrase. Pagefind scores every record with the exact phrase the same and lists them in
+  // index order, which differs between machines, so the phrase is one that only this entry contains.
+  { query: '"Biology Olympiad"', group: 'Events', first: `/events/${SLUGS.event}` },
+];
+
+/** The `count` entries a seeded shuffle picks, so a run checks the same entries until the content changes. */
+function sample<T extends { id: string }>(items: T[], count: number, seed: number) {
+  const pool = [...items].sort((a, b) => a.id.localeCompare(b.id));
+  // mulberry32
+  const random = () => {
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  return Array.from({ length: count }, () => pool.splice(Math.floor(random() * pool.length), 1)[0]);
+}
+
 const field = (page: Page) => page.getByRole('searchbox', { name: 'Search the ledger' });
 const status = (page: Page) => page.getByRole('status');
 const group = (page: Page, label: string) => page.getByRole('region', { name: new RegExp(`^${label}\\b`) });
 const count = async (page: Page, label: string) =>
   Number(await group(page, label).getByRole('heading').locator('span').textContent());
+const firstResult = (page: Page, label: string) => group(page, label).getByRole('listitem').first();
 
 /** Holds Pagefind's result fragment requests until `release` lets them and every later one through. */
 async function holdFragments(page: Page) {
@@ -311,4 +364,47 @@ test('results pass axe and fit a 375px screen', async ({ page }) => {
   const result = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
   const serious = result.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
   expect(serious.map((v) => `${v.id}: ${v.nodes.map((n) => n.target).join(', ')}`)).toEqual([]);
+});
+
+test('the field says how to match a phrase exactly', async ({ page }) => {
+  await page.goto('/search');
+  await expect(page.getByText('Put a phrase in quotes to match it exactly.')).toBeVisible();
+  await expect(field(page)).toHaveAccessibleDescription('Put a phrase in quotes to match it exactly.');
+});
+
+test.describe('result order', () => {
+  test.beforeEach(({}, testInfo) => {
+    test.skip(testInfo.project.name !== 'chromium', 'the order does not vary by viewport');
+  });
+
+  for (const { query, group: label, first, known } of EXPECTED_FIRST) {
+    test(`${query} lists ${first} first under ${label}`, async ({ page }) => {
+      test.fail(known !== undefined, known);
+      await page.goto(`/search?q=${encodeURIComponent(query)}`);
+      await expect(firstResult(page, label).getByRole('link')).toHaveAttribute('href', first);
+    });
+  }
+
+  test('searching the full title of an entry lists that entry first under Events', async ({ page }) => {
+    const { events } = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'dist', 'data', 'events.json'), 'utf8'));
+    await page.goto('/search');
+    for (const { id, title } of sample<{ id: string; title: string }>(events, 25, 260)) {
+      await field(page).fill(title);
+      await field(page).press('Enter');
+      await expect(status(page)).toContainText(`for “${title}”`);
+      await expect.soft(firstResult(page, 'Events').getByRole('link'), title).toHaveAttribute('href', `/events/${id}`);
+    }
+  });
+
+  test('for scaling laws the first entry has both words in its title or summary', async ({ page }) => {
+    test.fail(true, 'No entry has both words in its title or summary, and Pagefind matches "laws" as the start of "lawsuits", so "Growing Wave of Copyright Lawsuits Against AI Companies" ranks first.');
+    const { events } = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'dist', 'data', 'events.json'), 'utf8'));
+    await page.goto('/search?q=scaling+laws');
+    const href = await firstResult(page, 'Events').getByRole('link').getAttribute('href');
+    const record = (events as { id: string; title: string; summary: string }[]).find((event) => `/events/${event.id}` === href);
+    expect(record, `no entry in events.json for ${href}`).toBeDefined();
+    const text = `${record!.title} ${record!.summary}`;
+    expect(text).toMatch(/\bscaling\b/i);
+    expect(text).toMatch(/\blaws\b/i);
+  });
 });
