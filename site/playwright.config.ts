@@ -21,8 +21,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
-  // Keep worker count modest — the test pages mount a force-graph canvas which
-  // likes to consume CPU. Playwright defaults to (cores/2) which is fine locally.
+  // Locally Playwright uses half the CPU cores as workers; CI sets --workers in e2e.yml.
   reporter: [['list']],
 
   use: {
