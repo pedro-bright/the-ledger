@@ -55,16 +55,18 @@ On April 24, 2026 — one year after DeepSeek's V3 model destabilized AI market 
 V4-Pro, with 1.6 trillion total parameters and 49 billion active per inference step, scored 80.6% on SWE-bench Verified, 0.2 percentage points below Claude Opus 4.6's 80.8% in DeepSeek's own comparison, and outperformed Opus 4.6 on LiveCodeBench, 93.5% to 88.8%, while offering API pricing at approximately one-seventh of comparable Western model rates.
 Training was conducted in part on Huawei Ascend 950 chips operating in "Supernode" cluster configurations — the first publicly confirmed instance of a frontier-adjacent model trained on Chinese domestic silicon operating under US export controls.
 
-## Correction, November&nbsp;15,&nbsp;2026
+## Editorial correction, November&nbsp;15,&nbsp;2026
 
-The Summary above was corrected after a review of the entry against its sources.
-The DeepSeek-V4-Pro model card, the entry's official source, compares V4-Pro with Claude Opus 4.6 and not with Claude Opus 4.7.
+The DeepSeek-V4-Pro model card compares V4-Pro with Claude Opus 4.6 and not with Claude Opus 4.7.
 In that comparison V4-Pro scores 80.6% on SWE-bench Verified against 80.8% for Claude Opus 4.6, and 93.5% on LiveCodeBench against 88.8% for Claude Opus 4.6.
-The narrative below is preserved as published and still contains the earlier errors: its LiveCodeBench comparison names Claude Opus 4.7 for the Opus 4.6 score, and its 0.2-point gap in Why It Matters is the gap to Claude Opus 4.6.
-Its SWE-bench Verified figures of 87.6% for Claude Opus 4.7 and 89.1% for GPT-5.5 do not appear in the two sources that were read, the DeepSeek-V4-Pro model card and Simon Willison's post "DeepSeek V4".
+The original summary attributed both comparisons to Claude Opus 4.7.
+The original body below names Claude Opus 4.7 for the Opus 4.6 LiveCodeBench score, and the 0.2-point gap in Why It Matters is the gap to Claude Opus 4.6.
+The body's SWE-bench Verified figures of 87.6% for Claude Opus 4.7 and 89.1% for GPT-5.5 do not appear in the two sources that were read, the DeepSeek-V4-Pro model card and Simon Willison's post "DeepSeek V4".
 The third source, the Bloomberg article, could not be read behind its paywall.
 
 [Revision record with the prior summary and metadata](https://github.com/pedro-bright/the-ledger/blob/main/content/revisions/sr-deepseek-v4-pro-release-20261115.md).
+
+The original narrative below is preserved as published; use the revised summary and this note for the corrected account.
 
 ## What Happened
 
