@@ -120,7 +120,7 @@ test('the real analytics SDK keeps search terms in the browser and honors the pr
   await mastheadSearch.click();
   await mastheadSearch.fill(`${CANARY}-masthead`);
   await mastheadSearch.press('Enter');
-  await expect(page).toHaveURL(new RegExp(`q=${CANARY}-masthead`));
+  await expect(page).toHaveURL(new RegExp(`/search/?\\?q=${CANARY}-masthead`));
   await expect.poll(() => named('$pageview').length).toBeGreaterThan(1);
 
   await page.getByRole('navigation', { name: 'Secondary' }).getByRole('link', { name: 'About' }).click();
@@ -146,7 +146,7 @@ test('the real analytics SDK keeps search terms in the browser and honors the pr
   for (const key of ['ph_keyword', 'utm_term', '$session_entry_ph_keyword', '$session_entry_utm_term']) {
     expect(landingView).not.toHaveProperty(key);
   }
-  expect(named('$pageview').at(-1)?.properties.$referrer).toBe(`${origin}/explore`);
+  expect(named('$pageview').at(-1)?.properties.$referrer).toBe(`${origin}/search`);
 
   const webVitals = Object.keys(named('$web_vitals')[0].properties);
   expect(webVitals.some(key => /^\$web_vitals_.+_value$/.test(key))).toBe(true);
@@ -205,6 +205,43 @@ test('a dead click on the echoed search term does not send it', async ({ page })
   await clickSentenceUntilReported();
 
   expect(JSON.stringify(events)).not.toContain(CANARY);
+});
+
+test('the search page keeps the query, its echo and the matched words out of analytics', async ({ page }) => {
+  test.setTimeout(90_000);
+  const { events } = await loadRealAnalytics(page);
+  const deadClicks = () => events.filter(event => event.event === '$dead_click');
+  // Dead clicks are reported oldest first, so a report of this click means every earlier one was handled.
+  const clickHeadingUntilReported = async () => {
+    const reported = deadClicks().length;
+    await expect(async () => {
+      await page.getByRole('heading', { level: 1 }).click({ position: { x: 6, y: 6 } });
+      await expect.poll(() => deadClicks().length, { timeout: 5_000 }).toBeGreaterThan(reported);
+    }).toPass({ timeout: 30_000 });
+  };
+
+  await page.goto(`/search?q=${CANARY}-landing`);
+  const status = page.getByRole('status');
+  await expect(status).toContainText(`for “${CANARY}-landing”`);
+  await clickHeadingUntilReported();
+  await status.click({ position: { x: 6, y: 6 } });
+  // Typing changes the page, and a click followed by a change is not reported as dead.
+  await clickHeadingUntilReported();
+
+  const field = page.getByRole('searchbox', { name: 'Search the ledger' });
+  await field.fill(`${CANARY}-typed`);
+  await expect(page).toHaveURL(new RegExp(`q=${CANARY}-typed`));
+  await field.fill('olympiad');
+  await expect(status).toHaveText(/results for “olympiad”/);
+  const result = page.getByRole('region', { name: /^Events/ }).getByRole('listitem').first();
+  await result.locator('mark').first().click();
+  await result.locator('p').last().click({ position: { x: 6, y: 6 } });
+  await clickHeadingUntilReported();
+
+  const sent = JSON.stringify(events).toLowerCase();
+  expect(sent).toContain('$pageview');
+  expect(sent).not.toContain(CANARY);
+  expect(sent).not.toContain('olympiad');
 });
 
 test('footer links to the privacy note', async ({ page }) => {

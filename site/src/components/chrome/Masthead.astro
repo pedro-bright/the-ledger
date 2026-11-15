@@ -1,6 +1,6 @@
 ---
 // Masthead: brand mark (Fraunces "L"), site title, tagline, and a search input.
-// Search submits to /explore?q= (will move to /timeline in Wave 3).
+// Search submits to /search?q=, the archive-wide search page.
 ---
 <header class="wiki-masthead">
   <div class="wiki-masthead__inner">
@@ -11,16 +11,16 @@
         <span class="wiki-masthead__tag">A sourced historical record of AI</span>
       </span>
     </a>
-    <form class="wiki-masthead__search" action="/explore" method="get" role="search">
-      <label for="search-q" class="sr-only">Search events</label>
+    <form class="wiki-masthead__search" action="/search" method="get" role="search">
+      <label for="search-q" class="sr-only">Search events, threads, controversies and actors</label>
       <input
         type="search"
         id="search-q"
         class="ph-no-capture"
         name="q"
-        placeholder="Search events…"
+        placeholder="Search the ledger…"
         autocomplete="off"
-        aria-label="Search events"
+        aria-label="Search events, threads, controversies and actors"
         aria-keyshortcuts="Slash Control+K Meta+K"
       />
       <kbd aria-hidden="true" title="Press / to search">/</kbd>

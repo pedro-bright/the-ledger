@@ -76,6 +76,7 @@ test.describe('security headers', () => {
     '/',
     '/about',
     '/explore',
+    '/search?q=OpenAI',
     '/graph',
     '/threads',
     `/threads/${SLUGS.thread}`,

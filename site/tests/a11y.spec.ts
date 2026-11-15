@@ -28,6 +28,7 @@ const ROUTES: Array<{ path: string; label: string; include?: string }> = [
   { path: '/controversies', label: 'controversies-index' },
   { path: '/actors', label: 'actors-index' },
   { path: '/explore', label: 'explore' },
+  { path: '/search', label: 'search' },
   { path: '/graph', label: 'graph' },
   { path: '/about', label: 'about' },
   { path: '/privacy', label: 'privacy' },
@@ -82,9 +83,9 @@ test.describe('a11y (axe)', () => {
 });
 
 
-test('editable search boundaries have 3:1 contrast and mobile text is 16px', async ({ page }) => {
+for (const route of ['/explore', '/search']) test(`editable search boundaries on ${route} have 3:1 contrast and mobile text is 16px`, async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/explore');
+  await page.goto(route);
   const controls = await page.locator('input[type="search"]').evaluateAll((inputs) => {
     const luminance = (color: string) => {
       const channels = color.match(/\d+(?:\.\d+)?/g)!.slice(0, 3).map(Number).map((value) => {
