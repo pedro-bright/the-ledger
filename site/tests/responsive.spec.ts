@@ -12,7 +12,7 @@ import { SLUGS } from './_slugs';
  * the mobile project would just repeat work.
  */
 
-const ROUTES = ['/', `/events/${SLUGS.event}`, '/explore', '/graph', '/corrections', '/data'];
+const ROUTES = ['/', `/events/${SLUGS.event}`, '/explore', '/search', '/graph', '/corrections', '/data'];
 
 const VIEWPORTS = [
   { label: 'mobile', width: 375, height: 667 },

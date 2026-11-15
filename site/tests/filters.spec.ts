@@ -110,13 +110,8 @@ test.describe('search navigation regressions', () => {
     expect(new URL(page.url()).searchParams.has('category')).toBe(false);
   });
 
-  test('masthead search accurately names its event scope and offers other indexes', async ({ page }) => {
-    await page.goto('/');
-    const search = page.locator('#search-q');
-    await expect(search).toHaveAttribute('placeholder', 'Search events…');
-    await expect(search).toHaveAccessibleName('Search events');
-    await search.fill('The Scaling Laws Debate: Will Bigger Always Mean Better?');
-    await search.press('Enter');
+  test('a timeline keyword link with no matching event offers the other indexes', async ({ page }) => {
+    await page.goto(`/explore?q=${encodeURIComponent('The Scaling Laws Debate: Will Bigger Always Mean Better?')}`);
     await expect(page.locator('#explorer-search')).toHaveValue('The Scaling Laws Debate: Will Bigger Always Mean Better?');
     const recovery = page.getByRole('navigation', { name: 'Other indexes' });
     for (const label of ['Threads', 'Controversies', 'Actors']) {

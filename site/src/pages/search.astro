@@ -1,0 +1,370 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/wiki/PageHeader.astro';
+import RailSection from '../components/wiki/RailSection.astro';
+import CategoryTag from '../components/wiki/CategoryTag.astro';
+import { getCategories } from '../lib/content';
+
+// Archive-wide search over the Pagefind index that the site build writes to /pagefind/.
+// The groups follow the `type` filter each record carries (see ArticleShell).
+const groups = [
+  { type: 'event', label: 'Events', noun: 'events' },
+  { type: 'thread', label: 'Threads', noun: 'threads' },
+  { type: 'controversy', label: 'Controversies', noun: 'controversies' },
+  { type: 'actor', label: 'Actors', noun: 'actors' },
+];
+const categories = getCategories();
+---
+
+<Base
+  layout="index"
+  title="Search"
+  description="Search every entry, thread, controversy and actor in The Ledger."
+>
+  <Fragment slot="leftRail">
+    <RailSection title="Navigate">
+      <ul class="rail-list">
+        <li><a href="/">Main page</a></li>
+        <li><a href="/explore">Timeline</a></li>
+        <li><a href="/threads">Threads</a></li>
+        <li><a href="/controversies">Controversies</a></li>
+        <li><a href="/actors">Actors</a></li>
+        <li><a href="/about">About the ledger</a></li>
+      </ul>
+    </RailSection>
+  </Fragment>
+
+  <PageHeader eyebrow="§ Search" title="Search the ledger" noRule />
+
+  <noscript>
+    <p class="search-notice">
+      Search needs JavaScript. Without it, you can browse the <a href="/explore">timeline</a>.
+    </p>
+  </noscript>
+
+  <!-- Hidden until the script below runs, so readers without JavaScript see only the notice. -->
+  <div id="search-app" hidden>
+    <form id="search-form" class="search-form" action="/search" method="get" role="search">
+      <label for="search-page-q" class="sr-only">Search the ledger</label>
+      <input
+        type="search"
+        id="search-page-q"
+        class="ph-no-capture"
+        name="q"
+        autocomplete="off"
+        autocapitalize="off"
+        spellcheck="false"
+        enterkeyhint="search"
+      />
+    </form>
+
+    <p id="search-status" class="search-status ph-no-capture" role="status">
+      Search every entry, thread, controversy and actor in the ledger.
+    </p>
+
+    <div class="ph-no-capture">
+      {groups.map(({ type, label, noun }) => (
+        <section class="search-group" data-search-group={type} aria-labelledby={`search-${type}-head`} hidden>
+          <h2 class="search-group__head" id={`search-${type}-head`}>
+            {label}
+            <span class="search-group__count font-mono"></span>
+          </h2>
+          <ol class="search-group__list"></ol>
+          <button type="button" class="search-group__more" hidden>Show more {noun}</button>
+        </section>
+      ))}
+    </div>
+
+    <template id="search-result">
+      <li class="search-result">
+        <a class="search-result__title"></a>
+        <p class="search-result__meta"><time class="search-result__date"></time></p>
+        <p class="search-result__excerpt"></p>
+      </li>
+    </template>
+    {categories.map(({ id }) => (
+      <template data-search-category={id}><CategoryTag category={id} /></template>
+    ))}
+    <template id="search-empty">
+      No results for “<span data-query></span>”. Try fewer words, or browse the
+      <a href="/explore">timeline</a>, <a href="/threads">threads</a> or <a href="/actors">actors</a>.
+    </template>
+    <template id="search-failed">
+      Search could not load. Reload the page, or browse the <a href="/explore">timeline</a>.
+    </template>
+  </div>
+  <script is:inline>
+    document.getElementById('search-app').hidden = false;
+  </script>
+</Base>
+
+<script>
+  type Fragment = {
+    url: string;
+    excerpt: string;
+    meta: { title: string; date?: string };
+    filters: { category?: string[] };
+  };
+  type Result = { data: () => Promise<Fragment> };
+  type Pagefind = {
+    options: (options: { excerptEllipsis: string }) => Promise<void>;
+    init: () => Promise<void>;
+    search: (term: string, options: { filters: { type: string } }) => Promise<{ results: Result[] }>;
+  };
+
+  // Results shown per group at first, and added by each "Show more".
+  const STEP = 10;
+  // Pause after the last keystroke before searching.
+  const DELAY_MS = 200;
+  // A variable, so the bundler leaves the import for the browser: the index exists only after the build.
+  const PAGEFIND_URL = '/pagefind/pagefind.js';
+
+  const input = document.querySelector<HTMLInputElement>('#search-page-q')!;
+  const status = document.querySelector<HTMLElement>('#search-status')!;
+  const help = status.textContent!.trim();
+  const template = (selector: string) => document.querySelector<HTMLTemplateElement>(selector)!.content;
+  const groups = [...document.querySelectorAll<HTMLElement>('[data-search-group]')].map((section) => ({
+    type: section.dataset.searchGroup!,
+    section,
+    count: section.querySelector<HTMLElement>('.search-group__count')!,
+    list: section.querySelector<HTMLElement>('.search-group__list')!,
+    more: section.querySelector<HTMLButtonElement>('.search-group__more')!,
+    results: [] as Result[],
+  }));
+
+  let pagefind: Promise<Pagefind> | undefined;
+  function loadPagefind() {
+    pagefind ??= import(/* @vite-ignore */ PAGEFIND_URL).then(async (module: Pagefind) => {
+      await module.options({ excerptEllipsis: '…' });
+      await module.init();
+      return module;
+    });
+    return pagefind;
+  }
+
+  // Pagefind escapes angle brackets in the page text and wraps each matching word in <mark>.
+  function excerptNodes(excerpt: string) {
+    return excerpt.split(/<\/?mark>/).map((piece, index) => {
+      const text = piece.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+      if (index % 2 === 0) return text;
+      const mark = document.createElement('mark');
+      mark.textContent = text;
+      return mark;
+    });
+  }
+
+  async function rows(results: Result[], type: string) {
+    const fragments = await Promise.all(results.map((result) => result.data()));
+    return fragments.map((fragment) => {
+      const row = template('#search-result').firstElementChild!.cloneNode(true) as HTMLElement;
+      const link = row.querySelector('a')!;
+      // The site links to records without the trailing slash.
+      link.href = fragment.url.replace(/\/$/, '');
+      link.textContent = fragment.meta.title;
+      const meta = row.querySelector('.search-result__meta')!;
+      if (type === 'event') {
+        const time = meta.querySelector('time')!;
+        time.dateTime = time.textContent = fragment.meta.date ?? '';
+        meta.append(template(`[data-search-category="${fragment.filters.category?.[0]}"]`).cloneNode(true));
+      } else {
+        meta.remove();
+      }
+      row.querySelector('.search-result__excerpt')!.append(...excerptNodes(fragment.excerpt));
+      return row;
+    });
+  }
+
+  function message(selector: string, term: string) {
+    const content = template(selector).cloneNode(true) as DocumentFragment;
+    const query = content.querySelector('[data-query]');
+    if (query) query.textContent = term;
+    status.replaceChildren(content);
+  }
+
+  let latest = 0;
+  async function search() {
+    const run = ++latest;
+    const term = input.value.trim();
+    const url = new URL(location.href);
+    if (term) url.searchParams.set('q', term);
+    else url.searchParams.delete('q');
+    history.replaceState(history.state, '', url);
+
+    let found: Result[][] = groups.map(() => []);
+    let first: HTMLElement[][] = groups.map(() => []);
+    if (term) {
+      try {
+        const index = await loadPagefind();
+        const searches = await Promise.all(groups.map(({ type }) => index.search(term, { filters: { type } })));
+        found = searches.map(({ results }) => results);
+        first = await Promise.all(found.map((results, i) => rows(results.slice(0, STEP), groups[i].type)));
+      } catch {
+        if (run === latest) message('#search-failed', term);
+        return;
+      }
+      // A newer keystroke has started its own search.
+      if (run !== latest) return;
+    }
+
+    groups.forEach((group, i) => {
+      group.results = found[i];
+      group.section.hidden = found[i].length === 0;
+      group.count.textContent = String(found[i].length);
+      group.list.replaceChildren(...first[i]);
+      group.more.hidden = found[i].length <= STEP;
+    });
+    const total = found.reduce((sum, results) => sum + results.length, 0);
+    if (!term) status.textContent = help;
+    else if (total === 0) message('#search-empty', term);
+    else status.textContent = `${total} ${total === 1 ? 'result' : 'results'} for “${term}”`;
+  }
+
+  for (const group of groups) {
+    group.more.addEventListener('click', async () => {
+      const { results, list } = group;
+      const added = await rows(results.slice(list.children.length, list.children.length + STEP), group.type);
+      // A new search replaced this list while the rows loaded.
+      if (results !== group.results) return;
+      list.append(...added);
+      group.more.hidden = list.children.length >= results.length;
+      // Keyboard readers continue from the first added result.
+      added[0]?.querySelector('a')?.focus();
+    });
+  }
+
+  let timer: number | undefined;
+  input.addEventListener('input', () => {
+    window.clearTimeout(timer);
+    timer = window.setTimeout(search, DELAY_MS);
+  });
+  input.form!.addEventListener('submit', (event) => {
+    event.preventDefault();
+    window.clearTimeout(timer);
+    search();
+  });
+
+  input.value = new URL(location.href).searchParams.get('q') ?? '';
+  if (input.value.trim()) search();
+  else loadPagefind().catch(() => {});
+</script>
+
+<style>
+  .search-notice {
+    max-width: 65ch;
+    margin: 0;
+    color: var(--color-ink);
+  }
+
+  .search-form input {
+    width: 100%;
+    max-width: 40rem;
+    min-height: 48px;
+    padding: 12px 14px;
+    border: 1px solid var(--color-control-border);
+    border-radius: 2px;
+    background: var(--color-page-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+  }
+  .search-form input:focus-visible {
+    outline: 2px solid var(--color-wiki-link);
+    outline-offset: 0;
+    border-color: var(--color-wiki-link);
+  }
+
+  .search-status {
+    margin: 12px 0 32px;
+    font-family: var(--font-sans);
+    font-size: var(--text-small);
+    line-height: 1.5;
+    color: var(--color-ink-mid);
+  }
+
+  .search-group {
+    margin-bottom: 40px;
+  }
+  .search-group__head {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 36, 'SOFT' 0, 'WONK' 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--color-ink-dim);
+    margin: 0;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--color-rule-strong);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .search-group__count {
+    font-size: var(--text-meta);
+    font-weight: 400;
+    color: var(--color-ink-faint);
+    letter-spacing: 0.04em;
+    line-height: 1.45;
+  }
+  .search-group__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .search-group__more {
+    margin-top: 14px;
+    min-height: 40px;
+    padding: 8px 14px;
+    border: 1px solid var(--color-control-border);
+    border-radius: 2px;
+    background: var(--color-page-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-small);
+    cursor: pointer;
+    transition: background 120ms ease;
+  }
+  .search-group__more:hover {
+    background: var(--color-wiki-surface);
+  }
+
+  .search-result {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .search-result__title {
+    font-family: var(--font-serif);
+    font-size: 1.0625rem;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--color-wiki-link);
+  }
+  .search-result__title:visited { color: var(--color-wiki-link-visited); }
+  .search-result__title:hover { text-decoration: underline; }
+  .search-result__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 2px 12px;
+    margin: 3px 0 0;
+  }
+  .search-result__date {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    color: var(--color-ink-faint);
+    letter-spacing: 0.02em;
+    line-height: 1.45;
+  }
+  .search-result__excerpt {
+    max-width: 68ch;
+    margin: 4px 0 0;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--color-ink-mid);
+  }
+  .search-result__excerpt :global(mark) {
+    padding: 0 2px;
+    border-radius: 2px;
+    background: var(--color-wiki-surface-strong);
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+</style>
