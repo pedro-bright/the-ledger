@@ -22,7 +22,7 @@ function fixture(t: { after: (fn: () => void) => void }) {
 }
 
 function event(dir: string, name: string, id = 'example-event', date = '2026-01-01') {
-  fs.writeFileSync(path.join(dir, 'content/events/2026', name), `---\nid: ${id}\ntitle: Example event\ndate: ${date}\ncategory: policy\nsources:\n  - url: https://example.com/source\n    title: Example source\n---\n`);
+  fs.writeFileSync(path.join(dir, 'content/events/2026', name), `---\nid: ${id}\ntitle: Example event\ndate: ${date}\ncategory: policy\nsources:\n  - url: https://example.com/source\n    title: Example source\nrevision:\n  created: '2026-01-01'\n---\n`);
 }
 
 function validate(dir: string) {

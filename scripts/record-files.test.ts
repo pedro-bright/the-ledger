@@ -20,7 +20,7 @@ function fixture(t: { after: (fn: () => void) => void }) {
   fs.symlinkSync(path.join(root, 'node_modules'), path.join(dir, 'node_modules'));
   fs.copyFileSync(path.join(root, 'package.json'), path.join(dir, 'package.json'));
   fs.mkdirSync(path.join(dir, 'content/events/2023'), { recursive: true });
-  fs.writeFileSync(path.join(dir, 'content/events/2023/01-gpt-4-release.md'), `---\nid: gpt-4-release\ntitle: GPT-4\ndate: '2023-03-14'\ncategory: models\nsources:\n  - url: https://example.com\n    title: A source\n---\n\n## Summary\n\n${summary}\n\n## What Happened\n\nDo not copy this section.\n`);
+  fs.writeFileSync(path.join(dir, 'content/events/2023/01-gpt-4-release.md'), `---\nid: gpt-4-release\ntitle: GPT-4\ndate: '2023-03-14'\ncategory: models\nsources:\n  - url: https://example.com\n    title: A source\nrevision:\n  created: '2023-03-20'\n---\n\n## Summary\n\n${summary}\n\n## What Happened\n\nDo not copy this section.\n`);
   fs.writeFileSync(path.join(dir, 'fixed-clock.mjs'), `
     const RealDate = Date;
     globalThis.Date = class extends RealDate {
