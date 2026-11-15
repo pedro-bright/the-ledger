@@ -396,12 +396,14 @@ test.describe('result order', () => {
     }
   });
 
-  test('for scaling laws the first entry has both words in its title or excerpt', async ({ page }) => {
+  test('for scaling laws the first entry has both words in its title or summary', async ({ page }) => {
     test.fail(true, 'No entry has both words in its title or summary, and Pagefind matches "laws" as the start of "lawsuits", so "Growing Wave of Copyright Lawsuits Against AI Companies" ranks first.');
+    const { events } = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'dist', 'data', 'events.json'), 'utf8'));
     await page.goto('/search?q=scaling+laws');
-    const entry = firstResult(page, 'Events');
-    await expect(entry).toBeVisible();
-    const text = (await entry.locator('.search-result__title, .search-result__excerpt').allTextContents()).join(' ');
+    const href = await firstResult(page, 'Events').getByRole('link').getAttribute('href');
+    const record = (events as { id: string; title: string; summary: string }[]).find((event) => `/events/${event.id}` === href);
+    expect(record, `no entry in events.json for ${href}`).toBeDefined();
+    const text = `${record!.title} ${record!.summary}`;
     expect(text).toMatch(/\bscaling\b/i);
     expect(text).toMatch(/\blaws\b/i);
   });
