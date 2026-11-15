@@ -3,7 +3,14 @@ id: usco-ai-report-part-3-training
 title: "US Copyright Office: AI Training Not Categorically Fair Use"
 date: 2025-05-09
 category: policy
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "Agency guidance on fair use for training shifts the debate; courts decide the question."
 confidence: high
 actors:
   - id: us-copyright-office

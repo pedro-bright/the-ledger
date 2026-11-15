@@ -3,7 +3,14 @@ id: openai-40b-softbank-round
 title: "OpenAI Raises $40 Billion SoftBank-Led Round at $300B Valuation"
 date: 2025-03-31
 category: industry
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "A record private round that shifts the funding landscape; later rounds surpassed it within a year."
 confidence: high
 actors:
   - id: openai

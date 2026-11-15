@@ -3,7 +3,14 @@ id: openai-gpt-5-5-release
 title: "OpenAI Releases GPT-5.5, First Fully Retrained Base Model Since GPT-4.5"
 date: 2026-04-23
 category: models
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-04-26
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "The first fully retrained OpenAI base model since GPT-4.5 meaningfully shifts the frontier."
 confidence: high
 sources:
   - url: https://openai.com/index/introducing-gpt-5-5/

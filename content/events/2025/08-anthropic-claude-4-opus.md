@@ -3,7 +3,14 @@ id: anthropic-claude-4-opus
 title: "Anthropic Releases Claude Opus 4 and Claude Sonnet 4"
 date: 2025-05-22
 category: models
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-03-08
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "A frontier release that moved coding benchmarks; one of several frontier releases that year."
 confidence: high
 actors:
   - id: anthropic

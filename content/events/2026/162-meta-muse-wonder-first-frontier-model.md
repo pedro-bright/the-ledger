@@ -3,7 +3,14 @@ id: meta-muse-wonder-first-frontier-model
 title: "Meta Releases Muse Wonder, Its First Frontier Model, and Says It Cannot Rule Out High Chemical and Biological Risk Without Mitigations"
 date: 2026-10-12
 category: models
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-10-16
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "Meta entering the frontier tier with a model it cannot clear for chemical and biological risk shifts the competitive and safety landscape."
 confidence: high
 sources:
   - url: https://research.meta.ai/blog/muse-wonder

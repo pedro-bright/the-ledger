@@ -3,7 +3,14 @@ id: anthropic-public-s1-filing-founder-voting-control
 title: "Anthropic Files Public S-1 Showing $16.3 Billion First-Half Revenue, an $80.7 Billion Net Loss, and a Founder-Held 50.1% Vote"
 date: 2026-10-26
 category: industry
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-10-29
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "The first public financial disclosure by a frontier lab shifts what is known about the economics of the field."
 confidence: high
 sources:
   - url: https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm

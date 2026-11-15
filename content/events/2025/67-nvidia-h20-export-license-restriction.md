@@ -3,7 +3,14 @@ id: nvidia-h20-export-license-restriction
 title: "US Imposes Export License Requirement on Nvidia H20 — $5.5B Write-Down"
 date: 2025-04-15
 category: policy
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "A significant export-control move with a large write-down; part of an ongoing series of chip policy changes."
 actors:
   - id: nvidia
     role: subject

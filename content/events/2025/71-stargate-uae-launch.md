@@ -3,7 +3,14 @@ id: stargate-uae-launch
 title: "Stargate UAE — 1GW Abu Dhabi AI Campus Announced"
 date: 2025-05-22
 category: industry
-significance: landmark
+significance: notable
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: notable
+    date: 2026-11-14
+    reason: "An extension of the Stargate project already rated landmark; worth recording, not a separate shift."
 actors:
   - id: openai
     role: partner

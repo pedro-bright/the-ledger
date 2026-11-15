@@ -3,7 +3,14 @@ id: openai-erdos-unit-distance-disproof
 title: "OpenAI Reasoning Model Autonomously Disproves Erdős Unit Distance Conjecture"
 date: 2026-05-20
 category: research
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-05-25
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "An autonomous disproof of a long-standing Erdős conjecture is a meaningful shift in AI's role in mathematics."
 confidence: high
 sources:
   - url: https://openai.com/index/model-disproves-discrete-geometry-conjecture/

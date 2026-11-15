@@ -3,7 +3,14 @@ id: anthropic-series-f-183b
 title: "Anthropic Raises $13B Series F at $183B Valuation"
 date: 2025-09-02
 category: industry
-significance: landmark
+significance: notable
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: notable
+    date: 2026-11-14
+    reason: "One of several large frontier-lab rounds in a year; later rounds superseded it within months."
 confidence: high
 actors:
   - id: anthropic

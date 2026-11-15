@@ -3,7 +3,14 @@ id: anthropic-circuit-tracing-biology-llm
 title: "Anthropic Publishes Circuit Tracing and 'Biology of a Large Language Model'"
 date: 2025-03-27
 category: research
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "An important interpretability method release that shifts research practice, below the 2 to 5 per year bar."
 confidence: high
 actors:
   - id: anthropic

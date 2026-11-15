@@ -3,7 +3,14 @@ id: anthropic-asl3-activation-opus-4
 title: "Anthropic Activates ASL-3 Protections for Claude Opus 4"
 date: 2025-05-22
 category: safety
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "The first real activation of a responsible scaling threshold shifts lab safety practice, within one company's voluntary framework."
 confidence: high
 actors:
   - id: anthropic

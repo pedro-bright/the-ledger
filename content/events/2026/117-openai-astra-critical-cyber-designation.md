@@ -3,7 +3,14 @@ id: openai-astra-critical-cyber-designation
 title: "OpenAI Designates Astra the First Model to Meet Its Critical Cybersecurity Threshold and Sets Gated Access for Release"
 date: 2026-09-01
 category: safety
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-09-05
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "The first model a lab rates at its Critical cyber threshold, with gated release, shifts deployment practice."
 confidence: high
 sources:
   - url: https://openai.com/index/path-to-astra/

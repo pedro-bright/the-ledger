@@ -3,7 +3,14 @@ id: openai-operator-launch
 title: "OpenAI Launches Operator — First Mainstream Computer-Using Agent"
 date: 2025-01-23
 category: models
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "The first mainstream computer-using agent shifted the landscape, but later agent releases matter as much, so it does not alone alter the trajectory."
 confidence: high
 actors:
   - id: openai

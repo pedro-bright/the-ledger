@@ -3,7 +3,14 @@ id: magnifica-humanitas-pope-leo-ai-encyclical
 title: "Pope Leo XIV Issues 'Magnifica Humanitas,' First Papal Encyclical on Artificial Intelligence"
 date: 2026-05-25
 category: culture
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-05-28
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "The first papal encyclical on AI shifts the cultural and moral debate for a global institution."
 confidence: high
 sources:
   - url: https://www.anthropic.com/news/chris-olah-pope-leo-encyclical

@@ -3,7 +3,14 @@ id: alphaproof-nature-paper
 title: "AlphaProof Published in Nature — Olympiad-Level Formal Math via RL"
 date: 2025-11-12
 category: research
-significance: landmark
+significance: notable
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: notable
+    date: 2026-11-14
+    reason: "The paper formalizes the 2024 IMO silver result already in the record; publication is worth documenting, not a new shift."
 confidence: high
 actors:
   - id: google-deepmind

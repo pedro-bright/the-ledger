@@ -3,7 +3,14 @@ id: coe-ai-convention-in-force
 title: Council of Europe AI Convention Entry into Force
 date: 2025-11-01
 category: policy
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "The first binding international AI treaty would shift the landscape; the entry-into-force claim is under challenge, so landmark is not supported."
 confidence: high
 actors:
   - id: council-of-europe

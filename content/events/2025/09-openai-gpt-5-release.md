@@ -3,7 +3,14 @@ id: openai-gpt-5-release
 title: "OpenAI Releases GPT-5 as Unified Flagship Model"
 date: '2025-08-07'
 category: models
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-03-08
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "A widely used flagship release that shifts the landscape; reception framed it as incremental, not a trajectory change."
 confidence: high
 actors:
   - id: openai

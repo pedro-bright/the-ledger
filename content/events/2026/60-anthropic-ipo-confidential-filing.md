@@ -3,7 +3,14 @@ id: anthropic-ipo-confidential-filing
 title: "Anthropic Submits Confidential Draft S-1 to SEC, Formally Opening IPO Process"
 date: 2026-06-01
 category: industry
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-06-06
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "A second frontier lab starting an IPO within weeks meaningfully shifts the financing landscape."
 confidence: high
 sources:
   - url: https://www.anthropic.com/news/confidential-draft-s1-sec

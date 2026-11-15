@@ -3,7 +3,14 @@ id: deepseek-v4-pro-release
 title: "DeepSeek Releases V4-Pro, Open-Weight Frontier Model Trained on Huawei Ascend Chips"
 date: 2026-04-24
 category: models
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-04-27
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "An open-weight frontier model trained on domestic Chinese chips shifts both the open-weight and export-control landscape."
 confidence: high
 sources:
   - url: https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro

@@ -3,7 +3,14 @@ id: anthropic-second-risk-report-misalignment
 title: "Anthropic Raises Its Misalignment Risk Assessment and Discloses an Unreleased Internal Model"
 date: 2026-08-14
 category: safety
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-08-17
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "A frontier lab raising its own misalignment risk rating is a meaningful shift in published risk assessment."
 confidence: high
 sources:
   - url: https://assets.claude.com/f61d49fa5596956a5dec75fea0e973bf6a6a8378.pdf

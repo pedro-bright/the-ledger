@@ -3,7 +3,14 @@ id: openai-ipo-confidential-filing
 title: "OpenAI Files Confidential IPO Registration with SEC, Targeting $1 Trillion Valuation"
 date: 2026-05-22
 category: industry
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-05-29
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "The leading lab formally starting an IPO meaningfully shifts the industry's financing and accountability landscape."
 confidence: high
 sources:
   - url: https://www.bloomberg.com/news/articles/2026-05-20/openai-preparing-for-ipo-filing-in-days-or-weeks-wsj-reports

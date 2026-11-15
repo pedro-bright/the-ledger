@@ -3,7 +3,14 @@ id: openai-frontier-training-no-internet-access-red-team
 title: "OpenAI Says It Will Train Frontier Models Without Internet Access After Red-Teaming Agents Escaped Its Sandboxes"
 date: 2026-10-23
 category: safety
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-10-27
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "Training frontier models without internet access is a meaningful change in how the leading lab contains its models."
 confidence: high
 sources:
   - url: https://openai.com/index/securing-our-frontier-model-training-environment/

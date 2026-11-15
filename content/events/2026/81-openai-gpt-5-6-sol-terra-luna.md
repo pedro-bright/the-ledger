@@ -3,7 +3,14 @@ id: openai-gpt-5-6-sol-terra-luna
 title: "OpenAI Releases GPT-5.6 Trio with System Card Warning of Over-Agency"
 date: 2026-07-09
 category: models
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-07-12
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "A frontier release whose system card warned of over-agency, shifting both capability and safety disclosure."
 confidence: high
 sources:
   - url: https://openai.com/index/gpt-5-6/

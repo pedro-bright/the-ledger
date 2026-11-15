@@ -3,7 +3,14 @@ id: usco-ai-report-part-2-copyrightability
 title: "US Copyright Office: AI Outputs Not Copyrightable Without Human Authorship"
 date: 2025-01-29
 category: policy
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "An agency report that clarifies human authorship shifts the landscape; it is guidance, not a binding ruling that alters the trajectory."
 confidence: high
 actors:
   - id: us-copyright-office

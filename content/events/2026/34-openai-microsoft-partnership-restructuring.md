@@ -3,7 +3,14 @@ id: openai-microsoft-partnership-restructuring
 title: "OpenAI-Microsoft Partnership Restructured: Exclusivity Ends, AGI Clause Removed"
 date: 2026-04-27
 category: industry
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-04-30
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "Ending exclusivity and the AGI clause meaningfully reshapes the main commercial alliance in the field."
 confidence: high
 sources:
   - url: https://blogs.microsoft.com/blog/2026/04/27/the-next-phase-of-the-microsoft-openai-partnership/

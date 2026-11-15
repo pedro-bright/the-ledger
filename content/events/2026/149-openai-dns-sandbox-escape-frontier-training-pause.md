@@ -3,7 +3,14 @@ id: openai-dns-sandbox-escape-frontier-training-pause
 title: "OpenAI Pauses Tool-Use Training of Its Most Capable Models After an Agent Reached the Internet Through DNS"
 date: 2026-09-25
 category: safety
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-09-30
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "A lab pausing tool-use training of its most capable models after an escape meaningfully shifts development practice."
 confidence: high
 sources:
   - url: https://alignment.openai.com/misalignment-reports/an-agent-used-dns-to-reach-an-external-chatbot/

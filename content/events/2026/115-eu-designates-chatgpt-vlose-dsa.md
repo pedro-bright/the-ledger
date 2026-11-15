@@ -3,7 +3,14 @@ id: eu-designates-chatgpt-vlose-dsa
 title: "European Commission Designates ChatGPT a Very Large Online Search Engine Under the Digital Services Act"
 date: 2026-08-31
 category: policy
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-09-03
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "The first time the EU applies its highest platform tier to a chatbot shifts how general AI assistants are regulated."
 confidence: high
 sources:
   - url: https://digital-strategy.ec.europa.eu/en/news/commission-designates-chatgpt-reddit-roblox-under-digital-services-act

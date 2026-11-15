@@ -3,7 +3,14 @@ id: musk-v-altman-verdict
 title: "Jury Dismisses Elon Musk's Lawsuit Against OpenAI on Statute of Limitations Grounds"
 date: 2026-05-18
 category: policy
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-05-22
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "The verdict settles the main legal challenge to OpenAI's structure and shifts its path to a public offering."
 confidence: high
 sources:
   - url: https://cand.uscourts.gov/cases-e-filing/cases/424-cv-04722-ygr/musk-v-altman-et-al

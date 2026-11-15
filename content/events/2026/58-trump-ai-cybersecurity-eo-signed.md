@@ -3,7 +3,14 @@ id: trump-ai-cybersecurity-eo-signed
 title: "Trump Signs AI Cybersecurity Executive Order with Voluntary 30-Day Pre-Release Review"
 date: 2026-06-02
 category: policy
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-06-05
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "A federal pre-release review framework for frontier models, though voluntary, meaningfully shifts US oversight."
 confidence: high
 sources:
   - url: https://www.whitehouse.gov/presidential-actions/2026/06/promoting-advanced-artificial-intelligence-innovation-and-security/
