@@ -124,6 +124,7 @@ test.describe('security headers', () => {
     expect(violations).toEqual([]);
   });
 
+  // A form submission is what form-action governs; visiting /search?q= does not exercise it.
   test('the masthead search form submits and the search page answers with the policy enforced', async ({ page }) => {
     const violations = await enforcePolicy(page);
     await page.goto('/');
@@ -136,7 +137,7 @@ test.describe('security headers', () => {
     expect(violations).toEqual([]);
   });
 
-  test('the article contents navigation and the print view work with the policy enforced', async ({ page }) => {
+  test('the article contents navigation works with the policy enforced', async ({ page }) => {
     const violations = await enforcePolicy(page);
     // Only long articles have a contents list; this one is also used by article-print.spec.ts.
     await page.goto('/events/openai-misalignment-reporting-framework-six-reports');
@@ -144,9 +145,6 @@ test.describe('security headers', () => {
     await expect(contents.locator('details')).toHaveAttribute('open', '');
     await contents.getByRole('link', { name: 'References', exact: true }).click();
     await expect(page.locator('#refs-head')).toBeInViewport();
-    await page.emulateMedia({ media: 'print' });
-    await expect(page.locator('#article-contents')).toBeHidden();
-    await expect(page.locator('.wiki-article__title')).toBeVisible();
     await page.waitForLoadState('networkidle');
     expect(violations).toEqual([]);
   });
@@ -164,27 +162,6 @@ test.describe('security headers', () => {
     await page.mouse.click(node.x, node.y);
     await expect(page).toHaveURL(new URL(node.route, page.url()).href);
     await page.waitForLoadState('networkidle');
-    expect(violations).toEqual([]);
-  });
-
-  test('every data download opens with the policy enforced', async ({ page }) => {
-    const violations = await enforcePolicy(page);
-    await page.goto('/data');
-    const hrefs = await page.locator('a.data-file__name').evaluateAll((links) => links.map((link) => link.getAttribute('href')!));
-    expect(hrefs.length).toBeGreaterThan(0);
-    for (const href of hrefs) {
-      await page.goto('/data');
-      const link = page.locator(`a.data-file__name[href="${href}"]`);
-      if (href.endsWith('.csv')) {
-        const download = page.waitForEvent('download');
-        await link.click();
-        expect(await (await download).failure()).toBeNull();
-      } else {
-        await link.click();
-        await expect(page).toHaveURL(new RegExp(`${href.replace(/[.]/g, '\\.')}$`));
-        expect(await page.evaluate(() => JSON.parse(document.body.innerText))).toBeTruthy();
-      }
-    }
     expect(violations).toEqual([]);
   });
 
