@@ -52,9 +52,13 @@ const breadcrumb = [
   { label: thread.title },
 ];
 const subtitle = thread.core_question ? `— ${thread.core_question}` : undefined;
+// The whole core question, followed by the synthesis's first sentence when both fit.
+// A question longer than the limit stays whole; search engines shorten it themselves.
 // The synthesis opens with its author line.
 const synthesis = plainParagraphs(thread.content).find((p) => !p.startsWith('Author:')) ?? '';
-const description = metaDescription(`${thread.core_question ?? ''} ${firstSentence(synthesis)}`);
+const question = thread.core_question ?? '';
+const withSentence = `${question} ${firstSentence(synthesis)}`.trim();
+const description = question && withSentence.length > 160 ? question : metaDescription(withSentence);
 ---
 
 <Base

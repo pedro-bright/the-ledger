@@ -288,12 +288,13 @@ test.describe('page metadata', () => {
       '@type': 'ListItem',
       position: i + 1,
       name,
-      ...(href && { item: href.replace('http://localhost:4321', 'https://the-ledger.net') }),
+      ...(href && { item: href.replace(new URL(page.url()).origin, 'https://the-ledger.net') }),
     })));
   });
 
   test('every page has one description, canonical link and image, and valid structured data', () => {
     const dist = path.join(__dirname, '..', 'dist');
+    const threadsDir = path.join(__dirname, '..', '..', 'content', 'threads');
     const pages = filesIn(dist).filter((f: string) => f.endsWith('.html'));
     expect(pages.length).toBeGreaterThan(300);
 
@@ -315,7 +316,18 @@ test.describe('page metadata', () => {
       expect(count('meta', 'name', 'title'), file).toBe(0);
       expect(all.filter((el) => /^twitter:/.test(attr(el, 'property') ?? '')), file).toHaveLength(0);
       const description = attr(all.find((el) => el.tagName === 'meta' && attr(el, 'name') === 'description')!, 'content')!;
-      if (/^(events|threads|controversies)\/.+\/index\.html$/.test(file)) expect(description.length, file).toBeLessThanOrEqual(160);
+      const thread = file.match(/^threads\/(.+)\/index\.html$/)?.[1];
+      if (thread) {
+        // A thread keeps its whole core question, even past the limit, and adds the
+        // synthesis's first sentence only when both fit.
+        const question = parseFrontmatter(fs.readFileSync(path.join(threadsDir, `${thread}.md`), 'utf8')).data.core_question;
+        if (description !== question) {
+          expect(description.startsWith(`${question} `), file).toBe(true);
+          expect(description.length, file).toBeLessThanOrEqual(160);
+        }
+      } else if (/^(events|controversies)\/.+\/index\.html$/.test(file)) {
+        expect(description.length, file).toBeLessThanOrEqual(160);
+      }
 
       const blocks = all
         .filter((el) => el.tagName === 'script' && attr(el, 'type') === 'application/ld+json')
