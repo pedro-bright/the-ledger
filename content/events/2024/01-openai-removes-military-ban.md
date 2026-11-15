@@ -2,7 +2,7 @@
 id: openai-removes-military-ban
 title: "OpenAI Quietly Removes Ban on Military Use from Usage Policy"
 date: 2024-01-10
-category: policy
+category: not-a-category
 significance: major
 confidence: high
 actors:
