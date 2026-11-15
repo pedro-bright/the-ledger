@@ -12,9 +12,24 @@ export interface Source {
   archive_url?: string;
   title: string;
   publisher?: string;
-  type: 'primary' | 'secondary' | 'commentary' | 'official';
+  type:
+    | 'primary'
+    | 'secondary'
+    | 'commentary'
+    | 'official'
+    | 'primary_document'
+    | 'primary_recording'
+    | 'primary_dataset'
+    | 'secondary_reporting'
+    | 'expert_interpretation'
+    | 'editorial_synthesis'
+    | 'hearsay_unverified'
+    | 'retraction'
+    | 'correction';
   date?: string;
+  published_at?: string;
   accessed?: string;
+  accessed_at?: string;
 }
 
 export interface Actor {
@@ -222,6 +237,22 @@ function isoDate(value: unknown): string {
   return String(value);
 }
 
+const SOURCE_DATE_FIELDS = ['date', 'published_at', 'accessed', 'accessed_at'] as const;
+
+/** Return a source with each of its date fields as a YYYY-MM-DD string. */
+function isoSource(source: any): Source {
+  const out = { ...source };
+  for (const field of SOURCE_DATE_FIELDS) {
+    if (out[field] != null) out[field] = isoDate(out[field]);
+  }
+  return out;
+}
+
+function isoContestation(contestation: any): Contestation | undefined {
+  if (contestation?.last_challenged == null) return contestation;
+  return { ...contestation, last_challenged: isoDate(contestation.last_challenged) };
+}
+
 /** Separate the opening section so canonical prose can precede metadata. */
 export function splitArticleLead(html: string): { lead: string; body: string } {
   const headings = [...html.matchAll(/<h2(?:\s[^>]*)?>/g)];
@@ -273,14 +304,14 @@ export function loadEvents(): EventData[] {
           category: data.category || 'uncategorized',
           significance: data.significance,
           confidence: data.confidence,
-          contestation: data.contestation,
+          contestation: isoContestation(data.contestation),
           actors: data.actors,
           regions: data.regions,
           tags: data.tags,
           threads: data.threads,
           related: data.related,
-          sources: data.sources,
-          significance_history: data.significance_history,
+          sources: data.sources?.map(isoSource),
+          significance_history: data.significance_history?.map((entry: any) => ({ ...entry, date: isoDate(entry.date) })),
           state: data.state,
           claim_status: data.claim_status,
           revision: data.revision?.created || data.revision?.last_reviewed
@@ -327,7 +358,7 @@ export function loadThreads(): ThreadData[] {
         core_question: data.core_question,
         curator: data.curator,
         curator_scope: data.curator_scope,
-        contestation: data.contestation,
+        contestation: isoContestation(data.contestation),
         last_updated: data.last_updated ? isoDate(data.last_updated) : undefined,
         events: data.events,
         controversies: data.controversies,
@@ -359,7 +390,9 @@ export function loadControversies(): ControversyData[] {
         status: data.status,
         polarity: data.polarity,
         last_updated: data.last_updated ? isoDate(data.last_updated) : undefined,
-        positions: data.positions,
+        positions: data.positions?.map((position: any) =>
+          position.sources ? { ...position, sources: position.sources.map(isoSource) } : position,
+        ),
         content,
         htmlContent,
         slug: cId,

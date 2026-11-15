@@ -359,13 +359,11 @@ const contestationHref = records.length > 0 ? '#revision-history' : undefined;
     {event.sources && event.sources.length > 0 && (
       <Fragment slot="references">
         <ol>
-          {event.sources.map((source: any) => (
+          {event.sources.map((source) => (
             <li>
-              <a href={source.url} target="_blank" rel="noopener noreferrer">
-                {source.title || source.url}
-              </a>
+              <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title || source.url}</a>
               {source.publisher && <span class="ref-meta">, {source.publisher}</span>}
-              {source.date && <span class="ref-date font-mono"> ({source.date})</span>}
+              {source.date && <span class="ref-date font-mono"> (<time datetime={source.date}>{source.date}</time>)</span>}
               {source.type && (
                 <span class={`flag-chip ref-type${isPrimary(source.type) ? ' ref-type--primary' : ''}`}>
                   {formatSourceType(source.type)}
@@ -374,9 +372,7 @@ const contestationHref = records.length > 0 ? '#revision-history' : undefined;
               {source.archive_url && (
                 <>
                   {' '}
-                  <a href={source.archive_url} target="_blank" rel="noopener noreferrer" class="ref-archive">
-                    archived copy
-                  </a>
+                  <a href={source.archive_url} target="_blank" rel="noopener noreferrer" class="ref-archive">archived copy</a>
                 </>
               )}
             </li>
