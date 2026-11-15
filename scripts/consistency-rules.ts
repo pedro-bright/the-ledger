@@ -20,6 +20,7 @@ export interface Finding {
 
 const ENTRY_SECTIONS = ["Summary", "What Happened", "Why It Matters"];
 const MARKED_CONTESTED = ["contested", "unresolved"];
+const OPEN_CHALLENGE = ["open", "under_review"];
 const DECIDED_CHALLENGE = ["sustained", "dismissed", "partially_sustained"];
 const NAMED_AFTER_ID = ["thread", "controversy", "actor", "challenge", "revision", "resolution"];
 const KEBAB_CASE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -71,13 +72,13 @@ export function consistencyFindings(files: RecordFile[]): { errors: Finding[]; w
       if (first === undefined) firstUse.set(url, i);
       else error(file, "unique sources", `sources[${i}].url repeats sources[${first}].url (${url})`, "Remove the repeated source.");
 
-      const [publishedField, published] = source.date !== undefined ? ["date", source.date] : ["published_at", source.published_at];
-      const [accessedField, accessed] = source.accessed !== undefined ? ["accessed", source.accessed] : ["accessed_at", source.accessed_at];
-      if (isoDate(published) && isoDate(accessed) && (accessed as string) < (published as string)) {
+      const published = isoDate(source.date);
+      const accessed = isoDate(source.accessed);
+      if (published && accessed && accessed < published) {
         error(
           file,
           "source dates",
-          `sources[${i}].${accessedField} (${accessed}) is earlier than sources[${i}].${publishedField} (${published})`,
+          `sources[${i}].accessed (${accessed}) is earlier than sources[${i}].date (${published})`,
           "Correct whichever date is wrong; a source cannot be read before it was published.",
         );
       }
@@ -108,12 +109,12 @@ export function consistencyFindings(files: RecordFile[]): { errors: Finding[]; w
     const { data } = file;
     const target = eventsById.get(data.target_claim_id);
     const status = text(record(target?.data.contestation).status);
-    if (target && data.status !== "dismissed" && !(status && MARKED_CONTESTED.includes(status))) {
+    if (target && typeof data.status === "string" && OPEN_CHALLENGE.includes(data.status) && !(status && MARKED_CONTESTED.includes(status))) {
       error(
         file,
         "challenge target is marked",
         `target_claim_id "${data.target_claim_id}" names an entry whose contestation.status is ${status ? `"${status}"` : "missing"}`,
-        `Set contestation.status to contested or unresolved in ${target.relativePath.split(path.sep).join("/")} while the challenge is ${data.status}.`,
+        `Set contestation.status to contested or unresolved in ${target.relativePath.split(path.sep).join("/")} while the challenge is ${data.status}; once the challenge is decided, the entry can take any contestation.status.`,
       );
     }
 

@@ -301,22 +301,17 @@ test('unique sources rule rejects a source URL listed twice', (t) => {
   assertNotListed(result.output, '01-distinct-sources.md');
 });
 
-// The aliases are checked on an entry created before the publication rules, which require date and accessed.
-for (const [published, accessed] of [['date', 'accessed'], ['published_at', 'accessed_at']]) {
-  test(`source dates rule rejects ${accessed} earlier than ${published}`, (t) => {
-    const withDates = (id: string, read: string) => {
-      const event = complete(id);
-      if (published !== 'date') event.revision.created = '2026-11-01';
-      const { date, accessed: _, ...source } = secondary(1);
-      event.sources.push({ ...source, [published]: '2026-11-10', [accessed]: read });
-      return event;
-    };
-    const result = validate(t, [withDates('read-after-publication', '2026-11-10'), withDates('read-before-publication', '2026-11-09')]);
-    assert.equal(result.status, 1, result.output);
-    assertRule(result.output, 'events/2026/02-read-before-publication.md', 'source dates', `sources[1].${accessed} (2026-11-09) is earlier than sources[1].${published} (2026-11-10)`);
-    assertNotListed(result.output, '01-read-after-publication.md');
-  });
-}
+test('source dates rule rejects accessed earlier than date', (t) => {
+  const withDates = (id: string, read: string) => {
+    const event = complete(id);
+    event.sources.push({ ...secondary(1), date: '2026-11-10', accessed: read });
+    return event;
+  };
+  const result = validate(t, [withDates('read-after-publication', '2026-11-10'), withDates('read-before-publication', '2026-11-09')]);
+  assert.equal(result.status, 1, result.output);
+  assertRule(result.output, 'events/2026/02-read-before-publication.md', 'source dates', 'sources[1].accessed (2026-11-09) is earlier than sources[1].date (2026-11-10)');
+  assertNotListed(result.output, '01-read-after-publication.md');
+});
 
 test('no self reference rule rejects an entry that names itself in related', (t) => {
   const passing = complete('relates-elsewhere');
@@ -340,23 +335,39 @@ for (const status of ['contested', 'unresolved']) {
   });
 }
 
-for (const [name, change] of [['no contestation', (event: Event) => event], ['contestation.status uncontested', (event: Event) => { event.contestation = { status: 'uncontested' }; }]] as const) {
-  test(`challenge target is marked rule rejects a challenge whose entry has ${name}`, (t) => {
-    const unmarked = complete('unmarked-entry');
-    change(unmarked);
-    const dismissedTarget = complete('dismissed-entry');
-    change(dismissedTarget);
-    const result = validate(t, [contested('marked-entry'), unmarked, dismissedTarget], {
-      ...challenge('cc-marked-entry', 'marked-entry'),
-      ...challenge('cc-unmarked-entry', 'unmarked-entry', 'under_review'),
-      ...challenge('cc-dismissed-entry', 'dismissed-entry', 'dismissed', { resolution_note_id: 'rn-dismissed-entry' }),
-      ...resolution('rn-dismissed-entry', 'cc-dismissed-entry'),
+const unmarkedCases = [
+  ['no contestation', (event: Event) => event],
+  ['contestation.status uncontested', (event: Event) => { event.contestation = { status: 'uncontested' }; }],
+] as const;
+for (const status of ['open', 'under_review']) {
+  for (const [name, change] of unmarkedCases) {
+    test(`challenge target is marked rule rejects an ${status} challenge whose entry has ${name}`, (t) => {
+      const unmarked = complete('unmarked-entry');
+      change(unmarked);
+      const dismissedTarget = complete('dismissed-entry');
+      change(dismissedTarget);
+      const result = validate(t, [contested('marked-entry'), unmarked, dismissedTarget], {
+        ...challenge('cc-marked-entry', 'marked-entry', status),
+        ...challenge('cc-unmarked-entry', 'unmarked-entry', status),
+        ...challenge('cc-dismissed-entry', 'dismissed-entry', 'dismissed', { resolution_note_id: 'rn-dismissed-entry' }),
+        ...resolution('rn-dismissed-entry', 'cc-dismissed-entry'),
+      });
+      assert.equal(result.status, 1, result.output);
+      assertRule(result.output, 'challenges/cc-unmarked-entry.md', 'challenge target is marked', 'target_claim_id "unmarked-entry" names an entry whose contestation.status is');
+      assert.equal(ruleCount(result.output, 'challenge target is marked'), 1, result.output);
     });
-    assert.equal(result.status, 1, result.output);
-    assertRule(result.output, 'challenges/cc-unmarked-entry.md', 'challenge target is marked', 'target_claim_id "unmarked-entry" names an entry whose contestation.status is');
-    assert.equal(ruleCount(result.output, 'challenge target is marked'), 1, result.output);
-  });
+  }
 }
+
+test('challenge target is marked rule places no requirement on the entry of a sustained challenge', (t) => {
+  const ids = ['contested', 'superseded', 'uncontested'];
+  const records = Object.assign({}, ...ids.map((id) => ({
+    ...challenge(`cc-${id}-entry`, `${id}-entry`, 'sustained', { resolution_note_id: `rn-${id}-entry` }),
+    ...resolution(`rn-${id}-entry`, `cc-${id}-entry`),
+  })));
+  const result = validate(t, ids.map((id) => contested(`${id}-entry`, id)), records);
+  assert.equal(result.status, 0, result.output);
+});
 
 test('challenge resolution link rule rejects a missing resolution and one that points elsewhere', (t) => {
   const events = ['linked', 'missing-note', 'crossed-note'].map((id) => contested(id));
