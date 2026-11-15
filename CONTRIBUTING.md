@@ -198,4 +198,4 @@ The best contributions often come from people who know a specific event or topic
 
 ---
 
-*Questions? Open a Discussion on GitHub or reach out to the editorial team.*
+*Questions? Open an issue with the blank template.*

@@ -1,0 +1,30 @@
+# Labels applied by the issue forms and workflows.
+# The sync-labels workflow creates or updates these on pushes to main that change this file.
+
+- name: new-event
+  color: "1d76db"
+  description: New event submitted through the event form
+- name: tier-0
+  color: "c5def5"
+  description: Submission from anyone, waiting for an editor to normalize it
+- name: source-tip
+  color: "bfdadc"
+  description: Source link for an event the curator should consider
+- name: challenge
+  color: "d93f0b"
+  description: Formal challenge to an existing event or claim
+- name: contestation
+  color: "f9d0c4"
+  description: Disputes how an existing claim is stated or rated
+- name: reinterpretation
+  color: "5319e7"
+  description: Proposed new reading of a past event
+- name: retrospective
+  color: "d4c5f9"
+  description: Looks back at a past event in light of new evidence
+- name: broken-links
+  color: "ededed"
+  description: Source URLs that fail the weekly link check
+- name: maintenance
+  color: "ededed"
+  description: Upkeep of content, tooling or infrastructure
