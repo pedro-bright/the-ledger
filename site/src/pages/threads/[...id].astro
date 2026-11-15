@@ -7,6 +7,8 @@ import RailSection from '../../components/wiki/RailSection.astro';
 import EventRow from '../../components/wiki/EventRow.astro';
 import ContestationBadge from '../../components/ContestationBadge';
 import { loadThreads, loadEvents, loadControversies, getThreadEvents, splitArticleLead } from '../../lib/content';
+import { firstSentence, metaDescription, plainParagraphs } from '../../lib/markdown';
+import { breadcrumbList } from '../../lib/structured-data';
 
 export function getStaticPaths() {
   const threads = loadThreads();
@@ -50,13 +52,17 @@ const breadcrumb = [
   { label: thread.title },
 ];
 const subtitle = thread.core_question ? `— ${thread.core_question}` : undefined;
+// The synthesis opens with its author line.
+const synthesis = plainParagraphs(thread.content).find((p) => !p.startsWith('Author:')) ?? '';
+const description = metaDescription(`${thread.core_question ?? ''} ${firstSentence(synthesis)}`);
 ---
 
 <Base
   title={thread.title}
-  description={thread.core_question || `Thread: ${thread.title}`}
+  description={description}
   image={`/og/threads/${thread.slug}.png`}
   imageAlt={`${thread.title}. A thread in The Ledger.`}
+  structuredData={[breadcrumbList(breadcrumb)]}
   layout="article"
 >
   <!-- LEFT RAIL -->

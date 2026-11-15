@@ -12,6 +12,8 @@ import {
   loadEvents, loadThreads, loadActors, loadSummaryRevisions, loadChallenges, loadResolutions, splitArticleLead,
   getThreadEvents,
 } from '../../lib/content';
+import { metaDescription, plainParagraphs } from '../../lib/markdown';
+import { breadcrumbList, eventArticle } from '../../lib/structured-data';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -80,7 +82,7 @@ const breadcrumb = [
 
 const subtitle = `A ledger entry in the ${formatCategory(event.category).toLowerCase()} archive, dated ${event.date}.`;
 const hasSigHistory = event.significance_history && event.significance_history.length > 1;
-const description = `${event.title} — ${event.date}`;
+const description = metaDescription(plainParagraphs(event.content, 'Summary').join(' '));
 const { created, last_reviewed: reviewed, final_author: finalAuthor } = event.revision ?? {};
 const lastReviewed = reviewed && finalAuthor !== 'pedro-bright' && (!created || reviewed > created) ? reviewed : undefined;
 
@@ -102,6 +104,9 @@ const contestationHref = records.length > 0 ? '#revision-history' : undefined;
   description={description}
   image={`/og/events/${event.slug}.png`}
   imageAlt={`${event.title}, ${event.date}. An entry in The Ledger.`}
+  type="article"
+  publishedTime={event.date}
+  structuredData={[eventArticle(event, description, linkedThreads), breadcrumbList(breadcrumb)]}
   layout="article"
 >
   <!-- LEFT RAIL -->

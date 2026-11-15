@@ -12,8 +12,8 @@ const htmlFiles = (dir: string): string[] =>
     return entry.name.endsWith('.html') ? [full] : [];
   });
 
-const meta = (html: string, property: string) =>
-  html.match(new RegExp(`<meta property="${property}" content="([^"]*)"`))?.[1];
+const meta = (html: string, property: string, attribute = 'property') =>
+  html.match(new RegExp(`<meta ${attribute}="${property}" content="([^"]*)"`))?.[1];
 
 function pngSize(file: string) {
   const bytes = fs.readFileSync(file);
@@ -33,7 +33,7 @@ test('every page with an og:image points at an existing 1200x630 PNG', () => {
     const file = path.join(DIST, decodeURIComponent(new URL(image!).pathname));
     assert.ok(fs.existsSync(file), `${page}: og:image ${image} is missing from site/dist`);
     assert.deepEqual(pngSize(file), { width: 1200, height: 630 }, `${page}: ${image}`);
-    assert.equal(meta(html, 'twitter:image'), image, `${page}: twitter:image differs from og:image`);
+    assert.equal(meta(html, 'twitter:image', 'name'), image, `${page}: twitter:image differs from og:image`);
   }
 });
 

@@ -5,6 +5,7 @@ import Infobox from '../../components/wiki/Infobox.astro';
 import RailSection from '../../components/wiki/RailSection.astro';
 import ConfidenceBadge from '../../components/ConfidenceBadge';
 import { loadControversies, loadThreads, loadActors, getExcerpt } from '../../lib/content';
+import { metaDescription, plainParagraphs } from '../../lib/markdown';
 
 export function getStaticPaths() {
   const controversies = loadControversies();
@@ -65,7 +66,7 @@ function displayActor(id: string): { name: string; href?: string } {
 <Base
   layout="article"
   title={controversy.title}
-  description={positions[0]?.claim || `Controversy: ${controversy.title}`}
+  description={metaDescription(plainParagraphs(controversy.content)[0] ?? `Controversy: ${controversy.title}`)}
 >
   <ArticleShell
     title={controversy.title}

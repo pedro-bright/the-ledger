@@ -29,6 +29,10 @@ interface Props {
   image?: string;
   imageAlt?: string;
   type?: string;
+  /** ISO date written as `article:published_time`. */
+  publishedTime?: string;
+  /** schema.org objects written as JSON-LD blocks in the head. */
+  structuredData?: object[];
   /**
    * Layout variant.
    *  - `article`: default 3-col with optional left/right rails. Used for long-form pages.
@@ -38,7 +42,7 @@ interface Props {
   layout?: 'article' | 'index' | 'full';
 }
 
-const { title, description, image, imageAlt, type, layout = 'index' } = Astro.props;
+const { title, description, image, imageAlt, type, publishedTime, structuredData, layout = 'index' } = Astro.props;
 const pageTitle = !title || title === 'The Ledger'
   ? 'The Ledger — A durable historical record of AI'
   : `${title} — The Ledger`;
@@ -59,7 +63,15 @@ const hasRightRail = Astro.slots.has('rightRail');
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/atom+xml" title="The Ledger" href="/feed.xml" />
     <link rel="alternate" type="application/rss+xml" title="The Ledger" href="/rss.xml" />
-    <SEO title={pageTitle} description={description} image={image} imageAlt={imageAlt} type={type} />
+    <SEO
+      title={pageTitle}
+      description={description}
+      image={image}
+      imageAlt={imageAlt}
+      type={type}
+      publishedTime={publishedTime}
+      structuredData={structuredData}
+    />
     <PostHog />
   </head>
   <body class="min-h-screen flex flex-col bg-page-bg text-ink">

@@ -18,11 +18,19 @@ const CSP_HEADER = 'Content-Security-Policy-Report-Only';
 const POSTHOG_ORIGINS = 'https://us.i.posthog.com https://us-assets.i.posthog.com';
 const REPO_URL = 'https://github.com/pedro-bright/the-ledger';
 
-/** Returns the text of each script element in the page that has any. */
+/**
+ * Returns the text of each script element in the page that has any. JSON-LD blocks are
+ * data that the policy does not restrict, so they are left out; each page has its own,
+ * and hashing them would give every page its own policy route.
+ */
 function inlineScripts(html) {
   // Attribute values are matched whole because they can contain ">".
-  const scripts = /<script\b(?:[^>"']|"[^"]*"|'[^']*')*>([\s\S]*?)<\/script\b[^>]*>/gi;
-  return [...html.matchAll(scripts)].map(([, text]) => text).filter(Boolean);
+  const scripts = /<script\b((?:[^>"']|"[^"]*"|'[^']*')*)>([\s\S]*?)<\/script\b[^>]*>/gi;
+  const jsonLd = /(?:^|\s)type\s*=\s*(["']?)application\/ld\+json\1(?=[\s/]|$)/i;
+  return [...html.matchAll(scripts)]
+    .filter(([, attributes]) => !jsonLd.test(attributes))
+    .map(([, , text]) => text)
+    .filter(Boolean);
 }
 
 /** Returns the CSP source for a script. */

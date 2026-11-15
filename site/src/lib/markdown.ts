@@ -46,14 +46,54 @@ export function renderMarkdown(markdown: string): string {
   return contentMarked.parse(markdown, { async: false }) as string;
 }
 
+const text = (node: DefaultTreeAdapterTypes.Node): string => {
+  if ('value' in node) return node.value;
+  return 'childNodes' in node ? node.childNodes.map(text).join('') : '';
+};
+
+/** Plain text of each top-level paragraph, or of those under the `## section` heading when one is named. */
+export function plainParagraphs(markdown: string, section?: string): string[] {
+  const paragraphs: string[] = [];
+  let heading: string | undefined;
+  for (const node of parseFragment(renderMarkdown(markdown)).childNodes) {
+    if (!('tagName' in node)) continue;
+    if (node.tagName === 'h2') heading = text(node).trim();
+    else if (node.tagName === 'p' && (section === undefined || heading === section)) {
+      paragraphs.push(text(node).replace(/\s+/g, ' ').trim());
+    }
+  }
+  return paragraphs;
+}
+
+// A sentence ends at ., ! or ? (and any closing quote or bracket) before a space. A
+// period after a single letter ("U.S.", "J. Smith") or a common abbreviation does not end one.
+const SENTENCE_END =
+  /(?:(?<!(?:^|[\s.(])(?:\p{L}|Inc|Corp|Co|Ltd|Jr|Sr|Dr|Mr|Mrs|Ms|St|vs|No|Sen|Rep|Gov|Gen))\.|[!?])["'”’)\]]*(?=\s)/gu;
+
+/** The first sentence of a text, or all of it when it has no sentence break. */
+export function firstSentence(value: string): string {
+  const end = [...value.matchAll(SENTENCE_END)][0];
+  return end ? value.slice(0, end.index + end[0].length) : value;
+}
+
+/**
+ * Shortens text for a meta description: whole when it fits, otherwise cut after the
+ * last sentence that fits, or at the last word that fits with an ellipsis.
+ */
+export function metaDescription(value: string, limit = 160): string {
+  const clean = value.replace(/\s+/g, ' ').trim();
+  if (clean.length <= limit) return clean;
+  const sentences = [...clean.matchAll(SENTENCE_END)].filter((end) => end.index + end[0].length <= limit);
+  const last = sentences[sentences.length - 1];
+  if (last) return clean.slice(0, last.index + last[0].length);
+  const cut = clean.slice(0, limit);
+  return `${cut.slice(0, cut.lastIndexOf(' ')).replace(/[\s,;:—–-]+$/, '')}…`;
+}
+
 /** Anchor actual heading nodes; markup-like text in attributes must remain inert. */
 export function anchorSections(html: string, used: Set<string>) {
   const fragment = parseFragment(html);
   const sections: Array<{ id: string; title: string; level: number }> = [];
-  const text = (node: DefaultTreeAdapterTypes.Node): string => {
-    if ('value' in node) return node.value;
-    return 'childNodes' in node ? node.childNodes.map(text).join('') : '';
-  };
   const visit = (node: DefaultTreeAdapterTypes.Node) => {
     if ('tagName' in node && (node.tagName === 'h2' || node.tagName === 'h3')) {
       const title = text(node).trim();
