@@ -306,6 +306,39 @@ const stats = {
     <a href="/explore" class="more-link">All entries →</a>
   </section>
 
+  <!-- Recently added and Active controversies again, shown when the right rail that holds them is hidden -->
+  {recentlyAdded.length > 0 && (
+    <section class="home-section home-section--rail">
+      <h2 class="home-section__title font-display">Recently added</h2>
+      <ul class="home-event-list">
+        {recentlyAdded.map((e) => (
+          <EventRow event={e} added={e.revision!.created} />
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {activeControversies.length > 0 && (
+    <section class="home-section home-section--rail">
+      <h2 class="home-section__title font-display">Active controversies</h2>
+      <dl class="wiki-thread-list">
+        {activeControversies.map((c) => (
+          <>
+            <dt>
+              <a href={`/controversies/${c.slug}`} class="wiki-thread-list__title font-display">{c.title}</a>
+            </dt>
+            <dd>
+              <span class="wiki-thread-list__meta">
+                {c.polarity && <>{c.polarity.replace('-', ' ')} · </>}
+                {(c.positions?.length || 0)} positions
+              </span>
+            </dd>
+          </>
+        ))}
+      </dl>
+    </section>
+  )}
+
   <!-- 5. Ongoing threads -->
   {ongoingThreads.length > 0 && (
     <section class="home-section">
@@ -557,6 +590,11 @@ const stats = {
     font-size: 1.25rem;
     margin-bottom: 10px;
   }
+  /* Rail sections repeated in the main column; the right rail is hidden at 1024px and below. */
+  .home-section--rail { display: none; }
+  @media (max-width: 1024px) {
+    .home-section--rail { display: block; }
+  }
   .home-section--quiet .home-section__title {
     font-size: 1.125rem;
     font-weight: 500;
@@ -634,6 +672,7 @@ const stats = {
     color: var(--color-ink-faint);
     line-height: 1.45;
   }
+  .wiki-thread-list__meta:first-child { margin-left: 0; }
 
   /* Contribute */
   .home-contribute p {

@@ -13,6 +13,8 @@ interface Props {
     category: string;
     significance?: 'landmark' | 'major' | 'notable';
   };
+  /** Day the entry was added to the ledger, shown as "added <day>" in place of the event date. */
+  added?: string;
   /** Hide the date (useful when list is grouped by date already). */
   hideDate?: boolean;
   /** Hide the category tag (e.g., when grouping by category). */
@@ -23,12 +25,12 @@ interface Props {
   compact?: boolean;
 }
 
-const { event, hideDate = false, hideCategory = false, hideFlag = false, compact = false } = Astro.props;
+const { event, added, hideDate = false, hideCategory = false, hideFlag = false, compact = false } = Astro.props;
 const href = `/events/${event.slug || event.id}`;
 ---
 <li class={`event-row${compact ? ' event-row--compact' : ''}`}>
   {!hideDate && (
-    <time class="event-row__date" datetime={event.date}>{event.date}</time>
+    <time class="event-row__date" datetime={added ?? event.date}>{added ? `added ${added}` : event.date}</time>
   )}
   {!hideCategory && (
     <CategoryTag category={event.category} variant="pip" class="event-row__pip" />

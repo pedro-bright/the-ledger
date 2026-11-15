@@ -72,3 +72,19 @@ test('the thread rows are hidden in print', async ({ page }) => {
   await page.emulateMedia({ media: 'print' });
   await expect(page.locator('nav.thread-nav').first()).toBeHidden();
 });
+
+test('earlier and later links follow the thread page across a year subheading', async ({ page }) => {
+  await page.goto('/threads/frontier-safety-policies');
+  const title = await page.locator('h1').textContent();
+  const timeline = page.locator('section:has(> h2:text-is("Event timeline"))');
+  const hrefs = await timeline.locator('a[href^="/events/"]').evaluateAll((links) => links.map((link) => link.getAttribute('href')!));
+  // The last entry under the first year: its later neighbour is under the next year.
+  const last = await timeline.locator('.thread-year').first().locator('a').count() - 1;
+  expect(last).toBeGreaterThan(0);
+  expect(hrefs.length).toBeGreaterThan(last + 1);
+
+  await page.goto(hrefs[last]);
+  const nav = page.getByRole('navigation', { name: `${title} thread`, exact: true });
+  await expect(step(nav, 'Earlier in this thread').getByRole('link')).toHaveAttribute('href', hrefs[last - 1]);
+  await expect(step(nav, 'Later in this thread').getByRole('link')).toHaveAttribute('href', hrefs[last + 1]);
+});

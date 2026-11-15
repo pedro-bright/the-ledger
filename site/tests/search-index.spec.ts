@@ -138,6 +138,11 @@ test.describe('search index', () => {
       expect(text).not.toMatch(ISO_DATE);
       expect(text).not.toMatch(/\b(Landmark|Major|Notable)\b/);
     }
+
+    await page.goto(`/actors/${SLUGS.actor}`);
+    const yearLinks = words((await page.locator('nav[aria-label="Years"]').textContent())!);
+    expect(yearLinks).toMatch(/^\d{4} \d+ entr/);
+    expect(words(actor!.content)).not.toContain(yearLinks);
   });
 
   test('an actor alias finds the actor', async ({ page }) => {

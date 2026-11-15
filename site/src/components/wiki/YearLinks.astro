@@ -1,0 +1,59 @@
+---
+// Row of links to the year sections of a long list, each with its entry count.
+// Targets are the `#y-<year>` anchors on the page. Left out of the search index and of print.
+interface Props {
+  years: Array<{ year: number; count: number }>;
+  /** Show only at 780px and below, where the left rail that lists the same years is hidden. */
+  narrowOnly?: boolean;
+}
+
+const { years, narrowOnly = false } = Astro.props;
+---
+<nav class:list={['year-links', { 'year-links--narrow': narrowOnly }]} aria-label="Years" data-pagefind-ignore>
+  <ul>
+    {years.map(({ year, count }) => (
+      <li>
+        <a href={`#y-${year}`}>{year}</a>
+        <span class="year-links__count">{count}<span class="sr-only"> {count === 1 ? 'entry' : 'entries'}</span></span>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .year-links {
+    font-family: var(--font-sans);
+    font-size: var(--text-meta);
+    line-height: 1.45;
+  }
+  .year-links--narrow { display: none; }
+  @media (max-width: 780px) {
+    .year-links--narrow { display: block; }
+  }
+  .year-links ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 20px;
+    margin: 0;
+    padding: 0;
+  }
+  .year-links li {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin: 0;
+  }
+  /* The padding makes each link a 35px-high target. */
+  .year-links a {
+    padding: 8px 0;
+    font-weight: 500;
+  }
+  .year-links__count {
+    font-family: var(--font-mono);
+    color: var(--color-ink-faint);
+  }
+  @media print {
+    .year-links { display: none; }
+  }
+</style>

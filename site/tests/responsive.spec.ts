@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { SLUGS } from './_slugs';
 
 /**
- * Responsive tests: visit 6 representative pages at 3 viewports and assert
+ * Responsive tests: visit representative pages at 3 viewports and assert
  *  - no horizontal scroll,
  *  - masthead is visible,
  *  - right-rail / floated-infobox behaviour matches the 1024px and 780px breakpoints
@@ -12,7 +12,9 @@ import { SLUGS } from './_slugs';
  * the mobile project would just repeat work.
  */
 
-const ROUTES = ['/', `/events/${SLUGS.event}`, '/explore', '/search', '/graph', '/corrections', '/data'];
+const LONG_THREAD = '/threads/frontier-safety-policies';
+
+const ROUTES = ['/', `/events/${SLUGS.event}`, `/actors/${SLUGS.actor}`, LONG_THREAD, '/explore', '/search', '/graph', '/corrections', '/data'];
 
 const VIEWPORTS = [
   { label: 'mobile', width: 375, height: 667 },
@@ -285,5 +287,143 @@ test.describe('reading layout regressions', () => {
     }));
     expect(lines.length).toBeGreaterThan(0);
     expect(lines.every((count) => count === 1)).toBe(true);
+  });
+});
+
+test.describe('aids that live in a rail on wide screens', () => {
+  test.beforeEach(({}, testInfo) => {
+    test.skip(testInfo.project.name !== 'chromium', 'viewport-own');
+  });
+
+  const entryCount = (count: number) => `${count} ${count === 1 ? 'entry' : 'entries'}`;
+
+  // The right rail is hidden at 1024px and below.
+  for (const width of [375, 900, 1024, 1025, 1280]) {
+    test(`an entry page shows one epistemic key at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(`/events/${SLUGS.event}`);
+      const inArticle = page.locator('.wiki-article details').filter({ hasText: 'How to read the metadata' });
+      const inRail = page.locator('.wiki-rail[data-side="right"]').getByRole('heading', { name: 'Epistemic key' });
+      if (width > 1024) {
+        await expect(inRail).toBeVisible();
+        await expect(inArticle).toBeHidden();
+        return;
+      }
+      await expect(inRail).toBeHidden();
+      await expect(inArticle).toBeVisible();
+      await inArticle.locator('summary').focus();
+      await page.keyboard.press('Enter');
+      await expect(inArticle.getByText('Fundamentally alters the trajectory')).toBeVisible();
+    });
+
+    test(`the home page lists Recently added and Active controversies once at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/');
+      for (const name of ['Recently added', 'Active controversies']) {
+        // Role queries leave out what a screen reader does not announce.
+        await expect(page.getByRole('heading', { name, exact: true })).toHaveCount(1);
+        const inMain = page.locator(`.wiki-main section:has(> h2:text-is("${name}"))`);
+        const inRail = page.locator(`.wiki-rail .rail-block:has(> h4:text-is("${name}"))`);
+        if (width > 1024) {
+          await expect(inRail).toBeVisible();
+          await expect(inMain).toBeHidden();
+          continue;
+        }
+        await expect(inRail).toBeHidden();
+        await expect(inMain).toBeVisible();
+        const hrefs = (list: typeof inMain) => list.locator('a').evaluateAll((links) => links.map((link) => link.getAttribute('href')));
+        expect(await hrefs(inMain)).toEqual(await hrefs(inRail));
+      }
+      if (width > 1024) return;
+      const sections = await page.locator('.wiki-main h2:visible').allTextContents();
+      expect(sections.slice(sections.indexOf('Recent entries')).slice(0, 3))
+        .toEqual(['Recent entries', 'Recently added', 'Active controversies']);
+      const added = await page.locator('.wiki-rail .rail-block:has(> h4:text-is("Recently added")) time').allTextContents();
+      await expect(page.locator('.wiki-main section:has(> h2:text-is("Recently added")) time'))
+        .toHaveText(added.map((day) => `added ${day}`));
+    });
+  }
+
+  // The left rail, which lists an actor's years, is hidden at 780px and below.
+  for (const width of [375, 780, 781, 1280]) {
+    test(`an actor page links to each year once at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 800 });
+      await page.goto(`/actors/${SLUGS.actor}`);
+      const inArticle = page.locator('.wiki-article').getByRole('navigation', { name: 'Years' });
+      const inRail = page.locator('.wiki-rail .rail-block:has(> h4:text-is("Years"))');
+      if (width > 780) {
+        await expect(inRail).toBeVisible();
+        await expect(inArticle).toHaveCount(0);
+        return;
+      }
+      await expect(inRail).toBeHidden();
+      await expect(inArticle).toBeVisible();
+      const years = await page.locator('.actor-year').evaluateAll((sections) => sections.map((section) => ({
+        year: section.querySelector('h2')!.textContent!,
+        entries: section.querySelectorAll('li').length,
+      })));
+      expect(years.length).toBeGreaterThan(1);
+      await expect(inArticle.getByRole('listitem')).toHaveText(years.map(({ year, entries }) => `${year} ${entryCount(entries)}`));
+      for (const { year } of years) {
+        await inArticle.getByRole('link', { name: year, exact: true }).focus();
+        await page.keyboard.press('Enter');
+        await expect(page).toHaveURL(new RegExp(`#y-${year}$`));
+        await expect(page.locator(`#y-${year}`).getByRole('heading', { name: year, exact: true })).toBeInViewport();
+      }
+    });
+  }
+
+  for (const width of [375, 1280]) {
+    test(`a long thread timeline has year subheadings and year links at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 800 });
+      await page.goto(LONG_THREAD);
+      const timeline = page.locator('section:has(> h2:text-is("Event timeline"))');
+      const years = await timeline.locator('.thread-year').evaluateAll((groups) => groups.map((group) => ({
+        year: group.querySelector('h3')!.textContent!,
+        dates: [...group.querySelectorAll('time')].map((time) => time.dateTime),
+      })));
+      expect(years.length).toBeGreaterThan(1);
+      for (const { year, dates } of years) {
+        expect(dates.length).toBeGreaterThan(0);
+        expect(dates.every((date) => date.startsWith(`${year}-`)), `entries under ${year}`).toBe(true);
+      }
+      const dates = years.flatMap((group) => group.dates);
+      expect(dates).toEqual([...dates].sort());
+
+      const links = timeline.getByRole('navigation', { name: 'Years' });
+      await expect(links).toBeVisible();
+      await expect(links.getByRole('listitem')).toHaveText(years.map(({ year, dates }) => `${year} ${entryCount(dates.length)}`));
+      for (const { year } of years) {
+        await links.getByRole('link', { name: year, exact: true }).focus();
+        await page.keyboard.press('Enter');
+        await expect(page).toHaveURL(new RegExp(`#y-${year}$`));
+        await expect(timeline.getByRole('heading', { name: year, exact: true })).toBeInViewport();
+      }
+    });
+  }
+
+  test('only timelines of more than 20 entries in more than one year have year links', async ({ page, request }) => {
+    const { threads } = await (await request.get('/data/threads.json')).json() as { threads: { id: string; event_count: number }[] };
+    expect(threads.some((thread) => thread.event_count > 20)).toBe(true);
+    for (const { id, event_count } of threads) {
+      await page.goto(`/threads/${id}`);
+      const years = await page.locator('.thread-year').count();
+      expect(years, `year subheadings on ${id}`).toBeGreaterThan(0);
+      await expect(page.getByRole('navigation', { name: 'Years' }), `year links on ${id}`)
+        .toHaveCount(event_count > 20 && years > 1 ? 1 : 0);
+    }
+  });
+
+  test('year links are left out of print', async ({ page }) => {
+    for (const route of [`/actors/${SLUGS.actor}`, LONG_THREAD]) {
+      await page.goto(route);
+      await page.emulateMedia({ media: 'print' });
+      // Letter with one-inch margins, narrower than the width at which the actor's row appears on screen.
+      await page.setViewportSize({ width: 624, height: 864 });
+      const links = page.locator('nav[aria-label="Years"]');
+      await expect(links).toHaveCount(1);
+      await expect(links).toBeHidden();
+      await expect(page.locator('.actor-year h2, .thread-year h3').first()).toBeVisible();
+    }
   });
 });
