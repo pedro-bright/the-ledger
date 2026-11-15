@@ -12,14 +12,14 @@ sources:
     publisher: U.S. Securities and Exchange Commission
     date: 2026-10-26
     accessed: 2026-11-01
-    archive_url: https://web.archive.org/web/*/https://www.sec.gov/Archives/edgar/data/1326801/000119312526431036/d116268dfwp.htm
+    archive_url: https://web.archive.org/web/20261028141633/https://www.sec.gov/Archives/edgar/data/1326801/000119312526431036/d116268dfwp.htm
   - url: https://www.sec.gov/Archives/edgar/data/1326801/000119312526432549/d382225dfwp.htm
     title: "Meta Platforms, Inc. - Pricing Term Sheet (Form FWP)"
     type: primary_document
     publisher: U.S. Securities and Exchange Commission
     date: 2026-10-27
     accessed: 2026-11-01
-    archive_url: https://web.archive.org/web/*/https://www.sec.gov/Archives/edgar/data/1326801/000119312526432549/d382225dfwp.htm
+    archive_url: https://web.archive.org/web/20261102093804/https://www.sec.gov/Archives/edgar/data/1326801/000119312526432549/d382225dfwp.htm
   - url: https://www.sec.gov/Archives/edgar/data/1326801/000119312526436410/d94886d424b5.htm
     title: "Meta Platforms, Inc. - Prospectus Supplement, 40,000,000 Shares of Class A Common Stock (Form 424B5)"
     type: primary_document
@@ -33,7 +33,7 @@ sources:
     publisher: U.S. Securities and Exchange Commission
     date: 2026-10-28
     accessed: 2026-11-01
-    archive_url: https://web.archive.org/web/*/https://www.sec.gov/Archives/edgar/data/1326801/000119312526436405/d133631d424b5.htm
+    archive_url: https://web.archive.org/web/20261103024129/https://www.sec.gov/Archives/edgar/data/1326801/000119312526436405/d133631d424b5.htm
   - url: https://www.sec.gov/Archives/edgar/data/1326801/000119312526438017/d183592d8k.htm
     title: "Meta Platforms, Inc. - Current Report (Form 8-K), closing of the offerings"
     type: primary_document
@@ -61,7 +61,7 @@ sources:
     publisher: AMD
     date: 2026-10-27
     accessed: 2026-11-01
-    archive_url: https://web.archive.org/web/*/https://ir.amd.com/news-events/press-releases/detail/1302/amd-and-meta-advance-strategic-partnership-to-power-metas-superintelligence-infrastructure
+    archive_url: https://web.archive.org/web/20261103104650/https://ir.amd.com/news-events/press-releases/detail/1302/amd-and-meta-advance-strategic-partnership-to-power-metas-superintelligence-infrastructure
   - url: https://www.semafor.com/article/10/26/2026/meta-announces-95b-offering-to-fund-ai
     title: "Meta announces $95B offering to fund AI"
     type: secondary_reporting
