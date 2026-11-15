@@ -4,7 +4,10 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
 import { buildEnvironment, filesIn, writeBuildOutput } from './vercel-output.mjs';
-import { CSP_HEADER, scriptHash } from '../site/scripts/generate-security-headers.cjs';
+import { scriptHash } from '../site/scripts/generate-security-headers.cjs';
+
+// Browsers enforce this header; the report-only form must not be sent alongside it.
+const CSP_HEADER = 'Content-Security-Policy';
 
 const ANALYTICS = { PUBLIC_POSTHOG_PROJECT_TOKEN: 'production-project', PUBLIC_POSTHOG_HOST: 'https://us.i.posthog.com' };
 
@@ -105,8 +108,14 @@ test('a production build missing an analytics setting warns and continues', () =
 
 const PAGE_ONLY_HASHES = [scriptHash('home()'), scriptHash('explore()')];
 
+function assertEnforcedPolicy(response, url) {
+  assert.equal(typeof response.headers[CSP_HEADER], 'string', url);
+  assert.equal(response.headers['Content-Security-Policy-Report-Only'], undefined, url);
+}
+
 function assertSitePolicyOnly(response, url) {
   assert.equal(response.headers['X-Frame-Options'], 'DENY', url);
+  assertEnforcedPolicy(response, url);
   for (const script of ['shared()', 'missing()', 'extra()']) {
     assert.ok(response.headers[CSP_HEADER].includes(scriptHash(script)), `${url} ${script}`);
   }
@@ -126,6 +135,7 @@ test('pages answer on every URL form with their own policy', () => {
         assert.equal(response.status, 200, url);
         assert.equal(response.file, file, url);
         assert.equal(response.headers['X-Frame-Options'], 'DENY', url);
+        assertEnforcedPolicy(response, url);
         assert.ok(response.headers[CSP_HEADER].includes(scriptHash('shared()')), url);
         for (const pageOnly of PAGE_ONLY_HASHES) {
           assert.equal(response.headers[CSP_HEADER].includes(pageOnly), pageOnly === hash, `${url} ${pageOnly}`);
@@ -172,6 +182,7 @@ test('feeds, graph, crawl files, assets and security.txt are published with the 
       const response = request(build, `/${file}`);
       assert.equal(response.status, 200, file);
       assert.equal(response.headers['X-Frame-Options'], 'DENY', file);
+      assertEnforcedPolicy(response, file);
       assert.equal(readFileSync(path.join(build.output, 'static', file), 'utf8'), readFileSync(path.join(build.dist, file), 'utf8'));
     }
     assert.equal(request(build, '/.well-known/security.txt').status, 200);
