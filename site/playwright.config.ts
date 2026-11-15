@@ -5,7 +5,9 @@ import { defineConfig, devices } from '@playwright/test';
  *
  * Tests run against the STATIC BUILD (npm run build && npm run preview), not the dev
  * server — the rewrite is a static-output change, and preview is closer to production.
- * The preview port comes from astro preview defaults (4321).
+ * In CI an earlier job builds the site, so the run only serves it.
+ * The preview port comes from astro preview defaults (4321). A run always starts its own
+ * server, so it stops with an error when another server already holds the port.
  */
 export default defineConfig({
   testDir: './tests',
@@ -41,9 +43,11 @@ export default defineConfig({
 
   webServer: {
     // Astro 7 can otherwise background the server when invoked by an agent.
-    command: 'npm run build && npm run preview -- --ignore-lock',
+    command: process.env.CI
+      ? 'npm run preview -- --ignore-lock'
+      : 'npm run build && npm run preview -- --ignore-lock',
     url: 'http://localhost:4321',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     // The initial build is slow (content collection + graph + 100+ static pages).
     timeout: 180_000,
     stdout: 'ignore',
