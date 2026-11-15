@@ -25,3 +25,9 @@ updates:
       # Remove this rule when both type checks pass on TypeScript 7.
       - dependency-name: typescript
         versions: ["7.x"]
+    groups:
+      feed-markdown:
+        group-by: dependency-name
+        patterns:
+          - marked
+          - parse5

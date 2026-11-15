@@ -285,13 +285,12 @@ const stats = {
           });
         });
 
-        // RSS feed link click
-        var rssFeedLink = document.querySelector('a[href="/feed.xml"]');
-        if (rssFeedLink) {
-          rssFeedLink.addEventListener('click', function () {
+        // RSS feed link clicks
+        document.querySelectorAll('a[href="/rss.xml"]').forEach(function (el) {
+          el.addEventListener('click', function () {
             window.posthog?.capture('rss_feed_clicked');
           });
-        }
+        });
       });
     })();
   </script>
@@ -397,7 +396,7 @@ const stats = {
 
     <RailSection title="Tools">
       <ul class="rail-list rail-list--plain">
-        <li><a href="/feed.xml">RSS feed</a></li>
+        <li><a href="/rss.xml">RSS feed</a></li>
         <li>
           <a href="https://github.com/pedro-bright/the-ledger" target="_blank" rel="noopener noreferrer">GitHub</a>
         </li>

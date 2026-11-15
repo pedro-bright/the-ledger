@@ -60,6 +60,7 @@ function withSandbox(files: Record<string, string>, run: (sandbox: string) => vo
     fs.cpSync(path.join(ROOT, "schema"), path.join(sandbox, "schema"), { recursive: true });
     fs.symlinkSync(path.join(ROOT, "node_modules"), path.join(sandbox, "node_modules"));
     fs.mkdirSync(path.join(sandbox, "site", "dist"), { recursive: true });
+    fs.symlinkSync(path.join(ROOT, "site", "src"), path.join(sandbox, "site", "src"));
     for (const [relative, body] of Object.entries(files)) {
       const target = path.join(sandbox, "content", relative);
       fs.mkdirSync(path.dirname(target), { recursive: true });
@@ -148,8 +149,9 @@ test("no command-line tool runs a code frontmatter file", () => {
   withMarker((marker) => {
     withSandbox({ "events/2026/01-rce-poc.md": codeFrontmatterPoc("js") }, (sandbox) => {
       for (const script of ["validate.ts", "build-graph.ts", "generate-feed.ts", "test-parity.ts", "check-links.ts"]) {
-        runScript(sandbox, script);
+        const { status, output } = runScript(sandbox, script);
         assert.equal(fs.existsSync(marker), false, `${script} ran the frontmatter`);
+        if (script === "generate-feed.ts") assert.equal(status, 0, `generate-feed.ts should skip the file and pass:\n${output}`);
       }
       for (const script of ["validate.ts", "build-graph.ts"]) {
         const { status, output } = runScript(sandbox, script);
