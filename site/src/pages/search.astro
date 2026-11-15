@@ -55,7 +55,9 @@ const categories = getCategories();
         autocapitalize="off"
         spellcheck="false"
         enterkeyhint="search"
+        aria-describedby="search-page-hint"
       />
+      <p id="search-page-hint" class="search-hint">Put a phrase in quotes to match it exactly.</p>
     </form>
 
     <p id="search-status" class="search-status ph-no-capture" role="status">
@@ -106,8 +108,9 @@ const categories = getCategories();
     filters: { category?: string[] };
   };
   type Result = { data: () => Promise<Fragment> };
+  type Ranking = { termSimilarity: number; termFrequency: number; metaWeights: Record<string, number> };
   type Pagefind = {
-    options: (options: { excerptEllipsis: string }) => Promise<void>;
+    options: (options: { excerptEllipsis: string; ranking: Ranking }) => Promise<void>;
     init: () => Promise<void>;
     search: (term: string, options: { filters: { type: string } }) => Promise<{ results: Result[] }>;
   };
@@ -118,6 +121,12 @@ const categories = getCategories();
   const DELAY_MS = 200;
   // A variable, so the bundler leaves the import for the browser: the index exists only after the build.
   const PAGEFIND_URL = '/pagefind/pagefind.js';
+  // Pagefind matches each query word as a prefix, so `gpt-4` also finds `gpt-4o`. These values rank a
+  // record whose title has the query's words first: termSimilarity (default 1) favours the word as typed
+  // over longer words that start with it, termFrequency (default 1) lets a few matches in a long record
+  // count, and the title weight (default 5) favours words in the title. The expected order is in
+  // tests/search.spec.ts.
+  const RANKING: Ranking = { termSimilarity: 20, termFrequency: 0.5, metaWeights: { title: 30 } };
 
   const input = document.querySelector<HTMLInputElement>('#search-page-q')!;
   const status = document.querySelector<HTMLElement>('#search-status')!;
@@ -139,7 +148,7 @@ const categories = getCategories();
   let pagefind: Promise<Pagefind> | undefined;
   function loadPagefind() {
     pagefind ??= import(/* @vite-ignore */ PAGEFIND_URL).then(async (module: Pagefind) => {
-      await module.options({ excerptEllipsis: '…' });
+      await module.options({ excerptEllipsis: '…', ranking: RANKING });
       await module.init();
       return module;
     });
@@ -296,6 +305,14 @@ const categories = getCategories();
     outline: 2px solid var(--color-wiki-link);
     outline-offset: 0;
     border-color: var(--color-wiki-link);
+  }
+
+  .search-hint {
+    margin: 8px 0 0;
+    font-family: var(--font-sans);
+    font-size: var(--text-meta);
+    line-height: 1.45;
+    color: var(--color-ink-faint);
   }
 
   .search-status {
