@@ -3,7 +3,14 @@ id: meta-10pct-layoffs-ai-efficiency
 title: "Meta Cuts 10% of Workforce Citing AI Efficiency, Eliminating 14,000 Positions"
 date: 2026-04-23
 category: industry
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-04-29
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "A large employer cutting 10% of staff citing AI efficiency is a meaningful shift in how AI affects employment."
 confidence: high
 sources:
   - url: https://www.bloomberg.com/news/articles/2026-04-23/meta-tells-staff-it-will-cut-10-of-jobs-in-push-for-efficiency

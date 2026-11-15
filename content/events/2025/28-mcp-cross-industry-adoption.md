@@ -3,7 +3,14 @@ id: mcp-cross-industry-adoption
 title: "OpenAI and Google Adopt Anthropic's Model Context Protocol"
 date: 2025-03-26
 category: industry
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "Competitors adopting one tool protocol meaningfully shifts the agent ecosystem; its long-term weight is still open."
 confidence: high
 actors:
   - id: anthropic

@@ -3,7 +3,14 @@ id: take-it-down-act-signed
 title: "Trump Signs TAKE IT DOWN Act into Law"
 date: 2025-05-19
 category: policy
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "The first federal statute on AI deepfakes is a meaningful shift, but narrow in scope."
 confidence: high
 actors:
   - id: donald-trump

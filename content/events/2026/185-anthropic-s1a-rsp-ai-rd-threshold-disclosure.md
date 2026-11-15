@@ -3,7 +3,14 @@ id: anthropic-s1a-rsp-ai-rd-threshold-disclosure
 title: "Anthropic's Amended S-1 Says It May Imminently Meet Its Responsible Scaling Policy Threshold for AI-Driven Acceleration of AI Research"
 date: 2026-11-02
 category: safety
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-11-13
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "A securities filing warning that AI-driven acceleration of AI research may be imminent shifts how that risk is disclosed."
 confidence: high
 sources:
   - url: https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm

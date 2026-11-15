@@ -3,7 +3,14 @@ id: arc-institute-evo-2-dna-foundation-model
 title: "Arc Institute Releases Evo 2 — 40B DNA Foundation Model Across All Life"
 date: 2025-02-19
 category: research
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "The largest open DNA model meaningfully shifts biology research, but its trajectory-level effect is not yet shown."
 confidence: high
 actors:
   - id: arc-institute

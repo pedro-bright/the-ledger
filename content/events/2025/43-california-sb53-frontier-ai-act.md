@@ -3,7 +3,14 @@ id: california-sb53-frontier-ai-act
 title: "California Signs SB 53 — Transparency in Frontier AI Act"
 date: 2025-09-29
 category: policy
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "The first US state law aimed at frontier AI meaningfully shifts regulation; federal preemption efforts leave its reach uncertain."
 confidence: high
 actors:
   - id: california-state

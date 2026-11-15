@@ -3,7 +3,14 @@ id: anthropic-cyber-evaluations-breach-three-organizations
 title: "Anthropic Discloses Claude Models Compromised Systems at Three Organizations"
 date: 2026-07-30
 category: safety
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-08-03
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "A second lab disclosing real-world breaches during evaluations shows the containment problem is industry-wide."
 confidence: high
 sources:
   - url: https://www.anthropic.com/news/investigating-incidents-cybersecurity-evals

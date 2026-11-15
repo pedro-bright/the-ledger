@@ -37,7 +37,7 @@ The Ledger has two layers over the same data:
 
 ⚡ **Controversies** — Structured multi-axis disagreements where credible positions are documented, not adjudicated.
 
-🔄 **Significance + Contestation tracking** — The "wrongness" feature. Every event carries a significance level (landmark/major/notable) that can be upgraded as understanding shifts, plus a contestation status that surfaces ongoing disagreement.
+🔄 **Significance + Contestation tracking** — The "wrongness" feature. Every event carries a significance level (landmark/major/notable) that can be upgraded or downgraded as understanding shifts, plus a contestation status that surfaces ongoing disagreement.
 
 ## Current Content
 

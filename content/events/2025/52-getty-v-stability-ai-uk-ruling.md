@@ -3,7 +3,14 @@ id: getty-v-stability-ai-uk-ruling
 title: "UK High Court Rules Stability AI Weights Not Infringing Copies"
 date: 2025-11-04
 category: policy
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "The first high-court ruling on whether weights are infringing copies shifts the legal landscape in one jurisdiction."
 confidence: high
 regions: [UK]
 actors:

@@ -3,7 +3,14 @@ id: trump-eo-state-ai-preemption
 title: "Trump Signs Executive Order to Preempt State AI Laws"
 date: 2025-12-11
 category: policy
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "Directing agencies to preempt state AI laws shifts the regulatory landscape; courts and Congress decide its effect."
 confidence: high
 actors:
   - id: white-house

@@ -3,7 +3,14 @@ id: tsmc-arizona-100b-investment
 title: "TSMC Announces Additional $100 Billion US Investment"
 date: 2025-03-03
 category: industry
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "A large shift in chip manufacturing geography; one of several 2025 infrastructure commitments rather than a turning point."
 actors:
   - id: tsmc
     role: subject

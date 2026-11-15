@@ -3,7 +3,14 @@ id: doj-statement-of-interest-openai-fair-use
 title: "US Justice Department Files Statement of Interest Backing OpenAI's Fair-Use Defense in the New York Times Copyright MDL"
 date: 2026-09-01
 category: policy
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-09-08
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "The federal government taking a side on fair use in the main copyright MDL shifts the legal landscape."
 confidence: high
 sources:
   - url: https://storage.courtlistener.com/recap/gov.uscourts.nysd.640396/gov.uscourts.nysd.640396.1682.0.pdf

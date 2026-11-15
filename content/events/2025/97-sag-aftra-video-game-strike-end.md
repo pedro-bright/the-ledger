@@ -3,7 +3,14 @@ id: sag-aftra-video-game-strike-end
 title: "SAG-AFTRA Video Game Strike Ends with AI Consent Deal"
 date: 2025-07-09
 category: industry
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "AI consent terms in a major union contract shift labor practice in one sector."
 confidence: high
 actors:
   - id: sag-aftra

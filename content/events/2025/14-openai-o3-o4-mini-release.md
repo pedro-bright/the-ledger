@@ -3,7 +3,14 @@ id: openai-o3-o4-mini-release
 title: "OpenAI Releases o3 and o4-mini with Multimodal Reasoning"
 date: 2025-04-16
 category: models
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "A strong reasoning release that shifts capabilities, but o1 already marked the reasoning-model turn."
 confidence: high
 actors:
   - id: openai

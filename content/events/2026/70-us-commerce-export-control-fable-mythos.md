@@ -3,7 +3,14 @@ id: us-commerce-export-control-fable-mythos
 title: "US Commerce Department Issues First Export Control Directive Against a Commercial Large Language Model"
 date: 2026-06-12
 category: policy
-significance: notable
+significance: landmark
+significance_history:
+  - level: notable
+    date: 2026-06-15
+    reason: Initial rating at publication.
+  - level: landmark
+    date: 2026-11-14
+    reason: "The first export control directive against a commercial language model extends export controls from chips to models, a trajectory change."
 confidence: high
 sources:
   - url: https://www.anthropic.com/news/fable-mythos-access

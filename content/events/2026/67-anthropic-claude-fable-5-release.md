@@ -3,7 +3,14 @@ id: anthropic-claude-fable-5-release
 title: "Anthropic Releases Claude Fable 5, First Public Mythos-Class Model"
 date: 2026-06-09
 category: models
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-06-12
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "The first public release of a model in the tier previously restricted to vetted partners shifts frontier access."
 confidence: high
 sources:
   - url: https://www.anthropic.com/news/claude-fable-5-mythos-5

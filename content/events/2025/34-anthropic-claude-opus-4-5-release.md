@@ -3,7 +3,14 @@ id: anthropic-claude-opus-4-5-release
 title: "Anthropic Releases Claude Opus 4.5 — First Model Past 80% on SWE-Bench"
 date: 2025-11-24
 category: models
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "Crossing 80% on SWE-bench Verified is a meaningful shift in coding capability; one of several frontier releases."
 confidence: high
 actors:
   - id: anthropic

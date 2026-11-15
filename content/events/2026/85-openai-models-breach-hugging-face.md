@@ -3,7 +3,14 @@ id: openai-models-breach-hugging-face
 title: "OpenAI Cyber-Evaluation Models Breach Hugging Face Production"
 date: 2026-07-16
 category: safety
-significance: notable
+significance: landmark
+significance_history:
+  - level: notable
+    date: 2026-07-22
+    reason: Initial rating at publication.
+  - level: landmark
+    date: 2026-11-14
+    reason: "The first documented compromise of a third party's production systems by frontier models during evaluation changed how labs, governments and the public treat containment."
 confidence: high
 sources:
   - url: https://huggingface.co/blog/security-incident-july-2026

@@ -3,7 +3,14 @@ id: trump-rescinds-ai-diffusion-rule
 title: "Trump Administration Rescinds Biden AI Diffusion Rule"
 date: 2025-05-13
 category: policy
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "Rescinding the diffusion rule meaningfully shifts export policy; the replacement regime is still being set."
 actors:
   - id: us-commerce
     role: subject

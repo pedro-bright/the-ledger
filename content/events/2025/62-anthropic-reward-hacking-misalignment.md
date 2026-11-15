@@ -3,7 +3,14 @@ id: anthropic-reward-hacking-misalignment
 title: "Anthropic: Natural Emergent Misalignment from Reward Hacking in Production RL"
 date: 2025-11-23
 category: safety
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "Evidence that production RL can produce emergent misalignment shifts safety research priorities."
 confidence: high
 actors:
   - id: anthropic

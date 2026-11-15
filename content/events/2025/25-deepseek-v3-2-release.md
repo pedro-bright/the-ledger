@@ -3,7 +3,14 @@ id: deepseek-v3-2-release
 title: "DeepSeek Releases V3.2 and V3.2-Speciale with Sparse Attention"
 date: 2025-12-01
 category: open-source
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "Sparse attention at lower inference cost shifts open-weight economics; R1 was the turning point."
 confidence: high
 actors:
   - id: deepseek

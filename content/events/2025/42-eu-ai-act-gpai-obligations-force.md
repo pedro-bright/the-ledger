@@ -3,7 +3,14 @@ id: eu-ai-act-gpai-obligations-force
 title: "EU AI Act General-Purpose AI Obligations Enter Force"
 date: 2025-08-02
 category: policy
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "Obligations on general-purpose model providers shift compliance, following the prohibitions that started enforcement."
 confidence: high
 actors:
   - id: european-commission

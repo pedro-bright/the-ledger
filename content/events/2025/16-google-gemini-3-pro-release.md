@@ -3,7 +3,14 @@ id: google-gemini-3-pro-release
 title: "Google Launches Gemini 3 with Cross-Product Rollout and Deep Think"
 date: 2025-11-18
 category: models
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "A frontier release that took the benchmark lead; releases at this level occur several times a year."
 confidence: high
 actors:
   - id: google-deepmind

@@ -3,7 +3,14 @@ id: openai-copyright-mdl-3143-consolidation
 title: "JPML Consolidates 12 AI Copyright Cases into SDNY MDL 3143"
 date: 2025-04-03
 category: policy
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "Consolidation shapes how the copyright cases proceed; the rulings, not the procedural step, would alter the trajectory."
 confidence: high
 actors:
   - id: openai

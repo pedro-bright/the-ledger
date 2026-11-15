@@ -221,7 +221,7 @@ The decision crystallized a fault line that had been forming since...
 - **Major** (~2-4/month) — Meaningfully shifts the landscape.
 - **Notable** (~5-10/week) — Worth documenting for the record.
 
-Significance can be **upgraded** over time. The upgrade is tracked in `significance_history` and surfaced in the UI. This enables historical humility: "We thought this was minor. We were wrong."
+Significance can be **upgraded** or downgraded over time. Each change is tracked in `significance_history` and surfaced in the UI. This enables historical humility: "We thought this was minor. We were wrong."
 
 ### Threads
 
@@ -607,7 +607,7 @@ Three views over the same data, serving different needs:
 - Full narrative + sources sidebar
 - **Reinterpretation banner** (visually unavoidable) if retrospectives exist
 - Contestation badge, linked to the revision history when the event has one
-- Significance history shown if upgraded
+- Significance history shown when the event has more than one `significance_history` entry
 - "Part of thread: [link]" navigation
 - "This record last reviewed [date]" in the footer, omitted on automatic daily scan entries and when `last_reviewed` is not later than `created`
 - "Revision history" section between the body and the references, omitted when no records target the event: summary revisions with the date, reason, revised summary, and the earlier summary in a disclosure; challenges with the date opened, status, allegation types, and resolution

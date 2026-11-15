@@ -3,7 +3,14 @@ id: anthropic-claude-opus-5-release
 title: "Anthropic Releases Claude Opus 5 with Revised Cyber Safeguards"
 date: 2026-07-24
 category: models
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-07-28
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "A new frontier generation from a leading lab meaningfully shifts the landscape."
 confidence: high
 sources:
   - url: https://www.anthropic.com/news/claude-opus-5

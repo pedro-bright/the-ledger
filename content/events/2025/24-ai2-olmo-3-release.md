@@ -3,7 +3,14 @@ id: ai2-olmo-3-release
 title: "AI2 Releases OLMo 3 — First Fully Open Frontier Reasoning Model"
 date: 2025-11-20
 category: open-source
-significance: landmark
+significance: major
+significance_history:
+  - level: landmark
+    date: 2026-04-19
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "A fully open reasoning model meaningfully shifts open research, without changing the overall trajectory."
 confidence: high
 actors:
   - id: ai2

@@ -3,7 +3,14 @@ id: nsa-cisa-fbi-distillation-advisory-aa26-251a
 title: "NSA, CISA and FBI Name Six Chinese AI Companies in a Joint Advisory on Industrial-Scale Distillation of US Models"
 date: 2026-09-08
 category: policy
-significance: notable
+significance: major
+significance_history:
+  - level: notable
+    date: 2026-09-11
+    reason: Initial rating at publication.
+  - level: major
+    date: 2026-11-14
+    reason: "A joint US security advisory naming Chinese labs for distillation shifts model security and US-China policy."
 confidence: high
 sources:
   - url: https://www.cisa.gov/news-events/cybersecurity-advisories/aa26-251a
