@@ -154,7 +154,7 @@ jobs:
       # In CI the Playwright web server serves this build instead of building again.
       - name: Run Playwright tests
         working-directory: site
-        run: npx playwright test --shard=${{ matrix.shard }}/2
+        run: npx playwright test --shard=${{ matrix.shard }}/2 --workers=4
 
       - name: Upload Playwright test-results
         if: failure()
