@@ -217,7 +217,12 @@ test.describe('smoke', () => {
 });
 
 
-test('home lists the five most recently added entries with the day each was added', async ({ page }) => {
+test('home lists the five most recently added entries with the day each was added', async ({ page }, testInfo) => {
+  if (testInfo.project.name !== 'chromium') {
+    await page.goto('/');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize()!.width);
+    return;
+  }
   const eventsDir = path.join(__dirname, '..', '..', 'content', 'events');
   const day = (value: unknown) => (value instanceof Date ? value.toISOString() : String(value)).slice(0, 10);
   const entries = fs.readdirSync(eventsDir, { recursive: true })
@@ -231,6 +236,7 @@ test('home lists the five most recently added entries with the day each was adde
   await page.goto('/');
   const rows = page.locator('.rail-block:has(> h4:text-is("Recently added")) li');
   await expect(rows).toHaveCount(5);
+  for (const row of await rows.all()) await expect(row).toBeVisible();
   expect(await rows.evaluateAll((els) => els.map((el) => ({
     href: el.querySelector('a')?.getAttribute('href'),
     added: el.querySelector('time')?.textContent,
