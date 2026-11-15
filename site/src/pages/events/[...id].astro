@@ -184,6 +184,7 @@ const contestationHref = records.length > 0 ? '#revision-history' : undefined;
     articleText={event.htmlContent}
     lastReviewed={lastReviewed}
     sourcePath={sourcePath}
+    search={{ type: 'event', filters: { category: event.category, year: event.date.slice(0, 4) }, meta: { date: event.date } }}
   >
     <Fragment slot="markers">
       <SignificanceFlag level={event.significance} />
@@ -250,7 +251,7 @@ const contestationHref = records.length > 0 ? '#revision-history' : undefined;
     <Fragment set:html={article.body} />
 
     {threadNav.map(({ thread, earlier, later }) => (
-      <nav class="thread-nav" aria-label={`${thread.title} thread`}>
+      <nav class="thread-nav" aria-label={`${thread.title} thread`} data-pagefind-ignore>
         <a class="thread-nav__thread" href={`/threads/${thread.slug}`}>{thread.title}</a>
         <div class="thread-nav__steps">
           {earlier && (
@@ -272,7 +273,7 @@ const contestationHref = records.length > 0 ? '#revision-history' : undefined;
     ))}
 
     {/* Mobile-only epistemic key — right rail is hidden below 780px. */}
-    <details class="mobile-epistemic-key" aria-label="Epistemic key">
+    <details class="mobile-epistemic-key" aria-label="Epistemic key" data-pagefind-ignore>
       <summary>§ How to read the metadata</summary>
       <dl>
         <dt>Landmark</dt>

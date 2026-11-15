@@ -51,12 +51,14 @@ test.describe('security headers', () => {
     outputRoot = undefined;
   });
 
-  async function loadWithPolicy(page: import('@playwright/test').Page, urlPath: string) {
-    const policy = policyFor(outputRoutes(), urlPath);
-    await page.route('**/*', async (route) => {
-      if (!route.request().isNavigationRequest()) return route.continue();
+  // Vercel sends a policy with every response, and a worker script runs under the policy sent with it.
+  async function loadWithPolicy(page: import('@playwright/test').Page, urlPath: string, header = CSP_HEADER) {
+    const routes = outputRoutes();
+    const origin = new URL(test.info().project.use.baseURL!).origin;
+    await page.route(`${origin}/**`, async (route) => {
       const response = await route.fetch();
-      await route.fulfill({ response, headers: { ...response.headers(), [CSP_HEADER]: policy } });
+      const policy = policyFor(routes, new URL(route.request().url()).pathname);
+      await route.fulfill({ response, headers: { ...response.headers(), [header]: policy } });
     });
     await page.addInitScript(() => {
       (window as any).__cspViolations = [];
@@ -92,6 +94,17 @@ test.describe('security headers', () => {
       expect(await violations(page)).toEqual([]);
     });
   }
+
+  test('the search index loads and answers a query with the policy enforced', async ({ page }) => {
+    await loadWithPolicy(page, `/events/${SLUGS.event}`, 'Content-Security-Policy');
+    // A string, so the dynamic import reaches the browser untranspiled.
+    const firstUrl = await page.evaluate(`import('/pagefind/pagefind.js')
+      .then((pagefind) => pagefind.search('OpenAI'))
+      .then(({ results }) => results[0].data())
+      .then((data) => data.url)`);
+    expect(firstUrl).toMatch(/^\//);
+    expect(await violations(page)).toEqual([]);
+  });
 
   test('the policy reports an injected inline script', async ({ page }) => {
     await loadWithPolicy(page, '/about');

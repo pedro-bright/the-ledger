@@ -91,6 +91,7 @@ function cleanUrl(url: string): string {
       { label: actor.name },
     ]}
     sourcePath={`content/actors/${actor.id}.yml`}
+    search={{ type: 'actor' }}
   >
     <Fragment slot="infobox">
       <Infobox title="Actor metadata">

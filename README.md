@@ -88,7 +88,7 @@ The same contact is published at `/.well-known/security.txt` on the site.
 ## Deployment
 
 Vercel builds branch previews and deploys `main` to production through its Git integration.
-The root `vercel.json` installs both packages and runs `npm run build:vercel`, which generates the graph and feeds before building Astro.
+The root `vercel.json` installs both packages and runs `npm run build:vercel`, which generates the graph and feeds before building Astro and indexing the built pages with Pagefind.
 The build emits static files, generated security headers with per-page script hashes, and `/.well-known/security.txt` through Vercel's Build Output API v3 in `.vercel/output/`.
 Vercel configuration stays outside the published static files.
 

@@ -78,6 +78,7 @@ function displayActor(id: string): { name: string; href?: string } {
     articleText={`${controversy.htmlContent} ${positions.map((position) => position.claim).join(' ')}`}
     lastModified={controversy.last_updated}
     sourcePath={`content/controversies/${controversy.slug}.md`}
+    search={{ type: 'controversy' }}
   >
     <Fragment slot="infobox">
       <Infobox title="Controversy metadata" wide>
