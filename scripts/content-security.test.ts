@@ -149,11 +149,10 @@ test("no command-line tool runs a code frontmatter file", () => {
   withMarker((marker) => {
     withSandbox({ "events/2026/01-rce-poc.md": codeFrontmatterPoc("js") }, (sandbox) => {
       for (const script of ["validate.ts", "build-graph.ts", "generate-feed.ts", "test-parity.ts", "check-links.ts"]) {
-        runScript(sandbox, script);
+        const { status, output } = runScript(sandbox, script);
         assert.equal(fs.existsSync(marker), false, `${script} ran the frontmatter`);
+        if (script === "generate-feed.ts") assert.equal(status, 0, `generate-feed.ts should skip the file and pass:\n${output}`);
       }
-      const feed = runScript(sandbox, "generate-feed.ts");
-      assert.equal(feed.status, 0, `generate-feed.ts should skip the file and pass:\n${feed.output}`);
       for (const script of ["validate.ts", "build-graph.ts"]) {
         const { status, output } = runScript(sandbox, script);
         assert.equal(status, 1, `${script} should fail:\n${output}`);
