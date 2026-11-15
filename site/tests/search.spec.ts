@@ -43,9 +43,9 @@ const EXPECTED_FIRST: { query: string; group: string; first: string; known?: str
   { query: 'AGI timeline', group: 'Controversies', first: '/controversies/agi-timeline-disagreement' },
   // A two-word topic.
   { query: 'copyright lawsuits', group: 'Events', first: '/events/authors-guild-ai-lawsuits' },
-  // Quoted phrases.
+  // A quoted phrase. Pagefind scores every record with the exact phrase the same and lists them in
+  // index order, which differs between machines, so the phrase is one that only this entry contains.
   { query: '"Biology Olympiad"', group: 'Events', first: `/events/${SLUGS.event}` },
-  { query: '"Stargate"', group: 'Events', first: '/events/trump-stargate-announcement' },
 ];
 
 /** The `count` entries a seeded shuffle picks, so a run checks the same entries until the content changes. */
