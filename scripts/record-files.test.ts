@@ -165,6 +165,7 @@ test('resolution uses the case target, leaves editorial decisions unfinished and
   for (const heading of ['Decision', 'Evidence', 'Review']) assert.ok(content.includes(`## ${heading}\n`));
   for (const field of ['findings', 'actions', 'decided_by', 'resolution_note_id', 'status', 'summary_revision_id']) assert.ok(result.output.includes(field));
   assert.match(result.output, /curator/);
+  assert.match(result.output, /contestation\.status to corrected when an action creates a summary revision/);
   const unfilled = validate(dir);
   assert.equal(unfilled.status, 1, unfilled.output);
   assert.match(unfilled.output, /findings/);
@@ -262,4 +263,13 @@ test('revision refuses a missing Summary instead of guessing prior_version', (t)
   assert.equal(result.status, 1, result.output);
   assert.match(result.output, /Summary/);
   assert.equal(fs.existsSync(path.join(dir, 'content/revisions')), false);
+});
+
+test('CONTRIBUTING.md lists every contestation status in the event schema', () => {
+  const schema = JSON.parse(fs.readFileSync(path.join(root, 'schema/event.schema.json'), 'utf8'));
+  const contributing = fs.readFileSync(path.join(root, 'CONTRIBUTING.md'), 'utf8');
+  const line = contributing.split('\n').find((text) => text.includes('`contestation.status` from the event schema'));
+  assert.ok(line, 'CONTRIBUTING.md has no line listing contestation statuses');
+  const listed = [...line.matchAll(/`([a-z]+)`/g)].map((match) => match[1]);
+  assert.deepEqual(listed, schema.properties.contestation.properties.status.enum);
 });

@@ -81,6 +81,7 @@
           "enum": [
             "uncontested",
             "contested",
+            "corrected",
             "superseded",
             "unresolved"
           ]

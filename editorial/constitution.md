@@ -16,7 +16,7 @@ Events are immutable once published. Updates happen via retrospectives, not edit
 
 ### 2. Contestability by Default
 
-Every substantive claim has a challenge window (90 days post-publication) and a visible contestation status (`uncontested` | `contested` | `superseded` | `unresolved`). Disagreement is always possible, never forced. Anyone can file a formal challenge at any time; after the challenge window, unchallenged claims move to "uncontested" status but can always be reopened.
+Every substantive claim has a challenge window (90 days post-publication) and a visible contestation status (`uncontested` | `contested` | `corrected` | `superseded` | `unresolved`). Disagreement is always possible, never forced. Anyone can file a formal challenge at any time; after the challenge window, unchallenged claims move to "uncontested" status but can always be reopened.
 
 **Why:** Consensus without the possibility of dissent is not consensus — it's silence. Contestability keeps knowledge honest.
 

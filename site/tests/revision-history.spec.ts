@@ -53,7 +53,7 @@ for (const javaScriptEnabled of [true, false]) {
       });
     }
 
-    test('a challenged event links its contestation badge to the revision history', async ({ page }) => {
+    test('a corrected event links its contestation badge to the revision history', async ({ page }) => {
       await page.goto('/events/coe-ai-convention-in-force/');
       await expect(page.locator('#article-contents a[href="#revision-history"]')).toHaveText('Revision history');
       for (const label of ['Medium confidence', 'Low confidence', 'Disputed']) {
@@ -62,9 +62,10 @@ for (const javaScriptEnabled of [true, false]) {
       const infoboxTerms = page.locator('.wiki-infobox dt');
       await expect(infoboxTerms.filter({ hasText: 'Significance' })).toHaveCount(1);
       await expect(infoboxTerms.filter({ hasText: 'Confidence' })).toHaveCount(0);
-      const contested = page.locator('a[href="#revision-history"]').filter({ hasText: 'Contested', visible: true }).first();
-      await expect(contested.locator('[title]')).toHaveAttribute('title', 'At least one formal challenge has been filed against this claim.');
-      await contested.click();
+      await expect(page.getByText('Contested', { exact: true })).toHaveCount(0);
+      const corrected = page.locator('a[href="#revision-history"]').filter({ hasText: 'Corrected', visible: true }).first();
+      await expect(corrected.locator('[title]')).toHaveAttribute('title', 'A formal challenge was upheld and this entry was corrected. The revision history records the change.');
+      await corrected.click();
       await expect(page.getByRole('heading', { level: 2, name: 'Revision history' })).toBeInViewport();
     });
   });

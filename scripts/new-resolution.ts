@@ -18,5 +18,5 @@ runScaffold(() => {
     decided_by: [null],
     issued_at: today,
   }, body);
-  console.log(`Created ${filename}. Fill findings (TODO: empty), actions (TODO: null), decided_by (TODO: null) and the Decision, Evidence and Review sections. Include actions.summary_revision_id for any summary_revision_created action; use no_action only when approved. The curator approves every disposition. Update challenge status and resolution_note_id, then entry state, confidence, contestation, Summary and revision.last_reviewed as the approved actions require. Run npm run validate before submitting.`);
+  console.log(`Created ${filename}. Fill findings (TODO: empty), actions (TODO: null), decided_by (TODO: null) and the Decision, Evidence and Review sections. Include actions.summary_revision_id for any summary_revision_created action; use no_action only when approved. The curator approves every disposition. Update challenge status and resolution_note_id, then entry state, confidence, contestation, Summary and revision.last_reviewed as the approved actions require; set contestation.status to corrected when an action creates a summary revision. Run npm run validate before submitting.`);
 });
