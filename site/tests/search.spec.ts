@@ -165,6 +165,52 @@ test('Show more adds the next results and moves focus to the first of them', asy
   await expect(events.getByRole('button')).toHaveText(`Show ${Math.min(10, total - 20)} more events`);
 });
 
+test('a failed Show more can be retried, and the result count returns', async ({ page }) => {
+  await page.goto('/search?q=OpenAI');
+  const events = group(page, 'Events');
+  const rows = events.getByRole('listitem');
+  await expect(rows).toHaveCount(10);
+  const counted = await status(page).textContent();
+
+  await page.route('**/pagefind/fragment/**', (route) => route.abort());
+  await events.getByRole('button', { name: 'Show 10 more events' }).click();
+  await expect(status(page)).toHaveText('Search could not load. Reload the page, or browse the timeline.');
+  await expect(rows).toHaveCount(10);
+
+  await page.unroute('**/pagefind/fragment/**');
+  await events.getByRole('button', { name: 'Show 10 more events' }).click();
+  await expect(rows).toHaveCount(20);
+  await expect(status(page)).toHaveText(counted!);
+});
+
+test('the button for a single remaining result names one result', async ({ page }) => {
+  // A stand-in for the Pagefind module that answers every search with eleven events.
+  await page.route('**/pagefind/pagefind.js', (route) => route.fulfill({
+    contentType: 'text/javascript',
+    body: `
+      const result = (n) => ({ data: async () => ({
+        url: '/events/stand-in-' + n + '/',
+        excerpt: 'A <mark>stand-in</mark> result.',
+        meta: { title: 'Stand-in event ' + n, date: '2024-01-01' },
+        filters: { category: ['models'] },
+      }) });
+      export const options = async () => {};
+      export const init = async () => {};
+      export const search = async (term, { filters }) => ({
+        results: filters.type === 'event' ? Array.from({ length: 11 }, (_, n) => result(n)) : [],
+      });
+    `,
+  }));
+  await page.goto('/search?q=stand-in');
+  const events = group(page, 'Events');
+  await expect(events.getByRole('listitem')).toHaveCount(10);
+
+  await events.getByRole('button', { name: 'Show 1 more event', exact: true }).click();
+  await expect(events.getByRole('listitem')).toHaveCount(11);
+  await expect(events.getByRole('link', { name: 'Stand-in event 10' })).toBeFocused();
+  await expect(events.getByRole('button')).toBeHidden();
+});
+
 test('activating Show more again while its rows load adds each result once', async ({ page }) => {
   await page.goto('/search?q=OpenAI');
   const events = group(page, 'Events');

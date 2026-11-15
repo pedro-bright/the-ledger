@@ -185,6 +185,8 @@ const categories = getCategories();
     status.replaceChildren(content);
   }
 
+  // The status line for the results on the page, restored when a failed Show more succeeds on retry.
+  let summary = help;
   let latest = 0;
   async function search() {
     const run = ++latest;
@@ -219,17 +221,18 @@ const categories = getCategories();
       updateMore(group);
     });
     const total = found.reduce((sum, results) => sum + results.length, 0);
+    summary = term ? `${total} ${total === 1 ? 'result' : 'results'} for “${term}”` : help;
     if (failed) message('#search-failed');
-    else if (!term) status.textContent = help;
-    else if (total === 0) message('#search-empty', term);
-    else status.textContent = `${total} ${total === 1 ? 'result' : 'results'} for “${term}”`;
+    else if (term && total === 0) message('#search-empty', term);
+    else status.textContent = summary;
   }
 
   // The button names how many results its next activation adds.
   function updateMore(group: Group) {
     const left = group.results.length - group.list.children.length;
     group.more.hidden = left <= 0;
-    group.more.textContent = `Show ${Math.min(STEP, left)} more ${group.noun}`;
+    // The group type is the singular of its noun.
+    group.more.textContent = left === 1 ? `Show 1 more ${group.type}` : `Show ${Math.min(STEP, left)} more ${group.noun}`;
   }
 
   for (const group of groups) {
@@ -243,6 +246,7 @@ const categories = getCategories();
         if (results !== group.results) return;
         list.append(...added);
         updateMore(group);
+        if (status.textContent !== summary) status.textContent = summary;
         // Keyboard readers continue from the first added result.
         added[0]?.querySelector('a')?.focus();
       } catch {
