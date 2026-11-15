@@ -2,7 +2,7 @@
 id: frontier-safety-policies
 title: "Frontier Safety Policies"
 status: active
-started: 2023-09-19
+started: 2023-03-22
 core_question: "How did voluntary frontier AI safety commitments — RSPs, Preparedness Frameworks, FSFs — evolve under competitive pressure, and can lab-authored safety thresholds hold when tested?"
 curator: terry-tang
 curator_scope: initial-synthesis
