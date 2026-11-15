@@ -9,8 +9,10 @@ import { parseYaml as siteParseYaml } from "../site/src/lib/content.ts";
 
 const contentDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../content");
 
-// The frontmatter parser still runs the js-yaml version that predates the
-// upgrade, so it is the baseline for what each file parsed to before.
+// The baseline is gray-matter, which parses Markdown frontmatter with its own
+// nested js-yaml 3. Before the upgrade the standalone YAML files went through
+// js-yaml 4, so this compares against js-yaml 3. When gray-matter is replaced,
+// this test needs a new baseline.
 function parseBefore(yaml: string): unknown {
   return parseFrontmatter(`---\n${yaml}\n---\n`).data;
 }
