@@ -23,6 +23,8 @@ sources:
   - url: https://www.nytimes.com/2023/03/14/technology/openai-new-gpt4.html
     title: "OpenAI Plans to Up the Ante in Tech's A.I. Race"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

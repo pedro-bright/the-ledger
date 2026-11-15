@@ -35,6 +35,8 @@ sources:
     type: secondary_reporting
     publisher: Washington Times
     date: 2026-04-08
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

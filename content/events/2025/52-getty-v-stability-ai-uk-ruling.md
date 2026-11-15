@@ -34,6 +34,8 @@ sources:
     type: official
     publisher: Getty Images
     date: 2025-11-04
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

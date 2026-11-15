@@ -20,6 +20,8 @@ sources:
     title: "GPT-5.3 and GPT-5.4 in ChatGPT"
     type: official
     date: 2026-03-05
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

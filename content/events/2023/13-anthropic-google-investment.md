@@ -22,6 +22,8 @@ sources:
   - url: https://www.cnbc.com/2023/10/27/google-commits-to-invest-2-billion-in-openai-competitor-anthropic.html
     title: "Google commits to invest $2 billion in OpenAI rival Anthropic"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

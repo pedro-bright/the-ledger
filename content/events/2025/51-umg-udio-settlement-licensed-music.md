@@ -27,6 +27,8 @@ sources:
     title: "UMG Recordings, Inc. v. Suno, Inc. — CourtListener Docket"
     type: primary_document
     publisher: CourtListener
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

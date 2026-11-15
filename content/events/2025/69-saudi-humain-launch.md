@@ -31,6 +31,8 @@ sources:
     title: "Saudi Arabia launches HUMAIN to build global AI capabilities"
     type: secondary_reporting
     date: 2025-05-12
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

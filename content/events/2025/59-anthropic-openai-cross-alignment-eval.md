@@ -23,6 +23,8 @@ sources:
     type: primary_document
     publisher: OpenAI
     date: 2025-08-27
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

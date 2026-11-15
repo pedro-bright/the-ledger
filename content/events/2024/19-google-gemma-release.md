@@ -18,6 +18,8 @@ sources:
   - url: https://deepmind.google/models/gemma/
     title: "Gemma - Google AI for Developers"
     type: primary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

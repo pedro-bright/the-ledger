@@ -18,6 +18,8 @@ sources:
   - url: https://www.theverge.com/2024/6/20/24182396/anthropic-claude-3-5-sonnet-ai-model
     title: "Anthropic's new Claude 3.5 Sonnet outperforms GPT-4o and its own flagship model"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

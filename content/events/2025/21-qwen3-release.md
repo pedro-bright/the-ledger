@@ -24,6 +24,8 @@ sources:
     title: "Qwen3-235B-A22B Model Card"
     type: primary_document
     date: 2025-04-28
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

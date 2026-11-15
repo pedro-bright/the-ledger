@@ -29,6 +29,8 @@ sources:
     title: "President Trump's Latest Executive Order on AI Seeks to Preempt State Laws"
     type: secondary_reporting
     publisher: Gibson Dunn
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

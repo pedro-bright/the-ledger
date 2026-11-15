@@ -26,6 +26,8 @@ sources:
     type: secondary_reporting
     publisher: Authors Guild
     date: 2025-05-10
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

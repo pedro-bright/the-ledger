@@ -34,6 +34,8 @@ sources:
     type: expert_interpretation
     publisher: SaferAI
     date: 2026-02-24
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

@@ -24,6 +24,8 @@ sources:
     title: "OpenAI launches a pair of AI reasoning models, o3 and o4-mini"
     type: secondary_reporting
     date: 2025-04-16
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

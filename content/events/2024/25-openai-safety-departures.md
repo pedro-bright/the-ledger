@@ -20,6 +20,8 @@ sources:
   - url: https://www.vox.com/future-perfect/2024/5/17/24158403/openai-jan-leike-ilya-sutskever-superalignment-safety-concerns
     title: "Why OpenAI's safety team is falling apart"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

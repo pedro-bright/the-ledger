@@ -50,6 +50,13 @@ const featuredDateLabel = featured
 // ─── Recent entries ───────────────────────────────────────────
 const recentEvents = events.slice(0, 10);
 
+// ─── Recently added ───────────────────────────────────────────
+// Newest additions first, then the latest event among entries added the same day.
+const recentlyAdded = events
+  .filter((e) => e.revision?.created)
+  .sort((a, b) => b.revision!.created!.localeCompare(a.revision!.created!) || b.date.localeCompare(a.date))
+  .slice(0, 5);
+
 // ─── Ongoing threads ──────────────────────────────────────────
 const threadSummaries = threads.map((t) => ({
   ...t,
@@ -403,6 +410,19 @@ const stats = {
 
   <!-- ─── Right rail ─── -->
   <Fragment slot="rightRail">
+    {recentlyAdded.length > 0 && (
+      <RailSection title="Recently added">
+        <ul class="rail-list rail-list--stacked">
+          {recentlyAdded.map((e) => (
+            <li>
+              <a href={`/events/${e.slug}`}>{e.title}</a>
+              <time class="rail-added__date font-mono" datetime={e.revision!.created}>{e.revision!.created}</time>
+            </li>
+          ))}
+        </ul>
+      </RailSection>
+    )}
+
     {featuredThread && (
       <RailSection title="Featured thread">
         <p class="rail-thread">
@@ -654,6 +674,13 @@ const stats = {
     font-size: var(--text-meta);
     color: var(--color-ink-faint);
     text-transform: lowercase;
+    line-height: 1.45;
+  }
+  :global(.rail-added__date) {
+    display: block;
+    margin-top: 2px;
+    font-size: var(--text-meta);
+    color: var(--color-ink-faint);
     line-height: 1.45;
   }
   :global(.rail-pip) {

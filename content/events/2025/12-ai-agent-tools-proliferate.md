@@ -22,6 +22,8 @@ sources:
   - url: https://www.anthropic.com/news/claude-code
     title: "Claude Code"
     type: primary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

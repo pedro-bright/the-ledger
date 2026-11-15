@@ -28,6 +28,8 @@ sources:
     title: "OpenAI and the Agentic AI Foundation"
     type: official
     date: 2025-12-09
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

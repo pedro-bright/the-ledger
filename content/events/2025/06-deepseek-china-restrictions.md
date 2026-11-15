@@ -18,6 +18,8 @@ sources:
   - url: https://www.nytimes.com/2025/02/06/technology/deepseek-china-ai-concerns.html
     title: "DeepSeek Raises Security Concerns Over China Ties"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

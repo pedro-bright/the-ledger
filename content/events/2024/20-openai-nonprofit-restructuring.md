@@ -20,6 +20,8 @@ sources:
   - url: https://www.nytimes.com/2024/09/25/technology/openai-plans-to-become-for-profit.html
     title: "OpenAI Plans to Become a For-Profit Company"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

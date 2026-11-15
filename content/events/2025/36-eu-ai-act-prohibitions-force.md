@@ -25,6 +25,8 @@ sources:
     title: "EU AI Act: Ban on Certain AI Practices and Requirements for AI Literacy Come into Effect"
     type: secondary_reporting
     publisher: Mayer Brown
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

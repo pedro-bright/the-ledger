@@ -26,6 +26,7 @@ sources:
     title: GPT-5.2 System Card
     type: primary_document
 revision:
+  created: 2026-03-08
   last_reviewed: 2026-10-26
   draft_assistance: ai-assisted
   final_author: terry-tang

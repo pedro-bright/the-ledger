@@ -34,6 +34,7 @@ sources:
     accessed: '2026-10-26'
     archive_url: https://web.archive.org/web/20261011231801/https://www.anthropic.com/research/open-source-circuit-tracing
 revision:
+  created: 2026-04-19
   last_reviewed: 2026-10-26
   draft_assistance: ai-assisted
   final_author: terry-tang

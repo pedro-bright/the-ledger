@@ -22,6 +22,8 @@ sources:
     type: secondary_reporting
     publisher: LessWrong
     date: 2025-12-16
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

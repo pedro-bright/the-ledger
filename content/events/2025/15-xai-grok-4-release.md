@@ -21,6 +21,8 @@ sources:
     type: secondary_reporting
     date: 2025-07-09
     archive_url: https://web.archive.org/web/20250715105339/https://smythos.com/developers/ai-models/whats-new-in-grok-4-release-facts-benchmarks-and-value/
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

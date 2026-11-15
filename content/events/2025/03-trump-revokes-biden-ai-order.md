@@ -18,6 +18,8 @@ sources:
   - url: https://www.reuters.com/technology/artificial-intelligence/trump-revoke-biden-executive-order-ai-safety-2025-01-20/
     title: "Trump revokes Biden executive order on AI safety"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

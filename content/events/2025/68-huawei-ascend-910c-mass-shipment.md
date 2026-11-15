@@ -26,6 +26,8 @@ sources:
     title: "Huawei's 910C AI Chip Reportedly Gears Up for Mass Shipment in May Amid U.S. Curbs on Nvidia"
     type: secondary_reporting
     date: 2025-04-22
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

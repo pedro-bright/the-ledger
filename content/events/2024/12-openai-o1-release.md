@@ -18,6 +18,8 @@ sources:
   - url: https://openai.com/index/introducing-openai-o1-preview/
     title: "Introducing OpenAI o1-preview"
     type: primary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

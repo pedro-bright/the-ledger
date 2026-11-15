@@ -20,6 +20,8 @@ sources:
     title: "Anthropic Rolls Out Claude Sonnet 4.6 as Default for Free and Pro Users"
     type: secondary_reporting
     date: 2026-02-17
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

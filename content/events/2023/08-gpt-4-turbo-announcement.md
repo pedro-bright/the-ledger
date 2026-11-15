@@ -20,6 +20,8 @@ sources:
   - url: https://www.theverge.com/2023/11/6/23948619/openai-chatgpt-devday-developer-conference-2023
     title: "OpenAI's DevDay keynote"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

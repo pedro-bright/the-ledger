@@ -25,6 +25,8 @@ sources:
     title: "TSMC pledges additional $100 billion investment in US, announces plans for three more factories"
     type: secondary_reporting
     date: 2025-03-03
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

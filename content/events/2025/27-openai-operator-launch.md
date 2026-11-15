@@ -24,6 +24,8 @@ sources:
     title: "OpenAI Launches Operator, an Agent That Can Use a Computer for You"
     type: secondary_reporting
     date: 2025-01-23
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

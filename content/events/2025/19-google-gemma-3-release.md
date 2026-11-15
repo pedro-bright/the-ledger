@@ -33,6 +33,7 @@ sources:
     accessed: '2026-10-26'
     archive_url: https://web.archive.org/web/20260824065808/https://developers.googleblog.com/gemma-explained-whats-new-in-gemma-3/
 revision:
+  created: 2026-04-19
   last_reviewed: 2026-10-26
   draft_assistance: ai-assisted
   final_author: terry-tang

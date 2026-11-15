@@ -21,6 +21,8 @@ sources:
   - url: https://www.nytimes.com/2024/09/29/technology/california-ai-bill-vetoed-newsom.html
     title: "California Governor Vetoes A.I. Safety Bill"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

@@ -25,6 +25,8 @@ sources:
     title: "EU AI Act: GPAI Model Obligations in Force and Final GPAI Code of Practice in Place"
     type: secondary_reporting
     publisher: Latham & Watkins
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

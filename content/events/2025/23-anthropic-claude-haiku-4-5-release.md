@@ -20,6 +20,8 @@ sources:
     title: "Anthropic Launches Claude Haiku 4.5: Small AI Model That Delivers Sonnet 4-Level Coding Performance at One-Third the Cost"
     type: secondary_reporting
     date: 2025-10-15
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

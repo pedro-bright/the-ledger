@@ -24,6 +24,8 @@ sources:
     title: "China Announces Action Plan for Global AI Governance"
     type: secondary_reporting
     publisher: American National Standards Institute
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

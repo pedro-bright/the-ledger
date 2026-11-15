@@ -18,6 +18,8 @@ sources:
   - url: https://www.theverge.com/2024/3/19/24105900/microsoft-hires-mustafa-suleyman-inflection-ai
     title: "Microsoft hires Inflection's Mustafa Suleyman to lead its consumer AI division"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

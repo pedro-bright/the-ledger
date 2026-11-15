@@ -20,6 +20,8 @@ sources:
   - url: https://www.nytimes.com/2023/12/27/business/media/new-york-times-open-ai-microsoft-lawsuit.html
     title: "The Times Sues OpenAI and Microsoft Over A.I. Use of Copyrighted Work"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

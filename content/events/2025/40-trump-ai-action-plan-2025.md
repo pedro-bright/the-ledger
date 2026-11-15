@@ -26,6 +26,8 @@ sources:
     title: "Executive Order: Preventing Woke AI in the Federal Government"
     type: primary_document
     publisher: White House
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

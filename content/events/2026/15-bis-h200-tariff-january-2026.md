@@ -27,6 +27,8 @@ sources:
     title: "Department of Commerce Revises License Review Policy for Semiconductors Exported to China"
     type: official
     date: 2026-01-15
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

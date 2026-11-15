@@ -27,6 +27,8 @@ sources:
   - url: https://www.bbc.com/news/uk-67302048
     title: "AI summit: World leaders agree on Bletchley Declaration"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

@@ -33,6 +33,8 @@ sources:
     type: secondary_reporting
     publisher: NVIDIA
     date: 2025-02-19
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

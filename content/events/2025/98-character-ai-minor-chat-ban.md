@@ -29,6 +29,8 @@ sources:
     type: secondary_reporting
     publisher: Fortune
     date: 2025-10-29
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

@@ -35,6 +35,7 @@ contestation:
   status: contested
   last_challenged: '2026-10-26'
 revision:
+  created: 2026-04-19
   last_reviewed: 2026-11-14
   draft_assistance: ai-assisted
   final_author: terry-tang

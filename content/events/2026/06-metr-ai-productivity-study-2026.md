@@ -25,6 +25,8 @@ sources:
     title: "HN Discussion: Measuring the impact of AI on experienced open-source developer productivity"
     type: commentary
     date: 2025-07-10
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

@@ -36,6 +36,8 @@ sources:
     title: "China, Russia and Iran Will Likely Use AI to Target Canada's 2025 Election, Intelligence Warns"
     type: secondary_reporting
     publisher: The Globe and Mail
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

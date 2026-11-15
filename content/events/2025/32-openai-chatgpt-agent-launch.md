@@ -24,6 +24,8 @@ sources:
     title: "ChatGPT Agent Release Notes"
     type: primary_document
     date: 2025-07-17
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

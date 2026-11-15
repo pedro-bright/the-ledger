@@ -24,6 +24,8 @@ sources:
     title: "Qwen2.5-VL-72B-Instruct Model Card"
     type: primary_document
     date: 2025-01-26
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

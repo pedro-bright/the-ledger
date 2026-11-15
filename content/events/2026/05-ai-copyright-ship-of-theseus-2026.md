@@ -21,6 +21,8 @@ sources:
     title: "HN Discussion: AI and the Ship of Theseus (180+ points, 189 comments)"
     type: commentary
     date: 2026-03-05
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

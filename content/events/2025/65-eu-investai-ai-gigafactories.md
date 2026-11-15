@@ -25,6 +25,8 @@ sources:
     title: "AI: Council adopts position on the updated regulation to create AI gigafactories"
     type: official
     date: 2025-12-09
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

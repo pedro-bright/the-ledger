@@ -18,6 +18,8 @@ sources:
   - url: https://www.theverge.com/news/618440/anthropic-claude-3-7-sonnet-ai-model-hybrid-reasoning
     title: "Anthropic releases Claude 3.7 Sonnet with extended thinking"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

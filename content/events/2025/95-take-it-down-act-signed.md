@@ -39,6 +39,8 @@ sources:
     title: "TAKE IT DOWN Act"
     type: secondary_reporting
     publisher: RAINN
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary
