@@ -20,7 +20,7 @@ const formatSize = (bytes: number) => (bytes < 1024 * 1024
 const plural = (n: number) => `${n} record${n === 1 ? '' : 's'}`;
 ---
 
-<Base layout="full" title="Data" description="The Ledger's events, actors, threads and controversies as JSON and CSV files.">
+<Base layout="full" title="Data" description="The Ledger's events, actors, threads, controversies and correction records as JSON and CSV files.">
   <PageHeader eyebrow="§ About the Ledger" title="Data" />
 
   <article class="prose data-prose">
@@ -47,7 +47,8 @@ const plural = (n: number) => `${n} record${n === 1 ? '' : 's'}`;
     <p>
       Each JSON file is an object with <code>schema_version</code>, <code>generated_at</code>,
       <code>license</code> and <code>attribution</code>, and the records under a key named after the file.
-      Every record has the URL of its page in <code>url</code>, and dates in records are written as YYYY-MM-DD.
+      Every record has the URL of its page in <code>url</code>; a revision, challenge or resolution links the revision history on the page of the entry it concerns.
+      Dates in records are written as YYYY-MM-DD.
     </p>
     <p>
       <code>schema_version</code> goes up when a field is renamed or removed; new fields can appear without a change.
