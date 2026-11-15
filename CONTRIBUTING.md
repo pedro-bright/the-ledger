@@ -55,6 +55,17 @@ Contributor submissions follow the review process below.
 4. Add kernel frontmatter: `id`, `title`, `date`, `category`, `sources`
 5. Submit a PR
 
+Create a scaffold from the repository root:
+
+```bash
+npm run new-event -- --id example-event --date 2026-11-01 --category policy
+```
+
+The command creates `content/events/<year>/<number>-<id>.md` with the required frontmatter and body headings.
+It uses the highest existing number in that year plus one, leaving gaps for open pull requests.
+The id must be unique and the category must be listed in the event schema.
+Fill in the title, source URL and source title, then write the body and run `npm run validate` before submitting.
+
 **AI assistance:** If you use AI tools to draft content, set `draft_assistance: ai-assisted` under `revision` in the frontmatter (`revision.draft_assistance`).
 This is a disclosure.
 See [editorial/ai-assistance.md](editorial/ai-assistance.md).

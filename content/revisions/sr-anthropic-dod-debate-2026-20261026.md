@@ -33,7 +33,7 @@ Terry Tang reviewed and approved this correction on 2026-10-26.
 ## Event location and identity
 
 Original file: `content/events/2026/02-anthropic-dod-debate.md`.
-Current file: [`content/events/2026/02-anthropic-dod-debate.md`](https://github.com/pedro-bright/the-ledger/blob/main/content/events/2026/02-anthropic-dod-debate.md).
+Current file: [`content/events/2026/02-anthropic-dod-debate-2026.md`](https://github.com/pedro-bright/the-ledger/blob/main/content/events/2026/02-anthropic-dod-debate-2026.md).
 The event ID remains `anthropic-dod-debate-2026`; its public URL is [unchanged](https://the-ledger.net/events/anthropic-dod-debate-2026/).
 
 ## Evidence
