@@ -188,25 +188,27 @@ const feed = { title: `The Ledger: ${thread.title}`, href: `/threads/${thread.sl
     <!-- Canonical synthesis (rendered markdown) -->
     <Fragment set:html={article.body} />
 
-    <p class="thread-notice" data-pagefind-ignore>
-      To follow new entries, subscribe to the <a href={feed.href}>thread feed (Atom)</a>.
-    </p>
-
-    {linkedEvents.length > 0 && (
-      <section class="thread-section" data-pagefind-ignore>
-        <h2 class="wiki-article__h2">Event timeline</h2>
-        {newerEntries > 0 && (
-          <p class="thread-notice">
-            {newerEntries === 1 ? '1 entry is' : `${newerEntries} entries are`} dated after this synthesis was last updated on <time class="font-mono" datetime={thread.last_updated}>{thread.last_updated}</time>.
-          </p>
-        )}
+    <section class="thread-section" data-pagefind-ignore>
+      <h2 class="wiki-article__h2">Event timeline</h2>
+      {linkedEvents.length === 0 && (
+        <p class="thread-notice">No entries have been added to this thread yet.</p>
+      )}
+      {newerEntries > 0 && (
+        <p class="thread-notice">
+          {newerEntries === 1 ? '1 entry is' : `${newerEntries} entries are`} dated after this synthesis was last updated on <time class="font-mono" datetime={thread.last_updated}>{thread.last_updated}</time>.
+        </p>
+      )}
+      <p class="thread-notice">
+        To follow new entries, subscribe to the <a href={feed.href}>thread feed (Atom)</a>.
+      </p>
+      {linkedEvents.length > 0 && (
         <ul class="thread-timeline">
           {linkedEvents.map((e) => (
             <EventRow event={e} />
           ))}
         </ul>
-      </section>
-    )}
+      )}
+    </section>
 
     {linkedControversies.length > 0 && (
       <section class="thread-section" data-pagefind-ignore>
