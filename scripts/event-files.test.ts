@@ -3,7 +3,7 @@ import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { test } from 'node:test';
 import { parseFrontmatter } from './frontmatter.js';
 import yaml from 'js-yaml';
@@ -70,15 +70,15 @@ test('the same number in different years is allowed', (t) => {
   assert.equal(validate(dir).status, 0);
 });
 
-function scaffold(dir: string, id = 'zz-example', category = 'policy', date = '2026-11-01') {
-  return spawnSync('npm', ['run', 'new-event', '--', '--id', id, '--date', date, '--category', category], { cwd: dir, encoding: 'utf8' });
+function scaffold(dir: string, id = 'zz-example', category = 'policy', date = '2026-11-01', env = process.env) {
+  return spawnSync('npm', ['run', 'new-event', '--', '--id', id, '--date', date, '--category', category], { cwd: dir, encoding: 'utf8', env });
 }
 
 test('scaffold allocates above the maximum, supplies frontmatter and validates after sourcing', (t) => {
   const dir = fixture(t);
   event(dir, '01-example-event.md');
   event(dir, '99-latest-event.md', 'latest-event');
-  const result = scaffold(dir);
+  const result = scaffold(dir, 'zz-example', 'policy', '2026-11-01', { ...process.env, TZ: 'UTC' });
   assert.equal(result.status, 0, result.stdout + result.stderr);
   const filename = path.join(dir, 'content/events/2026/100-zz-example.md');
   const raw = fs.readFileSync(filename, 'utf8');
@@ -131,4 +131,34 @@ test('scaffold refuses to allocate a four digit number', (t) => {
   assert.notEqual(result.status, 0);
   assert.match(result.stdout + result.stderr, /two or three digits/);
   assert.deepEqual(fs.readdirSync(path.join(dir, 'content/events/2026')), ['999-example-event.md']);
+});
+
+test('scaffold revision dates use the local calendar day near UTC midnight', (t) => {
+  for (const [timeZone, instant, expected] of [
+    ['America/Los_Angeles', '2026-11-15T00:30:00Z', '2026-11-14'],
+    ['UTC', '2026-11-15T00:30:00Z', '2026-11-15'],
+    ['Pacific/Kiritimati', '2026-11-15T12:30:00Z', '2026-11-16'],
+  ]) {
+    const dir = fixture(t);
+    const clock = path.join(dir, 'fixed-clock.mjs');
+    fs.writeFileSync(clock, `
+      const RealDate = Date;
+      globalThis.Date = class extends RealDate {
+        constructor(...args) {
+          if (args.length === 0) super(${JSON.stringify(instant)});
+          else super(...args);
+        }
+        static now() { return RealDate.parse(${JSON.stringify(instant)}); }
+      };
+    `);
+    const result = scaffold(dir, 'zz-example', 'policy', '2026-11-01', {
+      ...process.env,
+      TZ: timeZone,
+      NODE_OPTIONS: `${process.env.NODE_OPTIONS || ''} --import=${pathToFileURL(clock).href}`,
+    });
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    const { data } = parseFrontmatter(fs.readFileSync(path.join(dir, 'content/events/2026/01-zz-example.md'), 'utf8'));
+    assert.equal(data.revision.created, expected, timeZone);
+    assert.equal(data.revision.last_reviewed, expected, timeZone);
+  }
 });

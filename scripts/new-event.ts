@@ -38,7 +38,12 @@ function main() {
   const number = Math.max(0, ...numbers) + 1;
   if (number > 999) throw new Error("Event numbers must have two or three digits; this year is full.");
   const filename = path.join(yearDir, `${String(number).padStart(2, "0")}-${id}.md`);
-  const today = new Date().toISOString().slice(0, 10);
+  const now = new Date();
+  const today = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, "0"),
+    String(now.getDate()).padStart(2, "0"),
+  ].join("-");
   const frontmatter = yaml.dump({
     id,
     title: "Untitled event",
