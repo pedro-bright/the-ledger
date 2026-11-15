@@ -610,7 +610,7 @@ Three views over the same data, serving different needs:
 - Significance history shown when the event has more than one `significance_history` entry
 - "Part of thread: [link]" navigation
 - "This record last reviewed [date]" in the footer, omitted on automatic daily scan entries and when `last_reviewed` is not later than `created`
-- "Revision history" section between the body and the references, omitted when no records target the event: summary revisions with the date, reason, revised summary, and the earlier summary in a disclosure; challenges with the date opened, status, allegation types, and resolution
+- "Revision history" section between the body and the references, omitted when no records target the event: entries ordered by date, oldest first, and on one day by challenge opened, summary revised, challenge resolved; summary revisions with the date, reason, revised summary, and the earlier summary in a disclosure; challenges with the date opened, status, and allegation types; resolutions as their own "Challenge resolved" entry with the date issued, disposition, and findings as a bulleted list
 
 ### Thread Pages
 - **Signed canonical synthesis at top** (current best reading)
