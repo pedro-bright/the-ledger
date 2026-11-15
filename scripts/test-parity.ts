@@ -186,7 +186,8 @@ function parseCsv(text: string): string[][] {
 }
 
 // The /data/ files: each parses, events.json has one item per built event page and
-// links each to a built page, and events.csv has the same rows as events.json.
+// links each to a built page, and events.csv starts with a byte-order mark followed by
+// the same rows as events.json.
 function checkDataExport() {
   const read = (file: string) => fs.readFileSync(path.join(DIST_DIR, "data", file), "utf8");
   for (const key of ["actors", "threads", "controversies"]) {
@@ -203,7 +204,9 @@ function checkDataExport() {
     const page = path.join(decodeURIComponent(new URL(event.url).pathname), "index.html");
     assert.ok(existsHtml(page), `data/events.json URL has no built page: ${event.url}`);
   }
-  const [header, ...rows] = parseCsv(read("events.csv"));
+  const csv = fs.readFileSync(path.join(DIST_DIR, "data", "events.csv"));
+  assert.deepEqual([...csv.subarray(0, 3)], [0xef, 0xbb, 0xbf], "data/events.csv must start with a UTF-8 byte-order mark");
+  const [header, ...rows] = parseCsv(csv.subarray(3).toString("utf8"));
   assert.deepEqual(header, [
     "id", "date", "title", "category", "significance", "confidence",
     "regions", "threads", "actors", "source_count", "url",

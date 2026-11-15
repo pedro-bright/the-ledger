@@ -76,7 +76,7 @@ export const dataFiles = [
     name: 'events.csv',
     type: 'text/csv; charset=utf-8',
     count: events.length,
-    body: [CSV_COLUMNS, ...eventRows].map((row) => `${row.map(csvField).join(',')}\r\n`).join(''),
+    body: `\uFEFF${[CSV_COLUMNS, ...eventRows].map((row) => `${row.map(csvField).join(',')}\r\n`).join('')}`,
   },
   { name: 'actors.json', type: JSON_TYPE, count: actors.length, body: envelope('actors', actors) },
   { name: 'threads.json', type: JSON_TYPE, count: threads.length, body: envelope('threads', threads) },
