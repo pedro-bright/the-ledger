@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { buildCorrectionRecords } from '../site/src/lib/corrections.ts';
+import { buildCorrectionRecords, countOpenChallenges } from '../site/src/lib/corrections.ts';
 
 const events = [{ id: 'some-event', slug: 'some-event', title: 'Some event' }];
 
@@ -45,4 +45,12 @@ test('records that target a synthesis render unlinked under the synthesis id', (
       reason: 'Alleges overstatement.',
     },
   ]);
+});
+
+test('open challenges are counted by status, whether or not a resolution exists', () => {
+  const statuses = ['open', 'under_review', 'sustained', 'dismissed', 'partially_sustained'] as const;
+  const challenges = statuses.map((status) => ({ status }));
+  assert.equal(countOpenChallenges(challenges), 2);
+  assert.equal(countOpenChallenges([{ status: 'dismissed' }]), 0);
+  assert.equal(countOpenChallenges([{ status: 'under_review' }]), 1);
 });

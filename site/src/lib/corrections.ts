@@ -28,6 +28,11 @@ const KIND_ORDER: Record<CorrectionRecord['kind'], number> = {
   'Challenge opened': 2,
 };
 
+// A challenge is open until its status records a decision, whether or not a resolution file exists yet.
+export function countOpenChallenges(challenges: Array<Pick<ChallengeCase, 'status'>>): number {
+  return challenges.filter((c) => c.status === 'open' || c.status === 'under_review').length;
+}
+
 export function buildCorrectionRecords({ events, revisions, challenges, resolutions }: CorrectionSources): CorrectionRecord[] {
   const eventsById = new Map(events.map((e) => [e.id, e]));
 
