@@ -4,7 +4,7 @@
   "title": "Challenge Case",
   "description": "Formal contestation of a specific claim, creating a procedural record.",
   "type": "object",
-  "required": ["id", "target_claim_id", "allegations", "status"],
+  "required": ["id", "target_claim_id", "allegations", "status", "opened_at"],
   "properties": {
     "id": {
       "type": "string",

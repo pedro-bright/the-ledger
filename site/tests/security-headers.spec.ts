@@ -100,6 +100,8 @@ test.describe('security headers', () => {
     `/actors/${SLUGS.actor}`,
     '/feed.xml',
     '/rss.xml',
+    `/threads/${SLUGS.thread}/feed.xml`,
+    '/corrections/feed.xml',
     '/no-such-page',
   ];
 

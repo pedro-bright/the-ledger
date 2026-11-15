@@ -499,7 +499,10 @@ export function getSignificanceOrder(sig?: string): number {
 }
 
 // A thread's events: its own `events` list plus every event that declares the thread, oldest first.
-export function getThreadEvents(thread: ThreadData, events: EventData[]): EventData[] {
+export function getThreadEvents<E extends Pick<EventData, 'id' | 'date' | 'threads'>>(
+  thread: Pick<ThreadData, 'id' | 'events'>,
+  events: E[],
+): E[] {
   const listed = new Set(thread.events ?? []);
   return events
     .filter((e) => listed.has(e.id) || e.threads?.includes(thread.id))

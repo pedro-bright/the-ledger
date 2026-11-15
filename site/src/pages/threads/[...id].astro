@@ -61,6 +61,8 @@ const synthesis = plainParagraphs(thread.content).find((p) => !p.startsWith('Aut
 const question = thread.core_question ?? '';
 const withSentence = `${question} ${firstSentence(synthesis)}`.trim();
 const description = question && withSentence.length > 160 ? question : metaDescription(withSentence);
+// Written by scripts/generate-feed.ts.
+const feed = { title: `The Ledger: ${thread.title}`, href: `/threads/${thread.slug}/feed.xml` };
 ---
 
 <Base
@@ -69,6 +71,7 @@ const description = question && withSentence.length > 160 ? question : metaDescr
   image={`/og/threads/${thread.slug}.png`}
   imageAlt={`${thread.title}. A thread in The Ledger.`}
   structuredData={[breadcrumbList(breadcrumb)]}
+  feed={feed}
   layout="article"
 >
   <!-- LEFT RAIL -->
@@ -185,21 +188,27 @@ const description = question && withSentence.length > 160 ? question : metaDescr
     <!-- Canonical synthesis (rendered markdown) -->
     <Fragment set:html={article.body} />
 
-    {linkedEvents.length > 0 && (
-      <section class="thread-section" data-pagefind-ignore>
-        <h2 class="wiki-article__h2">Event timeline</h2>
-        {newerEntries > 0 && (
-          <p class="thread-notice">
-            {newerEntries === 1 ? '1 entry is' : `${newerEntries} entries are`} dated after this synthesis was last updated on <time class="font-mono" datetime={thread.last_updated}>{thread.last_updated}</time>.
-          </p>
-        )}
+    <section class="thread-section" data-pagefind-ignore>
+      <h2 class="wiki-article__h2">Event timeline</h2>
+      {linkedEvents.length === 0 && (
+        <p class="thread-notice">No entries have been added to this thread yet.</p>
+      )}
+      {newerEntries > 0 && (
+        <p class="thread-notice">
+          {newerEntries === 1 ? '1 entry is' : `${newerEntries} entries are`} dated after this synthesis was last updated on <time class="font-mono" datetime={thread.last_updated}>{thread.last_updated}</time>.
+        </p>
+      )}
+      <p class="thread-notice">
+        To follow new entries, subscribe to the <a href={feed.href}>thread feed (Atom)</a>.
+      </p>
+      {linkedEvents.length > 0 && (
         <ul class="thread-timeline">
           {linkedEvents.map((e) => (
             <EventRow event={e} />
           ))}
         </ul>
-      </section>
-    )}
+      )}
+    </section>
 
     {linkedControversies.length > 0 && (
       <section class="thread-section" data-pagefind-ignore>

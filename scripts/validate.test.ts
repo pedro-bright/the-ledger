@@ -527,3 +527,23 @@ test('a corrected entry needs a resolution of its challenge that creates a summa
   assertNotListed(result.output, '01-revised.md');
   for (const id of ['cc-revised', 'rn-revised', 'sr-revised', 'cc-not-revised', 'rn-not-revised']) assertNotListed(result.output, id);
 });
+
+const undatedCases: Array<[string, string, Record<string, string>]> = [
+  ['challenges/cc-undated.md', 'opened_at', challenge('cc-undated', 'undated-target')],
+  ['revisions/sr-undated.md', 'created_at', revision('sr-undated', 'undated-target', null)],
+  ['resolutions/rn-undated.md', 'issued_at', resolution('rn-undated', 'cc-undated-target')],
+];
+for (const [file, field, records] of undatedCases) {
+  test(`schema rejects a record in ${file.split('/')[0]} without ${field}`, (t) => {
+    const raw = records[file];
+    const undated = raw.replace(new RegExp(`^${field}: .*\\n`, 'm'), '');
+    assert.notEqual(undated, raw);
+    const result = validate(t, [contested('undated-target')], {
+      ...challenge('cc-undated-target', 'undated-target'),
+      [file]: undated,
+    });
+    assert.equal(result.status, 1, result.output);
+    assert.match(result.output, new RegExp(`${escapeRegExp(file)}\\n\\s+→ Schema: / must have required property '${field}'`), result.output);
+    assert.equal(result.output.split('must have required property').length - 1, 1, result.output);
+  });
+}

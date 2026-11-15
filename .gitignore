@@ -9,6 +9,7 @@ dist/
 graph.json
 feed.xml
 rss.xml
+feeds/
 broken-links-report.md
 broken-links-summary.md
 .vercel

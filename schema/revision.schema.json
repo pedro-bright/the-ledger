@@ -4,7 +4,7 @@
   "title": "Summary Revision",
   "description": "A versioned update to a canonical summary when underlying claims change.",
   "type": "object",
-  "required": ["id", "target_summary_id", "reason"],
+  "required": ["id", "target_summary_id", "reason", "created_at"],
   "properties": {
     "id": {
       "type": "string",
