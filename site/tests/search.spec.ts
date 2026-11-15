@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page, type Route } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { SLUGS } from './_slugs';
 
@@ -12,6 +12,45 @@ const THREAD_TITLE = 'The Scaling Laws Debate: Will Bigger Always Mean Better?';
 const field = (page: Page) => page.getByRole('searchbox', { name: 'Search the ledger' });
 const status = (page: Page) => page.getByRole('status');
 const group = (page: Page, label: string) => page.getByRole('region', { name: new RegExp(`^${label}\\b`) });
+const count = async (page: Page, label: string) =>
+  Number(await group(page, label).getByRole('heading').locator('span').textContent());
+
+/** Holds Pagefind's result fragment requests until `release` lets them and every later one through. */
+async function holdFragments(page: Page) {
+  const held: Route[] = [];
+  let holding = true;
+  await page.route('**/pagefind/fragment/**', (route) => (holding ? held.push(route) : route.continue()));
+  return {
+    count: () => held.length,
+    release: async () => {
+      holding = false;
+      await Promise.all(held.splice(0).map((route) => route.continue()));
+    },
+  };
+}
+
+/** The status line, and each visible group's heading and result links in order. */
+async function shown(page: Page) {
+  return {
+    status: await status(page).textContent(),
+    groups: await page.getByRole('region').evaluateAll((sections) =>
+      sections.map((section) => ({
+        heading: section.querySelector('h2')!.textContent!.replace(/\s+/g, ' ').trim(),
+        links: [...section.querySelectorAll('li a')].map((link) => link.getAttribute('href')),
+      })),
+    ),
+  };
+}
+
+/** What a fresh page shows for the query, to compare a page that searched something else first against. */
+async function shownFor(page: Page, term: string) {
+  const fresh = await page.context().newPage();
+  await fresh.goto(`/search?q=${encodeURIComponent(term)}`);
+  await expect(status(fresh)).toHaveText(new RegExp(`results for “${term}”$`));
+  const result = await shown(fresh);
+  await fresh.close();
+  return result;
+}
 
 test('typing a query lists matches under their groups and keeps the query in the URL', async ({ page }) => {
   await page.goto('/search');
@@ -115,12 +154,67 @@ test('Show more adds the next results and moves focus to the first of them', asy
   const events = group(page, 'Events');
   const rows = events.getByRole('listitem');
   await expect(rows).toHaveCount(10);
-  expect(Number(await events.getByRole('heading').locator('span').textContent())).toBeGreaterThan(20);
+  const total = await count(page, 'Events');
+  expect(total).toBeGreaterThan(20);
 
-  await events.getByRole('button', { name: 'Show more events' }).focus();
+  await events.getByRole('button', { name: 'Show 10 more events' }).focus();
   await page.keyboard.press('Enter');
   await expect(rows).toHaveCount(20);
   await expect(rows.nth(10).getByRole('link')).toBeFocused();
+  // The button names the size of the next batch, which is the rest when fewer than ten remain.
+  await expect(events.getByRole('button')).toHaveText(`Show ${Math.min(10, total - 20)} more events`);
+});
+
+test('activating Show more again while its rows load adds each result once', async ({ page }) => {
+  await page.goto('/search?q=OpenAI');
+  const events = group(page, 'Events');
+  const rows = events.getByRole('listitem');
+  await expect(rows).toHaveCount(10);
+  const total = await count(page, 'Events');
+
+  const fragments = await holdFragments(page);
+  const more = events.getByRole('button', { name: 'Show 10 more events' });
+  await more.click();
+  await expect.poll(fragments.count).toBeGreaterThan(0);
+  await more.click();
+  await fragments.release();
+
+  await expect(rows.nth(10).getByRole('link')).toBeFocused();
+  await expect(events.getByRole('button')).toHaveText(`Show ${Math.min(10, total - 20)} more events`);
+  await expect(rows).toHaveCount(20);
+  const links = await rows.getByRole('link').evaluateAll((all) => all.map((link) => link.getAttribute('href')));
+  expect(new Set(links).size).toBe(20);
+});
+
+test('a search typed while the previous one loads shows only the new results', async ({ page }) => {
+  const expected = await shownFor(page, 'scaling laws');
+  await page.goto('/search');
+  const fragments = await holdFragments(page);
+  await field(page).fill('bletchley');
+  await expect.poll(fragments.count).toBeGreaterThan(0);
+  await field(page).fill('scaling laws');
+  await expect(page).toHaveURL(/\?q=scaling\+laws$/);
+  await fragments.release();
+
+  await expect(status(page)).toHaveText(expected.status!);
+  expect(await shown(page)).toEqual(expected);
+});
+
+test('a search typed while Show more loads shows only the new results', async ({ page }) => {
+  const expected = await shownFor(page, 'bletchley');
+  await page.goto('/search?q=OpenAI');
+  const events = group(page, 'Events');
+  await expect(events.getByRole('listitem')).toHaveCount(10);
+
+  const fragments = await holdFragments(page);
+  await events.getByRole('button', { name: 'Show 10 more events' }).click();
+  await expect.poll(fragments.count).toBeGreaterThan(0);
+  await field(page).fill('bletchley');
+  await expect(page).toHaveURL(/\?q=bletchley$/);
+  await fragments.release();
+
+  await expect(status(page)).toHaveText(expected.status!);
+  expect(await shown(page)).toEqual(expected);
 });
 
 test('a search index that does not load is reported with a way on', async ({ page }) => {
@@ -128,6 +222,17 @@ test('a search index that does not load is reported with a way on', async ({ pag
   await page.goto('/search?q=bletchley');
   await expect(status(page)).toHaveText('Search could not load. Reload the page, or browse the timeline.');
   await expect(status(page).getByRole('link', { name: 'timeline' })).toHaveAttribute('href', '/explore');
+});
+
+test('a search that fails removes the results of the previous one', async ({ page }) => {
+  await page.goto('/search?q=bletchley');
+  await expect(group(page, 'Events').getByRole('listitem').first()).toBeVisible();
+
+  await page.route('**/pagefind/fragment/**', (route) => route.abort());
+  await field(page).fill('scaling laws');
+  await expect(status(page)).toHaveText('Search could not load. Reload the page, or browse the timeline.');
+  await expect(page.getByRole('region')).toHaveCount(0);
+  await expect(page.locator('.search-result')).toHaveCount(0);
 });
 
 test('without JavaScript the page says search needs it and links to the timeline', async ({ browser }) => {

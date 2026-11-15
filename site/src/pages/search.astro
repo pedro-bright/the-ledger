@@ -64,13 +64,13 @@ const categories = getCategories();
 
     <div class="ph-no-capture">
       {groups.map(({ type, label, noun }) => (
-        <section class="search-group" data-search-group={type} aria-labelledby={`search-${type}-head`} hidden>
+        <section class="search-group" data-search-group={type} data-search-noun={noun} aria-labelledby={`search-${type}-head`} hidden>
           <h2 class="search-group__head" id={`search-${type}-head`}>
             {label}
             <span class="search-group__count font-mono"></span>
           </h2>
           <ol class="search-group__list"></ol>
-          <button type="button" class="search-group__more" hidden>Show more {noun}</button>
+          <button type="button" class="search-group__more" hidden></button>
         </section>
       ))}
     </div>
@@ -125,12 +125,16 @@ const categories = getCategories();
   const template = (selector: string) => document.querySelector<HTMLTemplateElement>(selector)!.content;
   const groups = [...document.querySelectorAll<HTMLElement>('[data-search-group]')].map((section) => ({
     type: section.dataset.searchGroup!,
+    noun: section.dataset.searchNoun!,
     section,
     count: section.querySelector<HTMLElement>('.search-group__count')!,
     list: section.querySelector<HTMLElement>('.search-group__list')!,
     more: section.querySelector<HTMLButtonElement>('.search-group__more')!,
     results: [] as Result[],
+    // The results whose next rows are loading, so a second activation of Show more waits for them.
+    loading: undefined as Result[] | undefined,
   }));
+  type Group = (typeof groups)[number];
 
   let pagefind: Promise<Pagefind> | undefined;
   function loadPagefind() {
@@ -174,7 +178,7 @@ const categories = getCategories();
     });
   }
 
-  function message(selector: string, term: string) {
+  function message(selector: string, term = '') {
     const content = template(selector).cloneNode(true) as DocumentFragment;
     const query = content.querySelector('[data-query]');
     if (query) query.textContent = term;
@@ -192,15 +196,16 @@ const categories = getCategories();
 
     let found: Result[][] = groups.map(() => []);
     let first: HTMLElement[][] = groups.map(() => []);
+    let failed = false;
     if (term) {
       try {
         const index = await loadPagefind();
         const searches = await Promise.all(groups.map(({ type }) => index.search(term, { filters: { type } })));
-        found = searches.map(({ results }) => results);
-        first = await Promise.all(found.map((results, i) => rows(results.slice(0, STEP), groups[i].type)));
+        const results = searches.map((search) => search.results);
+        first = await Promise.all(results.map((matches, i) => rows(matches.slice(0, STEP), groups[i].type)));
+        found = results;
       } catch {
-        if (run === latest) message('#search-failed', term);
-        return;
+        failed = true;
       }
       // A newer keystroke has started its own search.
       if (run !== latest) return;
@@ -211,24 +216,40 @@ const categories = getCategories();
       group.section.hidden = found[i].length === 0;
       group.count.textContent = String(found[i].length);
       group.list.replaceChildren(...first[i]);
-      group.more.hidden = found[i].length <= STEP;
+      updateMore(group);
     });
     const total = found.reduce((sum, results) => sum + results.length, 0);
-    if (!term) status.textContent = help;
+    if (failed) message('#search-failed');
+    else if (!term) status.textContent = help;
     else if (total === 0) message('#search-empty', term);
     else status.textContent = `${total} ${total === 1 ? 'result' : 'results'} for “${term}”`;
+  }
+
+  // The button names how many results its next activation adds.
+  function updateMore(group: Group) {
+    const left = group.results.length - group.list.children.length;
+    group.more.hidden = left <= 0;
+    group.more.textContent = `Show ${Math.min(STEP, left)} more ${group.noun}`;
   }
 
   for (const group of groups) {
     group.more.addEventListener('click', async () => {
       const { results, list } = group;
-      const added = await rows(results.slice(list.children.length, list.children.length + STEP), group.type);
-      // A new search replaced this list while the rows loaded.
-      if (results !== group.results) return;
-      list.append(...added);
-      group.more.hidden = list.children.length >= results.length;
-      // Keyboard readers continue from the first added result.
-      added[0]?.querySelector('a')?.focus();
+      if (group.loading === results) return;
+      group.loading = results;
+      try {
+        const added = await rows(results.slice(list.children.length, list.children.length + STEP), group.type);
+        // A new search replaced this list while the rows loaded.
+        if (results !== group.results) return;
+        list.append(...added);
+        updateMore(group);
+        // Keyboard readers continue from the first added result.
+        added[0]?.querySelector('a')?.focus();
+      } catch {
+        if (results === group.results) message('#search-failed');
+      } finally {
+        if (group.loading === results) group.loading = undefined;
+      }
     });
   }
 
