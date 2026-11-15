@@ -33,6 +33,8 @@ interface Props {
   publishedTime?: string;
   /** schema.org objects written as JSON-LD blocks in the head. */
   structuredData?: object[];
+  /** The page's own Atom feed, announced in the head before the site's feeds. */
+  feed?: { title: string; href: string };
   /**
    * Layout variant.
    *  - `article`: default 3-col with optional left/right rails. Used for long-form pages.
@@ -42,7 +44,7 @@ interface Props {
   layout?: 'article' | 'index' | 'full';
 }
 
-const { title, description, image, imageAlt, type, publishedTime, structuredData, layout = 'index' } = Astro.props;
+const { title, description, image, imageAlt, type, publishedTime, structuredData, feed, layout = 'index' } = Astro.props;
 const pageTitle = !title || title === 'The Ledger'
   ? 'The Ledger — A durable historical record of AI'
   : `${title} — The Ledger`;
@@ -61,6 +63,7 @@ const hasRightRail = Astro.slots.has('rightRail');
     <meta name="generator" content={Astro.generator} />
     <title>{pageTitle}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {feed && <link rel="alternate" type="application/atom+xml" title={feed.title} href={feed.href} />}
     <link rel="alternate" type="application/atom+xml" title="The Ledger" href="/feed.xml" />
     <link rel="alternate" type="application/rss+xml" title="The Ledger" href="/rss.xml" />
     <SEO

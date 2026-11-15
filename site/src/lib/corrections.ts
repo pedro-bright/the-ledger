@@ -5,6 +5,8 @@ export type CorrectionTarget =
   | { kind: 'synthesis'; title: string };
 
 export interface CorrectionRecord {
+  /** The id of the resolution, revision or challenge the record lists. */
+  id: string;
   kind: 'Challenge resolved' | 'Summary revision' | 'Challenge opened';
   date?: string;
   target: CorrectionTarget;
@@ -48,6 +50,7 @@ export function buildCorrectionRecords({ events, revisions, challenges, resoluti
       const challenge = challenges.find((c) => c.id === r.case_id);
       if (!challenge) throw new Error(`Resolution ${r.id} names unknown challenge ${r.case_id}`);
       return {
+        id: r.id,
         kind: 'Challenge resolved',
         date: r.issued_at,
         target: targetFor(challenge.target_claim_id),
@@ -55,12 +58,14 @@ export function buildCorrectionRecords({ events, revisions, challenges, resoluti
       };
     }),
     ...revisions.map((r): CorrectionRecord => ({
+      id: r.id,
       kind: 'Summary revision',
       date: r.created_at,
       target: targetFor(r.target_summary_id),
       reason: r.reason,
     })),
     ...challenges.map((c): CorrectionRecord => ({
+      id: c.id,
       kind: 'Challenge opened',
       date: c.opened_at,
       target: targetFor(c.target_claim_id),

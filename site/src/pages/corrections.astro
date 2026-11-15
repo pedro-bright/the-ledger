@@ -13,12 +13,15 @@ const records = buildCorrectionRecords({ events: loadEvents(), revisions, challe
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
 const openChallenges = countOpenChallenges(challenges);
+// Written by scripts/generate-feed.ts.
+const feed = { title: 'The Ledger: Corrections and challenges', href: '/corrections/feed.xml' };
 ---
 
 <Base
   layout="index"
   title="Corrections and challenges"
   description="Every correction to a published entry in The Ledger and every formal challenge, newest first."
+  feed={feed}
 >
   <Fragment slot="leftRail">
     <RailSection title="Navigate">
@@ -44,6 +47,9 @@ const openChallenges = countOpenChallenges(challenges);
         target="_blank"
         rel="noopener noreferrer"
       >file a challenge</a>, or open the entry and use the link under its references.
+    </p>
+    <p class="corrections-feed">
+      To follow new records, subscribe to the <a href={feed.href}>corrections feed (Atom)</a>.
     </p>
   </PageHeader>
 
@@ -85,13 +91,15 @@ const openChallenges = countOpenChallenges(challenges);
 </script>
 
 <style>
-  .corrections-request {
+  .corrections-request,
+  .corrections-feed {
     margin: 10px 0 0;
     font-family: var(--font-sans);
     font-size: var(--text-meta);
     line-height: 1.45;
     color: var(--color-ink-mid);
   }
+  .corrections-feed { margin-top: 4px; }
 
   .corrections-stats {
     font-size: var(--text-meta);

@@ -21,24 +21,28 @@ test('records that target a synthesis render unlinked under the synthesis id', (
 
   assert.deepEqual(records, [
     {
+      id: 'rev-synth',
       kind: 'Summary revision',
       date: '2026-03-01',
       target: { kind: 'synthesis', title: 'some-synthesis' },
       reason: 'Tightened wording.',
     },
     {
+      id: 'rev-event',
       kind: 'Summary revision',
       date: '2026-02-01',
       target: { kind: 'event', title: 'Some event', href: '/events/some-event#revision-history' },
       reason: 'Fixed a date.',
     },
     {
+      id: 'res-synth',
       kind: 'Challenge resolved',
       date: '2026-01-20',
       target: { kind: 'synthesis', title: 'some-synthesis' },
       reason: 'Disposition: upheld. Claim overstated.',
     },
     {
+      id: 'ch-synth',
       kind: 'Challenge opened',
       date: '2026-01-15',
       target: { kind: 'synthesis', title: 'some-synthesis' },

@@ -45,6 +45,7 @@ jobs:
           mkdir -p site/public
           cp graph.json site/public/
           cp feed.xml rss.xml site/public/ 2>/dev/null || true
+          cp -R feeds/. site/public/
 
       - name: Build site
         working-directory: site

@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { copyFileSync, mkdirSync } from 'node:fs';
+import { copyFileSync, cpSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildEnvironment, writeBuildOutput } from './vercel-output.mjs';
@@ -20,5 +20,6 @@ mkdirSync(path.join(site, 'public'), { recursive: true });
 for (const file of ['graph.json', 'feed.xml', 'rss.xml']) {
   copyFileSync(path.join(root, file), path.join(site, 'public', file));
 }
+cpSync(path.join(root, 'feeds'), path.join(site, 'public'), { recursive: true });
 run('build', site);
 writeBuildOutput(path.join(site, 'dist'), path.join(root, '.vercel', 'output'));

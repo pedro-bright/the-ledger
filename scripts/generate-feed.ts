@@ -1,18 +1,23 @@
 #!/usr/bin/env tsx
 /**
  * generate-feed.ts — Generate RSS/Atom XML feeds of the events most recently
- * added to the ledger.
+ * added to the ledger, an Atom feed for each thread and an Atom feed of corrections.
  */
 
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { metaDescription, plainParagraphs } from "../site/src/lib/markdown.ts";
+import { getThreadEvents, type ChallengeCase, type ResolutionNote, type SummaryRevision } from "../site/src/lib/content.ts";
+import { buildCorrectionRecords, type CorrectionRecord } from "../site/src/lib/corrections.ts";
 import { parseFrontmatter } from "./frontmatter.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
-const EVENTS_DIR = path.join(ROOT, "content", "events");
+const CONTENT_DIR = path.join(ROOT, "content");
+const EVENTS_DIR = path.join(CONTENT_DIR, "events");
+// The thread and corrections feeds, at their paths on the site. The build copies this directory to the site root.
+const FEEDS_DIR = path.join(ROOT, "feeds");
 
 const SITE_URL = "https://the-ledger.net";
 const FEED_TITLE = "The Ledger — An Epistemic Ledger of AI History";
@@ -32,6 +37,7 @@ interface FeedEvent {
   category: string;
   summary: string;
   significance?: string;
+  threads?: string[];
 }
 
 function walkDir(dir: string): string[] {
@@ -69,6 +75,101 @@ function escapeXml(str: string): string {
     .replace(/'/g, "&apos;");
 }
 
+// Newest additions first, then the latest event among entries added the same day.
+function byAdded(a: FeedEvent, b: FeedEvent): number {
+  return b.added.localeCompare(a.added) || b.date.localeCompare(a.date);
+}
+
+// The latest of the entries' updated days, so a feed's updated time changes only with its entries.
+// A feed with no entries keeps one fixed time.
+function feedUpdated(updated: string[]): string {
+  const latest = updated.reduce((max, day) => (day > max ? day : max), "");
+  return new Date(latest || 0).toISOString();
+}
+
+function eventEntry(e: FeedEvent): string {
+  return `  <entry>
+    <id>${SITE_URL}/events/${escapeXml(e.id)}</id>
+    <title>${escapeXml(e.title)}</title>
+    <link href="${SITE_URL}/events/${escapeXml(e.id)}" rel="alternate"/>
+    <published>${new Date(e.added).toISOString()}</published>
+    <updated>${new Date(e.updated).toISOString()}</updated>
+    <summary type="text">${escapeXml(e.summary)}</summary>
+    <category term="${escapeXml(e.category)}"/>
+    ${e.significance ? `<category term="significance:${escapeXml(e.significance)}"/>` : ""}
+  </entry>`;
+}
+
+const RECORD_DIRS: Record<CorrectionRecord["kind"], string> = {
+  "Challenge resolved": "resolutions",
+  "Summary revision": "revisions",
+  "Challenge opened": "challenges",
+};
+
+// A correction links to the corrected entry's revision history, or to the corrections page for a synthesis.
+// Its id names the record file, so it never changes once published.
+function correctionEntry(r: CorrectionRecord): string {
+  if (!r.date) throw new Error(`${RECORD_DIRS[r.kind]}/${r.id} has no date, so the corrections feed cannot list it`);
+  const link = r.target.kind === "event" ? `${SITE_URL}${r.target.href}` : `${SITE_URL}/corrections`;
+  const day = new Date(r.date).toISOString();
+  return `  <entry>
+    <id>tag:the-ledger.net,2026:${RECORD_DIRS[r.kind]}/${escapeXml(r.id)}</id>
+    <title>${escapeXml(`${r.kind}: ${r.target.title}`)}</title>
+    <link href="${escapeXml(link)}" rel="alternate"/>
+    <published>${day}</published>
+    <updated>${day}</updated>
+    <summary type="text">${escapeXml(r.reason)}</summary>
+  </entry>`;
+}
+
+interface AtomFeed {
+  /** The feed's path on the site, which with the site URL is also its id. */
+  path: string;
+  title: string;
+  subtitle: string;
+  /** The page the feed follows. */
+  alternate: string;
+  updated: string;
+  entries: string[];
+}
+
+function atomFeed(feed: AtomFeed): string {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>${SITE_URL}${feed.path}</id>
+  <title>${escapeXml(feed.title)}</title>
+  <subtitle>${escapeXml(feed.subtitle)}</subtitle>
+  <link href="${feed.alternate}" rel="alternate"/>
+  <link href="${SITE_URL}${feed.path}" rel="self" type="application/atom+xml"/>
+  <updated>${feed.updated}</updated>
+  <author>
+    <name>The Ledger</name>
+    <uri>${SITE_URL}/about</uri>
+  </author>
+  <generator>The Ledger Feed Generator</generator>
+${feed.entries.join("\n")}
+</feed>
+`;
+}
+
+/** The frontmatter of every record in a flat content directory. */
+function loadRecords(dirName: string): Array<Record<string, any>> {
+  const dir = path.join(CONTENT_DIR, dirName);
+  if (!fs.existsSync(dir)) return [];
+  return fs
+    .readdirSync(dir)
+    .filter((file) => file.endsWith(".md"))
+    .map((file) => parseFrontmatter(fs.readFileSync(path.join(dir, file), "utf-8")).data);
+}
+
+function writeFeed(feed: AtomFeed): number {
+  const xml = atomFeed(feed);
+  const file = path.join(FEEDS_DIR, feed.path);
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, xml, "utf-8");
+  return Buffer.byteLength(xml);
+}
+
 function main() {
   console.log("📡 The Ledger — Generating RSS/Atom feed...\n");
 
@@ -93,51 +194,25 @@ function main() {
         category: String(data.category ?? ""),
         summary: `Event date: ${date}. ${extractSummary(content)}`,
         significance: data.significance ? String(data.significance) : undefined,
+        threads: data.threads,
       });
     } catch {
       // Skip unparseable files
     }
   }
 
-  // Newest additions first, then the latest event among entries added the same day.
-  events.sort((a, b) => b.added.localeCompare(a.added) || b.date.localeCompare(a.date));
+  events.sort(byAdded);
   const entries = events.slice(0, FEED_LIMIT);
 
-  const latestUpdate = entries.reduce((latest, e) => (e.updated > latest ? e.updated : latest), "");
-  const feedUpdated = latestUpdate ? new Date(latestUpdate).toISOString() : new Date().toISOString();
-
   // Generate Atom feed
-  const atomEntries = entries
-    .map(
-      (e) => `  <entry>
-    <id>${SITE_URL}/events/${escapeXml(e.id)}</id>
-    <title>${escapeXml(e.title)}</title>
-    <link href="${SITE_URL}/events/${escapeXml(e.id)}" rel="alternate"/>
-    <published>${new Date(e.added).toISOString()}</published>
-    <updated>${new Date(e.updated).toISOString()}</updated>
-    <summary type="text">${escapeXml(e.summary)}</summary>
-    <category term="${escapeXml(e.category)}"/>
-    ${e.significance ? `<category term="significance:${escapeXml(e.significance)}"/>` : ""}
-  </entry>`
-    )
-    .join("\n");
-
-  const atomFeed = `<?xml version="1.0" encoding="UTF-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-  <id>${SITE_URL}/feed.xml</id>
-  <title>${escapeXml(FEED_TITLE)}</title>
-  <subtitle>${escapeXml(FEED_DESCRIPTION)}</subtitle>
-  <link href="${SITE_URL}" rel="alternate"/>
-  <link href="${SITE_URL}/feed.xml" rel="self" type="application/atom+xml"/>
-  <updated>${feedUpdated}</updated>
-  <author>
-    <name>The Ledger</name>
-    <uri>${SITE_URL}/about</uri>
-  </author>
-  <generator>The Ledger Feed Generator</generator>
-${atomEntries}
-</feed>
-`;
+  const mainAtomFeed = atomFeed({
+    path: "/feed.xml",
+    title: FEED_TITLE,
+    subtitle: FEED_DESCRIPTION,
+    alternate: SITE_URL,
+    updated: feedUpdated(entries.map((e) => e.updated)),
+    entries: entries.map(eventEntry),
+  });
 
   // Generate RSS 2.0 feed
   const rssItems = entries
@@ -170,12 +245,48 @@ ${rssItems}
   // Write feeds
   const atomPath = path.join(ROOT, "feed.xml");
   const rssPath = path.join(ROOT, "rss.xml");
-  fs.writeFileSync(atomPath, atomFeed, "utf-8");
+  fs.writeFileSync(atomPath, mainAtomFeed, "utf-8");
   fs.writeFileSync(rssPath, rssFeed, "utf-8");
 
   console.log(`  Generated ${entries.length} of ${events.length} event entries.`);
   console.log(`  📄 Atom feed → feed.xml`);
   console.log(`  📄 RSS feed  → rss.xml\n`);
+
+  // Rewrite the thread and corrections feeds so a removed thread leaves no feed behind.
+  fs.rmSync(FEEDS_DIR, { recursive: true, force: true });
+  let bytes = 0;
+
+  // One feed per thread, holding every entry the thread page lists.
+  const threads = loadRecords("threads");
+  for (const thread of threads) {
+    const threadEntries = getThreadEvents({ id: String(thread.id), events: thread.events }, events).sort(byAdded);
+    bytes += writeFeed({
+      path: `/threads/${thread.id}/feed.xml`,
+      title: `The Ledger: ${thread.title}`,
+      subtitle: String(thread.core_question),
+      alternate: `${SITE_URL}/threads/${thread.id}`,
+      updated: feedUpdated(threadEntries.map((e) => e.updated)),
+      entries: threadEntries.map(eventEntry),
+    });
+  }
+
+  // The corrections page's records, newest first.
+  const records = buildCorrectionRecords({
+    events: events.map((e) => ({ id: e.id, slug: e.id, title: e.title })),
+    revisions: loadRecords("revisions").map((d) => ({ ...d, created_at: d.created_at && isoDate(d.created_at) }) as SummaryRevision),
+    challenges: loadRecords("challenges").map((d) => ({ ...d, opened_at: d.opened_at && isoDate(d.opened_at) }) as ChallengeCase),
+    resolutions: loadRecords("resolutions").map((d) => ({ ...d, issued_at: d.issued_at && isoDate(d.issued_at) }) as ResolutionNote),
+  });
+  bytes += writeFeed({
+    path: "/corrections/feed.xml",
+    title: "The Ledger: Corrections and challenges",
+    subtitle: "Every correction to a published entry in The Ledger and every formal challenge, newest first.",
+    alternate: `${SITE_URL}/corrections`,
+    updated: feedUpdated(records.map((r) => r.date ?? "")),
+    entries: records.map(correctionEntry),
+  });
+
+  console.log(`  📄 ${threads.length} thread feeds and the corrections feed (${records.length} records) → feeds/, ${bytes} bytes\n`);
 }
 
 main();
