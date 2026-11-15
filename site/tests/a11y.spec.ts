@@ -32,6 +32,7 @@ const ROUTES: Array<{ path: string; label: string; mobile?: boolean }> = [
   { path: `/controversies/${SLUGS.controversy}`, label: 'controversy-detail' },
   { path: '/explore', label: 'explore', mobile: true },
   { path: '/search', label: 'search', mobile: true },
+  { path: '/search?q=OpenAI&cat=policy&year=2025', label: 'search-filtered', mobile: true },
   { path: '/graph', label: 'graph' },
   { path: '/about', label: 'about' },
   { path: '/privacy', label: 'privacy' },
@@ -48,6 +49,12 @@ test.describe('a11y (axe)', () => {
       // Wait a tick for hydration on routes with client components (Explorer, Graph).
       if (path === '/graph') {
         await page.locator('canvas').first().waitFor({ state: 'visible', timeout: 10_000 });
+      }
+      if (path.startsWith('/search?')) {
+        await page.getByRole('button', { name: /^Policy\b/, pressed: true }).waitFor();
+        await page.locator('.search-result').first().waitFor();
+        // A chip that would list no entries is muted, and must still pass.
+        await page.locator('[data-search-filter][aria-disabled="true"]').first().waitFor();
       }
       if (path === '/explore') {
         await page.locator('#explorer-search').waitFor({ state: 'visible' });

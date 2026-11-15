@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import PageHeader from '../components/wiki/PageHeader.astro';
 import RailSection from '../components/wiki/RailSection.astro';
 import CategoryTag from '../components/wiki/CategoryTag.astro';
-import { getCategories } from '../lib/content';
+import { getCategories, loadEvents } from '../lib/content';
 
 // Archive-wide search over the Pagefind index that the site build writes to /pagefind/.
 // The groups follow the `type` filter each record carries (see ArticleShell).
@@ -14,6 +14,21 @@ const groups = [
   { type: 'actor', label: 'Actors', noun: 'actors' },
 ];
 const categories = getCategories();
+// The entry filters offer every year with an entry, newest first, as the timeline does.
+const years = [...new Set(loadEvents().map((event) => event.date.slice(0, 4)))].sort().reverse();
+// The chip classes of the timeline's filters (Explorer.tsx), with the pressed state set by aria-pressed.
+// Whole class names, so Tailwind finds them.
+const pip: Record<string, string> = {
+  policy: 'bg-category-policy',
+  models: 'bg-category-models',
+  research: 'bg-category-research',
+  industry: 'bg-category-industry',
+  safety: 'bg-category-safety',
+  culture: 'bg-category-culture',
+  'open-source': 'bg-category-open-source',
+};
+const chip =
+  'inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-sans rounded-sm border min-h-[32px] transition-colors duration-150 cursor-pointer bg-page-bg border-rule text-ink-muted hover:text-ink hover:border-rule-strong aria-pressed:bg-wiki-surface aria-pressed:border-rule-strong aria-pressed:text-ink aria-pressed:font-semibold';
 ---
 
 <Base
@@ -65,6 +80,36 @@ const categories = getCategories();
     </p>
 
     <div class="ph-no-capture">
+      <!-- The entry filters, shown while the Events group has entries for the query. -->
+      <div class="search-filters flex flex-col gap-3 p-4 rounded-sm border border-rule-strong bg-wiki-surface/60" role="group" aria-labelledby="search-filters-head" aria-describedby="search-filters-note" hidden>
+        <p class="search-filters__intro">
+          <span id="search-filters-head" class="label-eyebrow">Filter entries</span>
+          <span id="search-filters-note">Threads, controversies and actors are not filtered.</span>
+        </p>
+        <div class="flex flex-wrap items-baseline gap-2" role="group" aria-labelledby="search-filters-cat">
+          <span id="search-filters-cat" class="label-eyebrow mr-1">Category</span>
+          {categories.map(({ id, label }) => (
+            <button type="button" class={chip} data-search-filter="cat" value={id} data-label={label} aria-pressed="false">
+              <span aria-hidden="true" class={`inline-block w-1.5 h-1.5 rounded-full ${pip[id]}`}></span>
+              <span>{label}</span>
+              <span class="search-filters__count font-mono tabular-nums"></span>
+            </button>
+          ))}
+        </div>
+        <div class="flex flex-wrap items-baseline gap-2" role="group" aria-labelledby="search-filters-year">
+          <span id="search-filters-year" class="label-eyebrow mr-1">Year</span>
+          <button type="button" class={chip} data-search-filter="year" value="" aria-pressed="true">
+            <span>All</span>
+            <span class="search-filters__count font-mono tabular-nums"></span>
+          </button>
+          {years.map((year) => (
+            <button type="button" class={`${chip} font-mono tabular-nums`} data-search-filter="year" value={year} aria-pressed="false">
+              <span>{year}</span>
+              <span class="search-filters__count"></span>
+            </button>
+          ))}
+        </div>
+      </div>
       {groups.map(({ type, label, noun }) => (
         <section class="search-group" data-search-group={type} data-search-noun={noun} aria-labelledby={`search-${type}-head`} hidden>
           <h2 class="search-group__head" id={`search-${type}-head`}>
@@ -72,6 +117,7 @@ const categories = getCategories();
             <span class="search-group__count font-mono"></span>
           </h2>
           <ol class="search-group__list"></ol>
+          {type === 'event' && <p class="search-group__none" hidden>No entries match these filters.</p>}
           <button type="button" class="search-group__more" hidden></button>
         </section>
       ))}
@@ -109,10 +155,15 @@ const categories = getCategories();
   };
   type Result = { data: () => Promise<Fragment> };
   type Ranking = { termSimilarity: number; termFrequency: number; metaWeights: Record<string, number> };
+  type Filters = { type: string; category?: { any: string[] }; year?: string };
+  // The number of results for each value of each filter, if that value were added to the search's filters.
+  type Counts = Record<string, Record<string, number>>;
   type Pagefind = {
     options: (options: { excerptEllipsis: string; ranking: Ranking }) => Promise<void>;
     init: () => Promise<void>;
-    search: (term: string, options: { filters: { type: string } }) => Promise<{ results: Result[] }>;
+    // Loads the filter values, so that each search also returns its counts.
+    filters: () => Promise<Counts>;
+    search: (term: string, options: { filters: Filters }) => Promise<{ results: Result[]; filters: Counts }>;
   };
 
   // Results shown per group at first, and added by each "Show more".
@@ -145,11 +196,52 @@ const categories = getCategories();
   }));
   type Group = (typeof groups)[number];
 
+  // The category and year filters of the Events group, kept in the address as `cat` and `year`, the
+  // names the timeline uses. Each chip shows how many entries choosing it would list.
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('[data-search-filter]')];
+  const categoryChips = chips.filter((chip) => chip.dataset.searchFilter === 'cat');
+  const yearChips = chips.filter((chip) => chip.dataset.searchFilter === 'year');
+  const filterPanel = document.querySelector<HTMLElement>('.search-filters')!;
+  const noEntries = document.querySelector<HTMLElement>('.search-group__none')!;
+  const params = new URL(location.href).searchParams;
+  let categories = categoryChips.map((chip) => chip.value).filter((id) => params.get('cat')?.split(',').includes(id));
+  // The All chip's value is the empty string.
+  let year = yearChips.find((chip) => chip.value && chip.value === params.get('year'))?.value ?? '';
+
+  const entryFilters = (cats: string[], yr: string): Filters => ({
+    type: 'event',
+    ...(cats.length > 0 && { category: { any: cats } }),
+    ...(yr && { year: yr }),
+  });
+
+  function pressChips() {
+    for (const chip of categoryChips) chip.setAttribute('aria-pressed', String(categories.includes(chip.value)));
+    for (const chip of yearChips) chip.setAttribute('aria-pressed', String(chip.value === year));
+  }
+
+  // A chip that would list no entries is disabled, unless it is pressed, so that it can be released.
+  function countChips(chipsOfFilter: HTMLButtonElement[], counts: Record<string, number>) {
+    for (const chip of chipsOfFilter) {
+      const count = counts[chip.value] ?? 0;
+      chip.querySelector('.search-filters__count')!.textContent = String(count);
+      if (count === 0 && chip.getAttribute('aria-pressed') === 'false') chip.setAttribute('aria-disabled', 'true');
+      else chip.removeAttribute('aria-disabled');
+    }
+  }
+
+  // For the status line, such as ", with entries limited to Policy or Safety in 2025".
+  function filterSummary() {
+    const names = categoryChips.filter((chip) => categories.includes(chip.value)).map((chip) => chip.dataset.label);
+    if (names.length === 0 && !year) return '';
+    return `, with entries limited to ${[names.join(' or '), year].filter(Boolean).join(' in ')}`;
+  }
+
   let pagefind: Promise<Pagefind> | undefined;
   function loadPagefind() {
     pagefind ??= import(/* @vite-ignore */ PAGEFIND_URL).then(async (module: Pagefind) => {
       await module.options({ excerptEllipsis: '…', ranking: RANKING });
       await module.init();
+      await module.filters();
       return module;
     });
     return pagefind;
@@ -201,20 +293,37 @@ const categories = getCategories();
     const run = ++latest;
     const term = input.value.trim();
     const url = new URL(location.href);
-    if (term) url.searchParams.set('q', term);
-    else url.searchParams.delete('q');
+    for (const [key, value] of [['q', term], ['cat', categories.join(',')], ['year', year]]) {
+      if (value) url.searchParams.set(key, value);
+      else url.searchParams.delete(key);
+    }
     history.replaceState(history.state, '', url);
+    pressChips();
 
     let found: Result[][] = groups.map(() => []);
     let first: HTMLElement[][] = groups.map(() => []);
+    // The entries for the term before the category and year filters.
+    let entries = 0;
+    let categoryCounts: Record<string, number> = {};
+    let yearCounts: Record<string, number> = {};
     let failed = false;
     if (term) {
       try {
         const index = await loadPagefind();
-        const searches = await Promise.all(groups.map(({ type }) => index.search(term, { filters: { type } })));
+        const [searches, unfiltered, byCategory, byYear] = await Promise.all([
+          Promise.all(groups.map(({ type }) =>
+            index.search(term, { filters: type === 'event' ? entryFilters(categories, year) : { type } }))),
+          index.search(term, { filters: entryFilters([], '') }),
+          // Each filter's counts leave out that filter's own choice, so that choosing a second category adds to the first.
+          index.search(term, { filters: entryFilters([], year) }),
+          index.search(term, { filters: entryFilters(categories, '') }),
+        ]);
         const results = searches.map((search) => search.results);
         first = await Promise.all(results.map((matches, i) => rows(matches.slice(0, STEP), groups[i].type)));
         found = results;
+        entries = unfiltered.results.length;
+        categoryCounts = byCategory.filters.category ?? {};
+        yearCounts = { ...byYear.filters.year, '': byYear.results.length };
       } catch {
         failed = true;
       }
@@ -224,15 +333,22 @@ const categories = getCategories();
 
     groups.forEach((group, i) => {
       group.results = found[i];
-      group.section.hidden = found[i].length === 0;
+      // The Events group stays while its filters leave no entries, so that they can be changed.
+      group.section.hidden = (group.type === 'event' ? entries : found[i].length) === 0;
       group.count.textContent = String(found[i].length);
       group.list.replaceChildren(...first[i]);
       updateMore(group);
     });
+    countChips(categoryChips, categoryCounts);
+    countChips(yearChips, yearCounts);
+    filterPanel.hidden = entries === 0;
+    noEntries.hidden = !(entries > 0 && found[groups.findIndex(({ type }) => type === 'event')].length === 0);
     const total = found.reduce((sum, results) => sum + results.length, 0);
-    summary = term ? `${total} ${total === 1 ? 'result' : 'results'} for “${term}”` : help;
+    summary = term
+      ? `${total} ${total === 1 ? 'result' : 'results'} for “${term}”${entries > 0 ? filterSummary() : ''}`
+      : help;
     if (failed) message('#search-failed');
-    else if (term && total === 0) message('#search-empty', term);
+    else if (term && total === 0 && entries === 0) message('#search-empty', term);
     else status.textContent = summary;
   }
 
@@ -267,6 +383,21 @@ const categories = getCategories();
   }
 
   let timer: number | undefined;
+  for (const chip of chips) {
+    chip.addEventListener('click', () => {
+      if (chip.getAttribute('aria-disabled') === 'true') return;
+      if (chip.dataset.searchFilter === 'cat') {
+        categories = categories.includes(chip.value)
+          ? categories.filter((id) => id !== chip.value)
+          : [...categories, chip.value];
+      } else {
+        year = year === chip.value ? '' : chip.value;
+      }
+      window.clearTimeout(timer);
+      search();
+    });
+  }
+
   input.addEventListener('input', () => {
     window.clearTimeout(timer);
     timer = window.setTimeout(search, DELAY_MS);
@@ -346,6 +477,42 @@ const categories = getCategories();
     letter-spacing: 0.04em;
     line-height: 1.45;
   }
+  .search-filters {
+    margin-bottom: 32px;
+  }
+  .search-filters__intro {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 2px 10px;
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: var(--text-meta);
+    line-height: 1.45;
+    color: var(--color-ink-faint);
+  }
+  /* The display classes would otherwise show a hidden panel. */
+  .search-filters[hidden] {
+    display: none;
+  }
+  /* A chip that would list no entries. */
+  .search-filters button[aria-disabled='true'] {
+    border-style: dashed;
+    border-color: var(--color-rule-strong);
+    color: var(--color-ink-faint);
+    cursor: default;
+  }
+  .search-filters__count {
+    color: var(--color-ink-faint);
+    font-weight: 400;
+  }
+  .search-group__none {
+    margin: 14px 0 0;
+    font-family: var(--font-sans);
+    font-size: var(--text-small);
+    color: var(--color-ink-mid);
+  }
+
   .search-group__list {
     list-style: none;
     padding: 0;
