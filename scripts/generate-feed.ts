@@ -7,6 +7,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { metaDescription, plainParagraphs } from "../site/src/lib/markdown.ts";
 import { parseFrontmatter } from "./frontmatter.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -18,6 +19,7 @@ const FEED_TITLE = "The Ledger — An Epistemic Ledger of AI History";
 const FEED_DESCRIPTION =
   "Tracking how understanding of AI history changes over time. Events, threads, and evolving interpretations.";
 const FEED_LIMIT = 60;
+const SUMMARY_LIMIT = 500;
 
 interface FeedEvent {
   id: string;
@@ -46,15 +48,11 @@ function walkDir(dir: string): string[] {
   return results;
 }
 
+// The Summary section as plain text, or the body's paragraphs when it has none,
+// shortened at the last sentence end or word boundary that fits.
 function extractSummary(content: string): string {
-  // Extract the Summary section content, or first paragraph
-  const summaryMatch = content.match(/## Summary\s*\n([\s\S]*?)(?=\n## |\n---|$)/);
-  if (summaryMatch) {
-    return summaryMatch[1].trim().slice(0, 500);
-  }
-  // Fallback: first non-empty paragraph
-  const lines = content.split("\n").filter((l) => l.trim() && !l.startsWith("#"));
-  return lines.slice(0, 3).join(" ").trim().slice(0, 500);
+  const summary = plainParagraphs(content, "Summary");
+  return metaDescription((summary.length ? summary : plainParagraphs(content)).join(" "), SUMMARY_LIMIT);
 }
 
 // YAML reads an unquoted date as a Date and a quoted one as a string.
@@ -132,6 +130,10 @@ function main() {
   <link href="${SITE_URL}" rel="alternate"/>
   <link href="${SITE_URL}/feed.xml" rel="self" type="application/atom+xml"/>
   <updated>${feedUpdated}</updated>
+  <author>
+    <name>The Ledger</name>
+    <uri>${SITE_URL}/about</uri>
+  </author>
   <generator>The Ledger Feed Generator</generator>
 ${atomEntries}
 </feed>
