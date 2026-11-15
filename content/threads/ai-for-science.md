@@ -9,7 +9,7 @@ curator_scope: initial-synthesis
 contestation:
   status: uncontested
   challenge_window: open
-last_updated: 2026-05-05
+last_updated: 2026-11-14
 events:
   - arc-institute-evo-2-dna-foundation-model
   - ecmwf-aifs-operational
@@ -26,7 +26,7 @@ events:
 
 ## Canonical Synthesis
 
-**Author:** terry-tang | **Last updated:** 2026-04-19
+**Author:** terry-tang | **Last updated:** 2026-11-14
 
 The arc of AI for science runs from AlphaFold — a single system solving a single 50-year-old problem — to a broad front of tools reshaping how researchers do biology, chemistry, mathematics, weather forecasting, and energy physics simultaneously. The field's trajectory is not a straight line from benchmark to application, but the density of landmark results in 2025 makes it harder to dismiss as a series of isolated demos.
 
@@ -39,6 +39,35 @@ AlphaFold 2's release in November 2020 was the inflection point that started thi
 **Infrastructure science.** ECMWF's operational deployment of AIFS (February 2025) was the first time a machine-learning weather system ran in real-time 24/7 at a major forecast center, with an ensemble version following in July. The 1,000× energy efficiency advantage over physics-based numerical weather prediction has implications beyond meteorology: if similar gains apply to climate simulation, the compute cost of century-scale ensemble projections might become tractable. DeepMind's partnership with Commonwealth Fusion Systems (October 2025) applied deep RL plasma control to SPARC, the first application of the approach to a commercial fusion program.
 
 **Commercial.** Isomorphic Labs represents the clearest test of whether AI-native drug discovery translates to clinical outcomes. The $600M raise funds an internal pipeline in oncology and immunology, with milestone deals at Eli Lilly and Novartis. The timeline from AI-designed candidate to approved drug is a decade and subject to attrition rates that AI does not change. Whether the platform advantage in structure prediction and binding affinity propagates through the clinical trial process is the central unresolved question for AI pharma.
+
+## What changed since the last synthesis
+
+**Covers:** events dated 2026-04-16 to 2026-11-10 | **Written:** 2026-11-14
+
+*Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
+
+On April 16, 2026, OpenAI released GPT-Rosalind, its first model built for life sciences research, in limited access for qualified US enterprise customers, with Amgen, Moderna, the Allen Institute for Brain Science and Thermo Fisher Scientific as launch partners ([GPT-Rosalind](/events/openai-gpt-rosalind)).
+On April 30, a study in Science by researchers at Harvard Medical School and Beth Israel Deaconess Medical Center found that OpenAI's o1 identified the diagnosis at emergency triage in 67% of 76 real, unprocessed cases, against 55% and 50% for two attending physicians ([o1 diagnosis study](/events/openai-o1-er-diagnosis-study)).
+The authors call for prospective randomized trials before clinical deployment, and the entry notes that the study does not establish whether AI-assisted diagnosis improves patient outcomes ([o1 diagnosis study](/events/openai-o1-er-diagnosis-study)).
+
+The open question below about research-level mathematics gained its first documented case on May 20, 2026, when OpenAI said an internal general-purpose model had disproved the Erdős unit distance conjecture and nine outside mathematicians verified the construction the same day ([Erdős disproof](/events/openai-erdos-unit-distance-disproof)).
+OpenAI did not disclose the model, the prompting method, or the human intermediation involved ([Erdős disproof](/events/openai-erdos-unit-distance-disproof)).
+OpenAI's September 8 claim to have resolved the Navier-Stokes Millennium Prize problem was still unverified three days later, when twenty-five Fields medallists declared the goals of AI companies and mathematicians "severely misaligned," arguing that rushed announcements bypass the work of understanding and raise attribution questions ([Fields medallists' declaration](/events/fields-medallists-declaration-ai-mathematics-misalignment)).
+On September 21, OpenAI announced an independent advisory group at the Institute for Advanced Study to advise on how it assesses and releases mathematical results, excluding the pace of its work, and in the same post claimed that its internal model had resolved more than 100 open problems, with no list, papers, or external verification ([mathematics advisory group](/events/openai-mathematics-advisory-group-ias)).
+
+On July 29, OpenAI offered 10,000 academic researchers free hosted model access, with a target of 100,000 through 2027 and no weights or training data, which places it on the API-gated side of the two-tier ecosystem described below ([academic access program](/events/openai-chatgpt-academic-researchers)).
+On August 6, Google DeepMind reported that WeatherNext Cyclones added about one day of useful accuracy to cyclone track and intensity forecasts and released its weights, extending to cyclones the machine-learning forecasting that [ECMWF's AIFS](/events/ecmwf-aifs-operational) made operational in 2025 ([WeatherNext Cyclones](/events/google-weathernext-cyclone-forecasting)).
+Its gains rest on one retrospective evaluation and a limited live season, and the team said it did not fully understand which signals the model used ([WeatherNext Cyclones](/events/google-weathernext-cyclone-forecasting)).
+
+In biology, Google DeepMind and Isomorphic Labs published a joint bioresilience program on July 16 covering misuse prevention, pathogen detection, and countermeasure design, without validation results for its sequence screening ([bioresilience program](/events/google-deepmind-isomorphic-bioresilience)).
+On August 27, Anthropic previewed the Model Hardware Standard for agent-operated lab instruments, with safety limits enforced in the driver below the model and performance figures not independently replicated ([Model Hardware Standard](/events/anthropic-model-hardware-standard)).
+On September 23, Anthropic reported that Claude agents had found a family of phage reverse transcriptases, named ART, whose function it does not know; the result is an unreviewed company pre-print, human scientists did the lab work, and a Stanford team independently described a similar but distinct system ([ART discovery](/events/anthropic-biolab-claude-art-enzyme-discovery)).
+On October 7, Biohub, the US Energy Department, the NIH, Google DeepMind, Isomorphic Labs, and Meta announced $1.8 billion for AI-ready cell data, a total mixing new money with in-kind and earlier spending ([Virtual Biology Initiative](/events/biohub-virtual-biology-initiative-1-8-billion)).
+On October 24, the UK announced an AI Biosecurity Lab with £100 million in public funding and up to £200 million in OpenAI and Anthropic commitments, without named leadership ([UK AI Biosecurity Lab](/events/uk-ai-biosecurity-lab-openai-anthropic-credits)).
+Both biosecurity efforts address the dual-use open question below through trusted model access, and neither announcement reported measured results ([bioresilience program](/events/google-deepmind-isomorphic-bioresilience), [UK AI Biosecurity Lab](/events/uk-ai-biosecurity-lab-openai-anthropic-credits)).
+
+On November 10, Google DeepMind reported that AlphaProof Code agents wrote about 6.5 million lines of Lean proof establishing security properties of libsignal's compiled machine code, carrying the formal method of [AlphaProof](/events/alphaproof-nature-paper) from competition mathematics to production software ([AlphaProof Code](/events/google-deepmind-alphaproof-code-signal-verification)).
+The guarantee holds only within the stated scope and on about 26,000 lines of trusted specifications, and no independent group had checked the proofs at publication ([AlphaProof Code](/events/google-deepmind-alphaproof-code-signal-verification)).
 
 ## Open Questions
 

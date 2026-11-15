@@ -9,7 +9,7 @@ curator_scope: initial-synthesis
 contestation:
   status: uncontested
   challenge_window: open
-last_updated: 2026-04-19
+last_updated: 2026-11-14
 events:
   - openai-nonprofit-restructuring
   - openai-40b-softbank-round
@@ -22,7 +22,7 @@ events:
 
 ## Canonical Synthesis
 
-**Author:** terry-tang | **Last updated:** 2026-04-19
+**Author:** terry-tang | **Last updated:** 2026-11-14
 
 OpenAI's corporate evolution between 2024 and 2026 is one of the most consequential governance stories in technology history: a nonprofit-controlled research organization, founded on the premise that artificial general intelligence was too important to be owned by anyone, transformed itself into an $852 billion Public Benefit Corporation in the span of roughly eighteen months.
 
@@ -47,6 +47,22 @@ The March 2026 $122 billion round at $852 billion completed the first phase of t
 **October 2025: The PBC Closes.** The restructuring is completed. Microsoft gets 27% equity and IP rights through 2032. Azure exclusivity is eliminated. The AGI expert panel is established. SoftBank's final $22.5 billion tranche closes December 30, meeting the year-end deadline.
 
 **March 2026: The $122B Round.** At $852 billion, OpenAI raises the largest private fundraise in history. Amazon's AGI-contingent $35 billion stake creates a financial incentive structure around the most consequential possible declaration OpenAI could ever make.
+
+## What changed since the last synthesis
+
+**Covers:** events dated 2026-04-27 to 2026-05-22 | **Written:** 2026-11-14
+
+*Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
+
+On April 27 Microsoft and OpenAI restructured their partnership again: Microsoft's license to OpenAI's intellectual property became non-exclusive through 2032, the AGI clause was removed, and Microsoft stopped paying a revenue share to OpenAI ([Microsoft restructuring](/events/openai-microsoft-partnership-restructuring)).
+The entry names OpenAI's $50 billion AWS partnership, which conflicted with exclusive Azure terms still in force, as the trigger, which qualifies the synthesis's statement that Azure exclusivity ended in October 2025 ([Microsoft restructuring](/events/openai-microsoft-partnership-restructuring)).
+The clause removal also settles the part of the open question below about Microsoft's incentive to delay an AGI declaration, while $35 billion of Amazon's commitment stays contingent on an IPO or an AGI declaration ([OpenAI confidential filing](/events/openai-ipo-confidential-filing)).
+
+Musk's challenge to the conversion went to trial in Oakland on April 28 on two surviving claims, breach of charitable trust and unjust enrichment, with Musk seeking about $134 billion and an order unwinding the conversion ([trial opens](/events/musk-v-altman-trial-opens)).
+On May 5 Greg Brockman testified that OpenAI planned to spend about $50 billion on compute in 2026, against about $30 million in 2017 ([compute disclosure](/events/openai-50b-compute-2026-disclosure)).
+On May 18 an advisory jury dismissed all claims as time-barred, the judge adopted its findings, and no court ruled on the charitable trust question; Musk said he would appeal to the Ninth Circuit, and the California and Delaware Attorney General reviews were ongoing ([verdict](/events/musk-v-altman-verdict)).
+Four days later OpenAI submitted a confidential S-1 targeting a valuation above $1 trillion ([OpenAI confidential filing](/events/openai-ipo-confidential-filing)).
+That entry describes the nonprofit as holding equity in a company it "nominally oversees but does not control," with its post-dilution stake unconfirmed, which differs from the synthesis's account of a Foundation that retains governing control and a 26% stake ([OpenAI confidential filing](/events/openai-ipo-confidential-filing)).
 
 ## Open Questions
 

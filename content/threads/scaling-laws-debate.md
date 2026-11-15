@@ -9,7 +9,7 @@ curator_scope: initial-synthesis
 contestation:
   status: contested
   challenge_window: open
-last_updated: 2026-03-08
+last_updated: 2026-11-14
 events:
   - gpt-4-release
   - claude-2-release
@@ -51,7 +51,7 @@ controversies:
 
 ## Canonical Synthesis
 
-**Author:** terry-tang | **Last updated:** 2026-03-08
+**Author:** terry-tang | **Last updated:** 2026-11-14
 
 The scaling laws debate — whether simply making AI models bigger, training them on more data, and using more compute will continue to produce proportional capability gains — has been the most consequential technical question in AI since 2020. By 2026, the answer has proven more nuanced and more interesting than either camp anticipated.
 
@@ -98,6 +98,17 @@ The future of AI improvement lies not in bigger models but in smarter ones. Arch
 We are approaching the limits of what current paradigms (transformers, language modeling, RLHF) can achieve through any combination of scale and efficiency. Continued progress requires fundamental new approaches — new architectures, new training paradigms, or new ways of grounding AI in the physical world. The improvements from test-time compute and efficiency are real but bounded, and the industry needs to diversify its research portfolio beyond variations on the transformer theme.
 
 **Proponents:** Some academic researchers, neuroscience-inspired AI researchers, skeptics of the current paradigm.
+
+## What changed since the last synthesis
+
+**Covers:** events dated 2026-04-23 | **Written:** 2026-11-14
+
+*Draft assistance: AI-assisted. This section was drafted from the archive's event entries for the curator to edit and sign.*
+
+On April 23, 2026, OpenAI announced GPT-5.5, which the archive's original entry recorded as the company's first fully retrained base model since [GPT-4.5](/events/openai-gpt-4-5-release), built on a new data mixture and architecture after a series of GPT-5 variants that shared a base ([GPT-5.5 release](/events/openai-gpt-5-5-release)).
+If that description holds, it bears on the synthesis's third point, which read GPT-4.5 as evidence of diminishing returns from pure scale, because OpenAI again chose a full retraining when it sought to advance the frontier ([GPT-5.5 release](/events/openai-gpt-5-5-release)).
+An October 26, 2026 editorial correction found that its claim of a first million-token context was contradicted by GPT-4.1's 2025 release, and it retains the architectural and benchmark assertions only as historical assertions pending a separate source review ([GPT-5.5 release](/events/openai-gpt-5-5-release)).
+Neither the corrected summary nor the original body gives training compute or model size, so the entry cannot show whether GPT-5.5's reported gains came from scale, architecture, or data ([GPT-5.5 release](/events/openai-gpt-5-5-release)).
 
 ## Open Questions
 
