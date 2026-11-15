@@ -105,7 +105,7 @@ function cleanUrl(url: string): string {
       { label: actor.name },
     ]}
     sourcePath={`content/actors/${actor.id}.yml`}
-    search={{ type: 'actor' }}
+    search={{ type: 'actor', text: actor.aliases?.length ? [`Aliases: ${actor.aliases.join(', ')}`] : [] }}
   >
     <Fragment slot="infobox">
       <Infobox title="Actor metadata">
@@ -153,7 +153,7 @@ function cleanUrl(url: string): string {
           )}.
         </p>
         {years.map((year) => (
-          <section class="actor-year" id={`y-${year}`}>
+          <section class="actor-year" id={`y-${year}`} data-pagefind-ignore>
             <h2>{year}</h2>
             <ul class="actor-year__list">
               {byYear.get(year)!.map((e) => (

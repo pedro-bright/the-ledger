@@ -9,7 +9,7 @@ import { anchorSections } from '../../lib/markdown';
 // Without a `lead` slot, the infobox floats directly in the body.
 // Page provides `markers`, `infobox`, `lead`, default body, `revisions`, `references`, `seeAlso`, `footer` via slots.
 // The article is the page's search index record. Pagefind indexes nothing outside it and skips its
-// breadcrumb, contents, See also and last-modified line.
+// breadcrumb, subtitle, markers, References link, contents, infobox, See also and last-modified line.
 interface Props {
   title: string;
   subtitle?: string;
@@ -26,6 +26,8 @@ interface Props {
     type: 'event' | 'thread' | 'controversy' | 'actor';
     filters?: Record<string, string>;
     meta?: Record<string, string>;
+    /** Lines to index that the page shows only in parts the index skips, such as `Tags: …`. */
+    text?: string[];
   };
 }
 
@@ -72,9 +74,9 @@ if (hasSeeAlso) sections.push({ id: 'see-also-head', title: 'See also', level: 2
 
   <header class="wiki-article__header">
     <h1 class="wiki-article__title">{title}</h1>
-    {subtitle && <p class="wiki-article__subtitle">{subtitle}</p>}
-    {hasMarkers && <div class="wiki-article__markers"><slot name="markers" /></div>}
-    {hasReferences && <a class="wiki-article__references-link" href="#refs-head">References</a>}
+    {subtitle && <p class="wiki-article__subtitle" data-pagefind-ignore>{subtitle}</p>}
+    {hasMarkers && <div class="wiki-article__markers" data-pagefind-ignore><slot name="markers" /></div>}
+    {hasReferences && <a class="wiki-article__references-link" href="#refs-head" data-pagefind-ignore>References</a>}
   </header>
 
   {isLong && (
@@ -93,7 +95,7 @@ if (hasSeeAlso) sections.push({ id: 'see-also-head', title: 'See also', level: 2
   <div class="wiki-article__body">
     {hasLead && <div class="wiki-article__lead prose"><Fragment set:html={lead.content} /></div>}
     {hasInfobox && (hasLead ? (
-      <details class="wiki-article__metadata">
+      <details class="wiki-article__metadata" data-pagefind-ignore>
         <summary>Record metadata</summary>
         <slot name="infobox" />
       </details>
@@ -102,6 +104,8 @@ if (hasSeeAlso) sections.push({ id: 'see-also-head', title: 'See also', level: 2
       <Fragment set:html={body.content} />
     </div>
   </div>
+  {/* After the body, so an excerpt that starts at the title runs into the article text. */}
+  {search.text?.map((line) => <p hidden>{line}</p>)}
 
   {hasRevisions && (
     <section class="wiki-article__revisions" aria-labelledby="revision-history">

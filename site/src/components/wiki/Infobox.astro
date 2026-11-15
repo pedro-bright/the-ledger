@@ -1,6 +1,7 @@
 ---
 // Wikipedia-style infobox: floated-right metadata panel on article pages.
 // Consumer provides the <dl>/<ul>/content inside the slot.
+// The search index skips it; a page passes any value to keep searchable to ArticleShell's `search.text`.
 interface Props {
   title: string;
   /** Optional wider variant for controversy/actor pages with more content. */
@@ -9,7 +10,7 @@ interface Props {
 
 const { title, wide = false } = Astro.props;
 ---
-<aside class={`wiki-infobox${wide ? ' wiki-infobox--wide' : ''}`} aria-labelledby="infobox-title">
+<aside class={`wiki-infobox${wide ? ' wiki-infobox--wide' : ''}`} aria-labelledby="infobox-title" data-pagefind-ignore>
   <header class="wiki-infobox__header">
     <h2 id="infobox-title" class="wiki-infobox__title">{title}</h2>
   </header>

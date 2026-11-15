@@ -11,7 +11,12 @@ import { SLUGS } from './_slugs';
  */
 const DIST = path.join(process.cwd(), 'dist');
 
-type Result = { url: string; filters: Record<string, string[]>; meta: Record<string, string> };
+type Result = { url: string; excerpt: string; content: string; filters: Record<string, string[]>; meta: Record<string, string> };
+
+const ISO_DATE = /\d{4}-\d{2}-\d{2}/;
+
+/** Lowercase words only, so text compares across Pagefind's added sentence breaks. */
+const words = (text: string) => (text.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? []).join(' ');
 
 // Strings are not transpiled, so the dynamic import reaches the browser as written.
 async function loadPagefind(page: Page) {
@@ -19,12 +24,13 @@ async function loadPagefind(page: Page) {
   await page.evaluate("import('/pagefind/pagefind.js').then((pagefind) => { window.pagefind = pagefind; })");
 }
 
-function search(page: Page, term: string, filters: Record<string, string> = {}): Promise<Result[]> {
+/** Each result with its excerpt as plain text and its indexed text. A null term lists every record the filters match. */
+function search(page: Page, term: string | null, filters: Record<string, string> = {}): Promise<Result[]> {
   return page.evaluate(async ({ term, filters }) => {
     const { results } = await (window as any).pagefind.search(term, { filters });
     return Promise.all(results.map(async (result: any) => {
-      const { url, filters, meta } = await result.data();
-      return { url, filters, meta };
+      const { url, excerpt, content, filters, meta } = await result.data();
+      return { url, excerpt: new DOMParser().parseFromString(excerpt, 'text/html').body.textContent, content, filters, meta };
     }));
   }, { term, filters });
 }
@@ -68,6 +74,75 @@ test.describe('search index', () => {
     const entry = JSON.parse(fs.readFileSync(path.join(DIST, 'pagefind', 'pagefind-entry.json'), 'utf8'));
     const total = Object.values(expected).reduce((sum, count) => sum + count, 0);
     expect(entry.languages.en.page_count).toBe(total);
+  });
+
+  test('every entry keeps its category and year filters and its date', async ({ page }) => {
+    const entries = filesIn(path.join(DIST, 'events')).filter((file: string) => /^[^/]+\/index\.html$/.test(file)).length;
+    const filters = await page.evaluate(() => (window as any).pagefind.filters());
+    const total = (counts: Record<string, number>) => Object.values(counts).reduce((sum, count) => sum + count, 0);
+    expect(total(filters.category)).toBe(entries);
+    expect(total(filters.year)).toBe(entries);
+
+    const results = await search(page, null, { type: 'event' });
+    expect(results).toHaveLength(entries);
+    for (const { url, filters, meta } of results) {
+      expect(meta.date, url).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(filters.year, url).toEqual([meta.date.slice(0, 4)]);
+    }
+  });
+
+  test('entry excerpts leave out the subtitle line and keep tags apart from their label', async ({ page }) => {
+    const entries = (await search(page, 'frontier model')).filter(({ url }) => url.startsWith('/events/'));
+    expect(entries.length).toBeGreaterThan(0);
+    for (const { url, excerpt } of entries) {
+      expect(excerpt, url).not.toContain('A ledger entry in the');
+      expect(excerpt, url).not.toMatch(/Tags[\w-]/);
+    }
+  });
+
+  test('entry tags stay searchable', async ({ page }) => {
+    const { events } = JSON.parse(fs.readFileSync(path.join(DIST, 'data', 'events.json'), 'utf8'));
+    const tagged = events
+      .filter(({ tags }: { tags?: string[] }) => tags?.includes('mixture-of-experts'))
+      .map(({ id }: { id: string }) => `/events/${id}/`);
+    expect(tagged.length).toBeGreaterThan(0);
+    expect((await search(page, 'mixture-of-experts')).map(({ url }) => url)).toEqual(expect.arrayContaining(tagged));
+
+    // The board crisis entry carries power-dynamics as a tag and uses neither word in its text.
+    expect((await search(page, 'power dynamics')).map(({ url }) => url)).toContain('/events/openai-board-crisis/');
+  });
+
+  test('a thread excerpt comes from its synthesis, not its entry timeline', async ({ page }) => {
+    const thread = (await search(page, 'frontier safety')).find(({ url }) => url === '/threads/frontier-safety-policies/');
+    expect(thread).toBeDefined();
+    expect(thread!.excerpt).not.toMatch(ISO_DATE);
+
+    // The excerpt may open with the title, which the record indexes just before the synthesis.
+    // The index skips the synthesis's opening author and date line.
+    await page.goto('/threads/frontier-safety-policies');
+    const synthesis = await page.locator('.wiki-article__title, .wiki-article__lead, .wiki-article__prose').evaluateAll((parts) =>
+      parts.map((part) => {
+        const copy = part.cloneNode(true) as HTMLElement;
+        copy.querySelectorAll('.thread-section').forEach((section) => section.remove());
+        copy.querySelectorAll('p').forEach((line) => line.textContent!.startsWith('Author:') && line.remove());
+        return copy.textContent;
+      }).join(' '),
+    );
+    expect(words(synthesis)).toContain(words(thread!.excerpt));
+  });
+
+  test('an actor record and its excerpt leave out its entry list', async ({ page }) => {
+    const actor = (await search(page, 'OpenAI', { type: 'actor' })).find(({ url }) => url === `/actors/${SLUGS.actor}/`);
+    expect(actor).toBeDefined();
+    for (const text of [actor!.excerpt, actor!.content]) {
+      expect(text).not.toMatch(ISO_DATE);
+      expect(text).not.toMatch(/\b(Landmark|Major|Notable)\b/);
+    }
+  });
+
+  test('an actor alias finds the actor', async ({ page }) => {
+    const results = await search(page, 'DeepMind Technologies');
+    expect(results.map(({ url }) => url)).toContain('/actors/google-deepmind/');
   });
 
   test('an exact thread title finds the thread page first', async ({ page }) => {

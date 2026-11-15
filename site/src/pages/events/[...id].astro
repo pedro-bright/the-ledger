@@ -189,7 +189,12 @@ const contestationHref = records.length > 0 ? '#revision-history' : undefined;
     articleText={event.htmlContent}
     lastReviewed={lastReviewed}
     sourcePath={sourcePath}
-    search={{ type: 'event', filters: { category: event.category, year: event.date.slice(0, 4) }, meta: { date: event.date } }}
+    search={{
+      type: 'event',
+      filters: { category: event.category, year: event.date.slice(0, 4) },
+      meta: { date: event.date },
+      text: event.tags?.length ? [`Tags: ${event.tags.join(', ')}`] : [],
+    }}
   >
     <Fragment slot="markers">
       <SignificanceFlag level={event.significance} />
