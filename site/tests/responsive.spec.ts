@@ -324,15 +324,17 @@ test.describe('aids that live in a rail on wide screens', () => {
         await expect(page.getByRole('heading', { name, exact: true })).toHaveCount(1);
         const inMain = page.locator(`.wiki-main section:has(> h2:text-is("${name}"))`);
         const inRail = page.locator(`.wiki-rail .rail-block:has(> h4:text-is("${name}"))`);
-        if (width > 1024) {
-          await expect(inRail).toBeVisible();
-          await expect(inMain).toBeHidden();
-          continue;
-        }
-        await expect(inRail).toBeHidden();
-        await expect(inMain).toBeVisible();
-        const hrefs = (list: typeof inMain) => list.locator('a').evaluateAll((links) => links.map((link) => link.getAttribute('href')));
-        expect(await hrefs(inMain)).toEqual(await hrefs(inRail));
+        const [exposed, absent] = width > 1024 ? [inRail, inMain] : [inMain, inRail];
+        await expect(exposed).toBeVisible();
+        await expect(absent).toBeHidden();
+        const hrefs = await absent.locator('a').evaluateAll((links) => links.map((link) => link.getAttribute('href')));
+        expect(hrefs.length).toBeGreaterThan(0);
+        await expect(exposed.getByRole('heading', { name, exact: true })).toHaveCount(1);
+        await expect(absent.getByRole('heading')).toHaveCount(0);
+        await expect(absent.getByRole('link')).toHaveCount(0);
+        const exposedLinks = exposed.getByRole('link');
+        await expect(exposedLinks).toHaveCount(hrefs.length);
+        expect(await exposedLinks.evaluateAll((links) => links.map((link) => link.getAttribute('href')))).toEqual(hrefs);
       }
       if (width > 1024) return;
       const sections = await page.locator('.wiki-main h2:visible').allTextContents();
