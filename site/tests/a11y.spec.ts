@@ -12,37 +12,38 @@ import { SLUGS } from './_slugs';
  *    the canvas, so no canvas-specific exclusions are needed today.
  *  - No rules are disabled. If this becomes flaky on `color-contrast` after a
  *    visual design change, narrow the exclusion and document it here.
- *  - The revised-event route checks only its revision history: the GPT-5 entry's
- *    infobox actor list already fails `link-in-text-block` on its own.
+ *
+ * Routes marked `mobile` also run in the 375px `mobile` project, where pages show
+ * different elements (the closed metadata disclosure, the in-article key).
  */
 
-const ROUTES: Array<{ path: string; label: string; include?: string }> = [
-  { path: '/', label: 'home' },
-  { path: `/events/${SLUGS.event}`, label: 'event' },
-  { path: '/events/openai-gpt-5-release', label: 'revised-event', include: '.wiki-article__revisions' },
+const ROUTES: Array<{ path: string; label: string; mobile?: boolean }> = [
+  { path: '/', label: 'home', mobile: true },
+  { path: `/events/${SLUGS.event}`, label: 'event', mobile: true },
+  { path: '/events/openai-gpt-5-release', label: 'revised-event' },
   { path: '/events/coe-ai-convention-in-force', label: 'challenged-event' },
   { path: '/events/claude-2-release', label: 'threaded-event' },
   { path: '/events/anthropic-rsp-v3', label: 'cited-event' },
   { path: '/threads', label: 'threads-index' },
-  { path: `/threads/${SLUGS.thread}`, label: 'thread-detail' },
+  { path: `/threads/${SLUGS.thread}`, label: 'thread-detail', mobile: true },
   { path: '/controversies', label: 'controversies-index' },
   { path: '/actors', label: 'actors-index' },
-  { path: '/explore', label: 'explore' },
-  { path: '/search', label: 'search' },
+  { path: `/actors/${SLUGS.actor}`, label: 'actor-detail' },
+  { path: `/controversies/${SLUGS.controversy}`, label: 'controversy-detail' },
+  { path: '/explore', label: 'explore', mobile: true },
+  { path: '/search', label: 'search', mobile: true },
   { path: '/graph', label: 'graph' },
   { path: '/about', label: 'about' },
   { path: '/privacy', label: 'privacy' },
   { path: '/data', label: 'data' },
   { path: '/corrections', label: 'corrections' },
+  { path: '/no-such-page', label: 'not-found' },
 ];
 
 test.describe('a11y (axe)', () => {
-  test.beforeEach(({}, testInfo) => {
-    test.skip(testInfo.project.name !== 'chromium', 'desktop only');
-  });
-
-  for (const { path, label, include } of ROUTES) {
-    test(`${label} — no serious/critical violations`, async ({ page }) => {
+  for (const { path, label, mobile } of ROUTES) {
+    test(`${label} — no serious/critical violations`, async ({ page }, testInfo) => {
+      test.skip(testInfo.project.name === 'mobile' && !mobile, 'desktop only');
       await page.goto(path);
       // Wait a tick for hydration on routes with client components (Explorer, Graph).
       if (path === '/graph') {
@@ -52,12 +53,9 @@ test.describe('a11y (axe)', () => {
         await page.locator('#explorer-search').waitFor({ state: 'visible' });
       }
 
-      const builder = new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']);
-      if (include) {
-        await expect(page.locator(include)).toBeVisible();
-        builder.include(include);
-      }
-      const result = await builder.analyze();
+      const result = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+        .analyze();
 
       const serious = result.violations.filter(
         (v) => v.impact === 'serious' || v.impact === 'critical',
