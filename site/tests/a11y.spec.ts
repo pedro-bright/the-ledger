@@ -31,6 +31,7 @@ const ROUTES: Array<{ path: string; label: string; include?: string }> = [
   { path: '/graph', label: 'graph' },
   { path: '/about', label: 'about' },
   { path: '/privacy', label: 'privacy' },
+  { path: '/data', label: 'data' },
   { path: '/corrections', label: 'corrections' },
 ];
 

@@ -5,7 +5,8 @@
  * each event, thread, controversy and actor page exactly once with a lastmod
  * on every event, and that robots.txt names the sitemap index. Exits 1 if any
  * of these checks fails. It also checks that each thread page's event timeline
- * links every event that declares the thread.
+ * links every event that declares the thread, and that the /data/ export files
+ * parse and list one event per event page.
  */
 
 import fs from "node:fs";
@@ -156,6 +157,68 @@ function checkThreadTimelines(): string[] {
   return unlinked;
 }
 
+// Read a CSV document (RFC 4180 quoting, CRLF rows) into rows of fields.
+function parseCsv(text: string): string[][] {
+  const rows: string[][] = [];
+  let row: string[] = [];
+  let field = "";
+  let quoted = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (quoted) {
+      if (c === '"' && text[i + 1] === '"') field += text[++i];
+      else if (c === '"') quoted = false;
+      else field += c;
+    } else if (c === '"' && field === "") quoted = true;
+    else if (c === ",") {
+      row.push(field);
+      field = "";
+    } else if (c === "\r" && text[i + 1] === "\n") {
+      rows.push([...row, field]);
+      row = [];
+      field = "";
+      i++;
+    } else field += c;
+  }
+  assert.equal(quoted, false, "events.csv ends inside a quoted field");
+  assert.equal(row.length + field.length, 0, "events.csv must end with CRLF");
+  return rows;
+}
+
+// The /data/ files: each parses, events.json has one item per built event page and
+// links each to a built page, and events.csv starts with a byte-order mark followed by
+// the same rows as events.json.
+function checkDataExport() {
+  const read = (file: string) => fs.readFileSync(path.join(DIST_DIR, "data", file), "utf8");
+  for (const key of ["actors", "threads", "controversies"]) {
+    assert.ok(Array.isArray(JSON.parse(read(`${key}.json`))[key]), `data/${key}.json must list ${key}`);
+  }
+  const { events } = JSON.parse(read("events.json")) as {
+    events: { id: string; title: string; url: string }[];
+  };
+  const eventPages = fs
+    .readdirSync(path.join(DIST_DIR, "events"))
+    .filter((id) => existsHtml(path.join("events", id, "index.html")));
+  assert.equal(events.length, eventPages.length, "data/events.json must have one item per event page");
+  for (const event of events) {
+    const page = path.join(decodeURIComponent(new URL(event.url).pathname), "index.html");
+    assert.ok(existsHtml(page), `data/events.json URL has no built page: ${event.url}`);
+  }
+  const csv = fs.readFileSync(path.join(DIST_DIR, "data", "events.csv"));
+  assert.deepEqual([...csv.subarray(0, 3)], [0xef, 0xbb, 0xbf], "data/events.csv must start with a UTF-8 byte-order mark");
+  const [header, ...rows] = parseCsv(csv.subarray(3).toString("utf8"));
+  assert.deepEqual(header, [
+    "id", "date", "title", "category", "significance", "confidence",
+    "regions", "threads", "actors", "source_count", "url",
+  ]);
+  assert.deepEqual(
+    rows.map((row) => [row.length, row[0], row[2], row[10]]),
+    events.map((event) => [header.length, event.id, event.title, event.url]),
+    "data/events.csv must have one row per item in data/events.json",
+  );
+  console.log(`Data export: ${events.length} events in events.json and events.csv, each linked to its page.\n`);
+}
+
 // --------------- Main ---------------
 
 async function main() {
@@ -223,6 +286,7 @@ async function main() {
     path.join("actors", "index.html"),
     path.join("explore", "index.html"),
     path.join("graph", "index.html"),
+    path.join("data", "index.html"),
     "404.html",
   ];
   for (const p of topLevelPages) {
@@ -281,6 +345,7 @@ async function main() {
 
   if (missing.length === 0 && malformed.length === 0 && unlinked.length === 0) {
     await checkSitemap(checks);
+    checkDataExport();
     console.log("OK: every content item has a static page and all top-level routes built.");
     process.exit(0);
   }
