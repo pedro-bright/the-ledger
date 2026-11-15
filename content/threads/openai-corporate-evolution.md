@@ -2,7 +2,7 @@
 id: openai-corporate-evolution
 title: "OpenAI's Corporate Evolution"
 status: active
-started: 2024-09-26
+started: 2024-09-25
 core_question: "How did OpenAI transform from capped-profit nonprofit-governed lab into an $852B Public Benefit Corporation, and what does the Microsoft renegotiation and Amazon's AGI-contingent stake reveal about AI economics and mission?"
 curator: terry-tang
 curator_scope: initial-synthesis
