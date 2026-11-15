@@ -32,9 +32,37 @@ jobs:
         working-directory: site
         run: npm ci
 
-      - name: Install Playwright browsers
+      - name: Read Playwright version
+        id: playwright-version
         working-directory: site
-        run: npx playwright install --with-deps chromium
+        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        working-directory: site
+        run: npx playwright install chromium
+
+      - name: Install Playwright system dependencies
+        working-directory: site
+        run: |
+          for attempt in 1 2 3; do
+            if npx playwright install-deps chromium; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "Attempt $attempt to install system dependencies failed; retrying in 30 seconds."
+              sleep 30
+            fi
+          done
+          echo "Could not install system dependencies after 3 attempts."
+          exit 1
 
       - name: Run content validation
         run: npm run validate
@@ -50,6 +78,9 @@ jobs:
       - name: Build site
         working-directory: site
         run: npm run build
+
+      - name: Run content security tests
+        run: npm run test:security
 
       - name: Run content parity check
         run: npm run test:parity
