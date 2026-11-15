@@ -2,7 +2,7 @@
 id: ai-and-labor
 title: "AI and the Labor Market"
 status: active
-started: 2024-04-01
+started: 2024-02-27
 core_question: "How is AI actually reshaping jobs — beyond theoretical exposure — and what does the first rigorous data show about task automation, displacement, and augmentation?"
 curator: terry-tang
 curator_scope: initial-synthesis
@@ -11,6 +11,7 @@ contestation:
   challenge_window: open
 last_updated: 2026-11-14
 events:
+  - klarna-ai-assistant-two-thirds-customer-service-chats
   - klarna-ai-customer-service-reversal
   - anthropic-economic-index-labor-study
 ---
