@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { test } from 'node:test';
 import { parseFrontmatter } from './frontmatter.js';
-import yaml from 'js-yaml';
+import { dump } from 'js-yaml';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const tsx = path.join(root, 'node_modules/.bin/tsx');
@@ -89,7 +89,7 @@ test('scaffold allocates above the maximum, supplies frontmatter and validates a
   assert.equal(data.revision.created, new Date().toISOString().slice(0, 10));
   for (const heading of ['Summary', 'What Happened', 'Why It Matters']) assert.ok(content.includes(`## ${heading}`));
   data.sources = [{ url: 'https://example.com/source', title: 'Example source' }];
-  fs.writeFileSync(filename, `---\n${yaml.dump(data)}---\n${content}`);
+  fs.writeFileSync(filename, `---\n${dump(data)}---\n${content}`);
   assert.equal(validate(dir).status, 0, validate(dir).output);
   assert.notEqual(scaffold(dir).status, 0);
   assert.equal(fs.readFileSync(filename, 'utf8').includes('Example source'), true);

@@ -8,7 +8,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseFrontmatter } from "./frontmatter.js";
-import yaml from "js-yaml";
+import { loadYaml } from "./yaml.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -66,7 +66,7 @@ function parseFile(filePath: string): Record<string, unknown> {
   const raw = fs.readFileSync(filePath, "utf-8");
 
   if (ext === ".yml" || ext === ".yaml") {
-    return (yaml.load(raw) as Record<string, unknown>) ?? {};
+    return (loadYaml(raw) as Record<string, unknown>) ?? {};
   }
   return parseFrontmatter(raw).data;
 }

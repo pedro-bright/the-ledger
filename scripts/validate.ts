@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
 import { parseFrontmatter } from "./frontmatter.js";
-import yaml from "js-yaml";
+import { loadYaml } from "./yaml.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -127,7 +127,7 @@ function parseFile(filePath: string): { data: Record<string, unknown>; content: 
   const raw = fs.readFileSync(filePath, "utf-8");
 
   if (ext === ".yml" || ext === ".yaml") {
-    const data = yaml.load(raw) as Record<string, unknown>;
+    const data = loadYaml(raw) as Record<string, unknown>;
     return { data: normalizeDates(data ?? {}) as Record<string, unknown>, content: "" };
   }
 

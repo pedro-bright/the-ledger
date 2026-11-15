@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
-import yaml from "js-yaml";
+import { dump } from "js-yaml";
 import { parseFrontmatter } from "./frontmatter.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -44,7 +44,7 @@ function main() {
     String(now.getMonth() + 1).padStart(2, "0"),
     String(now.getDate()).padStart(2, "0"),
   ].join("-");
-  const frontmatter = yaml.dump({
+  const frontmatter = dump({
     id,
     title: "Untitled event",
     date,

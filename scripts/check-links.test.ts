@@ -6,7 +6,7 @@ import http from "node:http";
 import os from "node:os";
 import path from "node:path";
 import { test } from "node:test";
-import yaml from "js-yaml";
+import { loadYaml } from "./yaml.js";
 import { checkUrl, extractUrls, groupLinks, formatReport, suspiciousRedirect, writeReports } from "./check-links.js";
 
 async function withServer(
@@ -256,7 +256,7 @@ function withCliFixture(run: (dir: string, cli: (...args: string[]) => ReturnTyp
   try {
     fs.mkdirSync(path.join(dir, "scripts"));
     fs.mkdirSync(path.join(dir, "content/events/nested"), { recursive: true });
-    for (const name of ["check-links.ts", "frontmatter.ts"]) {
+    for (const name of ["check-links.ts", "frontmatter.ts", "yaml.ts"]) {
       fs.copyFileSync(new URL(name, import.meta.url), path.join(dir, "scripts", name));
     }
     fs.symlinkSync(new URL("../node_modules", import.meta.url), path.join(dir, "node_modules"), "dir");
@@ -428,7 +428,7 @@ test("unverified-only runs retain the full report and summary", () => {
 
 
 test("weekly workflow updates issues in place, closes clean runs, and preserves checker failures", async () => {
-  const workflow = yaml.load(fs.readFileSync(new URL("../.github/workflows/stale-sources.yml", import.meta.url), "utf-8")) as {
+  const workflow = loadYaml(fs.readFileSync(new URL("../.github/workflows/stale-sources.yml", import.meta.url), "utf-8")) as {
     jobs: { "check-links": { steps: Array<{ name: string; if?: string; env?: Record<string, string>; with?: { script?: string } }> } };
   };
   const step = workflow.jobs["check-links"].steps.find((step) => step.name === "Post report summary")!;

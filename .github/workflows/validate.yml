@@ -42,6 +42,9 @@ jobs:
       - name: Run validation
         run: npm run validate
 
+      - name: Test YAML parsing
+        run: npm run test:yaml
+
       - name: Test event filenames and scaffold
         run: npm run test:event-files
 

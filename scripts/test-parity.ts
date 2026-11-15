@@ -13,7 +13,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseFrontmatter } from "./frontmatter.js";
-import yaml from "js-yaml";
+import { loadYaml } from "./yaml.js";
 import assert from "node:assert/strict";
 import { XMLParser, XMLValidator } from "fast-xml-parser";
 
@@ -43,7 +43,7 @@ function readId(filePath: string): string | null {
   const raw = fs.readFileSync(filePath, "utf-8");
   try {
     if (ext === ".yml" || ext === ".yaml") {
-      const data = yaml.load(raw) as Record<string, unknown> | undefined;
+      const data = loadYaml(raw) as Record<string, unknown> | undefined;
       const id = data?.id;
       return typeof id === "string" ? id : null;
     }

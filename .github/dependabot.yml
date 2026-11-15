@@ -16,3 +16,12 @@ updates:
       interval: weekly
     cooldown:
       default-days: 7
+    ignore:
+      # CI and the root `engines` field use Node 22, so the Node types stay on 22.
+      # Remove this rule when CI and `engines` move to a newer Node version.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # TypeScript 7 removes the `baseUrl` option that site/tsconfig.json sets.
+      # Remove this rule when both type checks pass on TypeScript 7.
+      - dependency-name: typescript
+        versions: ["7.x"]
