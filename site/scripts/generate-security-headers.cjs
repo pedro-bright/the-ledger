@@ -33,7 +33,8 @@ function scriptHash(text) {
 function buildPolicy(hashes) {
   return [
     "default-src 'self'",
-    `script-src 'self' ${[...hashes].sort().join(' ')} ${POSTHOG_ORIGINS}`,
+    // The Pagefind search index compiles WebAssembly.
+    `script-src 'self' 'wasm-unsafe-eval' ${[...hashes].sort().join(' ')} ${POSTHOG_ORIGINS}`,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data:",
     "font-src 'self' data:",

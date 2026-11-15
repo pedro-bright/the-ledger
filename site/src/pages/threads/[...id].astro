@@ -140,6 +140,7 @@ const subtitle = thread.core_question ? `— ${thread.core_question}` : undefine
     articleText={thread.htmlContent}
     lastModified={thread.last_updated}
     sourcePath={sourcePath}
+    search={{ type: 'thread' }}
   >
     <Fragment slot="markers">
       {thread.status && <span class={`status-chip status-chip--${thread.status}`}>{thread.status}</span>}

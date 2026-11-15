@@ -8,6 +8,8 @@ import { anchorSections } from '../../lib/markdown';
 // desktop the script below moves it before the lead and opens it, so it floats beside the text.
 // Without a `lead` slot, the infobox floats directly in the body.
 // Page provides `markers`, `infobox`, `lead`, default body, `revisions`, `references`, `seeAlso`, `footer` via slots.
+// The article is the page's search index record. Pagefind indexes nothing outside it and skips its
+// breadcrumb, contents, See also and last-modified line.
 interface Props {
   title: string;
   subtitle?: string;
@@ -19,9 +21,18 @@ interface Props {
   lastReviewed?: string;
   /** Source file on GitHub (for "View source" editorial transparency). */
   sourcePath?: string;
+  /** Search index record type, plus any other filters and metadata. */
+  search: {
+    type: 'event' | 'thread' | 'controversy' | 'actor';
+    filters?: Record<string, string>;
+    meta?: Record<string, string>;
+  };
 }
 
-const { title, subtitle, breadcrumb = [], articleText = '', lastModified, lastReviewed, sourcePath } = Astro.props;
+const { title, subtitle, breadcrumb = [], articleText = '', lastModified, lastReviewed, sourcePath, search } = Astro.props;
+// Pagefind reads one filter per element but several metadata pairs from one attribute.
+const searchFilters = Object.entries({ type: search.type, ...search.filters });
+const searchMeta = Object.entries(search.meta ?? {}).map(([key, value]) => `${key}:${value}`).join(', ') || undefined;
 const hasMarkers = Astro.slots.has('markers');
 const hasInfobox = Astro.slots.has('infobox');
 const hasLead = Astro.slots.has('lead');
@@ -42,9 +53,10 @@ if (hasRevisions) sections.push({ id: 'revision-history', title: 'Revision histo
 if (hasReferences) sections.push({ id: 'refs-head', title: 'References', level: 2 });
 if (hasSeeAlso) sections.push({ id: 'see-also-head', title: 'See also', level: 2 });
 ---
-<article class="wiki-article">
+<article class="wiki-article" data-pagefind-body data-pagefind-meta={searchMeta}>
+  {searchFilters.map(([key, value]) => <span hidden data-pagefind-filter={`${key}:${value}`} />)}
   {breadcrumb.length > 0 && (
-    <nav class="wiki-article__breadcrumb" aria-label="Breadcrumb">
+    <nav class="wiki-article__breadcrumb" aria-label="Breadcrumb" data-pagefind-ignore>
       {breadcrumb.map((crumb, i) => (
         <Fragment>
           {i > 0 && <span class="wiki-article__crumb-sep" aria-hidden="true">›</span>}
@@ -66,7 +78,7 @@ if (hasSeeAlso) sections.push({ id: 'see-also-head', title: 'See also', level: 2
   </header>
 
   {isLong && (
-    <nav id="article-contents" class="article-contents rail-block" aria-label="On this page">
+    <nav id="article-contents" class="article-contents rail-block" aria-label="On this page" data-pagefind-ignore>
       <details>
         <summary>Contents</summary>
         <ol>
@@ -106,7 +118,7 @@ if (hasSeeAlso) sections.push({ id: 'see-also-head', title: 'See also', level: 2
   )}
 
   {hasSeeAlso && (
-    <section class="wiki-article__see-also" aria-labelledby="see-also-head">
+    <section class="wiki-article__see-also" aria-labelledby="see-also-head" data-pagefind-ignore>
       <h2 id="see-also-head" class="wiki-article__h2">See also</h2>
       <Fragment set:html={seeAlso} />
     </section>
@@ -119,7 +131,7 @@ if (hasSeeAlso) sections.push({ id: 'see-also-head', title: 'See also', level: 2
   )}
 
   {(lastModified || lastReviewed || sourcePath) && (
-    <footer class="wiki-article__lastmod">
+    <footer class="wiki-article__lastmod" data-pagefind-ignore>
       {lastReviewed && (
         <span>This record last reviewed <time datetime={lastReviewed}>{lastReviewed}</time>.</span>
       )}
