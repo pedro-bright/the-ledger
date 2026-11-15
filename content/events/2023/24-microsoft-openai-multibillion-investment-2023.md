@@ -69,7 +69,8 @@ CNBC also recalled that Microsoft's $1 billion investment in July 2019 had made 
 ## Why It Matters
 
 The announcement tied the most visible AI product of the moment, ChatGPT, to one of the largest technology companies through an undisclosed investment reported in the billions of dollars.
-It set the pattern of a cloud provider investing in an AI lab while supplying its computing, which Google and Amazon followed with Anthropic later in 2023 ([Google investment in Anthropic](/events/anthropic-google-investment)).
+The deal extended and scaled up an arrangement that began with Microsoft's 2019 investment, which made Microsoft OpenAI's exclusive cloud provider.
+Google and Amazon followed the same pattern of a cloud provider investing in an AI lab while supplying its computing with Anthropic later in 2023 ([Google investment in Anthropic](/events/anthropic-google-investment)).
 
 The entry is the starting point of the AI valuation cycle thread.
 The arrangements announced here, including Azure exclusivity and OpenAI's capped-profit structure under nonprofit governance, were renegotiated in October 2025 and again in April 2026 ([2025 renegotiation](/events/microsoft-openai-partnership-renegotiation); [2026 restructuring](/events/openai-microsoft-partnership-restructuring)).

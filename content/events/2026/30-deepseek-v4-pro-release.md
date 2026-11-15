@@ -42,9 +42,6 @@ tags: [open-weight, moe, price-compression, chinese-ai, huawei-ascend, mit-licen
 threads: [open-vs-closed-weights, chip-export-controls]
 related: [deepseek-r1-distill-impact]
 state: published
-contestation:
-  status: contested
-  last_challenged: 2026-11-15
 revision:
   created: 2026-04-27
   last_reviewed: 2026-11-15
@@ -60,14 +57,13 @@ Training was conducted in part on Huawei Ascend 950 chips operating in "Supernod
 
 ## Correction, November&nbsp;15,&nbsp;2026
 
-The Summary above was corrected after a challenge to its benchmark comparison was sustained.
+The Summary above was corrected after a review of the entry against its sources.
 The DeepSeek-V4-Pro model card, the entry's official source, compares V4-Pro with Claude Opus 4.6 and not with Claude Opus 4.7.
 In that comparison V4-Pro scores 80.6% on SWE-bench Verified against 80.8% for Claude Opus 4.6, and 93.5% on LiveCodeBench against 88.8% for Claude Opus 4.6.
 The narrative below is preserved as published and still contains the earlier errors: its LiveCodeBench comparison names Claude Opus 4.7 for the Opus 4.6 score, and its 0.2-point gap in Why It Matters is the gap to Claude Opus 4.6.
-Its SWE-bench Verified figures of 87.6% for Claude Opus 4.7 and 89.1% for GPT-5.5 do not appear in any of the entry's sources.
+Its SWE-bench Verified figures of 87.6% for Claude Opus 4.7 and 89.1% for GPT-5.5 do not appear in the two sources that were read, the DeepSeek-V4-Pro model card and Simon Willison's post "DeepSeek V4".
+The third source, the Bloomberg article, could not be read behind its paywall.
 
-[Challenge record](https://github.com/pedro-bright/the-ledger/blob/main/content/challenges/cc-deepseek-v4-pro-release-20261115.md).
-[Resolution note](https://github.com/pedro-bright/the-ledger/blob/main/content/resolutions/rn-deepseek-v4-pro-release-20261115.md).
 [Revision record with the prior summary and metadata](https://github.com/pedro-bright/the-ledger/blob/main/content/revisions/sr-deepseek-v4-pro-release-20261115.md).
 
 ## What Happened

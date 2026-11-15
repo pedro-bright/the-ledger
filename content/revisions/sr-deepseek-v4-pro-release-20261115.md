@@ -17,11 +17,11 @@ new_version: |-
   V4-Pro, with 1.6 trillion total parameters and 49 billion active per inference step, scored 80.6% on SWE-bench Verified, 0.2 percentage points below Claude Opus 4.6's 80.8% in DeepSeek's own comparison, and outperformed Opus 4.6 on LiveCodeBench, 93.5% to 88.8%, while offering API pricing at approximately one-seventh of comparable Western model rates.
   Training was conducted in part on Huawei Ascend 950 chips operating in "Supernode" cluster configurations — the first publicly confirmed instance of a frontier-adjacent model trained on Chinese domestic silicon operating under US export controls.
 reason: >-
-  The challenge was sustained.
+  A review of the entry against its sources, raised in the follow-ups of pull request 234, found the error.
   The model card's comparison table, the source for the 0.2-point gap and the LiveCodeBench comparison, compares V4-Pro with Claude Opus 4.6 and not with Claude Opus 4.7, so the summary now names the model and states the figures the table gives.
 changed_claim_ids:
   - deepseek-v4-pro-release
-triggered_by_case_id: cc-deepseek-v4-pro-release-20261115
+triggered_by_case_id: null
 author: terry-tang
 created_at: '2026-11-15'
 ---
@@ -32,7 +32,7 @@ This revision corrects the benchmark comparison in the Summary.
 It names Claude Opus 4.6 as the model DeepSeek compared V4-Pro with and gives the SWE-bench Verified and LiveCodeBench figures from that comparison.
 The rest of the summary is unchanged.
 The What Happened and Why It Matters sections stay as published, below a correction note.
-The revision was drafted with AI assistance for the curator's review, and the [resolution note](https://github.com/pedro-bright/the-ledger/blob/main/content/resolutions/rn-deepseek-v4-pro-release-20261115.md) records the outcome.
+The revision was drafted with AI assistance for the curator's review.
 
 ## Event location and identity
 
@@ -44,6 +44,8 @@ Entry ID: `deepseek-v4-pro-release`.
 [DeepSeek-V4-Pro model card](https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro), table "DeepSeek-V4-Pro-Max vs Frontier Models."
 The table gives SWE-bench Verified (Resolved) as 80.8 for "Opus-4.6 Max" and 80.6 for "DS-V4-Pro Max," and LiveCodeBench (Pass@1) as 88.8 and 93.5.
 The archived copy the entry cites has the same figures.
+The SWE-bench Verified figures of 87.6% for Claude Opus 4.7 and 89.1% for GPT-5.5 in What Happened do not appear in the two sources that were read, the DeepSeek-V4-Pro model card and Simon Willison's post "DeepSeek V4".
+The third source, the Bloomberg article, could not be read behind its paywall.
 
 ```yaml
 url: https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro
@@ -57,7 +59,6 @@ archive_url: https://web.archive.org/web/20260427030628/https://huggingface.co/d
 
 ## Metadata changes
 
-- `contestation`: added, with `status: contested` and `last_challenged: 2026-11-15`.
 - `revision.last_reviewed`: 2026-04-27 to 2026-11-15.
 - The model card source's `accessed` date stays 2026-04-27; this review read it again on 2026-11-15.
 
