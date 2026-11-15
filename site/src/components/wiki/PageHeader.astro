@@ -1,6 +1,7 @@
 ---
 // Index-page header: eyebrow label + title + optional italic subtitle + rule.
 // Pattern reused across Threads/Controversies/Actors/About index pages.
+// Content in the default slot follows the subtitle.
 interface Props {
   eyebrow?: string;
   title: string;
@@ -15,6 +16,7 @@ const { eyebrow, title, subtitle, noRule = false } = Astro.props;
   {eyebrow && <p class="page-header__eyebrow label-eyebrow">{eyebrow}</p>}
   <h1 class="page-header__title">{title}</h1>
   {subtitle && <p class="page-header__subtitle">{subtitle}</p>}
+  <slot />
 </header>
 
 <style>

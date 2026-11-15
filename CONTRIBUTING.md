@@ -12,7 +12,8 @@ The Ledger uses **progressive formalization** — you don't need to master the f
 
 **What:** Submit a claim and a source.
 
-**How:** Open a [GitHub Issue](../../issues/new) using the "New Event" template.
+**How:** Open a [GitHub Issue](../../issues/new) using the "New Event" template, or the "Source Tip" template when you have a source and a short note.
+To add a source to an entry that is already in the ledger, use the "Source Tip" template and fill in the entry's ID.
 
 **What to include:**
 - What happened (1-3 sentences)
@@ -163,7 +164,7 @@ fix/typo-in-claude-3-event
 
 1. Open a GitHub Issue using the "Challenge" template
 2. Specify the claim you're challenging
-3. Provide your basis: `misquote` | `context_omission` | `overstatement` | `unsupported_inference` | `source_misattribution` | `timeline_error`
+3. Provide your basis: `misquote` | `context_omission` | `overstatement` | `unsupported_inference` | `category_error` | `source_misattribution` | `timeline_error` | `duplication`
 4. Include sources supporting your challenge
 
 ### What Happens

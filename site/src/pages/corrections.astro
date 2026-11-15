@@ -38,7 +38,15 @@ const openChallenges = challenges.filter((c) => !resolvedIds.has(c.id)).length;
     eyebrow="§ Corrections"
     title="Corrections and challenges"
     subtitle="Every correction to a published entry and every formal challenge, in the order they were recorded."
-  />
+  >
+    <p class="corrections-request">
+      To request a correction, <a
+        href="https://github.com/pedro-bright/the-ledger/issues/new?template=challenge.yml"
+        target="_blank"
+        rel="noopener noreferrer"
+      >file a challenge</a>, or open the entry and use the link under its references.
+    </p>
+  </PageHeader>
 
   <p class="corrections-stats font-mono">
     <span>{plural(revisions.length, 'summary revision')}</span>
@@ -66,7 +74,26 @@ const openChallenges = challenges.filter((c) => !resolvedIds.has(c.id)).length;
   </ol>
 </Base>
 
+<script is:inline>
+  document.querySelectorAll('.corrections-request a').forEach(function (el) {
+    el.addEventListener('click', function () {
+      window.posthog?.capture('contribute_link_clicked', {
+        link_text: el.textContent?.trim(),
+        link_href: el.getAttribute('href'),
+      });
+    });
+  });
+</script>
+
 <style>
+  .corrections-request {
+    margin: 10px 0 0;
+    font-family: var(--font-sans);
+    font-size: var(--text-meta);
+    line-height: 1.45;
+    color: var(--color-ink-mid);
+  }
+
   .corrections-stats {
     font-size: var(--text-meta);
     color: var(--color-ink-faint);
