@@ -6,6 +6,8 @@ import path from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { XMLParser, XMLValidator } from "fast-xml-parser";
+import { plainParagraphs } from "../site/src/lib/markdown.ts";
+import { parseFrontmatter } from "./frontmatter.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const TSX = path.join(ROOT, "node_modules", ".bin", "tsx");
@@ -35,8 +37,20 @@ function day(start: string, offset: number): string {
   return d.toISOString().slice(0, 10);
 }
 
+// Each event's whole Summary as plain text, or its body's paragraphs when it has none.
+function fullSummaries(eventsDir: string): Map<string, string> {
+  const summaries = new Map<string, string>();
+  for (const relative of fs.readdirSync(eventsDir, { recursive: true, encoding: "utf-8" })) {
+    if (!relative.endsWith(".md")) continue;
+    const { data, content } = parseFrontmatter(fs.readFileSync(path.join(eventsDir, relative), "utf-8"));
+    const summary = plainParagraphs(content, "Summary");
+    summaries.set(String(data.id), (summary.length ? summary : plainParagraphs(content)).join(" ").replace(/\s+/g, " ").trim());
+  }
+  return summaries;
+}
+
 // Runs the real feed generator against the given events, or the archive's own events
-// when none are given, and returns both feeds.
+// when none are given, and returns both feeds with each event's whole summary.
 function generateFeeds(files?: Record<string, string>) {
   const sandbox = fs.mkdtempSync(path.join(os.tmpdir(), "ledger-feed-"));
   try {
@@ -60,7 +74,11 @@ function generateFeeds(files?: Record<string, string>) {
     assert.equal(XMLValidator.validate(atom), true);
     assert.equal(XMLValidator.validate(rss), true);
     const parser = new XMLParser({ ignoreAttributes: false, isArray: (name) => name === "entry" || name === "item" });
-    return { atom: parser.parse(atom).feed, rss: parser.parse(rss).rss.channel };
+    return {
+      atom: parser.parse(atom).feed,
+      rss: parser.parse(rss).rss.channel,
+      full: fullSummaries(path.join(sandbox, "content", "events")),
+    };
   } finally {
     fs.rmSync(sandbox, { recursive: true, force: true });
   }
@@ -111,13 +129,17 @@ test("feeds list the 60 most recently added entries, newest first", () => {
 type AtomEntry = { id: string; summary: { "#text": string } };
 type RssItem = { guid: { "#text": string }; description: string };
 
-// A summary ends at a sentence end, or with an ellipsis when it was cut inside a sentence.
+// A shortened summary ends at a sentence end, or with an ellipsis when it was cut inside a sentence.
 const ENDS_CLEANLY = /(?:[.!?]["'”’)\]]*|…)$/u;
 
-function assertPlainSummaries(atom: { entry: AtomEntry[] }, rss: { item: RssItem[] }) {
+function assertPlainSummaries(atom: { entry: AtomEntry[] }, rss: { item: RssItem[] }, full: Map<string, string>) {
   for (const [i, entry] of atom.entry.entries()) {
     const summary = entry.summary["#text"];
-    assert.match(summary, ENDS_CLEANLY, `${entry.id} ends mid-word: ${summary}`);
+    const whole = full.get(idFromLink(entry.id)!);
+    assert.ok(whole !== undefined, `${entry.id} has no event file`);
+    if (summary.replace(/^Event date: \d{4}-\d{2}-\d{2}\. /, "") !== whole) {
+      assert.match(summary, ENDS_CLEANLY, `${entry.id} ends mid-word: ${summary}`);
+    }
     assert.doesNotMatch(summary, /\]\(|\*\*/, `${entry.id} contains Markdown: ${summary}`);
     assert.equal(rss.item[i].description, summary);
   }
@@ -126,7 +148,7 @@ function assertPlainSummaries(atom: { entry: AtomEntry[] }, rss: { item: RssItem
 test("feeds carry an author and plain-text summaries shortened at a sentence end or word", () => {
   const filler = Array.from({ length: 12 }, (_, i) => `Filing ${i + 1} adds one more sourced detail to the record.`);
   const longClause = Array.from({ length: 60 }, (_, i) => `clause${i + 1}`).join(" and ");
-  const { atom, rss } = generateFeeds({
+  const { atom, rss, full } = generateFeeds({
     "2025/01-markdown.md": event(
       "markdown",
       "2025-03-03",
@@ -151,11 +173,11 @@ test("feeds carry an author and plain-text summaries shortened at a sentence end
     oneSentence.summary["#text"],
     `Event date: 2025-03-04. It began with ${Array.from({ length: 38 }, (_, i) => `clause${i + 1}`).join(" and ")} and…`,
   );
-  assertPlainSummaries(atom, rss);
+  assertPlainSummaries(atom, rss, full);
 });
 
 test("the archive's feeds have the elements the Atom and RSS specifications require", () => {
-  const { atom, rss } = generateFeeds();
+  const { atom, rss, full } = generateFeeds();
 
   // RFC 4287 4.1.1: a feed needs an id, a title, an updated date and an author.
   for (const key of ["id", "title", "updated"]) assert.ok(atom[key], `feed has no ${key}`);
@@ -172,5 +194,19 @@ test("the archive's feeds have the elements the Atom and RSS specifications requ
   assert.equal(rss.item.length, 60);
   for (const item of rss.item) assert.ok(item.title && item.description, `${item.guid["#text"]} has no title or description`);
 
-  assertPlainSummaries(atom, rss);
+  assertPlainSummaries(atom, rss, full);
+});
+
+test("the root package installs the Markdown packages the feed generator loads from the site, at the site's versions", () => {
+  const read = (file: string) => JSON.parse(fs.readFileSync(path.join(ROOT, file), "utf-8"));
+  const [rootPackage, sitePackage, rootLock, siteLock] = [
+    read("package.json"),
+    read("site/package.json"),
+    read("package-lock.json"),
+    read("site/package-lock.json"),
+  ];
+  for (const name of ["marked", "parse5"]) {
+    assert.equal(rootPackage.devDependencies[name], sitePackage.dependencies[name], `${name} range differs`);
+    assert.equal(rootLock.packages[`node_modules/${name}`].version, siteLock.packages[`node_modules/${name}`].version, `${name} version differs`);
+  }
 });
