@@ -39,7 +39,7 @@ sources:
     archive_url: https://web.archive.org/web/20250306123229/https://www.open-thoughts.ai/blog/launch
 state: published
 contestation:
-  status: contested
+  status: corrected
   last_challenged: '2026-10-26'
 revision:
   created: 2026-03-08

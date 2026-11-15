@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface Props {
-  status?: 'uncontested' | 'contested' | 'superseded' | 'unresolved';
+  status?: 'uncontested' | 'contested' | 'corrected' | 'superseded' | 'unresolved';
   /** Show only the icon (useful for dense list rows). */
   iconOnly?: boolean;
 }
@@ -22,7 +22,14 @@ const config: Record<
     color: '#92400E',
     bg: '#FEF3C7',
     border: '#F2D888',
-    hint: 'At least one formal challenge has been filed against this claim.',
+    hint: 'At least one formal challenge has been filed against this claim and not resolved by a correction.',
+  },
+  corrected: {
+    label: 'Corrected',
+    color: '#115E59',
+    bg: '#E3F1EF',
+    border: '#B2D8D3',
+    hint: 'A formal challenge was upheld and this entry was corrected. The revision history records the change.',
   },
   superseded: {
     label: 'Superseded',
@@ -70,6 +77,18 @@ export default function ContestationBadge({ status, iconOnly = false }: Props) {
             <circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1.5" />
             <path d="M6 4v2.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             <circle cx="6" cy="8.5" r="0.5" fill="currentColor" />
+          </>
+        )}
+        {status === 'corrected' && (
+          <>
+            <circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1.5" />
+            <path
+              d="M8 4.75L5.25 7.5L4 6.25"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </>
         )}
         {status === 'superseded' && (

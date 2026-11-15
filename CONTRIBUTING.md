@@ -236,6 +236,8 @@ Maintainers prepare the records and evidence in a pull request for that approval
    A `summary_revision_created` action must name the actual revision in `summary_revision_id`.
    If no change is approved, record the appropriate action rather than inventing a revision.
    Update the challenge's `status` and `resolution_note_id`, and the entry's `state`, `confidence`, `contestation`, Summary and review date as the approved actions require.
+   Choose the entry's `contestation.status` from the event schema: `uncontested`, `contested`, `corrected`, `superseded` or `unresolved`.
+   Use `corrected` when an approved action creates a summary revision; `npm run validate` rejects `corrected` on an entry without one.
 
 4. Run `npm run validate` and submit the linked files and entry updates together for review.
 

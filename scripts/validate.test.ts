@@ -509,3 +509,21 @@ test('in GitHub Actions warnings follow errors as annotations and a summary, and
     }
   }
 });
+
+test('a corrected entry needs a resolution of its challenge that creates a summary revision', (t) => {
+  const decided = (target: string) => challenge(`cc-${target}`, target, 'sustained', { resolution_note_id: `rn-${target}` });
+  const result = validate(t, [contested('revised', 'corrected'), contested('not-revised', 'corrected'), contested('unresolved-challenge', 'corrected'), contested('unchallenged', 'corrected')], {
+    ...decided('revised'),
+    ...revision('sr-revised', 'revised', 'cc-revised'),
+    ...resolution('rn-revised', 'cc-revised', [{ type: 'summary_revision_created', claim_id: 'revised', summary_revision_id: 'sr-revised' }]),
+    ...decided('not-revised'),
+    ...resolution('rn-not-revised', 'cc-not-revised'),
+    ...challenge('cc-unresolved-challenge', 'unresolved-challenge'),
+  });
+  assert.equal(result.status, 1, result.output);
+  for (const file of ['02-not-revised.md', '03-unresolved-challenge.md', '04-unchallenged.md']) {
+    assert.match(result.output, new RegExp(`events/2026/${file}\\n\\s+→ contestation.status is "corrected"`), result.output);
+  }
+  assertNotListed(result.output, '01-revised.md');
+  for (const id of ['cc-revised', 'rn-revised', 'sr-revised', 'cc-not-revised', 'rn-not-revised']) assertNotListed(result.output, id);
+});

@@ -165,6 +165,7 @@ test('resolution uses the case target, leaves editorial decisions unfinished and
   for (const heading of ['Decision', 'Evidence', 'Review']) assert.ok(content.includes(`## ${heading}\n`));
   for (const field of ['findings', 'actions', 'decided_by', 'resolution_note_id', 'status', 'summary_revision_id']) assert.ok(result.output.includes(field));
   assert.match(result.output, /curator/);
+  assert.match(result.output, /contestation\.status to corrected when an action creates a summary revision/);
   const unfilled = validate(dir);
   assert.equal(unfilled.status, 1, unfilled.output);
   assert.match(unfilled.output, /findings/);

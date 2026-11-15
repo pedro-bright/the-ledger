@@ -48,7 +48,7 @@ export interface SignificanceEntry {
 }
 
 export interface Contestation {
-  status: 'uncontested' | 'contested' | 'superseded' | 'unresolved';
+  status: 'uncontested' | 'contested' | 'corrected' | 'superseded' | 'unresolved';
   challenge_window?: 'open' | 'closed';
   last_challenged?: string;
 }

@@ -2,7 +2,7 @@
 
 *How The Ledger classifies and communicates the reliability of its claims.*
 
-**Version:** 1.0 | **Last updated:** 2026-03-08
+**Version:** 1.0 | **Last updated:** 2026-11-15
 
 ---
 
@@ -93,8 +93,9 @@ The dimensions are independent and can be queried in combination. Some informati
 
 | Reader View | Simplified Badge | Criteria |
 |-------------|-----------------|----------|
-| "Established" | ✓ | Corroborated + editorially accepted + unchallenged/resolved |
-| "Contested" | ⚡ | At least one formal challenge filed, whether open or resolved |
+| "Established" | ✓ | Corroborated + editorially accepted + no formal challenge filed |
+| "Contested" | ⚡ | At least one formal challenge filed and not resolved by a correction |
+| "Corrected" | ✎ | A formal challenge was upheld and the entry corrected through a summary revision, shown in its revision history |
 | "Emerging" | ○ | Published but not yet fully corroborated |
 | "Superseded" | ↻ | Temporal status is superseded |
 | "Retracted" | ✗ | Temporal status is retracted |

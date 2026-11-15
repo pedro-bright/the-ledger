@@ -70,7 +70,7 @@ This means contributors don't need to master the full ontology on day one. Low b
 
 Every substantive claim must have:
 - A **challenge period** (open objection slot after publication)
-- A visible **contestation status**: `uncontested` | `contested` | `superseded` | `unresolved`
+- A visible **contestation status**: `uncontested` | `contested` | `corrected` | `superseded` | `unresolved`
 - The ability to attach counterclaims at any time
 
 But **no requirement for fabricated disagreement** in threads where no credible dispute exists. "No substantial dispute known" is a valid, honest state.
@@ -149,7 +149,7 @@ end_date: 2026-03-05                       # optional, for multi-day events
 significance: landmark                     # landmark | major | notable
 confidence: high                           # high | medium | low | disputed
 contestation:
-  status: contested                        # uncontested | contested | superseded | unresolved
+  status: contested                        # uncontested | contested | corrected | superseded | unresolved
   challenge_window: open
   last_challenged: 2026-03-08
 actors:

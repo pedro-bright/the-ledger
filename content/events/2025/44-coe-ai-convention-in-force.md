@@ -39,7 +39,7 @@ sources:
     publisher: European Parliament
 state: published
 contestation:
-  status: contested
+  status: corrected
   last_challenged: '2026-10-26'
 revision:
   created: 2026-04-19

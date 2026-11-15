@@ -226,6 +226,20 @@ function validateAll(): { errors: Finding[]; warnings: Finding[] } {
     }
   }
 
+  // Entries corrected through a resolution: the targets of challenges whose
+  // resolution creates a summary revision.
+  const challengeTargets = new Map<unknown, unknown>();
+  for (const file of contentFiles) {
+    if (file.type === "challenge") challengeTargets.set(file.data.id, file.data.target_claim_id);
+  }
+  const correctedIds = new Set<unknown>();
+  for (const file of contentFiles) {
+    const actions = file.type === "resolution" && Array.isArray(file.data.actions) ? file.data.actions : [];
+    if (actions.some((action) => action?.type === "summary_revision_created")) {
+      correctedIds.add(challengeTargets.get(file.data.case_id));
+    }
+  }
+
   // Second pass: schema validation + cross-reference checks
   for (const file of contentFiles) {
     // Skip perspectives (no schema — they're freeform editorial)
@@ -283,6 +297,14 @@ function validateAll(): { errors: Finding[]; warnings: Finding[] } {
 
     // Cross-reference checks
     if (file.type === "event") {
+      const contestation = file.data.contestation as { status?: unknown } | undefined;
+      if (contestation?.status === "corrected" && !correctedIds.has(file.data.id)) {
+        errors.push({
+          file: file.relativePath,
+          message: `contestation.status is "corrected", but no resolution of a challenge to "${file.data.id}" has a summary_revision_created action. Add that resolution, or choose another status.`,
+        });
+      }
+
       // Check actor references
       const actors = file.data.actors as Array<{ id: string }> | undefined;
       if (actors) {
