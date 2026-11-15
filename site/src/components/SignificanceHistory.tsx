@@ -30,6 +30,7 @@ export default function SignificanceHistory({ history }: Props) {
             <time className="sig-history__date" dateTime={entry.date}>
               {new Date(entry.date).toLocaleDateString('en-US', {
                 month: 'short',
+                timeZone: 'UTC',
                 year: 'numeric',
               })}
             </time>

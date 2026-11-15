@@ -1,3 +1,4 @@
+import { getISOYear } from './dates';
 import fs from 'node:fs';
 import path from 'node:path';
 import yaml from 'js-yaml';
@@ -427,28 +428,23 @@ export function loadResolutions(): ResolutionNote[] {
 export function groupEventsByYear(events: EventData[]): Map<number, EventData[]> {
   const groups = new Map<number, EventData[]>();
   for (const event of events) {
-    const year = new Date(event.date).getFullYear();
+    const year = getISOYear(event.date);
     if (!groups.has(year)) groups.set(year, []);
     groups.get(year)!.push(event);
   }
   return new Map([...groups.entries()].sort((a, b) => b[0] - a[0]));
 }
 
-export function getCategories(): Array<{ id: string; label: string; color: string }> {
+export function getCategories(): Array<{ id: string; label: string }> {
   return [
-    { id: 'policy', label: 'Policy', color: '#6366F1' },
-    { id: 'models', label: 'Models', color: '#F59E0B' },
-    { id: 'research', label: 'Research', color: '#10B981' },
-    { id: 'industry', label: 'Industry', color: '#8B5CF6' },
-    { id: 'safety', label: 'Safety', color: '#EF4444' },
-    { id: 'culture', label: 'Culture', color: '#EC4899' },
-    { id: 'open-source', label: 'Open Source', color: '#06B6D4' },
+    { id: 'policy', label: 'Policy' },
+    { id: 'models', label: 'Models' },
+    { id: 'research', label: 'Research' },
+    { id: 'industry', label: 'Industry' },
+    { id: 'safety', label: 'Safety' },
+    { id: 'culture', label: 'Culture' },
+    { id: 'open-source', label: 'Open Source' },
   ];
-}
-
-export function getCategoryColor(category: string): string {
-  const cat = getCategories().find((c) => c.id === category);
-  return cat?.color || '#6B7280';
 }
 
 export function getSignificanceOrder(sig?: string): number {

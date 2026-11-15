@@ -1,4 +1,5 @@
 ---
+import { getISOYear } from '../lib/dates';
 import Base from '../layouts/Base.astro';
 import Explorer from '../components/Explorer';
 import PageHeader from '../components/wiki/PageHeader.astro';
@@ -38,7 +39,7 @@ const notableCount = events.filter((e) => e.significance === 'notable').length;
 // ─── Rail: per-year counts (newest first) ──────────────────────
 const yearCounts = new Map<number, number>();
 for (const e of events) {
-  const y = new Date(e.date).getFullYear();
+  const y = getISOYear(e.date);
   if (!Number.isNaN(y)) yearCounts.set(y, (yearCounts.get(y) || 0) + 1);
 }
 const years = Array.from(yearCounts.keys()).sort((a, b) => b - a);

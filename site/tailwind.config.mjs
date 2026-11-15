@@ -41,17 +41,6 @@ export default {
           dormant: '#7A7368',
           'dormant-bg': '#EDEAE3',
         },
-        // Legacy aliases — kept remapped to light values so existing pages
-        // compile during the wave-by-wave rewrite. Remove once nothing uses them.
-        ledger: {
-          bg: '#FAFAF7',
-          surface: '#F0EDE4',
-          border: '#E8E4DA',
-          'border-light': '#D9D3C5',
-          text: '#14130F',
-          'text-muted': '#5C564D',
-          'text-dim': '#7A7368',
-        },
         // Category colors — AA-contrast variants for text on page-bg.
         category: {
           policy: '#4338CA',
