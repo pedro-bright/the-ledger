@@ -7,6 +7,7 @@
   "scripts": {
     "build:vercel": "node scripts/build-vercel.mjs",
     "test:vercel": "node --test scripts/vercel-output.test.mjs",
+    "test:scan-watch": "node --test scripts/scan-watch.test.mjs",
     "validate": "tsx scripts/validate.ts",
     "test:validate": "tsx --test scripts/validate.test.ts",
     "new-event": "tsx scripts/new-event.ts",

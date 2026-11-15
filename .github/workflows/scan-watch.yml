@@ -1,0 +1,46 @@
+name: Scan Watch
+
+on:
+  schedule:
+    # Every day at 16:00 UTC
+    - cron: "0 16 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Print what would change without writing to the issue
+        type: boolean
+        default: false
+
+# Runs one at a time, so two runs cannot each find no issue and open one.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    name: Check scan pull requests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+      # Reads the check runs of open scan pull requests.
+      checks: read
+      issues: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+
+      - name: Check scan pull requests
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          DRY_RUN: ${{ inputs.dry_run && 'true' || '' }}
+        run: node scripts/scan-watch.mjs ${DRY_RUN:+--dry-run}
