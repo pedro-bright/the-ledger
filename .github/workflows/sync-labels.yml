@@ -14,6 +14,7 @@ jobs:
   sync:
     name: Create or update labels
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
       - name: Checkout

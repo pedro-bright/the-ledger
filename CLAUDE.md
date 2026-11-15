@@ -145,8 +145,10 @@ Anti-references — reject changes that make the site resemble any of these:
 ## Deployment
 
 - **Live:** https://the-ledger.net
-- **CI:** Push/PR to `main` triggers `validate.yml` (schema validation + graph build).
-  Every PR and every push to `main` also runs `e2e.yml`: validate, graph and feed build, site build, `npm run test:security`, `npm run test:parity`, `npm run test:no-dark-leaks`, `npm run test:css-floor`, `npm run test:dates`, `npm run test:corrections`, `npm run test:og`, `npm run test:feed`, and Playwright in `site/`.
+- **CI:** Push/PR to `main` triggers `validate.yml`: type checks of the scripts and the site, schema validation, `npm run test:yaml`, `npm run test:event-files`, `npm run test:links`, `npm run test:vercel`, and the graph build.
+  It is the only workflow that runs `npm run validate`, so each validation error gets one annotation on a PR.
+  Every PR and every push to `main` also runs `e2e.yml`: one job builds the graph, feeds and site, uploads the build, and runs `npm run test:security`, `npm run test:parity`, `npm run test:no-dark-leaks`, `npm run test:css-floor`, `npm run test:dates`, `npm run test:corrections`, `npm run test:og` and `npm run test:feed`; then two Playwright jobs in `site/` each run half of the suite against that build.
+  Every job has `timeout-minutes`, and a new push to a PR cancels that PR's older runs of both workflows; runs on `main` are never cancelled.
   Vercel's Git integration builds branch previews and deploys `main` to production using the root `vercel.json`.
   `npm run build:vercel` generates the graph and feeds, builds Astro, and emits static files with generated security headers through Build Output API v3 in `.vercel/output/`.
   Production builds read `PUBLIC_POSTHOG_PROJECT_TOKEN` and `PUBLIC_POSTHOG_HOST` from Vercel and print a build-log warning if either is missing; non-production builds remove both variables before building Astro.

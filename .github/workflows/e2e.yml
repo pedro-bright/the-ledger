@@ -8,10 +8,16 @@ on:
 permissions:
   contents: read
 
+# A newer push to a pull request cancels its older run; each run on main has its own group.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
-  e2e:
-    name: Build, Parity, and Playwright
+  build:
+    name: Build and Parity
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
 
     steps:
       - name: Checkout
@@ -25,6 +31,82 @@ jobs:
           node-version: 22
           cache: npm
 
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install site dependencies
+        working-directory: site
+        run: npm ci
+
+      - name: Build graph and feeds
+        run: |
+          npm run build-graph
+          npm run generate-feed
+          mkdir -p site/public
+          cp graph.json site/public/
+          cp feed.xml rss.xml site/public/ 2>/dev/null || true
+
+      - name: Build site
+        working-directory: site
+        run: npm run build
+
+      - name: Upload built site
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: built-site
+          path: |
+            graph.json
+            site/dist/
+          retention-days: 1
+          if-no-files-found: error
+
+      - name: Run content security tests
+        run: npm run test:security
+
+      - name: Run content parity check
+        run: npm run test:parity
+
+      - name: Run dark-leak check
+        run: npm run test:no-dark-leaks
+
+      - name: Run CSS browser floor check
+        run: npm run test:css-floor
+
+      - name: Check ISO date years
+        run: npm run test:dates
+
+      - name: Run corrections page unit test
+        run: npm run test:corrections
+
+      - name: Check preview card images
+        run: npm run test:og
+
+      - name: Check the feeds
+        run: npm run test:feed
+
+  playwright:
+    name: Playwright (${{ matrix.shard }}/2)
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+
+      # The security spec runs the root content security suite.
       - name: Install root dependencies
         run: npm ci
 
@@ -64,59 +146,22 @@ jobs:
           echo "Could not install system dependencies after 3 attempts."
           exit 1
 
-      - name: Run content validation
-        run: npm run validate
+      - name: Download built site
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: built-site
 
-      - name: Build graph and feeds
-        run: |
-          npm run build-graph
-          npm run generate-feed
-          mkdir -p site/public
-          cp graph.json site/public/
-          cp feed.xml rss.xml site/public/ 2>/dev/null || true
-
-      - name: Build site
-        working-directory: site
-        run: npm run build
-
-      - name: Run content security tests
-        run: npm run test:security
-
-      - name: Run content parity check
-        run: npm run test:parity
-
-      - name: Run dark-leak check
-        run: npm run test:no-dark-leaks
-
-      - name: Run CSS browser floor check
-        run: npm run test:css-floor
-
-      - name: Check ISO date years
-        run: npm run test:dates
-
-      - name: Run corrections page unit test
-        run: npm run test:corrections
-
-      - name: Check preview card images
-        run: npm run test:og
-
-      - name: Check the feeds
-        run: npm run test:feed
-
+      # In CI the Playwright web server serves this build instead of building again.
+      # Four workers, one per runner CPU, measured faster than the default of two or a third shard.
       - name: Run Playwright tests
         working-directory: site
-        run: |
-          if [ -d "tests" ]; then
-            npx playwright test
-          else
-            echo "No site/tests/ directory found — skipping Playwright tests."
-          fi
+        run: npx playwright test --shard=${{ matrix.shard }}/2 --workers=4
 
       - name: Upload Playwright test-results
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: playwright-test-results
+          name: playwright-test-results-${{ matrix.shard }}
           path: site/test-results/
           retention-days: 14
           if-no-files-found: ignore
