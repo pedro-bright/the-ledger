@@ -22,7 +22,7 @@ const config: Record<
     color: '#92400E',
     bg: '#FEF3C7',
     border: '#F2D888',
-    hint: 'At least one formal challenge has been filed against this claim.',
+    hint: 'At least one formal challenge has been filed against this claim and not resolved by a correction.',
   },
   corrected: {
     label: 'Corrected',

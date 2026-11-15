@@ -71,6 +71,23 @@ for (const javaScriptEnabled of [true, false]) {
   });
 }
 
+test('the contested and corrected badge hints agree with the epistemic key', async ({ page }) => {
+  const badgeHint = async (route: string, label: string) => {
+    await page.goto(route);
+    return page.locator('.wiki-article__markers [title]').filter({ hasText: label }).first().getAttribute('title');
+  };
+  const contestedHint = await badgeHint(`/threads/${SLUGS.thread}`, 'Contested');
+  const correctedHint = await badgeHint('/events/coe-ai-convention-in-force/', 'Corrected');
+  const key = (await page.locator('#epistemic-key dd').last().innerText()).replace(/\s+/g, ' ');
+  for (const [label, hint, clause] of [
+    ['Contested', contestedHint, 'not resolved by a correction'],
+    ['Corrected', correctedHint, 'challenge was upheld'],
+  ]) {
+    expect(hint).toContain(clause);
+    expect(key).toMatch(new RegExp(`${label} = [^.]*${clause}`));
+  }
+});
+
 test('an event without correction records has no revision history section', async ({ page }) => {
   await page.goto(`/events/${SLUGS.event}`);
   await expect(page.getByRole('heading', { name: 'Revision history' })).toHaveCount(0);

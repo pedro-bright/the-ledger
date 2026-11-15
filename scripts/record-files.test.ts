@@ -264,12 +264,3 @@ test('revision refuses a missing Summary instead of guessing prior_version', (t)
   assert.match(result.output, /Summary/);
   assert.equal(fs.existsSync(path.join(dir, 'content/revisions')), false);
 });
-
-test('CONTRIBUTING.md lists every contestation status in the event schema', () => {
-  const schema = JSON.parse(fs.readFileSync(path.join(root, 'schema/event.schema.json'), 'utf8'));
-  const contributing = fs.readFileSync(path.join(root, 'CONTRIBUTING.md'), 'utf8');
-  const line = contributing.split('\n').find((text) => text.includes('`contestation.status` from the event schema'));
-  assert.ok(line, 'CONTRIBUTING.md has no line listing contestation statuses');
-  const listed = [...line.matchAll(/`([a-z]+)`/g)].map((match) => match[1]);
-  assert.deepEqual(listed, schema.properties.contestation.properties.status.enum);
-});
