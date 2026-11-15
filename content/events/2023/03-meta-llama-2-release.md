@@ -26,6 +26,8 @@ sources:
   - url: https://www.theverge.com/2023/7/18/23799025/meta-ai-llama-2-open-source-microsoft
     title: "Meta releases Llama 2, a free and commercially viable open-source AI model"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

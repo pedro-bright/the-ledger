@@ -35,6 +35,8 @@ sources:
     type: secondary_reporting
     publisher: TechCrunch
     date: 2026-01-06
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

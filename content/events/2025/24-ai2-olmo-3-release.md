@@ -24,6 +24,8 @@ sources:
     title: "OLMo 3 32B Model Page"
     type: primary_document
     date: 2025-11-20
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

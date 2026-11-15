@@ -26,6 +26,8 @@ sources:
     title: "Analysis of OpenAI Preparedness Framework v2"
     type: expert_interpretation
     date: 2025-09-01
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

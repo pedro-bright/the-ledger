@@ -18,6 +18,8 @@ sources:
   - url: https://www.nytimes.com/2024/06/18/technology/nvidia-most-valuable-company.html
     title: "Nvidia Overtakes Microsoft as World's Most Valuable Company"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

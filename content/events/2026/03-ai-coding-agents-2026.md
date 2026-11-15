@@ -21,6 +21,8 @@ sources:
     title: "OpenAI Codex CLI"
     type: official
     date: 2025-05-16
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

@@ -20,6 +20,8 @@ sources:
   - url: https://www.washingtonpost.com/technology/2024/05/20/openai-scarlett-johansson-chatgpt-ai-voice/
     title: "Scarlett Johansson says she was 'shocked and angered' by ChatGPT voice"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

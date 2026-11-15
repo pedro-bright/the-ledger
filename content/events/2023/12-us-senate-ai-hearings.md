@@ -26,6 +26,8 @@ sources:
   - url: https://www.reuters.com/technology/musks-neuralink-meta-microsoft-openai-leaders-attend-us-senate-ai-forum-2023-09-12/
     title: "Elon Musk, Mark Zuckerberg, other tech leaders meet lawmakers at AI forum"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

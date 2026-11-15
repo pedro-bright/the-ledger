@@ -20,6 +20,8 @@ sources:
   - url: https://www.nytimes.com/2024/10/10/technology/dario-amodei-anthropic-ai-safety.html
     title: "The Most Powerful Person in A.I. Wants to Save the World"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

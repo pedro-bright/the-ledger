@@ -20,6 +20,8 @@ sources:
   - url: https://www.wsj.com/tech/ai/amazon-pours-2-75-billion-more-into-ai-startup-anthropic-3a0f30e0
     title: "Amazon Pours $2.75 Billion More Into AI Startup Anthropic"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

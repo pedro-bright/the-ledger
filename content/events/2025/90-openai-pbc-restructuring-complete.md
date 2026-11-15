@@ -43,6 +43,8 @@ sources:
     type: official
     publisher: Microsoft
     date: 2025-10-28
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

@@ -26,6 +26,8 @@ sources:
     title: "Google's AI Coding Agent Jules Is Now Out of Beta"
     type: secondary_reporting
     date: 2025-08-06
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

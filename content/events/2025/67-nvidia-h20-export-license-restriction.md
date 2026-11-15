@@ -25,6 +25,8 @@ sources:
     title: "US Bans Export of Nvidia H20 Accelerators to China, a Potential USD 5.5 Billion Loss for Nvidia"
     type: secondary_reporting
     date: 2025-04-15
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

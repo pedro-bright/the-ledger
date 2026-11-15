@@ -28,6 +28,8 @@ sources:
     title: "UK Drops 'Safety' from its AI Body, Now Called AI Security Institute, Inks MoU with Anthropic"
     type: secondary_reporting
     publisher: TechCrunch
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

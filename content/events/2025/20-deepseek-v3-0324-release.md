@@ -20,6 +20,8 @@ sources:
     title: "DeepSeek-V3-0324 Benchmark Analysis"
     type: secondary_reporting
     date: 2025-03-25
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

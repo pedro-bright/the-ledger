@@ -24,6 +24,8 @@ sources:
     title: "California's SB 53: The First Frontier AI Law Explained"
     type: secondary_reporting
     publisher: Future of Privacy Forum
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

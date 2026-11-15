@@ -33,6 +33,8 @@ sources:
     title: "SoftBank Group Joins Stargate UAE Initiative"
     type: official
     date: 2025-05-22
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

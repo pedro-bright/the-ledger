@@ -27,6 +27,8 @@ sources:
     title: "White House Releases New Policies on Federal Agency AI Use and Procurement"
     type: official
     publisher: White House
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

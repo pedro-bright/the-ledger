@@ -18,6 +18,8 @@ sources:
   - url: https://www.bloomberg.com/news/articles/2023-11-03/stability-ai-is-on-shaky-ground-as-investors-fret
     title: "Stability AI Is on Shaky Ground as Investors Fret"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

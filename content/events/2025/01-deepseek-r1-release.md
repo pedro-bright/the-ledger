@@ -21,6 +21,8 @@ sources:
   - url: https://www.nytimes.com/2025/01/27/technology/deepseek-ai-china-chatbot.html
     title: "A Chatbot From China Is Sending Shock Waves Through Silicon Valley"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

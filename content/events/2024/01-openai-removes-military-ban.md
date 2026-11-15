@@ -20,6 +20,8 @@ sources:
   - url: https://openai.com/policies/usage-policies
     title: "OpenAI Usage Policies"
     type: primary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

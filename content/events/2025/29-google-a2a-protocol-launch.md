@@ -20,6 +20,8 @@ sources:
     title: "Google Cloud Unveils Agent2Agent Protocol — A New Standard for AI Agent Interoperability"
     type: secondary_reporting
     date: 2025-04-09
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

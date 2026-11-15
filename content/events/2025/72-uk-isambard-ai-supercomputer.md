@@ -22,6 +22,8 @@ sources:
     title: "Compute Infrastructure and the AI Opportunities Action Plan"
     type: expert_interpretation
     date: 2025-11-15
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

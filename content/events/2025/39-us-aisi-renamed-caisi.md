@@ -26,6 +26,8 @@ sources:
     title: "US AI Safety Institute Has Been Renamed Center for AI Standards and Innovation"
     type: secondary_reporting
     publisher: SSTI
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

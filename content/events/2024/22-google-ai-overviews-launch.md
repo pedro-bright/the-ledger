@@ -18,6 +18,8 @@ sources:
   - url: https://www.theverge.com/2024/5/14/24155321/google-search-ai-overview-feature-io-2024
     title: "Google is redesigning its search engine — and it's AI all the way down"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

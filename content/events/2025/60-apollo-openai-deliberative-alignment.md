@@ -28,6 +28,8 @@ sources:
     type: official
     publisher: OpenAI
     date: 2025-09-19
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

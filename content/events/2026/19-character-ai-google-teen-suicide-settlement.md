@@ -34,6 +34,8 @@ sources:
     type: secondary_reporting
     publisher: Washington Post
     date: 2026-01-07
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

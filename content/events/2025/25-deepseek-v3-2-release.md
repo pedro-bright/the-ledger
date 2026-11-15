@@ -24,6 +24,8 @@ sources:
     title: "DeepSeek V3.2 release notes"
     type: secondary_reporting
     date: 2025-12-01
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

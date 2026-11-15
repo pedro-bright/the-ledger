@@ -20,6 +20,8 @@ sources:
     title: "Anthropic Releases Claude Opus 4.5"
     type: secondary_reporting
     date: 2025-11-24
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

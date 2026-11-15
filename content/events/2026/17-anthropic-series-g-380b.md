@@ -39,6 +39,8 @@ sources:
     type: secondary_reporting
     publisher: Crunchbase News
     date: 2026-02-12
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

@@ -41,6 +41,8 @@ sources:
     type: official
     publisher: Goldman Sachs Asset Management
     date: 2025-09-02
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

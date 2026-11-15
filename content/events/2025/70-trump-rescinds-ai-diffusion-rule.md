@@ -25,6 +25,8 @@ sources:
     title: "US Department of Commerce Rescinds Biden Administration's AI Diffusion Export Control Rule"
     type: expert_interpretation
     date: 2025-05-13
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

@@ -39,6 +39,7 @@ sources:
     archive_url: https://web.archive.org/web/20261026014159/https://www.anthropic.com/news/statement-comments-secretary-war
 end_date: '2026-02-27'
 revision:
+  created: 2026-03-08
   last_reviewed: 2026-10-26
   draft_assistance: ai-assisted
   final_author: terry-tang

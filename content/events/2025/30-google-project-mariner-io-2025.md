@@ -25,6 +25,8 @@ sources:
     title: "Google I/O 2025 Keynote"
     type: primary_recording
     date: 2025-05-20
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

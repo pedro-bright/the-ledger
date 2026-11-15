@@ -27,6 +27,8 @@ sources:
   - url: https://www.reuters.com/technology/trump-announce-private-sector-ai-infrastructure-investment-cbs-reports-2025-01-21/
     title: "Trump unveils $500 billion AI infrastructure investment"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

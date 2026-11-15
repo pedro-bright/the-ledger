@@ -18,6 +18,8 @@ sources:
   - url: https://github.com/xai-org/grok-1
     title: "Grok-1 GitHub Repository"
     type: primary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

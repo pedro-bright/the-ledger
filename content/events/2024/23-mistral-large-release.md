@@ -30,6 +30,7 @@ sources:
     accessed: '2026-10-26'
     archive_url: https://web.archive.org/web/20250513043246/https://www.lw.com/en/news/2023/12/latham-advises-general-catalyst-on-mistral-ai-series-a-funding-round
 revision:
+  created: 2026-03-08
   last_reviewed: 2026-10-26
   draft_assistance: ai-assisted
   final_author: terry-tang

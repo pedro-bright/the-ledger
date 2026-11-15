@@ -29,6 +29,8 @@ sources:
     type: primary_document
     publisher: UK AI Security Institute
     date: 2025-11-23
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

@@ -20,6 +20,8 @@ sources:
   - url: https://github.com/meta-llama/llama3
     title: "Meta Llama 3 GitHub Repository"
     type: primary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

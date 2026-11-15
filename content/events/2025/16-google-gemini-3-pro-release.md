@@ -24,6 +24,8 @@ sources:
     title: "Google Launches Gemini 3 with Deep Think Reasoning Mode"
     type: secondary_reporting
     date: 2025-11-18
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

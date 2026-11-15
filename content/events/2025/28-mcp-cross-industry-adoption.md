@@ -30,6 +30,8 @@ sources:
     title: "Introducing the Model Context Protocol"
     type: official
     date: 2024-11-25
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

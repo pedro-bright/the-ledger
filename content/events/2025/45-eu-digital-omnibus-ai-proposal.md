@@ -27,6 +27,8 @@ sources:
     title: "EU Digital Omnibus: Key AI Act Amendments Explained"
     type: secondary_reporting
     publisher: Morrison Foerster
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

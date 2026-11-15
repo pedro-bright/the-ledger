@@ -24,6 +24,8 @@ sources:
     title: "Mistral Closes In on Big AI Rivals with Mistral 3 Open-Weight Frontier and Small Models"
     type: secondary_reporting
     date: 2025-12-02
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

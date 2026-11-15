@@ -26,6 +26,8 @@ sources:
   - url: https://www.theverge.com/2023/11/22/23972572/openai-sam-altman-ceo-return-board
     title: "Sam Altman returns as CEO of OpenAI"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

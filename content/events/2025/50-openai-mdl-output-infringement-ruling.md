@@ -30,6 +30,8 @@ sources:
     title: "In re OpenAI Inc. Copyright Infringement Litigation — MDL Docket 1:25-md-03143"
     type: primary_document
     publisher: CourtListener
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

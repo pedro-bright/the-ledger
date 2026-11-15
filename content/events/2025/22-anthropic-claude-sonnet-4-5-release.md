@@ -20,6 +20,8 @@ sources:
     title: "Anthropic Releases Claude Sonnet 4.5, a Model It Says Can Build Software and Accomplish Business Tasks Autonomously"
     type: secondary_reporting
     date: 2025-09-29
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

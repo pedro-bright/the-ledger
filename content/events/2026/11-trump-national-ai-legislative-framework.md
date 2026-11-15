@@ -27,6 +27,8 @@ sources:
     title: "Trump Administration Issues Legislative Recommendations for a Federal AI Framework"
     type: secondary_reporting
     publisher: Mayer Brown
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

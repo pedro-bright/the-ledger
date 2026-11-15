@@ -23,6 +23,7 @@ sources:
     title: OpenAI launches GPT-4o
     type: secondary
 revision:
+  created: 2026-03-08
   last_reviewed: 2026-10-26
   draft_assistance: ai-assisted
   final_author: terry-tang

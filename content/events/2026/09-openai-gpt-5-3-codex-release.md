@@ -26,6 +26,8 @@ sources:
     title: "GPT-5.3-Codex Is Now Generally Available for GitHub Copilot"
     type: official
     date: 2026-02-09
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

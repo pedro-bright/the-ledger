@@ -18,6 +18,8 @@ sources:
   - url: https://www.theverge.com/news/620021/openai-gpt-4-5-orion-ai-model-release
     title: "OpenAI releases GPT-4.5, its biggest and most expensive model yet"
     type: secondary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary

@@ -24,6 +24,8 @@ sources:
     title: "What's New — Claude Opus 4.7"
     type: official
     date: 2026-04-16
+revision:
+  created: 2026-04-19
 ---
 
 ## Summary

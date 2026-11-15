@@ -20,6 +20,8 @@ sources:
   - url: https://arxiv.org/abs/2407.21783
     title: "The Llama 3 Herd of Models"
     type: primary
+revision:
+  created: 2026-03-08
 ---
 
 ## Summary
