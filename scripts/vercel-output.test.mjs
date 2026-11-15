@@ -193,6 +193,21 @@ test('the route count does not grow with the page count', () => {
   });
 });
 
+test('JSON-LD blocks that differ on every page add no routes or hashes', () => {
+  const jsonLd = (page) => `<script type="application/ld+json">{"@type":"Article","headline":"Page ${page}"}</script>`;
+  const files = { ...SITE };
+  for (let page = 0; page < 20; page += 1) files[`events/page-${page}/index.html`] = `${jsonLd(page)}${SHARED}`;
+  let plain;
+  withBuild(SITE, ({ routes }) => { plain = routes.length; });
+  withBuild(files, (build) => {
+    assert.equal(build.routes.length, plain);
+    const response = request(build, '/events/page-7/');
+    assert.equal(response.file, '/events/page-7/index.html');
+    assert.ok(!response.headers[CSP_HEADER].includes(scriptHash('{"@type":"Article","headline":"Page 7"}')));
+    assertSitePolicyOnly(response, '/events/page-7/');
+  });
+});
+
 test('only a root vercel.json is refused', () => {
   assert.throws(() => withBuild({ ...SITE, 'vercel.json': '{}' }, () => {}), /Vercel config/);
   withBuild({ ...SITE, 'vercel.js': 'inert()', 'examples/vercel.json': '{}' }, (build) => {

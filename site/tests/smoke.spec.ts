@@ -1,6 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { test, expect } from '@playwright/test';
+import { parse, type DefaultTreeAdapterTypes } from 'parse5';
+import { filesIn } from '../../scripts/vercel-output.mjs';
+import { parseFrontmatter } from '../src/lib/frontmatter.mts';
 import { SLUGS } from './_slugs';
 
 /**
@@ -232,4 +235,132 @@ test('utility links describe their destinations', async ({ page }) => {
   await expect(utility.getByRole('link', { name: 'Home', exact: true })).toHaveAttribute('href', '/');
   await expect(utility.getByRole('link', { name: 'About', exact: true })).toHaveAttribute('href', '/about');
   await expect(utility.getByRole('link', { name: 'Repository history', exact: true })).toHaveAttribute('href', 'https://github.com/pedro-bright/the-ledger/commits/main');
+});
+
+test.describe('page metadata', () => {
+  test.beforeEach(({}, testInfo) => {
+    test.skip(testInfo.project.name !== 'chromium', 'desktop only');
+  });
+
+  const meta = (page: import('@playwright/test').Page, attribute: string, value: string) =>
+    page.locator(`head meta[${attribute}="${value}"]`);
+
+  test('event pages describe the entry with its summary and an Article', async ({ page }) => {
+    const contentDir = path.join(__dirname, '..', '..', 'content', 'events');
+    const file = filesIn(contentDir).find((f: string) => f.endsWith(`-${SLUGS.event}.md`))!;
+    const { data, content } = parseFrontmatter(fs.readFileSync(path.join(contentDir, file), 'utf8'));
+    const summary = content.split('## Summary')[1].split('\n## ')[0].replace(/\s+/g, ' ').trim();
+
+    await page.goto(`/events/${SLUGS.event}/`);
+    const description = await meta(page, 'name', 'description').getAttribute('content');
+    expect(description!.length).toBeGreaterThan(60);
+    expect(description!.length).toBeLessThanOrEqual(160);
+    expect(summary.startsWith(description!.replace(/…$/, ''))).toBe(true);
+    await expect(meta(page, 'property', 'og:description')).toHaveAttribute('content', description!);
+    await expect(meta(page, 'name', 'twitter:description')).toHaveAttribute('content', description!);
+    await expect(meta(page, 'name', 'twitter:card')).toHaveAttribute('content', 'summary_large_image');
+    await expect(meta(page, 'property', 'og:type')).toHaveAttribute('content', 'article');
+    await expect(meta(page, 'property', 'article:published_time')).toHaveAttribute('content', '2023-03-14');
+
+    const blocks = await page.locator('head script[type="application/ld+json"]').allTextContents();
+    const [article, breadcrumbs] = blocks.map((text) => JSON.parse(text));
+    expect(blocks).toHaveLength(2);
+    expect(article).toMatchObject({
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: data.title,
+      description,
+      datePublished: '2023-03-14',
+      temporalCoverage: '2023-03-14',
+      isPartOf: [{ '@type': 'CreativeWork', url: 'https://the-ledger.net/threads/scaling-laws-debate/' }],
+      publisher: { '@type': 'Organization', name: 'The Ledger' },
+      license: 'https://creativecommons.org/licenses/by-sa/4.0/',
+    });
+    expect(article.citation).toEqual(data.sources.map((source: { title: string; url: string }) => ({
+      '@type': 'CreativeWork', name: source.title, url: source.url,
+    })));
+
+    const crumbs = await page.locator('.wiki-article__breadcrumb > :not(.wiki-article__crumb-sep)').evaluateAll(
+      (els) => els.map((el) => ({ name: el.textContent, href: (el as HTMLAnchorElement).href || undefined })),
+    );
+    expect(breadcrumbs['@type']).toBe('BreadcrumbList');
+    expect(breadcrumbs.itemListElement).toEqual(crumbs.map(({ name, href }, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name,
+      ...(href && { item: href.replace(new URL(page.url()).origin, 'https://the-ledger.net') }),
+    })));
+  });
+
+  test('every page has one description, canonical link and image, and valid structured data', () => {
+    const dist = path.join(__dirname, '..', 'dist');
+    const threadsDir = path.join(__dirname, '..', '..', 'content', 'threads');
+    const pages = filesIn(dist).filter((f: string) => f.endsWith('.html'));
+    expect(pages.length).toBeGreaterThan(300);
+
+    type Element = DefaultTreeAdapterTypes.Element;
+    const elements = (node: DefaultTreeAdapterTypes.Node): Element[] => {
+      const children = 'childNodes' in node ? node.childNodes.flatMap(elements) : [];
+      return 'tagName' in node ? [node as Element, ...children] : children;
+    };
+    const attr = (el: Element, name: string) => el.attrs.find((a) => a.name === name)?.value;
+    const text = (el: Element) => el.childNodes.map((n) => ('value' in n ? n.value : '')).join('');
+
+    for (const file of pages) {
+      const all = elements(parse(fs.readFileSync(path.join(dist, file), 'utf8')));
+      const count = (tag: string, name: string, value: string) =>
+        all.filter((el) => el.tagName === tag && attr(el, name) === value).length;
+      expect(count('meta', 'name', 'description'), file).toBe(1);
+      expect(count('link', 'rel', 'canonical'), file).toBe(1);
+      expect(count('meta', 'property', 'og:image'), file).toBe(1);
+      expect(count('meta', 'name', 'title'), file).toBe(0);
+      expect(all.filter((el) => /^twitter:/.test(attr(el, 'property') ?? '')), file).toHaveLength(0);
+      const description = attr(all.find((el) => el.tagName === 'meta' && attr(el, 'name') === 'description')!, 'content')!;
+      const thread = file.match(/^threads\/(.+)\/index\.html$/)?.[1];
+      if (thread) {
+        // A thread keeps its whole core question, even past the limit, and adds the
+        // synthesis's first sentence only when both fit.
+        const question = parseFrontmatter(fs.readFileSync(path.join(threadsDir, `${thread}.md`), 'utf8')).data.core_question;
+        if (description !== question) {
+          expect(description.startsWith(`${question} `), file).toBe(true);
+          expect(description.length, file).toBeLessThanOrEqual(160);
+        }
+      } else if (/^(events|controversies)\/.+\/index\.html$/.test(file)) {
+        expect(description.length, file).toBeLessThanOrEqual(160);
+      }
+
+      const blocks = all
+        .filter((el) => el.tagName === 'script' && attr(el, 'type') === 'application/ld+json')
+        .map((el) => JSON.parse(text(el)));
+      const types = blocks.map((block) => block['@type']).sort();
+      const expected = file.startsWith('events/') ? ['Article', 'BreadcrumbList']
+        : file.startsWith('threads/') && file !== 'threads/index.html' ? ['BreadcrumbList'] : [];
+      expect(types, file).toEqual(expected);
+
+      for (const block of blocks) {
+        expect(block['@context'], file).toBe('https://schema.org');
+        if (block['@type'] === 'BreadcrumbList') {
+          const items = block.itemListElement;
+          expect(items.length, file).toBeGreaterThan(1);
+          items.forEach((item: { position: number; name: string; item?: string }, i: number) => {
+            expect(item.position, file).toBe(i + 1);
+            expect(item.name, file).toBeTruthy();
+            if (i < items.length - 1) expect(item.item, file).toMatch(/^https:\/\/the-ledger\.net\//);
+          });
+        } else {
+          for (const field of ['headline', 'description', 'datePublished', 'temporalCoverage', 'license']) {
+            expect(block[field], `${file} ${field}`).toBeTruthy();
+          }
+          expect(block.description, file).toBe(description);
+          expect(block.publisher?.name, file).toBe('The Ledger');
+          const references = all.find((el) => el.tagName === 'section' && attr(el, 'class')?.includes('wiki-article__references'));
+          expect(block.citation.length, file).toBe(references ? elements(references).filter((el) => el.tagName === 'li').length : 0);
+          for (const citation of block.citation) {
+            expect(citation.name, file).toBeTruthy();
+            expect(citation.url, file).toMatch(/^https?:\/\//);
+          }
+        }
+      }
+    }
+  });
 });

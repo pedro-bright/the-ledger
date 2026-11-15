@@ -66,6 +66,11 @@ const typePlural: Record<string, string> = {
 };
 
 const entryCount = actorEvents.length;
+const entryYears = actorEvents.map((e) => e.date.slice(0, 4)).sort();
+const yearSpan = entryYears[0] === entryYears.at(-1) ? entryYears[0] : `${entryYears[0]} to ${entryYears.at(-1)}`;
+const description = entryCount > 0
+  ? `${actor.name}: ${entryCount} ${entryCount === 1 ? 'entry' : 'entries'} in The Ledger, ${yearSpan}.`
+  : `${actor.name}: no entries in The Ledger yet.`;
 const typeName = typeDisplay[actor.type] || 'entity';
 const subtitle = `${/^[aeiou]/.test(typeName) ? 'An' : 'A'} ${typeName} referenced in ${entryCount} ledger ${entryCount === 1 ? 'entry' : 'entries'}.`;
 
@@ -89,7 +94,7 @@ function cleanUrl(url: string): string {
 <Base
   layout="article"
   title={actor.name}
-  description={`Ledger entries involving ${actor.name}.`}
+  description={description}
 >
   <ArticleShell
     title={actor.name}

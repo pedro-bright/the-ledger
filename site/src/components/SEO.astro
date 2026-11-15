@@ -6,6 +6,10 @@ interface Props {
   imageAlt?: string;
   url?: string;
   type?: string;
+  /** ISO date written as `article:published_time` on article pages. */
+  publishedTime?: string;
+  /** schema.org objects, each written as its own JSON-LD block. */
+  structuredData?: object[];
 }
 
 const {
@@ -15,14 +19,17 @@ const {
   imageAlt = 'The Ledger: A sourced historical record of AI',
   url,
   type = 'website',
+  publishedTime,
+  structuredData = [],
 } = Astro.props;
 
 const canonicalURL = url || new URL(Astro.url.pathname, Astro.site || 'https://the-ledger.net').toString();
 const imageURL = image.startsWith('http') ? image : new URL(image, Astro.site || 'https://the-ledger.net').toString();
+// "<" is escaped so text in the data can never close the script element.
+const jsonLd = (data: object) => JSON.stringify(data).replace(/</g, '\\u003c');
 ---
 
 <!-- Primary Meta Tags -->
-<meta name="title" content={title} />
 <meta name="description" content={description} />
 <link rel="canonical" href={canonicalURL} />
 
@@ -36,10 +43,13 @@ const imageURL = image.startsWith('http') ? image : new URL(image, Astro.site ||
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content={imageAlt} />
 <meta property="og:site_name" content="The Ledger" />
+{publishedTime && <meta property="article:published_time" content={publishedTime} />}
 
 <!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={canonicalURL} />
-<meta property="twitter:title" content={title} />
-<meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={imageURL} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={canonicalURL} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageURL} />
+
+{structuredData.map((data) => <script is:inline type="application/ld+json" set:html={jsonLd(data)} />)}
