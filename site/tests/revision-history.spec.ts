@@ -22,17 +22,39 @@ for (const javaScriptEnabled of [true, false]) {
       await expect(earlier).toBeVisible();
     });
 
-    test('a challenged event shows the challenge status, allegations and resolution', async ({ page }) => {
-      await page.goto('/events/coe-ai-convention-in-force/');
-      const section = revisionHistory(page);
-      const challenge = section.getByRole('listitem').filter({ has: page.getByRole('heading', { level: 3, name: /Challenge opened/ }) });
-      await expect(challenge).toContainText('2026-10-26');
-      await expect(challenge).toContainText(/Status\s*sustained/);
-      await expect(challenge).toContainText(/Allegations\s*timeline error, unsupported inference/);
-      await expect(challenge).toContainText(/Resolution\s*sustained/);
-      await expect(challenge.locator('time[datetime="2026-11-14"]')).toHaveText('2026-11-14');
-      await expect(challenge).toContainText('lists two ratifications, by the European Union on May 15, 2026');
+    for (const { slug, finding } of [
+      { slug: 'coe-ai-convention-in-force', finding: 'The same chart lists two ratifications, by the European Union on May 15, 2026' },
+      { slug: 'deepseek-r1-distill-impact', finding: "DeepSeek's R1 report, first posted January 22, 2025, released six smaller" },
+    ]) {
+      test(`${slug} shows the challenge and its resolution as separate dated entries`, async ({ page }) => {
+        await page.goto(`/events/${slug}/`);
+        const section = revisionHistory(page);
+        await expect(section.getByRole('heading', { level: 3 })).toHaveText([
+          'Challenge opened 2026-10-26',
+          'Summary revised 2026-10-26',
+          'Summary revised 2026-11-14',
+          'Challenge resolved 2026-11-14',
+        ]);
 
+        const challenge = section.getByRole('listitem').filter({ has: page.getByRole('heading', { level: 3, name: /Challenge opened/ }) });
+        await expect(challenge).toContainText(/Status\s*sustained/);
+        await expect(challenge).toContainText(/Allegations\s*timeline error, unsupported inference/);
+        await expect(challenge).not.toContainText('Disposition');
+
+        const resolved = section.getByRole('listitem').filter({ has: page.getByRole('heading', { level: 3, name: /Challenge resolved/ }) });
+        await expect(resolved.locator('time[datetime="2026-11-14"]')).toHaveText('2026-11-14');
+        await expect(resolved).toContainText(/Disposition\s*sustained/);
+        const findings = resolved.getByRole('listitem');
+        await expect(findings).toHaveCount(4);
+        await expect(findings.filter({ hasText: finding })).toHaveCount(1);
+        await expect(findings.first()).toHaveCSS('list-style-type', 'disc');
+
+        expect(await section.innerText()).not.toMatch(/\s,/);
+      });
+    }
+
+    test('a challenged event links its contestation badge to the revision history', async ({ page }) => {
+      await page.goto('/events/coe-ai-convention-in-force/');
       await expect(page.locator('#article-contents a[href="#revision-history"]')).toHaveText('Revision history');
       for (const label of ['Medium confidence', 'Low confidence', 'Disputed']) {
         await expect(page.getByText(label, { exact: true })).toHaveCount(0);
@@ -52,6 +74,19 @@ test('an event without correction records has no revision history section', asyn
   await page.goto(`/events/${SLUGS.event}`);
   await expect(page.getByRole('heading', { name: 'Revision history' })).toHaveCount(0);
   await expect(page.locator('a[href="#revision-history"]')).toHaveCount(0);
+});
+
+test('a resolution prints its findings as a bulleted list', async ({ page }) => {
+  await page.goto('/events/coe-ai-convention-in-force/');
+  await page.emulateMedia({ media: 'print' });
+  const resolved = revisionHistory(page).getByRole('listitem').filter({ has: page.getByRole('heading', { level: 3, name: /Challenge resolved/ }) });
+  const findings = resolved.getByRole('listitem');
+  await expect(findings).toHaveCount(4);
+  for (const finding of await findings.all()) {
+    await expect(finding).toBeVisible();
+    await expect(finding).toHaveCSS('display', 'list-item');
+    await expect(finding).toHaveCSS('list-style-type', 'disc');
+  }
 });
 
 test('the revision history prints after the body with the earlier summary', async ({ page }) => {
