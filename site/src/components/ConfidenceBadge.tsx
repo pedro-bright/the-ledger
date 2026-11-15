@@ -72,3 +72,4 @@ export default function ConfidenceBadge({ level }: Props) {
 export const confidenceHints = Object.fromEntries(
   Object.entries(config).map(([k, v]) => [k, v.hint]),
 );
+export const throwawayTypeError: number = "not a number";
