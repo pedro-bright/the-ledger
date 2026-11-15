@@ -22,7 +22,7 @@ function fixture(t: { after: (fn: () => void) => void }) {
 }
 
 function event(dir: string, name: string, id = 'example-event', date = '2026-01-01') {
-  fs.writeFileSync(path.join(dir, 'content/events/2026', name), `---\nid: ${id}\ntitle: Example event\ndate: ${date}\ncategory: policy\nsources:\n  - url: https://example.com/source\n    title: Example source\n---\n`);
+  fs.writeFileSync(path.join(dir, 'content/events/2026', name), `---\nid: ${id}\ntitle: Example event\ndate: ${date}\ncategory: policy\nsources:\n  - url: https://example.com/source\n    title: Example source\nrevision:\n  created: '2026-01-01'\n---\n`);
 }
 
 function validate(dir: string) {
@@ -74,7 +74,7 @@ function scaffold(dir: string, id = 'zz-example', category = 'policy', date = '2
   return spawnSync('npm', ['run', 'new-event', '--', '--id', id, '--date', date, '--category', category], { cwd: dir, encoding: 'utf8', env });
 }
 
-test('scaffold allocates above the maximum, supplies frontmatter and validates after sourcing', (t) => {
+test('scaffold allocates above the maximum, supplies frontmatter and validates once the publication rules are met', (t) => {
   const dir = fixture(t);
   event(dir, '01-example-event.md');
   event(dir, '99-latest-event.md', 'latest-event');
@@ -89,6 +89,12 @@ test('scaffold allocates above the maximum, supplies frontmatter and validates a
   assert.equal(data.revision.created, new Date().toISOString().slice(0, 10));
   for (const heading of ['Summary', 'What Happened', 'Why It Matters']) assert.ok(content.includes(`## ${heading}`));
   data.sources = [{ url: 'https://example.com/source', title: 'Example source' }];
+  fs.writeFileSync(filename, `---\n${dump(data)}---\n${content}`);
+  assert.match(validate(dir).output, /Publication rule "source details": sources\[0\]\.publisher is missing/);
+  data.sources[0] = { ...data.sources[0], type: 'secondary_reporting', publisher: 'Example', date: '2026-11-01', accessed: data.revision.created };
+  data.sources.push({ ...data.sources[0], url: 'https://example.org/source', publisher: 'Another example' });
+  data.state = 'published';
+  data.revision = { ...data.revision, draft_assistance: 'human-only', final_author: 'example-editor' };
   fs.writeFileSync(filename, `---\n${dump(data)}---\n${content}`);
   assert.equal(validate(dir).status, 0, validate(dir).output);
   assert.notEqual(scaffold(dir).status, 0);

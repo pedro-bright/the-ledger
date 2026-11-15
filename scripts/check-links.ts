@@ -113,7 +113,7 @@ async function waitForHost(url: string): Promise<void> {
   await turn;
 }
 
-function unpinnedArchive(url: string): boolean {
+export function unpinnedArchive(url: string): boolean {
   const parsed = new URL(url);
   return parsed.hostname === "web.archive.org" &&
     !/^\/web\/\d{14}(?:[a-z_]+)?\/https?:\/\//i.test(parsed.pathname);

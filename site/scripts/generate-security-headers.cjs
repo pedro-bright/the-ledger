@@ -5,15 +5,15 @@
  * This module uses only Node built-ins.
  * The script hashes are generated because they change whenever an inline script or the
  * PostHog token changes.
- *
- * The policy is report-only for now. To enforce it, change CSP_HEADER to
- * Content-Security-Policy.
  */
 
 const { createHash } = require('node:crypto');
 const path = require('node:path');
 
-const CSP_HEADER = 'Content-Security-Policy-Report-Only';
+// Browsers enforce the policy. To roll back to report-only, revert the merge commit that
+// enforced it, which restores this constant and the test expectations together.
+// Changing only this constant fails test:vercel and the header test on purpose.
+const CSP_HEADER = 'Content-Security-Policy';
 
 const POSTHOG_ORIGINS = 'https://us.i.posthog.com https://us-assets.i.posthog.com';
 const REPO_URL = 'https://github.com/pedro-bright/the-ledger';

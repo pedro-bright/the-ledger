@@ -8,6 +8,7 @@
     "build:vercel": "node scripts/build-vercel.mjs",
     "test:vercel": "node --test scripts/vercel-output.test.mjs",
     "validate": "tsx scripts/validate.ts",
+    "test:validate": "tsx --test scripts/validate.test.ts",
     "new-event": "tsx scripts/new-event.ts",
     "new-challenge": "tsx scripts/new-challenge.ts",
     "new-revision": "tsx scripts/new-revision.ts",
@@ -33,7 +34,7 @@
     "test:build": "npm run build-graph && npm run generate-feed && cd site && npm run build && cd .. && npm run test:parity && npm run test:no-dark-leaks && npm run test:css-floor && npm run test:dates && npm run test:security && npm run test:corrections && npm run test:revision-history && npm run test:og && npm run test:feed"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
+    "@types/node": "^22.20.5",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
     "fast-xml-parser": "^5.12.0",

@@ -57,6 +57,9 @@ Sources that share the same underlying reporting — even if published by differ
 
 All primary sources must have an `archive_url` pointing to a preserved copy (via the Wayback Machine, archive.ph, or equivalent). This protects against link rot and ensures the evidentiary foundation remains accessible.
 
+For new events, `npm run validate` rejects a primary or official source without an `archive_url`, a Wayback Machine `archive_url` without a fixed capture timestamp, and an event that has neither a primary or official source nor two sources.
+The [publication rules](../CONTRIBUTING.md#publication-rules) list every rule the validator enforces.
+
 ### Recommended archiving
 
 Secondary sources should be archived when feasible, with priority given to:

@@ -16,7 +16,7 @@
     "@astrojs/react": "^7.1.2",
     "@astrojs/sitemap": "^3.7.4",
     "@fontsource-variable/fraunces": "^5.2.9",
-    "@fontsource-variable/source-serif-4": "^5.2.9",
+    "@fontsource-variable/source-serif-4": "^5.3.1",
     "@fontsource/fraunces": "^5.3.0",
     "@fontsource/inter": "^5.2.8",
     "@fontsource/jetbrains-mono": "^5.2.8",
@@ -29,7 +29,7 @@
     "marked": "^17.0.4",
     "parse5": "^7.3.0",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4",
+    "react-dom": "^19.3.1",
     "react-force-graph-2d": "^1.29.1",
     "satori": "^0.63.2",
     "tailwindcss": "^3.4.19"
