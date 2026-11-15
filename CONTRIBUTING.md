@@ -177,6 +177,54 @@ fix/typo-in-claude-3-event
    - **Partially sustained:** Some aspects are revised
 4. All resolutions are public and recorded
 
+## Handling a challenge
+
+The curator approves every disposition.
+Maintainers prepare the records and evidence in a pull request for that approval.
+
+1. Create the challenge record from the repository root:
+
+   ```bash
+   npm run new-challenge -- --target gpt-4-release --allegation misquote --issue 123
+   ```
+
+   Repeat `--allegation` for each applicable allegation from the challenge schema; `--issue` is optional.
+   Fill `opened_by`, quote the challenged assertion, and write the basis with sources and the procedural status.
+   Update the entry's `state` and `contestation` for the challenge, and record any justified confidence change.
+   Keep the entry's ID and original claims available in the public record.
+
+2. Review the evidence and, when the summary needs to change, create a revision:
+
+   ```bash
+   npm run new-revision -- --target gpt-4-release --case cc-gpt-4-release-20261114
+   ```
+
+   Use the actual challenge ID printed by the first command.
+   `--case` is optional for revisions outside a challenge.
+   The scaffold copies the entry's current Summary into `prior_version` and its frontmatter into Original metadata.
+   Fill `new_version`, `reason`, `author` and `changed_claim_ids`, then write Scope and Evidence.
+   Update the entry's Summary to match `new_version` and its `revision.last_reviewed` where applicable.
+
+3. Prepare the resolution using a disposition approved by the curator:
+
+   ```bash
+   npm run new-resolution -- --case cc-gpt-4-release-20261114 --disposition sustained
+   ```
+
+   Choose the disposition from the resolution schema: `upheld`, `rejected`, `mixed`, `deferred` or `sustained`.
+   Fill `findings`, `actions` and `decided_by`, cite the evidence, and record the curator's approval in Review.
+   A `summary_revision_created` action must name the actual revision in `summary_revision_id`.
+   If no change is approved, record the appropriate action rather than inventing a revision.
+   Update the challenge's `status` and `resolution_note_id`, and the entry's `state`, `confidence`, `contestation`, Summary and review date as the approved actions require.
+
+4. Run `npm run validate` and submit the linked files and entry updates together for review.
+
+The commands create `content/challenges/cc-<entry-id>-<YYYYMMDD>.md`, `content/revisions/sr-<entry-id>-<YYYYMMDD>.md` and `content/resolutions/rn-<entry-id>-<YYYYMMDD>.md` using the local calendar day.
+If an ID or filename is taken, the command adds `-2`, `-3` and so on without overwriting it.
+Each command prints the fields left to fill and the related updates to make.
+Empty or null editorial placeholders deliberately fail schema validation until completed.
+The commands write only the new record; maintainers apply the approved entry and challenge updates.
+
 ---
 
 ## Code of Conduct

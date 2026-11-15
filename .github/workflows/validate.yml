@@ -54,6 +54,9 @@ jobs:
       - name: Test event filenames and scaffold
         run: npm run test:event-files
 
+      - name: Test correction record scaffolds
+        run: npm run test:record-files
+
       - name: Test source checker
         run: npm run test:links
 

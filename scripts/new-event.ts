@@ -1,19 +1,16 @@
 #!/usr/bin/env tsx
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
-import { dump } from "js-yaml";
-import { parseFrontmatter } from "./frontmatter.js";
+import { localToday, readRecords, recordSchema, ROOT, runScaffold, writeScaffold } from "./scaffold.js";
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const EVENTS = path.join(ROOT, "content/events");
 
 function main() {
   const { values: { id, date, category } } = parseArgs({
     options: { id: { type: "string" }, date: { type: "string" }, category: { type: "string" } },
   });
-  const schema = JSON.parse(fs.readFileSync(path.join(ROOT, "schema/event.schema.json"), "utf8"));
+  const schema = recordSchema("event");
   if (!id || !new RegExp(schema.properties.id.pattern).test(id)) {
     throw new Error("Provide --id as an event slug matching the event schema.");
   }
@@ -23,9 +20,7 @@ function main() {
   if (!schema.properties.category.enum.includes(category)) {
     throw new Error(`Provide --category as one of: ${schema.properties.category.enum.join(", ")}`);
   }
-  for (const entry of fs.readdirSync(EVENTS, { recursive: true, withFileTypes: true })) {
-    if (!entry.isFile() || !entry.name.endsWith(".md")) continue;
-    const { data } = parseFrontmatter(fs.readFileSync(path.join(entry.parentPath, entry.name), "utf8"));
+  for (const { data } of readRecords("events")) {
     if (data.id === id) throw new Error(`Event id "${id}" already exists.`);
   }
   const yearDir = path.join(EVENTS, date.slice(0, 4));
@@ -38,28 +33,16 @@ function main() {
   const number = Math.max(0, ...numbers) + 1;
   if (number > 999) throw new Error("Event numbers must have two or three digits; this year is full.");
   const filename = path.join(yearDir, `${String(number).padStart(2, "0")}-${id}.md`);
-  const now = new Date();
-  const today = [
-    now.getFullYear(),
-    String(now.getMonth() + 1).padStart(2, "0"),
-    String(now.getDate()).padStart(2, "0"),
-  ].join("-");
-  const frontmatter = dump({
+  const today = localToday();
+  writeScaffold(filename, {
     id,
     title: "Untitled event",
     date,
     category,
     sources: [{ url: "", title: "" }],
     revision: { created: today, last_reviewed: today },
-  });
-  fs.mkdirSync(yearDir, { recursive: true });
-  fs.writeFileSync(filename, `---\n${frontmatter}---\n\n## Summary\n\n## What Happened\n\n## Why It Matters\n`, { flag: "wx" });
+  }, "## Summary\n\n## What Happened\n\n## Why It Matters\n");
   console.log(`Created ${path.relative(ROOT, filename)}. Fill in the title, source and body before submitting.`);
 }
 
-try {
-  main();
-} catch (error) {
-  console.error(error instanceof Error ? error.message : String(error));
-  process.exitCode = 1;
-}
+runScaffold(main);
