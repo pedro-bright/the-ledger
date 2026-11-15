@@ -88,9 +88,9 @@ test('opening a search link shows its results, with the date and category on eve
   await expect(summit.locator('mark').first()).toHaveText(/bletchley/i);
 
   // Only events carry a date and a category.
-  const actors = group(page, 'Actors');
-  await expect(actors.getByRole('listitem').first()).toBeVisible();
-  await expect(actors.locator('time, .category-tag')).toHaveCount(0);
+  const threads = group(page, 'Threads');
+  await expect(threads.getByRole('listitem').first()).toBeVisible();
+  await expect(threads.locator('time, .category-tag')).toHaveCount(0);
 });
 
 test('the masthead field searches every record type from any page', async ({ page }) => {
@@ -298,7 +298,7 @@ test('without JavaScript the page says search needs it and links to the timeline
 
 test('results pass axe and fit a 375px screen', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 800 });
-  await page.goto('/search?q=OpenAI');
+  await page.goto('/search?q=AI');
   await expect(group(page, 'Events').getByRole('listitem')).toHaveCount(10);
   await expect(group(page, 'Actors').getByRole('listitem')).toHaveCount(10);
 
