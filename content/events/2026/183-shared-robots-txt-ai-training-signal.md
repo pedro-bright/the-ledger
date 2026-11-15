@@ -19,14 +19,14 @@ sources:
     publisher: OpenAI
     date: 2026-10-30
     accessed: 2026-11-04
-    archive_url: https://web.archive.org/web/*/https://openai.com/index/helping-websites-express-ai-training-preferences/
+    archive_url: https://web.archive.org/web/20261104112439/https://openai.com/index/helping-websites-express-ai-training-preferences/
   - url: https://datatracker.ietf.org/doc/draft-kelley-aipref-training-preference-signal/
     title: "Machine-Readable Training Preference Signal (draft-kelley-aipref-training-preference-signal-00)"
     type: primary_document
     publisher: Internet Engineering Task Force
     date: 2026-10-30
     accessed: 2026-11-04
-    archive_url: https://web.archive.org/web/*/https://datatracker.ietf.org/doc/draft-kelley-aipref-training-preference-signal/
+    archive_url: https://web.archive.org/web/20261104111017/https://datatracker.ietf.org/doc/draft-kelley-aipref-training-preference-signal/
   - url: https://www.theverge.com/tech/1023763/openai-google-microsoft-ai-scraping-standard-opt-out
     title: "The biggest names in AI are backing a new way to opt out of scraping"
     type: secondary_reporting

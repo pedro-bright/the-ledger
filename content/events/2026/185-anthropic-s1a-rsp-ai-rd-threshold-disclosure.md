@@ -26,7 +26,7 @@ sources:
     publisher: Anthropic
     date: 2026-07-08
     accessed: 2026-11-06
-    archive_url: https://web.archive.org/web/*/https://www.anthropic.com/responsible-scaling-policy
+    archive_url: https://web.archive.org/web/20261107011558/https://www.anthropic.com/responsible-scaling-policy
   - url: https://techcrunch.com/2026/11/02/anthropic-warns-that-its-very-close-to-rsi-capability-aka-self-building-ai/
     title: "Anthropic warns that it's very close to RSI capability, aka self-building AI"
     type: secondary_reporting
