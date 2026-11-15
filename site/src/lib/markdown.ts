@@ -68,7 +68,7 @@ export function plainParagraphs(markdown: string, section?: string): string[] {
 // A sentence ends at ., ! or ? (and any closing quote or bracket) before a space. A
 // period after a single letter ("U.S.", "J. Smith") or a common abbreviation does not end one.
 const SENTENCE_END =
-  /(?:(?<!(?:^|[\s.(])(?:\p{L}|Inc|Corp|Co|Ltd|Jr|Sr|Dr|Mr|Mrs|Ms|St|vs|No|Sen|Rep|Gov|Gen))\.|[!?])["'”’)\]]*(?=\s)/gu;
+  /(?:(?<!(?:^|[\s.(])(?:\p{L}|Inc|Corp|Co|Ltd|Jr|Sr|Dr|Mr|Mrs|Ms|St|vs|No|pp|Sen|Rep|Gov|Gen))\.|[!?])["'”’)\]]*(?=\s)/gu;
 
 /** The first sentence of a text, or all of it when it has no sentence break. */
 export function firstSentence(value: string): string {

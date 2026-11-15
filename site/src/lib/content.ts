@@ -275,10 +275,10 @@ export function loadEvents(): EventData[] {
           sources: data.sources,
           significance_history: data.significance_history,
           state: data.state,
-          revision: data.revision?.last_reviewed
+          revision: data.revision?.created || data.revision?.last_reviewed
             ? {
                 created: data.revision.created ? isoDate(data.revision.created) : undefined,
-                last_reviewed: isoDate(data.revision.last_reviewed),
+                last_reviewed: data.revision.last_reviewed ? isoDate(data.revision.last_reviewed) : undefined,
                 final_author: data.revision.final_author,
               }
             : undefined,
