@@ -1,8 +1,9 @@
 #!/usr/bin/env tsx
 /**
  * validate.ts — Read all content/ files, parse YAML frontmatter,
- * validate against JSON schemas, check cross-references and apply the
- * publication rules to new events.
+ * validate against JSON schemas, check cross-references, apply the
+ * publication rules to new events and the consistency rules to all records.
+ * Warnings are reported after errors and never change the exit code.
  */
 
 import fs from "node:fs";
@@ -10,6 +11,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
+import { consistencyFindings, type Finding } from "./consistency-rules.js";
 import { parseFrontmatter } from "./frontmatter.js";
 import { publicationRuleErrors } from "./publication-rules.js";
 import { loadYaml } from "./yaml.js";
@@ -140,13 +142,8 @@ function parseFile(filePath: string): { data: Record<string, unknown>; content: 
 
 // --------------- Validation ---------------
 
-interface ValidationError {
-  file: string;
-  message: string;
-}
-
-function validateAll(): ValidationError[] {
-  const errors: ValidationError[] = [];
+function validateAll(): { errors: Finding[]; warnings: Finding[] } {
+  const errors: Finding[] = [];
   const ajv = createValidator();
 
   const files = walkDir(CONTENT_DIR);
@@ -408,7 +405,10 @@ function validateAll(): ValidationError[] {
     }
   }
 
-  return errors;
+  const consistency = consistencyFindings(contentFiles);
+  errors.push(...consistency.errors);
+
+  return { errors, warnings: consistency.warnings };
 }
 
 // --------------- GitHub Actions Reporting ---------------
@@ -422,21 +422,29 @@ function escapeProperty(value: string): string {
   return escapeData(value).replace(/:/g, "%3A").replace(/,/g, "%2C");
 }
 
-function reportToGitHubActions(errors: ValidationError[]) {
-  const files = errors.map((err) => `content/${err.file.split(path.sep).join("/")}`);
+function reportToGitHubActions(level: "error" | "warning", findings: Finding[], heading: string) {
+  if (findings.length === 0) return;
+  const files = findings.map((finding) => `content/${finding.file.split(path.sep).join("/")}`);
 
-  // The Files tab only shows annotations that carry a line; line 1 puts the error at the top of the file.
-  errors.forEach((err, i) => {
-    console.log(`::error file=${escapeProperty(files[i])},line=1::${escapeData(err.message)}`);
+  // The Files tab only shows annotations that carry a line; line 1 puts the finding at the top of the file.
+  findings.forEach((finding, i) => {
+    console.log(`::${level} file=${escapeProperty(files[i])},line=1::${escapeData(finding.message)}`);
   });
 
   const summaryPath = process.env.GITHUB_STEP_SUMMARY;
   if (!summaryPath) return;
-  const lines = errors.map((err, i) => `- \`${files[i]}\`: ${err.message.replace(/\s*\n\s*/g, " ")}`);
+  const lines = findings.map((finding, i) => `- \`${files[i]}\`: ${finding.message.replace(/\s*\n\s*/g, " ")}`);
   fs.appendFileSync(
     summaryPath,
-    `### Content validation failed\n\n${errors.length} error(s):\n\n${lines.join("\n")}\n`,
+    `### ${heading}\n\n${findings.length} ${level}(s):\n\n${lines.join("\n")}\n`,
   );
+}
+
+function printFindings(findings: Finding[]) {
+  for (const finding of findings) {
+    console.log(`  ${finding.file}`);
+    console.log(`    → ${finding.message}\n`);
+  }
 }
 
 // --------------- Main ---------------
@@ -444,22 +452,26 @@ function reportToGitHubActions(errors: ValidationError[]) {
 function main() {
   console.log("🔍 The Ledger — Validating content...\n");
 
-  const errors = validateAll();
+  const { errors, warnings } = validateAll();
 
   if (errors.length === 0) {
     console.log("✅ All content is valid.\n");
-    process.exit(0);
+  } else {
+    console.log(`❌ Found ${errors.length} validation error(s):\n`);
+    printFindings(errors);
   }
 
-  console.log(`❌ Found ${errors.length} validation error(s):\n`);
-  for (const err of errors) {
-    console.log(`  ${err.file}`);
-    console.log(`    → ${err.message}\n`);
+  if (warnings.length > 0) {
+    console.log(`⚠️  Found ${warnings.length} warning(s), which do not fail validation:\n`);
+    printFindings(warnings);
   }
 
-  if (process.env.GITHUB_ACTIONS) reportToGitHubActions(errors);
+  if (process.env.GITHUB_ACTIONS) {
+    reportToGitHubActions("error", errors, "Content validation failed");
+    reportToGitHubActions("warning", warnings, "Content validation warnings");
+  }
 
-  process.exit(1);
+  process.exit(errors.length === 0 ? 0 : 1);
 }
 
 main();

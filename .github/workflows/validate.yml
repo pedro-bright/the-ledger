@@ -48,7 +48,7 @@ jobs:
       - name: Run validation
         run: npm run validate
 
-      - name: Test publication rules
+      - name: Test publication and consistency rules
         run: npm run test:validate
 
       - name: Test YAML parsing

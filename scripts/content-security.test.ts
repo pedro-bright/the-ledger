@@ -231,6 +231,14 @@ revision:
 ## Summary
 
 Body.
+
+## What Happened
+
+Body.
+
+## Why It Matters
+
+Body.
 `;
   const actor = (website: string) => `id: zz-poc-actor\nname: PoC actor\ntype: company\nwebsite: "${website}"\n`;
 

@@ -20,7 +20,7 @@ function fixture(t: { after: (fn: () => void) => void }) {
   fs.symlinkSync(path.join(root, 'node_modules'), path.join(dir, 'node_modules'));
   fs.copyFileSync(path.join(root, 'package.json'), path.join(dir, 'package.json'));
   fs.mkdirSync(path.join(dir, 'content/events/2023'), { recursive: true });
-  fs.writeFileSync(path.join(dir, 'content/events/2023/01-gpt-4-release.md'), `---\nid: gpt-4-release\ntitle: GPT-4\ndate: '2023-03-14'\ncategory: models\nsources:\n  - url: https://example.com\n    title: A source\nrevision:\n  created: '2023-03-20'\n---\n\n## Summary\n\n${summary}\n\n## What Happened\n\nDo not copy this section.\n`);
+  fs.writeFileSync(path.join(dir, 'content/events/2023/01-gpt-4-release.md'), `---\nid: gpt-4-release\ntitle: GPT-4\ndate: '2023-03-14'\ncategory: models\nsources:\n  - url: https://example.com\n    title: A source\nrevision:\n  created: '2023-03-20'\n---\n\n## Summary\n\n${summary}\n\n## What Happened\n\nDo not copy this section.\n\n## Why It Matters\n\nNor this one.\n`);
   fs.writeFileSync(path.join(dir, 'fixed-clock.mjs'), `
     const RealDate = Date;
     globalThis.Date = class extends RealDate {
@@ -64,9 +64,16 @@ function fill(filename: string, data: object, content: string) {
   fs.writeFileSync(filename, `---\n${dump(data)}---\n${content}`);
 }
 
+// The challenge scaffold asks the editor to mark the entry; validation requires it.
+function markContested(dir: string) {
+  const filename = path.join(dir, 'content/events/2023/01-gpt-4-release.md');
+  fs.writeFileSync(filename, fs.readFileSync(filename, 'utf8').replace('revision:\n', 'contestation:\n  status: contested\nrevision:\n'));
+}
+
 function challenge(dir: string) {
   const result = scaffold(dir, 'challenge', ['--target', 'gpt-4-release', '--allegation', 'misquote']);
   assert.equal(result.status, 0, result.output);
+  markContested(dir);
   return record(dir, 'challenges', `cc-gpt-4-release-${stamp}`);
 }
 
@@ -89,6 +96,10 @@ test('challenge captures allegations, issue and local date, and needs its filer 
   assert.match(unfilled.output, /opened_by/);
   data.opened_by = 'example-editor';
   fill(filename, data, content);
+  const unmarked = validate(dir);
+  assert.equal(unmarked.status, 1, unmarked.output);
+  assert.match(unmarked.output, /Consistency rule "challenge target is marked"/);
+  markContested(dir);
   const completed = validate(dir);
   assert.equal(completed.status, 0, completed.output);
 });

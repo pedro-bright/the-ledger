@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import PageHeader from '../components/wiki/PageHeader.astro';
 import RailSection from '../components/wiki/RailSection.astro';
 import { loadEvents, loadSummaryRevisions, loadChallenges, loadResolutions } from '../lib/content';
-import { buildCorrectionRecords } from '../lib/corrections';
+import { buildCorrectionRecords, countOpenChallenges } from '../lib/corrections';
 
 const revisions = loadSummaryRevisions();
 const challenges = loadChallenges();
@@ -12,8 +12,7 @@ const records = buildCorrectionRecords({ events: loadEvents(), revisions, challe
 
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
-const resolvedIds = new Set(resolutions.map((r) => r.case_id));
-const openChallenges = challenges.filter((c) => !resolvedIds.has(c.id)).length;
+const openChallenges = countOpenChallenges(challenges);
 ---
 
 <Base
