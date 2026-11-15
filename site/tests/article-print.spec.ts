@@ -32,7 +32,7 @@ for (const javaScriptEnabled of [true, false]) {
         await page.goto(article);
         await page.emulateMedia({ media: 'print' });
         await page.setViewportSize(viewport);
-        for (const selector of ['#article-contents', '.wiki-article__references-link']) {
+        for (const selector of ['#article-contents', '.wiki-article__references-link', '.entry-contribute']) {
           const navigation = page.locator(selector);
           await expect(navigation).toHaveCount(1);
           await expect(navigation).toBeHidden();

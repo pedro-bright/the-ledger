@@ -35,6 +35,12 @@ body:
       placeholder: e.g., Anthropic, The New York Times, arXiv
 
   - type: input
+    id: related-entry
+    attributes:
+      label: Existing entry ID (optional)
+      description: Fill this in when the source adds to an entry that is already in the ledger.
+
+  - type: input
     id: event-date
     attributes:
       label: Date of the event (YYYY-MM-DD)

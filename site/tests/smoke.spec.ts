@@ -186,6 +186,12 @@ test.describe('smoke', () => {
     const response = await page.goto('/corrections');
     expect(response?.status()).toBe(200);
     await expect(page.locator('h1')).toHaveText('Corrections and challenges');
+    const requestLine = page.locator('.page-header .corrections-request');
+    await expect(requestLine).toHaveText(
+      'To request a correction, file a challenge, or open the entry and use the link under its references.',
+    );
+    await expect(requestLine.getByRole('link', { name: 'file a challenge', exact: true }))
+      .toHaveAttribute('href', 'https://github.com/pedro-bright/the-ledger/issues/new?template=challenge.yml');
     const stats = page.locator('.corrections-stats');
     await expect(stats).toContainText(new RegExp(`\\b${revisions} summary revisions?\\b`));
     await expect(stats).toContainText(new RegExp(`\\b${challenges - resolutions} open challenges?\\b`));
@@ -287,6 +293,34 @@ test('utility links describe their destinations', async ({ page }) => {
   await expect(utility.getByRole('link', { name: 'Home', exact: true })).toHaveAttribute('href', '/');
   await expect(utility.getByRole('link', { name: 'About', exact: true })).toHaveAttribute('href', '/about');
   await expect(utility.getByRole('link', { name: 'Repository history', exact: true })).toHaveAttribute('href', 'https://github.com/pedro-bright/the-ledger/commits/main');
+});
+
+test('entry pages link to challenge and source tip forms prefilled for the entry', async ({ page }) => {
+  await page.goto(`/events/${SLUGS.event}`);
+  const line = page.locator('.wiki-article__footer-slot .entry-contribute');
+  await expect(line).toHaveText(
+    'Found an error in this entry? File a challenge. Have a source it should cite? Suggest a source.',
+  );
+  await expect(line).toHaveAttribute('data-pagefind-ignore', '');
+  const challenge = line.getByRole('link', { name: 'File a challenge', exact: true });
+  const tip = line.getByRole('link', { name: 'Suggest a source', exact: true });
+  await expect(challenge).toHaveAttribute(
+    'href',
+    'https://github.com/pedro-bright/the-ledger/issues/new?template=challenge.yml'
+      + '&title=%5BChallenge%5D%20OpenAI%20Releases%20GPT-4&target-event=gpt-4-release',
+  );
+  await expect(tip).toHaveAttribute(
+    'href',
+    'https://github.com/pedro-bright/the-ledger/issues/new?template=source-tip.yml'
+      + '&title=%5BTip%5D%20Source%20for%20OpenAI%20Releases%20GPT-4&related-entry=gpt-4-release&event-date=2023-03-14',
+  );
+  for (const link of [challenge, tip]) {
+    await expect(link).toHaveAttribute('target', '_blank');
+    await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    await link.focus();
+    await expect(link).toHaveCSS('outline-style', 'solid');
+    await expect(link).toHaveCSS('outline-color', 'rgb(6, 69, 173)');
+  }
 });
 
 test.describe('page metadata', () => {

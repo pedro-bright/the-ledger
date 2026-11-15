@@ -97,6 +97,19 @@ const revisionRecords = loadSummaryRevisions()
 const records = [...challengeRecords, ...revisionRecords].sort((a, b) => (a.date ?? '').localeCompare(b.date ?? ''));
 const plainWords = (value: string) => value.replace(/_/g, ' ');
 const contestationHref = records.length > 0 ? '#revision-history' : undefined;
+
+// GitHub fills an issue form's inputs from query parameters named after each field's `id`.
+const issueFormHref = (params: Record<string, string>) =>
+  `https://github.com/pedro-bright/the-ledger/issues/new?${Object.entries(params)
+    .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+    .join('&')}`;
+const challengeHref = issueFormHref({ template: 'challenge.yml', title: `[Challenge] ${event.title}`, 'target-event': event.id });
+const sourceTipHref = issueFormHref({
+  template: 'source-tip.yml',
+  title: `[Tip] Source for ${event.title}`,
+  'related-entry': event.id,
+  'event-date': event.date,
+});
 ---
 
 <Base
@@ -414,6 +427,13 @@ const contestationHref = records.length > 0 ? '#revision-history' : undefined;
         )}
       </Fragment>
     )}
+
+    <Fragment slot="footer">
+      <p class="entry-contribute" data-pagefind-ignore>
+        Found an error in this entry? <a href={challengeHref} target="_blank" rel="noopener noreferrer">File a challenge</a>.
+        Have a source it should cite? <a href={sourceTipHref} target="_blank" rel="noopener noreferrer">Suggest a source</a>.
+      </p>
+    </Fragment>
   </ArticleShell>
 </Base>
 
@@ -428,6 +448,15 @@ const contestationHref = records.length > 0 ? '#revision-history' : undefined;
           event_title: eventTitle,
           event_category: eventCategory,
           source_title: el.textContent?.trim(),
+        });
+      });
+    });
+
+    document.querySelectorAll('.entry-contribute a').forEach(function (el) {
+      el.addEventListener('click', function () {
+        window.posthog?.capture('contribute_link_clicked', {
+          link_text: el.textContent?.trim(),
+          link_href: el.getAttribute('href'),
         });
       });
     });
@@ -563,6 +592,13 @@ const contestationHref = records.length > 0 ? '#revision-history' : undefined;
     line-height: 1.45;
   }
   .ref-archive:hover { color: var(--color-wiki-link); }
+  .entry-contribute {
+    margin: 2rem 0 0; font-family: var(--font-sans); font-size: var(--text-meta); color: var(--color-ink-mid);
+    line-height: 1.45;
+  }
+  @media print {
+    .entry-contribute { display: none; }
+  }
   .see-also__date { color: var(--color-ink-faint); font-size: var(--text-meta); font-style: normal; line-height: 1.45; }
   .see-also__label {
     margin: 14px 0 6px; font-family: var(--font-sans); font-size: var(--text-label); font-weight: 600;
