@@ -27,7 +27,7 @@ Terry Tang reviewed and approved this correction on 2026-10-26.
 ## Event location and identity
 
 Original file: `content/events/2025/13-google-gemini-2-5-pro-experimental-release.md`.
-Current file: [`content/events/2025/13-google-gemini-2-5-pro-experimental-release.md`](https://github.com/pedro-bright/the-ledger/blob/main/content/events/2025/13-google-gemini-2-5-pro-experimental-release.md).
+Current file: [`content/events/2025/13-google-gemini-2-5-pro-experimental.md`](https://github.com/pedro-bright/the-ledger/blob/main/content/events/2025/13-google-gemini-2-5-pro-experimental.md).
 The event ID remains `google-gemini-2-5-pro-experimental`; its public URL is [unchanged](https://the-ledger.net/events/google-gemini-2-5-pro-experimental/).
 
 ## Evidence
