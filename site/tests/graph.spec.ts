@@ -281,6 +281,18 @@ test('touch gestures scroll the page until explicitly enabled, also with reduced
       await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
     };
 
+    const settledScrollY = () => page.evaluate(async () => {
+      let previous = scrollY;
+      let stableFrames = 0;
+      while (stableFrames < 2) {
+        await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+        const current = scrollY;
+        stableFrames = current === previous ? stableFrames + 1 : 0;
+        previous = current;
+      }
+      return previous;
+    });
+
     const transform = () => canvas.evaluate((el: HTMLCanvasElement) => {
       const { a, e, f } = el.getContext('2d')!.getTransform();
       return { a, e, f };
@@ -288,12 +300,14 @@ test('touch gestures scroll the page until explicitly enabled, also with reduced
     const mapBefore = await transform();
     const framesBefore = await drawnFrame(page);
     const node = await visibleNode(page);
-    const start = await page.evaluate(() => scrollY);
+    const start = await settledScrollY();
     await swipe(node);
     await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(start + 40);
     expect(await transform()).toEqual(mapBefore);
     expect(await drawnFrame(page)).toEqual(framesBefore);
 
+    // Passing the distance threshold does not mean the swipe has stopped coasting.
+    await settledScrollY();
     const toggle = page.getByRole('button', { name: 'Enable touch gestures' });
     await toggle.focus();
     await page.keyboard.press('Enter');
@@ -301,12 +315,12 @@ test('touch gestures scroll the page until explicitly enabled, also with reduced
     await expect(disable).toHaveAttribute('aria-pressed', 'true');
     expect(await canvas.evaluate((el) => getComputedStyle(el).touchAction)).toBe('none');
     const activeNode = await visibleNode(page);
-    const pageBefore = await page.evaluate(() => scrollY);
+    const pageBefore = await settledScrollY();
     const image = () => canvas.evaluate((el: HTMLCanvasElement) => el.toDataURL());
     const imageBefore = await image();
     await swipe(activeNode);
     await expect.poll(image).not.toBe(imageBefore);
-    expect(await page.evaluate(() => scrollY)).toBe(pageBefore);
+    expect(await settledScrollY()).toBe(pageBefore);
     await settledFrame(page);
 
     await page.keyboard.press('Escape');
