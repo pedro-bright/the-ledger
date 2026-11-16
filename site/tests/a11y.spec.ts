@@ -88,6 +88,16 @@ test.describe('a11y (axe)', () => {
 });
 
 
+for (const route of ['/', `/events/${SLUGS.event}`, `/actors/${SLUGS.actor}`, '/threads/frontier-safety-policies']) {
+  test(`headings in the main column of ${route} never skip a level`, async ({ page }) => {
+    await page.goto(route);
+    const levels = await page.locator('.wiki-main :is(h1, h2, h3, h4, h5, h6):visible')
+      .evaluateAll((headings) => headings.map((heading) => Number(heading.tagName[1])));
+    expect(levels[0]).toBe(1);
+    for (let i = 1; i < levels.length; i++) expect(levels[i] - levels[i - 1], `heading ${i + 1} of ${levels.join(' ')}`).toBeLessThanOrEqual(1);
+  });
+}
+
 for (const route of ['/explore', '/search']) test(`editable search boundaries on ${route} have 3:1 contrast and mobile text is 16px`, async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(route);

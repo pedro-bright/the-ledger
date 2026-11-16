@@ -5,6 +5,7 @@ import ArticleShell from '../../components/wiki/ArticleShell.astro';
 import Infobox from '../../components/wiki/Infobox.astro';
 import EventRow from '../../components/wiki/EventRow.astro';
 import RailSection from '../../components/wiki/RailSection.astro';
+import YearLinks from '../../components/wiki/YearLinks.astro';
 import { loadActors, loadEvents, buildActorEventMap } from '../../lib/content';
 
 export function getStaticPaths() {
@@ -152,6 +153,9 @@ function cleanUrl(url: string): string {
             <> spanning <span class="font-mono">{years[years.length - 1]}</span>–<span class="font-mono">{years[0]}</span></>
           )}.
         </p>
+        {years.length > 1 && (
+          <YearLinks years={years.map((year) => ({ year, count: byYear.get(year)!.length }))} narrowOnly />
+        )}
         {years.map((year) => (
           <section class="actor-year" id={`y-${year}`} data-pagefind-ignore>
             <h2>{year}</h2>

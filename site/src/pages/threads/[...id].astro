@@ -5,6 +5,7 @@ import ArticleShell from '../../components/wiki/ArticleShell.astro';
 import Infobox from '../../components/wiki/Infobox.astro';
 import RailSection from '../../components/wiki/RailSection.astro';
 import EventRow from '../../components/wiki/EventRow.astro';
+import YearLinks from '../../components/wiki/YearLinks.astro';
 import ContestationBadge from '../../components/ContestationBadge';
 import { loadThreads, loadEvents, loadControversies, getThreadEvents, splitArticleLead } from '../../lib/content';
 import { firstSentence, metaDescription, plainParagraphs } from '../../lib/markdown';
@@ -28,6 +29,11 @@ const allControversies = loadControversies();
 
 // Linked events, chronological.
 const linkedEvents = getThreadEvents(thread, allEvents);
+// The same entries in the same order, under the year each is dated.
+const timelineYears = [...new Set(linkedEvents.map((e) => getISOYear(e.date)))].map((year) => ({
+  year,
+  events: linkedEvents.filter((e) => getISOYear(e.date) === year),
+}));
 
 const linkedControversies = thread.controversies
   ? allControversies.filter((c) => thread.controversies!.includes(c.id))
@@ -201,13 +207,20 @@ const feed = { title: `The Ledger: ${thread.title}`, href: `/threads/${thread.sl
       <p class="thread-notice">
         To follow new entries, subscribe to the <a href={feed.href}>thread feed (Atom)</a>.
       </p>
-      {linkedEvents.length > 0 && (
-        <ul class="thread-timeline">
-          {linkedEvents.map((e) => (
-            <EventRow event={e} />
-          ))}
-        </ul>
+      {linkedEvents.length > 20 && timelineYears.length > 1 && (
+        <YearLinks years={timelineYears.map(({ year, events }) => ({ year, count: events.length }))} />
       )}
+      {/* A div, because scripts/test-parity.ts reads the timeline up to the first closing section tag. */}
+      {timelineYears.map(({ year, events }) => (
+        <div class="thread-year" id={`y-${year}`}>
+          <h3>{year}</h3>
+          <ul class="thread-timeline">
+            {events.map((e) => (
+              <EventRow event={e} />
+            ))}
+          </ul>
+        </div>
+      ))}
     </section>
 
     {linkedControversies.length > 0 && (
@@ -254,7 +267,10 @@ const feed = { title: `The Ledger: ${thread.title}`, href: `/threads/${thread.sl
   }
   .thread-section { margin-top: 2rem; }
   .thread-notice { margin: 8px 0 0; font-family: var(--font-sans); font-size: var(--text-meta); color: var(--color-ink-muted); line-height: 1.45; }
-  .thread-timeline,
+  .thread-section :global(.year-links) { margin-top: 4px; }
+  .thread-year { scroll-margin-top: 20px; }
+  .thread-year h3 { margin: 1.25rem 0 0.25rem; }
+  .thread-timeline { list-style: none; padding: 0; margin: 0; }
   .controversy-list { list-style: none; padding: 0; margin: 12px 0 0; }
   .controversy-list li {
     padding: 8px 0; border-bottom: 1px dotted var(--color-rule);

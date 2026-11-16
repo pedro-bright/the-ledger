@@ -292,7 +292,7 @@ const sourceTipHref = issueFormHref({
       </nav>
     ))}
 
-    {/* Mobile-only epistemic key — right rail is hidden below 780px. */}
+    {/* In-article epistemic key, shown when the right rail is hidden at 1024px and below. */}
     <details class="mobile-epistemic-key" aria-label="Epistemic key" data-pagefind-ignore>
       <summary>§ How to read the metadata</summary>
       <dl>
@@ -483,7 +483,7 @@ const sourceTipHref = issueFormHref({
   .rail-stack__role { margin-left: 3px; }
   .infobox-role { color: var(--color-ink-faint); font-size: var(--text-meta); line-height: 1.45; }
 
-  /* Mobile-only epistemic key — the right rail is hidden below 780px,
+  /* In-article epistemic key: the right rail is hidden at 1024px and below,
      so we duplicate the definitions at the end of the article body. */
   .mobile-epistemic-key {
     display: none;
@@ -531,7 +531,7 @@ const sourceTipHref = issueFormHref({
     color: var(--color-ink-mid);
     line-height: 1.45;
   }
-  @media (max-width: 780px) {
+  @media (max-width: 1024px) {
     .mobile-epistemic-key { display: block; }
   }
 
