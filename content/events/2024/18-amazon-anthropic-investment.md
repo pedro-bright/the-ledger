@@ -16,10 +16,10 @@ threads: [open-vs-closed-weights]
 sources:
   - url: https://www.aboutamazon.com/news/company-news/amazon-anthropic-ai-investment
     title: "Amazon and Anthropic deepen their shared commitment to advancing generative AI"
-    type: primary
+    type: primary_document
   - url: https://www.wsj.com/tech/ai/amazon-pours-2-75-billion-more-into-ai-startup-anthropic-3a0f30e0
     title: "Amazon Pours $2.75 Billion More Into AI Startup Anthropic"
-    type: secondary
+    type: secondary_reporting
 revision:
   created: 2026-03-08
 ---

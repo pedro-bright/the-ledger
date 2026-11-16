@@ -16,10 +16,10 @@ threads: [ai-copyright-wars]
 sources:
   - url: https://nytco-assets.nytimes.com/2023/12/NYT_Complaint_Dec2023.pdf
     title: "The New York Times Company v. Microsoft Corporation et al."
-    type: primary
+    type: primary_document
   - url: https://www.nytimes.com/2023/12/27/business/media/new-york-times-open-ai-microsoft-lawsuit.html
     title: "The Times Sues OpenAI and Microsoft Over A.I. Use of Copyrighted Work"
-    type: secondary
+    type: secondary_reporting
 revision:
   created: 2026-03-08
 ---

@@ -16,10 +16,10 @@ threads: [scaling-laws-debate]
 sources:
   - url: https://openai.com/blog/new-models-and-developer-products-announced-at-devday
     title: "New models and developer products announced at DevDay"
-    type: primary
+    type: primary_document
   - url: https://www.theverge.com/2023/11/6/23948619/openai-chatgpt-devday-developer-conference-2023
     title: "OpenAI's DevDay keynote"
-    type: secondary
+    type: secondary_reporting
 revision:
   created: 2026-03-08
 ---

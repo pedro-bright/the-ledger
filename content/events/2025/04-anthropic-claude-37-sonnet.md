@@ -14,10 +14,10 @@ threads: [scaling-laws-debate]
 sources:
   - url: https://www.anthropic.com/news/claude-3-7-sonnet
     title: "Claude 3.7 Sonnet and Claude Code"
-    type: primary
+    type: primary_document
   - url: https://www.theverge.com/news/618440/anthropic-claude-3-7-sonnet-ai-model-hybrid-reasoning
     title: "Anthropic releases Claude 3.7 Sonnet with extended thinking"
-    type: secondary
+    type: secondary_reporting
 revision:
   created: 2026-03-08
 ---

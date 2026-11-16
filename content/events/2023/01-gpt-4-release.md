@@ -16,13 +16,13 @@ threads: [scaling-laws-debate]
 sources:
   - url: https://openai.com/research/gpt-4
     title: "GPT-4"
-    type: primary
+    type: primary_document
   - url: https://arxiv.org/abs/2303.08774
     title: "GPT-4 Technical Report"
-    type: primary
+    type: primary_document
   - url: https://www.nytimes.com/2023/03/14/technology/openai-new-gpt4.html
     title: "OpenAI Plans to Up the Ante in Tech's A.I. Race"
-    type: secondary
+    type: secondary_reporting
 revision:
   created: 2026-03-08
 ---

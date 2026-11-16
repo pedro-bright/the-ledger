@@ -19,13 +19,13 @@ threads: [scaling-laws-debate, open-vs-closed-weights]
 sources:
   - url: https://openai.com/blog/openai-announces-leadership-transition
     title: "OpenAI announces leadership transition"
-    type: primary
+    type: primary_document
   - url: https://www.nytimes.com/2023/11/17/technology/openai-sam-altman-fired.html
     title: "OpenAI Fires Its CEO, Sam Altman"
-    type: secondary
+    type: secondary_reporting
   - url: https://www.theverge.com/2023/11/22/23972572/openai-sam-altman-ceo-return-board
     title: "Sam Altman returns as CEO of OpenAI"
-    type: secondary
+    type: secondary_reporting
 revision:
   created: 2026-03-08
 ---

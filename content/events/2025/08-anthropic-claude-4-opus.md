@@ -23,7 +23,7 @@ threads: [scaling-laws-debate]
 sources:
   - url: https://www.anthropic.com/news/claude-4
     title: "Introducing Claude 4"
-    type: primary
+    type: primary_document
 revision:
   created: 2026-03-08
 ---

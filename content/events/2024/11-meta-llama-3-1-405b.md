@@ -16,10 +16,10 @@ threads: [open-vs-closed-weights, scaling-laws-debate]
 sources:
   - url: https://ai.meta.com/blog/meta-llama-3-1/
     title: "Introducing Llama 3.1: Our most capable models to date"
-    type: primary
+    type: primary_document
   - url: https://arxiv.org/abs/2407.21783
     title: "The Llama 3 Herd of Models"
-    type: primary
+    type: primary_document
 revision:
   created: 2026-03-08
 ---

@@ -14,10 +14,10 @@ threads: [scaling-laws-debate]
 sources:
   - url: https://openai.com/index/introducing-gpt-4-5/
     title: "Introducing GPT-4.5"
-    type: primary
+    type: primary_document
   - url: https://www.theverge.com/news/620021/openai-gpt-4-5-orion-ai-model-release
     title: "OpenAI releases GPT-4.5, its biggest and most expensive model yet"
-    type: secondary
+    type: secondary_reporting
 revision:
   created: 2026-03-08
 ---

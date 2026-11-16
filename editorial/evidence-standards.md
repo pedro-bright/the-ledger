@@ -15,6 +15,7 @@ Every source used in The Ledger is classified by type. The type determines how m
 | `primary_document` | Original document, filing, announcement, or official statement | Press releases, court filings, published research papers, official blog posts, executive orders | Highest |
 | `primary_recording` | Direct audio, video, or transcript of the event | Conference keynotes, interviews, congressional testimony, leaked recordings | Highest |
 | `primary_dataset` | Original data or measurements | Benchmark results, financial filings, usage statistics from official sources | Highest |
+| `official` | Statement issued by a government body or company about its own actions, published through its own channels. Use it for the announcement; use `primary_document` for the document itself, such as a paper, filing, bill text or model card. | Government press releases, agency notices, regulatory decisions, company announcements and policy pages | Highest |
 | `secondary_reporting` | Journalistic or research reporting based on primary sources | News articles, investigative reports, research summaries | High |
 | `expert_interpretation` | Analysis by domain experts | Op-eds by practitioners, academic commentary, think tank analyses | Medium |
 | `editorial_synthesis` | Aggregated interpretation or meta-analysis | Newsletter roundups, "state of AI" reports, year-in-review articles | Medium |

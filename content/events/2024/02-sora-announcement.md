@@ -14,13 +14,13 @@ threads: [ai-copyright-wars, scaling-laws-debate]
 sources:
   - url: https://openai.com/sora
     title: "Sora: Creating video from text"
-    type: primary
+    type: primary_document
   - url: https://openai.com/research/video-generation-models-as-world-simulators
     title: "Video generation models as world simulators"
-    type: primary
+    type: primary_document
   - url: https://www.nytimes.com/2024/02/15/technology/openai-sora-videos.html
     title: "OpenAI Unveils A.I. That Instantly Generates Eye-Popping Videos"
-    type: secondary
+    type: secondary_reporting
 revision:
   created: 2026-03-08
 ---

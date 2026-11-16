@@ -40,7 +40,7 @@ AI tools used for research assistance and draft structuring are disclosed global
 
 ### 6. Source Primacy
 
-Primary sources over commentary. Archived URLs mandatory for primary sources (via Wayback Machine or equivalent). Sources are typed as `primary` | `secondary` | `commentary` | `official` to help readers assess evidentiary weight.
+Primary sources over commentary. Archived URLs mandatory for primary sources (via Wayback Machine or equivalent). Each source is typed from the list in the [evidence standards](evidence-standards.md#source-types), which gives the evidentiary weight of each type to help readers assess it.
 
 **Why:** Commentary layers interpretation on top of events. Primary sources let readers form their own judgments. Archiving prevents link rot from destroying the evidentiary foundation.
 

@@ -21,10 +21,10 @@ sources:
     archive_url: https://web.archive.org/web/20261014093018/https://mistral.ai/news/announcing-mistral-7b/
   - url: https://arxiv.org/abs/2310.06825
     title: Mistral 7B
-    type: primary
+    type: primary_document
   - url: https://techcrunch.com/2023/09/27/mistral-ai-makes-its-first-large-language-model-free-for-everyone/
     title: Mistral AI makes its first large language model free for everyone
-    type: secondary
+    type: secondary_reporting
 revision:
   created: 2026-03-08
   last_reviewed: 2026-10-26

@@ -107,7 +107,7 @@ This captures the spirit of 5.2's "surface tension" without forcing fake dissent
 
 5. **AI Transparency** - AI tools used for research assistance and draft structuring are disclosed globally (at `/methodology/ai-assistance`). All factual claims, confidence assessments, and interpretations are reviewed and approved by a named human editor, except automatic daily scan entries, which may not be read individually by a human (see `editorial/ai-assistance.md`).
 
-6. **Source Primacy** — Primary sources over commentary. Archived URLs mandatory for primary sources. Sources typed as primary / secondary / commentary / official.
+6. **Source Primacy** — Primary sources over commentary. Archived URLs mandatory for primary sources. Source types and their evidentiary weight are defined in [`editorial/evidence-standards.md`](editorial/evidence-standards.md#source-types).
 
 7. **Pluralism** — Minority viewpoints are documented, not deleted. Interpretations sections welcome competing narratives.
 
@@ -142,7 +142,7 @@ category: policy                           # policy | models | research | indust
 sources:
   - url: https://...
     title: "Original reporting"
-    type: primary                          # primary | secondary | commentary | official
+    type: primary_document                 # see editorial/evidence-standards.md#source-types
 
 # === ENRICHED (added by editors, Tier 1-2) ===
 end_date: 2026-03-05                       # optional, for multi-day events
@@ -166,7 +166,7 @@ sources:                                   # enriched sources
     archive_url: https://web.archive.org/...   # mandatory for primary
     title: "Original reporting"
     publisher: NYT
-    type: primary
+    type: primary_document
     date: 2026-03-01
     accessed: 2026-03-03
 significance_history:

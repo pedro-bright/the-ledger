@@ -14,10 +14,10 @@ threads: [ai-military-ethics, open-vs-closed-weights]
 sources:
   - url: https://www.reuters.com/technology/artificial-intelligence/italy-blocks-chinese-ai-app-deepseek-2025-01-30/
     title: "Italy blocks Chinese AI app DeepSeek"
-    type: secondary
+    type: secondary_reporting
   - url: https://www.nytimes.com/2025/02/06/technology/deepseek-china-ai-concerns.html
     title: "DeepSeek Raises Security Concerns Over China Ties"
-    type: secondary
+    type: secondary_reporting
 revision:
   created: 2026-03-08
 ---

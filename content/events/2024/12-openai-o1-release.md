@@ -14,10 +14,10 @@ threads: [scaling-laws-debate]
 sources:
   - url: https://openai.com/index/learning-to-reason-with-llms/
     title: "Learning to Reason with LLMs"
-    type: primary
+    type: primary_document
   - url: https://openai.com/index/introducing-openai-o1-preview/
     title: "Introducing OpenAI o1-preview"
-    type: primary
+    type: primary_document
 revision:
   created: 2026-03-08
 ---

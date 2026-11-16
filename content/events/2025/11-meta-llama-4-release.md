@@ -16,7 +16,7 @@ threads: [open-vs-closed-weights, scaling-laws-debate]
 sources:
   - url: https://ai.meta.com/blog/llama-4-multimodal-intelligence/
     title: "Llama 4: Open, Multimodal Intelligence"
-    type: primary
+    type: primary_document
 revision:
   created: 2026-03-08
 ---

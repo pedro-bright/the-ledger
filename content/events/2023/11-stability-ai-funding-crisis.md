@@ -14,10 +14,10 @@ threads: [open-vs-closed-weights]
 sources:
   - url: https://www.semafor.com/article/2023/10/18/stability-ais-cash-problem
     title: "Stability AI, the company behind Stable Diffusion, is running out of money"
-    type: secondary
+    type: secondary_reporting
   - url: https://www.bloomberg.com/news/articles/2023-11-03/stability-ai-is-on-shaky-ground-as-investors-fret
     title: "Stability AI Is on Shaky Ground as Investors Fret"
-    type: secondary
+    type: secondary_reporting
 revision:
   created: 2026-03-08
 ---

@@ -23,10 +23,10 @@ sources:
     archive_url: https://web.archive.org/web/20261016013712/https://blog.google/innovation-and-ai/technology/ai/google-gemini-ai/
   - url: https://arxiv.org/abs/2312.11805
     title: 'Gemini: A Family of Highly Capable Multimodal Models'
-    type: primary
+    type: primary_document
   - url: https://www.nytimes.com/2023/12/06/technology/google-ai-gemini.html
     title: Google Announces Gemini, Its Most Powerful AI Model
-    type: secondary
+    type: secondary_reporting
 revision:
   created: 2026-03-08
   last_reviewed: 2026-10-26

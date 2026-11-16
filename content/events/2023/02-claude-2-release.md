@@ -16,10 +16,10 @@ threads: [scaling-laws-debate, open-vs-closed-weights]
 sources:
   - url: https://www.anthropic.com/news/claude-2
     title: "Claude 2"
-    type: primary
+    type: primary_document
   - url: https://www.theverge.com/2023/7/11/23790254/anthropic-claude-chatbot-ai-available-beta
     title: "Anthropic's Claude 2 chatbot is now generally available"
-    type: secondary
+    type: secondary_reporting
 revision:
   created: 2026-03-08
 ---

@@ -23,7 +23,7 @@ sources:
     date: 2026-02-24
   - url: https://news.ycombinator.com/item?id=44522772
     title: "HN Discussion: Measuring the impact of AI on experienced open-source developer productivity"
-    type: commentary
+    type: expert_interpretation
     date: 2025-07-10
 revision:
   created: 2026-03-08

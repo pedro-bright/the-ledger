@@ -14,10 +14,10 @@ threads: [open-vs-closed-weights]
 sources:
   - url: https://x.ai/blog/grok-os
     title: "Open Release of Grok-1"
-    type: primary
+    type: primary_document
   - url: https://github.com/xai-org/grok-1
     title: "Grok-1 GitHub Repository"
-    type: primary
+    type: primary_document
 revision:
   created: 2026-03-08
 ---
