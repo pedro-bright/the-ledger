@@ -10,6 +10,7 @@ import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
 import { parse, type DefaultTreeAdapterMap } from "parse5";
 import { parseFrontmatter } from "./frontmatter.js";
+import { unpinnedArchive } from "./check-links.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const EVENTS = path.join(ROOT, "content/events");
@@ -185,7 +186,7 @@ async function main(): Promise<void> {
       originals.set(file, raw);
       (data.sources as Source[]).forEach((source, index) => {
         if (!(source.type?.startsWith("primary") || source.type === "official")) return;
-        if (source.archive_url && (!source.archive_url.includes("web.archive.org/") || FIXED.test(source.archive_url))) return;
+        if (source.archive_url && !unpinnedArchive(source.archive_url)) return;
         const referenceField = source.accessed ? "accessed" : source.date ? "source date" : "event date";
         const reference = dateString(source.accessed || source.date || data.date);
         results.push({ file, index, source, reference, referenceField });
