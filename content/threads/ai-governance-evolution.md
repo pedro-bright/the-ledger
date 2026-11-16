@@ -2,7 +2,7 @@
 id: ai-governance-evolution
 title: "AI Governance Evolution"
 status: active
-started: 2025-02-02
+started: 2023-03-22
 core_question: "How are governments and international bodies racing to regulate frontier AI — and how are competitive pressures already bending those rules back toward permissiveness?"
 curator: terry-tang
 curator_scope: initial-synthesis

@@ -2,7 +2,7 @@
 id: ai-valuation-cycle
 title: "The AI Valuation Cycle"
 status: active
-started: 2023-01-01
+started: 2023-01-23
 core_question: "Is the AI valuation surge — OpenAI $300B→$852B, Anthropic $61B→$380B, xAI ~$230B — anchored in durable revenue, or is it a cycle driven by compute economics and sovereign/strategic capital?"
 curator: terry-tang
 curator_scope: initial-synthesis
@@ -11,6 +11,7 @@ contestation:
   challenge_window: open
 last_updated: 2026-11-14
 events:
+  - microsoft-openai-multibillion-investment-2023
   - nvidia-fy2025-record-results
   - openai-40b-softbank-round
   - openai-10b-arr-milestone
