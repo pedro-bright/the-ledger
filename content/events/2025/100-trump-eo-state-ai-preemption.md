@@ -32,6 +32,7 @@ sources:
     title: "Fact Sheet: President Donald J. Trump Ensures a National Policy Framework for Artificial Intelligence"
     type: official
     publisher: White House
+    archive_url: https://web.archive.org/web/20251212034915/https://www.whitehouse.gov/fact-sheets/2025/12/fact-sheet-president-donald-j-trump-ensures-a-national-policy-framework-for-artificial-intelligence/
   - url: https://www.gibsondunn.com/president-trump-latest-executive-order-on-ai-seeks-to-preempt-state-laws/
     title: "President Trump's Latest Executive Order on AI Seeks to Preempt State Laws"
     type: secondary_reporting

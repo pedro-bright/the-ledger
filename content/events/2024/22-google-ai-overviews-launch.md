@@ -15,6 +15,7 @@ sources:
   - url: https://blog.google/products/search/generative-ai-google-search-may-2024/
     title: "AI Overviews and more in Search"
     type: primary_document
+    archive_url: https://web.archive.org/web/20240514175929/https://blog.google/products/search/generative-ai-google-search-may-2024/
   - url: https://www.theverge.com/2024/5/14/24155321/google-search-ai-overview-feature-io-2024
     title: "Google is redesigning its search engine — and it's AI all the way down"
     type: secondary_reporting

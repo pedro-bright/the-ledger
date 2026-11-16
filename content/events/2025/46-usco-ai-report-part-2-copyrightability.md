@@ -23,11 +23,13 @@ sources:
     type: primary_document
     publisher: US Copyright Office
     date: 2025-01-29
+    archive_url: https://web.archive.org/web/20250129161826/https://www.copyright.gov/ai/Copyright-and-Artificial-Intelligence-Part-2-Copyrightability-Report.pdf
   - url: https://newsroom.loc.gov/news/copyright-office-releases-part-2-of-artificial-intelligence-report/s/f3959c36-d616-498d-b8f9-67641fd18bab
     title: "Copyright Office Releases Part 2 of Artificial Intelligence Report"
     type: official
     publisher: Library of Congress
     date: 2025-01-29
+    archive_url: https://web.archive.org/web/20250131064051/https://newsroom.loc.gov/news/copyright-office-releases-part-2-of-artificial-intelligence-report/s/f3959c36-d616-498d-b8f9-67641fd18bab
   - url: https://www.skadden.com/insights/publications/2025/02/copyright-office-publishes-report
     title: "Copyright Office Publishes Report on Copyrightability of AI-Generated Content"
     type: expert_interpretation

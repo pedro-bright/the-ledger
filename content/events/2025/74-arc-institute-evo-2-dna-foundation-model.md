@@ -25,16 +25,19 @@ sources:
     type: primary_document
     publisher: bioRxiv
     date: 2025-02-19
+    archive_url: https://web.archive.org/web/20250222023540/https://www.biorxiv.org/content/10.1101/2025.02.18.638918v1
   - url: https://www.nature.com/articles/s41586-026-10176-5
     title: "Evo 2: Sequence modeling and design from molecular to genome scale"
     type: primary_document
     publisher: Nature
     date: 2026-01-15
+    archive_url: https://web.archive.org/web/20260304160740/https://www.nature.com/articles/s41586-026-10176-5
   - url: https://arcinstitute.org/news/evo2
     title: "Evo 2: A Foundation Model for Biology"
     type: official
     publisher: Arc Institute
     date: 2025-02-19
+    archive_url: https://web.archive.org/web/20250630234835/https://arcinstitute.org/news/evo2
   - url: https://blogs.nvidia.com/blog/evo-2-biomolecular-ai/
     title: "Evo 2: NVIDIA BioNeMo Powers Breakthrough DNA Foundation Model"
     type: secondary_reporting

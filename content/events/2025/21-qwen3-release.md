@@ -16,14 +16,17 @@ sources:
     title: "Qwen3: Think Deeper, Act Faster"
     type: official
     date: 2025-04-28
+    archive_url: https://web.archive.org/web/20250428211103/https://qwenlm.github.io/blog/qwen3/
   - url: https://arxiv.org/abs/2505.09388
     title: "Qwen3 Technical Report"
     type: primary_document
     date: 2025-05-14
+    archive_url: https://web.archive.org/web/20250515015322/https://arxiv.org/abs/2505.09388
   - url: https://huggingface.co/Qwen/Qwen3-235B-A22B
     title: "Qwen3-235B-A22B Model Card"
     type: primary_document
     date: 2025-04-28
+    archive_url: https://web.archive.org/web/20250428211505/https://huggingface.co/Qwen/Qwen3-235B-A22B
 revision:
   created: 2026-04-19
 ---

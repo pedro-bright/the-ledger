@@ -34,6 +34,7 @@ sources:
     type: official
     publisher: Anthropic
     date: 2025-05-22
+    archive_url: https://web.archive.org/web/20250522171824/https://www.anthropic.com/news/activating-asl3-protections
   - url: https://www-cdn.anthropic.com/4263b940cabb546aa0e3283f35b686f4f3b2ff47.pdf
     title: "Claude Opus 4 System Card"
     type: primary_document

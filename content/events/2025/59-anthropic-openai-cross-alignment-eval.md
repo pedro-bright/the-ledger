@@ -18,11 +18,13 @@ sources:
     type: primary_document
     publisher: Anthropic Alignment Science Blog
     date: 2025-08-27
+    archive_url: https://web.archive.org/web/20250827170443/https://alignment.anthropic.com/2025/openai-findings/
   - url: https://openai.com/index/openai-anthropic-safety-evaluation/
     title: "OpenAI-Anthropic Safety Evaluation"
     type: primary_document
     publisher: OpenAI
     date: 2025-08-27
+    archive_url: https://web.archive.org/web/20250827190845/https://openai.com/index/openai-anthropic-safety-evaluation/
 revision:
   created: 2026-04-19
 ---

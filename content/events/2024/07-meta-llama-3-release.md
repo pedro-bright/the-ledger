@@ -17,9 +17,11 @@ sources:
   - url: https://ai.meta.com/blog/meta-llama-3/
     title: "Introducing Meta Llama 3: The most capable openly available LLM to date"
     type: primary_document
+    archive_url: https://web.archive.org/web/20240418155938/https://ai.meta.com/blog/meta-llama-3/
   - url: https://github.com/meta-llama/llama3
     title: "Meta Llama 3 GitHub Repository"
     type: primary_document
+    archive_url: https://web.archive.org/web/20240418165151/https://github.com/meta-llama/llama3
 revision:
   created: 2026-03-08
 ---

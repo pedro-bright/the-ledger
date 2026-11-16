@@ -17,6 +17,7 @@ sources:
   - url: https://ai.meta.com/blog/llama-4-multimodal-intelligence/
     title: "Llama 4: Open, Multimodal Intelligence"
     type: primary_document
+    archive_url: https://web.archive.org/web/20250405185132/https://ai.meta.com/blog/llama-4-multimodal-intelligence/
 revision:
   created: 2026-03-08
 ---

@@ -33,11 +33,13 @@ sources:
     type: official
     publisher: White House
     date: 2025-05-19
+    archive_url: https://web.archive.org/web/20250520035808/https://www.whitehouse.gov/presidential-actions/2025/05/president-donald-j-trump-signed-s-146-into-law/
   - url: https://www.commerce.senate.gov/press/rep/release/sen-cruz-applauds-presidential-signing-of-the-take-it-down-act-into-law-2025-5/
     title: "Sen. Cruz Applauds Presidential Signing of the TAKE IT DOWN Act"
     type: official
     publisher: Senate Commerce Committee
     date: 2025-05-19
+    archive_url: https://web.archive.org/web/20260410112717/https://www.commerce.senate.gov/press/rep/release/sen-cruz-applauds-presidential-signing-of-the-take-it-down-act-into-law-2025-5/
   - url: https://www.lw.com/en/insights/president-trump-signs-take-it-down-act-into-law
     title: "President Trump Signs TAKE IT DOWN Act Into Law"
     type: secondary_reporting

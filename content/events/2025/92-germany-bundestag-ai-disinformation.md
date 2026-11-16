@@ -23,6 +23,7 @@ sources:
     type: primary_document
     publisher: CORRECTIV
     date: 2025-01-24
+    archive_url: https://web.archive.org/web/20250125161228/https://correctiv.org/en/fact-checking-en/2025/01/24/disinformation-operation-russian-meddling-in-german-election-campaign-exposed/
   - url: https://www.isdglobal.org/digital-dispatch/coordinated-disinformation-network-uses-ai-media-impersonation-to-target-german-election/
     title: "Coordinated Disinformation Network Uses AI Media Impersonation to Target German Election"
     type: expert_interpretation

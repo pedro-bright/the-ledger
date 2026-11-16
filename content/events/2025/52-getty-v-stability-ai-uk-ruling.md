@@ -26,6 +26,7 @@ sources:
     type: primary_document
     publisher: UK Judiciary
     date: 2025-11-04
+    archive_url: https://web.archive.org/web/20251104130856/https://www.judiciary.uk/wp-content/uploads/2025/11/Getty-Images-v-Stability-AI.pdf
   - url: https://www.lw.com/en/insights/getty-images-v-stability-ai-english-high-court-rejects-secondary-copyright-claim
     title: "Getty Images v. Stability AI: English High Court Rejects Secondary Copyright Claim"
     type: expert_interpretation
@@ -41,6 +42,7 @@ sources:
     type: official
     publisher: Getty Images
     date: 2025-11-04
+    archive_url: https://web.archive.org/web/20251104191306/https://newsroom.gettyimages.com/en/getty-images/getty-images-issues-statement-on-ruling-in-stability-ai-uk-litigation
 revision:
   created: 2026-04-19
 ---

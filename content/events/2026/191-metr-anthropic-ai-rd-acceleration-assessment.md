@@ -19,7 +19,6 @@ sources:
     publisher: METR (X)
     date: 2026-11-05
     accessed: 2026-11-11
-    archive_url: https://web.archive.org/web/*/https://x.com/METR_Evals/status/2118412183860351084
   - url: https://www.washingtonpost.com/business/2026/11/05/anthropic-metr-ai-claude-acceleration/863c713e-d943-11f1-930a-e08f8086f5ac_story.html
     title: "Anthropic is rapidly accelerating AI development amid slowdown calls, outside research group says"
     type: secondary_reporting

@@ -23,6 +23,7 @@ sources:
     title: "Claude Opus 4.5"
     type: official
     date: 2025-11-24
+    archive_url: https://web.archive.org/web/20251124190104/https://www.anthropic.com/news/claude-opus-4-5
   - url: https://www.macrumors.com/2025/11/24/anthropic-claude-opus-4-5/
     title: "Anthropic Releases Claude Opus 4.5"
     type: secondary_reporting

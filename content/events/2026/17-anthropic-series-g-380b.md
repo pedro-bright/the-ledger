@@ -24,6 +24,7 @@ sources:
     type: official
     publisher: Anthropic
     date: 2026-02-12
+    archive_url: https://web.archive.org/web/20260212190217/https://www.anthropic.com/news/anthropic-raises-30-billion-series-g-funding-380-billion-post-money-valuation
   - url: https://www.cnbc.com/2026/02/12/anthropic-closes-30-billion-funding-round-at-380-billion-valuation.html
     title: "Anthropic Closes $30 Billion Funding Round at $380 Billion Valuation"
     type: secondary_reporting
@@ -34,6 +35,7 @@ sources:
     type: official
     publisher: GIC
     date: 2026-02-12
+    archive_url: https://web.archive.org/web/20260212222451/https://www.gic.com.sg/newsroom/all/gic-leads-30-billion-series-g-in-anthropic/
   - url: https://news.crunchbase.com/ai/anthropic-raises-30b-second-largest-deal-all-time/
     title: "Anthropic Raises $30B — Second Largest VC Deal of All Time"
     type: secondary_reporting

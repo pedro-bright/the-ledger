@@ -12,7 +12,6 @@ sources:
     publisher: CourtListener
     date: 2026-10-12
     accessed: 2026-10-17
-    archive_url: https://web.archive.org/web/*/https://storage.courtlistener.com/recap/gov.uscourts.deb.203004/gov.uscourts.deb.203004.1.0.pdf
   - url: https://techcrunch.com/2026/10/13/just-5-years-in-interactive-chatbot-platform-character-ai-files-for-bankruptcy/
     title: "Just 5 years in, interactive chatbot platform Character.AI files for bankruptcy"
     type: secondary_reporting

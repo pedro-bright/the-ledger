@@ -15,6 +15,7 @@ sources:
   - url: https://blogs.microsoft.com/blog/2024/03/19/mustafa-suleyman-deepmind-and-inflection-co-founder-joins-microsoft-to-lead-copilot/
     title: "Mustafa Suleyman, DeepMind and Inflection Co-founder, joins Microsoft to lead Copilot"
     type: primary_document
+    archive_url: https://web.archive.org/web/20240319163040/https://blogs.microsoft.com/blog/2024/03/19/mustafa-suleyman-deepmind-and-inflection-co-founder-joins-microsoft-to-lead-copilot/
   - url: https://www.theverge.com/2024/3/19/24105900/microsoft-hires-mustafa-suleyman-inflection-ai
     title: "Microsoft hires Inflection's Mustafa Suleyman to lead its consumer AI division"
     type: secondary_reporting

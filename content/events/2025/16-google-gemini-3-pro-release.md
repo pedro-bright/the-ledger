@@ -23,10 +23,12 @@ sources:
     title: "Gemini 3: Introducing the latest Gemini AI model"
     type: official
     date: 2025-11-18
+    archive_url: https://web.archive.org/web/20251118160715/https://blog.google/products/gemini/gemini-3/
   - url: https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-deep-think/
     title: "Gemini 3 Deep Think"
     type: official
     date: 2025-11-18
+    archive_url: https://web.archive.org/web/20260212161956/https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-deep-think/
   - url: https://www.infoq.com/news/2025/11/google-gemini-3/
     title: "Google Launches Gemini 3 with Deep Think Reasoning Mode"
     type: secondary_reporting

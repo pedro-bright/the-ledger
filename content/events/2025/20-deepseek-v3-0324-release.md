@@ -16,6 +16,7 @@ sources:
     title: "DeepSeek-V3-0324 Model Card"
     type: primary_document
     date: 2025-03-24
+    archive_url: https://web.archive.org/web/20250324123213/https://huggingface.co/deepseek-ai/DeepSeek-V3-0324
   - url: https://artificialanalysis.ai/models/deepseek-v3-0324
     title: "DeepSeek-V3-0324 Benchmark Analysis"
     type: secondary_reporting

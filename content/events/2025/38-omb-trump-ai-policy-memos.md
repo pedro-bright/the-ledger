@@ -19,14 +19,17 @@ sources:
     title: "M-25-21: Accelerating Federal Use of AI through Innovation, Governance, and Public Trust"
     type: primary_document
     publisher: White House OMB
+    archive_url: https://web.archive.org/web/20250404181941/https://www.whitehouse.gov/wp-content/uploads/2025/02/M-25-21-Accelerating-Federal-Use-of-AI-through-Innovation-Governance-and-Public-Trust.pdf
   - url: https://www.whitehouse.gov/wp-content/uploads/2025/02/M-25-22-Driving-Efficient-Acquisition-of-Artificial-Intelligence-in-Government.pdf
     title: "M-25-22: Driving Efficient Acquisition of Artificial Intelligence in Government"
     type: primary_document
     publisher: White House OMB
+    archive_url: https://web.archive.org/web/20250404181943/https://www.whitehouse.gov/wp-content/uploads/2025/02/M-25-22-Driving-Efficient-Acquisition-of-Artificial-Intelligence-in-Government.pdf
   - url: https://www.whitehouse.gov/articles/2025/04/white-house-releases-new-policies-on-federal-agency-ai-use-and-procurement/
     title: "White House Releases New Policies on Federal Agency AI Use and Procurement"
     type: official
     publisher: White House
+    archive_url: https://web.archive.org/web/20250407152154/https://www.whitehouse.gov/articles/2025/04/white-house-releases-new-policies-on-federal-agency-ai-use-and-procurement/
 revision:
   created: 2026-04-19
 ---

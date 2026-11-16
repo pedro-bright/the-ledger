@@ -24,6 +24,7 @@ sources:
   - url: https://www.anthropic.com/news/claude-4
     title: "Introducing Claude 4"
     type: primary_document
+    archive_url: https://web.archive.org/web/20250522163841/https://www.anthropic.com/news/claude-4
 revision:
   created: 2026-03-08
 ---

@@ -17,6 +17,7 @@ sources:
   - url: https://blog.google/technology/google-deepmind/google-gemini-ai-update-december-2024/
     title: 'Introducing Gemini 2.0: our new AI model for the agentic era'
     type: primary_document
+    archive_url: https://web.archive.org/web/20250203123942/https://blog.google/technology/google-deepmind/google-gemini-ai-update-december-2024/
   - url: https://blog.google/innovation-and-ai/models-and-research/google-deepmind/gemini-model-updates-february-2025/
     title: Gemini 2.0 is now available to everyone
     type: primary_document

@@ -19,10 +19,12 @@ sources:
     title: "Digital Omnibus AI Regulation Proposal"
     type: official
     publisher: European Commission
+    archive_url: https://web.archive.org/web/20251119132408/https://digital-strategy.ec.europa.eu/en/library/digital-omnibus-ai-regulation-proposal
   - url: https://www.europarl.europa.eu/legislative-train/package-digital-package/file-digital-omnibus-on-ai
     title: "Digital Omnibus on AI — EP Legislative Train"
     type: official
     publisher: European Parliament
+    archive_url: https://web.archive.org/web/20251223050249/https://www.europarl.europa.eu/legislative-train/package-digital-package/file-digital-omnibus-on-ai
   - url: https://www.mofo.com/resources/insights/251201-eu-digital-omnibus
     title: "EU Digital Omnibus: Key AI Act Amendments Explained"
     type: secondary_reporting

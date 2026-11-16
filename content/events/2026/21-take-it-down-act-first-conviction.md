@@ -30,6 +30,7 @@ sources:
     title: "Rep. Salazar Marks First DOJ Conviction Under Landmark TAKE IT DOWN Act She Led"
     type: official
     publisher: Office of Rep. Maria Elvira Salazar
+    archive_url: https://web.archive.org/web/20260409142421/https://salazar.house.gov/media/press-releases/rep-salazar-marks-first-doj-conviction-under-landmark-take-it-down-act-she-led
   - url: https://www.washingtontimes.com/news/2026/apr/8/ohio-man-first-nation-convicted-melania-trumps-deepfake-law/
     title: "Ohio Man First in Nation Convicted Under Melania Trump's Deepfake Law"
     type: secondary_reporting

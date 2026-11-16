@@ -18,14 +18,17 @@ sources:
     title: "America's AI Action Plan"
     type: primary_document
     publisher: White House OSTP
+    archive_url: https://web.archive.org/web/20250723140548/https://www.whitehouse.gov/wp-content/uploads/2025/07/Americas-AI-Action-Plan.pdf
   - url: https://www.whitehouse.gov/presidential-actions/2025/07/accelerating-federal-permitting-of-data-center-infrastructure/
     title: "Executive Order: Accelerating Federal Permitting of Data Center Infrastructure"
     type: primary_document
     publisher: White House
+    archive_url: https://web.archive.org/web/20250723231711/https://www.whitehouse.gov/presidential-actions/2025/07/accelerating-federal-permitting-of-data-center-infrastructure/
   - url: https://www.whitehouse.gov/presidential-actions/2025/07/preventing-woke-ai-in-the-federal-government/
     title: "Executive Order: Preventing Woke AI in the Federal Government"
     type: primary_document
     publisher: White House
+    archive_url: https://web.archive.org/web/20250723225302/https://www.whitehouse.gov/presidential-actions/2025/07/preventing-woke-ai-in-the-federal-government/
 revision:
   created: 2026-04-19
 ---

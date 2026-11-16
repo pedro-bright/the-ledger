@@ -37,6 +37,7 @@ sources:
     title: "Introducing the Model Context Protocol"
     type: official
     date: 2024-11-25
+    archive_url: https://web.archive.org/web/20241125160704/https://www.anthropic.com/news/model-context-protocol
 revision:
   created: 2026-04-19
 ---

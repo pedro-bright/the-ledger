@@ -18,6 +18,7 @@ sources:
     type: primary_document
     publisher: Anthropic
     date: 2026-03-05
+    archive_url: https://web.archive.org/web/20260305203148/https://www.anthropic.com/research/labor-market-impacts
   - url: https://www.euronews.com/business/2026/03/14/how-ai-will-reshape-work-anthropic-identifies-the-most-exposed-jobs
     title: "How AI Will Reshape Work: Anthropic Identifies the Most Exposed Jobs"
     type: secondary_reporting

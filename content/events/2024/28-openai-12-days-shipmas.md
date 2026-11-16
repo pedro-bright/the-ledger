@@ -18,6 +18,7 @@ sources:
   - url: https://openai.com/12-days/
     title: "12 Days of OpenAI"
     type: primary_document
+    archive_url: https://web.archive.org/web/20241205190820/https://openai.com/12-days/
 revision:
   created: 2026-03-08
 ---

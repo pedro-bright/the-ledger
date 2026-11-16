@@ -23,6 +23,7 @@ sources:
     title: "HRH Crown Prince Launches HUMAIN as Global AI Powerhouse"
     type: official
     date: 2025-05-12
+    archive_url: https://web.archive.org/web/20250513005955/https://www.pif.gov.sa/en/news-and-insights/press-releases/2025/hrh-crown-prince-launches-humain-as-global-ai-powerhouse/
   - url: https://spa.gov.sa/en/N2316888
     title: "Crown Prince Launches HUMAIN Company for Artificial Intelligence"
     type: official

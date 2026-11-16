@@ -19,6 +19,7 @@ sources:
   - url: https://openai.com/index/introducing-codex/
     title: "Introducing Codex"
     type: primary_document
+    archive_url: https://web.archive.org/web/20250516164208/https://openai.com/index/introducing-codex/
   - url: https://www.anthropic.com/news/claude-code
     title: "Claude Code"
     type: primary_document

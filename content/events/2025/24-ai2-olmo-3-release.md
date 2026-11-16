@@ -31,6 +31,7 @@ sources:
     title: "OLMo 3 32B Model Page"
     type: primary_document
     date: 2025-11-20
+    archive_url: https://web.archive.org/web/20251120143706/https://huggingface.co/allenai/Olmo-3-1125-32B
 revision:
   created: 2026-04-19
 ---

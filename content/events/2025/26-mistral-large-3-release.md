@@ -16,10 +16,12 @@ sources:
     title: "Mistral 3"
     type: official
     date: 2025-12-02
+    archive_url: https://web.archive.org/web/20251202152420/https://mistral.ai/news/mistral-3
   - url: https://huggingface.co/mistralai/Mistral-Large-3-675B-Instruct-2512
     title: "Mistral-Large-3-675B-Instruct-2512 Model Card"
     type: primary_document
     date: 2025-12-02
+    archive_url: https://web.archive.org/web/20251202161826/https://huggingface.co/mistralai/Mistral-Large-3-675B-Instruct-2512
   - url: https://techcrunch.com/2025/12/02/mistral-closes-in-on-big-ai-rivals-with-mistral-3-open-weight-frontier-and-small-models/
     title: "Mistral Closes In on Big AI Rivals with Mistral 3 Open-Weight Frontier and Small Models"
     type: secondary_reporting

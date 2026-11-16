@@ -24,6 +24,7 @@ sources:
     title: "Department of Commerce Announces Rescission of Biden-Era Artificial Intelligence Diffusion Rule"
     type: official
     date: 2025-05-13
+    archive_url: https://web.archive.org/web/20250807104850/https://www.bis.gov/press-release/department-commerce-announces-rescission-biden-era-artificial-intelligence-diffusion-rule-strengthens
   - url: https://techcrunch.com/2025/05/13/trump-administration-officially-rescinds-bidens-ai-diffusion-rules/
     title: "Trump administration officially rescinds Biden's AI diffusion rules"
     type: secondary_reporting

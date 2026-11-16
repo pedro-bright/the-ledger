@@ -24,6 +24,7 @@ sources:
     type: primary_document
     publisher: The Bureau of Investigative Journalism
     date: 2025-10-29
+    archive_url: https://web.archive.org/web/20251029135003/https://www.thebureauinvestigates.com/stories/2025-10-29/character-ai-to-ban-under-18s-from-talking-to-its-chatbots-after-tbij-investigation
   - url: https://fortune.com/2025/10/29/character-ai-ban-children-teens-chatbots-regulatory-pressure-age-verification-online-harms/
     title: "Character.AI Will Ban Teens from Talking to Its Chatbots Under Regulatory Pressure"
     type: secondary_reporting

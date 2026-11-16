@@ -16,6 +16,7 @@ sources:
     title: Introducing Gemma 3
     type: official
     date: '2025-03-12'
+    archive_url: https://web.archive.org/web/20250312083100/https://developers.googleblog.com/en/introducing-gemma3/
   - url: https://storage.googleapis.com/deepmind-media/gemma/Gemma3Report.pdf
     title: Gemma 3 Technical Report
     type: primary_document

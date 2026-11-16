@@ -20,10 +20,12 @@ sources:
     title: "Tackling AI Security Risks to Unleash Growth and Deliver Plan for Change"
     type: official
     publisher: GOV.UK
+    archive_url: https://web.archive.org/web/20250214024830/https://www.gov.uk/government/news/tackling-ai-security-risks-to-unleash-growth-and-deliver-plan-for-change
   - url: https://www.gov.uk/government/speeches/remarks-made-by-technology-secretary-peter-kyle-at-the-munich-security-conference
     title: "Remarks Made by Technology Secretary Peter Kyle at the Munich Security Conference"
     type: official
     publisher: GOV.UK
+    archive_url: https://web.archive.org/web/20250214181426/https://www.gov.uk/government/speeches/remarks-made-by-technology-secretary-peter-kyle-at-the-munich-security-conference
   - url: https://techcrunch.com/2025/02/13/uk-drops-safety-from-its-ai-body-now-called-ai-security-institute-inks-mou-with-anthropic/
     title: "UK Drops 'Safety' from its AI Body, Now Called AI Security Institute, Inks MoU with Anthropic"
     type: secondary_reporting

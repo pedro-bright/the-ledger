@@ -18,16 +18,19 @@ sources:
     type: primary_document
     publisher: arXiv
     date: 2025-09-19
+    archive_url: https://web.archive.org/web/20250922212442/https://arxiv.org/abs/2509.15541
   - url: https://www.apolloresearch.ai/research/stress-testing-deliberative-alignment-for-anti-scheming-training/
     title: "Stress-Testing Deliberative Alignment for Anti-Scheming Training"
     type: official
     publisher: Apollo Research
     date: 2025-09-19
+    archive_url: https://web.archive.org/web/20251120210624/https://www.apolloresearch.ai/research/stress-testing-deliberative-alignment-for-anti-scheming-training/
   - url: https://openai.com/index/detecting-and-reducing-scheming-in-ai-models/
     title: "Detecting and Reducing Scheming in AI Models"
     type: official
     publisher: OpenAI
     date: 2025-09-19
+    archive_url: https://web.archive.org/web/20250918213708/https://openai.com/index/detecting-and-reducing-scheming-in-ai-models/
 revision:
   created: 2026-04-19
 ---

@@ -26,11 +26,13 @@ sources:
     type: official
     publisher: OpenAI
     date: 2025-10-28
+    archive_url: https://web.archive.org/web/20251028142120/https://openai.com/index/next-chapter-of-microsoft-openai-partnership/
   - url: https://blogs.microsoft.com/blog/2025/10/28/the-next-chapter-of-the-microsoft-openai-partnership/
     title: "The Next Chapter of the Microsoft-OpenAI Partnership"
     type: official
     publisher: Microsoft
     date: 2025-10-28
+    archive_url: https://web.archive.org/web/20251028133811/https://blogs.microsoft.com/blog/2025/10/28/the-next-chapter-of-the-microsoft-openai-partnership/
   - url: https://techcrunch.com/2025/01/21/microsoft-is-no-longer-openais-exclusive-cloud-provider/
     title: "Microsoft Is No Longer OpenAI's Exclusive Cloud Provider"
     type: secondary_reporting

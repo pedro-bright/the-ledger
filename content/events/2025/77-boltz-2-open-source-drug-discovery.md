@@ -20,16 +20,19 @@ sources:
     type: primary_document
     publisher: bioRxiv
     date: 2025-06-14
+    archive_url: https://web.archive.org/web/20250709002427/https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1
   - url: https://www.globenewswire.com/news-release/2025/06/06/3095179/0/en/MIT-and-Recursion-Release-Boltz-2-Next-Generation-AI-Model-to-Predict-Binding-Affinity-at-Unprecedented-Speed-Scale-and-Accuracy.html
     title: "MIT and Recursion Release Boltz-2, Next-Generation AI Model to Predict Binding Affinity"
     type: official
     publisher: GlobeNewswire
     date: 2025-06-06
+    archive_url: https://web.archive.org/web/20250606214842/https://www.globenewswire.com/news-release/2025/06/06/3095179/0/en/MIT-and-Recursion-Release-Boltz-2-Next-Generation-AI-Model-to-Predict-Binding-Affinity-at-Unprecedented-Speed-Scale-and-Accuracy.html
   - url: https://www.csail.mit.edu/news/mit-releases-breakthrough-protein-binding-affinity-model-expanding-role-ai-drug-discovery
     title: "MIT Releases Breakthrough Protein Binding Affinity Model"
     type: official
     publisher: MIT CSAIL
     date: 2025-06-06
+    archive_url: https://web.archive.org/web/20250610173044/https://www.csail.mit.edu/news/mit-releases-breakthrough-protein-binding-affinity-model-expanding-role-ai-drug-discovery
 revision:
   created: 2026-04-19
 ---

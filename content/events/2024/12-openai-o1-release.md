@@ -15,9 +15,11 @@ sources:
   - url: https://openai.com/index/learning-to-reason-with-llms/
     title: "Learning to Reason with LLMs"
     type: primary_document
+    archive_url: https://web.archive.org/web/20240912171926/https://openai.com/index/learning-to-reason-with-llms/
   - url: https://openai.com/index/introducing-openai-o1-preview/
     title: "Introducing OpenAI o1-preview"
     type: primary_document
+    archive_url: https://web.archive.org/web/20240912171617/https://openai.com/index/introducing-openai-o1-preview/
 revision:
   created: 2026-03-08
 ---

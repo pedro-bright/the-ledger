@@ -12,7 +12,6 @@ sources:
     publisher: U.S. Securities and Exchange Commission
     date: 2026-06-16
     accessed: 2026-06-19
-    archive_url: https://web.archive.org/web/*/https://www.sec.gov/Archives/edgar/data/0001181412/000162828026043411/exhibit101-8xk.htm
   - url: https://www.bloomberg.com/news/articles/2026-06-16/spacex-cements-60-billion-deal-to-take-over-ai-startup-cursor
     title: "SpaceX Cements $60 Billion Deal to Take Over AI Startup Cursor"
     type: secondary_reporting

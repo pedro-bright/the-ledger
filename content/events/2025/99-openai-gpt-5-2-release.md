@@ -25,6 +25,7 @@ sources:
   - url: https://cdn.openai.com/pdf/3a4153c8-c748-4b71-8e31-aecbde944f8d/oai_5_2_system-card.pdf
     title: GPT-5.2 System Card
     type: primary_document
+    archive_url: https://web.archive.org/web/20251211191325/https://cdn.openai.com/pdf/3a4153c8-c748-4b71-8e31-aecbde944f8d/oai_5_2_system-card.pdf
 revision:
   created: 2026-03-08
   last_reviewed: 2026-10-26

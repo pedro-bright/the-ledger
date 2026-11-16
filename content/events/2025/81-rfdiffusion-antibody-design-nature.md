@@ -17,11 +17,13 @@ sources:
     type: primary_document
     publisher: Nature
     date: 2025-11-05
+    archive_url: https://web.archive.org/web/20251105212101/https://www.nature.com/articles/s41586-025-09721-5
   - url: https://www.ipd.uw.edu/2025/11/rfantibody-in-nature/
     title: "RFantibody: De Novo Antibody Design Published in Nature"
     type: official
     publisher: Institute for Protein Design
     date: 2025-11-05
+    archive_url: https://web.archive.org/web/20251106011209/https://www.ipd.uw.edu/2025/11/rfantibody-in-nature/
 revision:
   created: 2026-04-19
 ---

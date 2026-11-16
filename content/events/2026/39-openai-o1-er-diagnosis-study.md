@@ -12,7 +12,6 @@ sources:
     publisher: Science (AAAS)
     date: 2026-04-30
     accessed: 2026-05-05
-    archive_url: https://web.archive.org/web/*/https://www.science.org/doi/10.1126/science.adz4433
   - url: https://techcrunch.com/2026/05/03/in-harvard-study-ai-offered-more-accurate-diagnoses-than-emergency-room-doctors/
     title: "In Harvard study, AI offered more accurate emergency room diagnoses than two human doctors"
     type: secondary_reporting

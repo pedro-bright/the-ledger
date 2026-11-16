@@ -18,11 +18,13 @@ sources:
     type: official
     publisher: Google DeepMind
     date: 2025-10-16
+    archive_url: https://web.archive.org/web/20251103184325/https://deepmind.google/blog/bringing-ai-to-the-next-generation-of-fusion-energy/
   - url: https://blog.cfs.energy/with-ai-alliance-google-deepmind-and-cfs-take-fusion-to-the-next-level/
     title: "With AI Alliance, Google DeepMind and CFS Take Fusion to the Next Level"
     type: official
     publisher: Commonwealth Fusion Systems
     date: 2025-10-16
+    archive_url: https://web.archive.org/web/20251017001842/https://blog.cfs.energy/with-ai-alliance-google-deepmind-and-cfs-take-fusion-to-the-next-level/
   - url: https://techcrunch.com/2025/10/16/the-real-reason-google-deepmind-is-working-with-a-fusion-energy-startup/
     title: "The Real Reason Google DeepMind Is Working with a Fusion Energy Startup"
     type: secondary_reporting

@@ -21,10 +21,12 @@ sources:
     title: "EIB Group and European Commission join forces to finance AI gigafactories"
     type: official
     date: 2025-02-11
+    archive_url: https://web.archive.org/web/20251204132236/https://www.eib.org/en/press/all/2025-491-eib-group-and-european-commission-join-forces-to-finance-ai-gigafactories
   - url: https://www.consilium.europa.eu/en/press/press-releases/2025/12/09/ai-council-adopts-position-on-the-updated-regulation-to-create-ai-gigafactories/
     title: "AI: Council adopts position on the updated regulation to create AI gigafactories"
     type: official
     date: 2025-12-09
+    archive_url: https://web.archive.org/web/20251209133923/https://www.consilium.europa.eu/en/press/press-releases/2025/12/09/ai-council-adopts-position-on-the-updated-regulation-to-create-ai-gigafactories/
 revision:
   created: 2026-04-19
 ---

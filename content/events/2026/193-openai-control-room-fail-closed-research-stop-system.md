@@ -19,7 +19,6 @@ sources:
     publisher: OpenAI
     date: 2026-11-09
     accessed: 2026-11-13
-    archive_url: https://web.archive.org/web/*/https://x.com/OpenAI/status/2119913172039868579
   - url: https://www.bloomberg.com/jp/news/articles/2026-11-09/TO98P9KK3NYA00
     title: "OpenAI、AIモデル35秒以内に強制停止へ－中央管理システムで常時監視"
     type: secondary_reporting

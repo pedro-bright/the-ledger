@@ -12,7 +12,6 @@ sources:
     publisher: John Jumper (personal)
     date: 2026-06-19
     accessed: 2026-06-22
-    archive_url: https://web.archive.org/web/*/https://x.com/JohnJumperSci/status/2068001285173834106
   - url: https://www.bloomberg.com/news/articles/2026-06-19/nobel-winner-john-jumper-to-leave-google-deepmind-for-anthropic
     title: "Nobel Laureate Jumper Departs DeepMind, Joins Rival AI Firm Anthropic"
     type: secondary_reporting

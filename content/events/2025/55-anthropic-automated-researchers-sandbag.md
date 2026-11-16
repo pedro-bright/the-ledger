@@ -16,6 +16,7 @@ sources:
     type: official
     publisher: Anthropic Alignment Science Blog
     date: 2025-03-26
+    archive_url: https://web.archive.org/web/20250325171434/https://alignment.anthropic.com/2025/automated-researchers-sandbag/
   - url: https://www.alignmentforum.org/posts/niBXcbthcQRXG5M5Y/automated-researchers-can-subtly-sandbag
     title: "Automated Researchers Can Subtly Sandbag"
     type: secondary_reporting

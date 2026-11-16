@@ -26,6 +26,7 @@ sources:
     publisher: arXiv
     date: 2026-05-20
     accessed: 2026-05-25
+    archive_url: https://web.archive.org/web/20260521174904/https://arxiv.org/abs/2605.20695
 actors:
   - id: openai
     role: subject

@@ -16,6 +16,7 @@ sources:
     title: "Claude Haiku 4.5"
     type: official
     date: 2025-10-15
+    archive_url: https://web.archive.org/web/20251015170339/https://www.anthropic.com/news/claude-haiku-4-5
   - url: https://www.marktechpost.com/2025/10/15/anthropic-launches-claude-haiku-4-5-small-ai-model-that-delivers-sonnet-4-level-coding-performance-at-one-third-the-cost-and-more-than-twice-the-speed/
     title: "Anthropic Launches Claude Haiku 4.5: Small AI Model That Delivers Sonnet 4-Level Coding Performance at One-Third the Cost"
     type: secondary_reporting

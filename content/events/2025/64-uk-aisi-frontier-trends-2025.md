@@ -17,16 +17,19 @@ sources:
     type: primary_document
     publisher: UK AI Security Institute
     date: 2025-12-18
+    archive_url: https://web.archive.org/web/20251218104405/https://www.aisi.gov.uk/research/aisi-frontier-ai-trends-report-2025
   - url: https://cdn.prod.website-files.com/663bd486c5e4c81588db7a1d/6943e6c11cb5bfd8178443f9_Frontier%20AI%20Trends%20Report%20-%20UK%20AISI%202025%20-%20compressed.pdf
     title: "Frontier AI Trends Report 2025 (PDF)"
     type: primary_document
     publisher: UK AI Security Institute
     date: 2025-12-18
+    archive_url: https://web.archive.org/web/20251222074549/https://cdn.prod.website-files.com/663bd486c5e4c81588db7a1d/6943e6c11cb5bfd8178443f9_Frontier%20AI%20Trends%20Report%20-%20UK%20AISI%202025%20-%20compressed.pdf
   - url: https://www.gov.uk/government/news/inaugural-report-pioneered-by-ai-security-institute-gives-clearest-picture-yet-of-capabilities-of-most-advanced-ai
     title: "Inaugural Report Gives Clearest Picture Yet of Capabilities of Most Advanced AI"
     type: official
     publisher: UK Government
     date: 2025-12-18
+    archive_url: https://web.archive.org/web/20251218105004/https://www.gov.uk/government/news/inaugural-report-pioneered-by-ai-security-institute-gives-clearest-picture-yet-of-capabilities-of-most-advanced-ai
 revision:
   created: 2026-04-19
 ---

@@ -26,6 +26,7 @@ sources:
     type: official
     publisher: OpenAI
     date: 2025-05-05
+    archive_url: https://web.archive.org/web/20250505183006/https://openai.com/index/evolving-our-structure/
   - url: https://www.cnbc.com/2025/05/05/openai-says-nonprofit-retain-control-of-company-bowing-to-pressure.html
     title: "OpenAI Says Nonprofit Will Retain Control of Company, Bowing to Pressure"
     type: secondary_reporting

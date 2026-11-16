@@ -15,9 +15,11 @@ sources:
   - url: https://blog.google/technology/ai/google-gemini-next-generation-model-february-2024/
     title: "Our next-generation model: Gemini 1.5"
     type: primary_document
+    archive_url: https://web.archive.org/web/20240215151350/https://blog.google/technology/ai/google-gemini-next-generation-model-february-2024/
   - url: https://arxiv.org/abs/2403.05530
     title: "Gemini 1.5: Unlocking multimodal understanding across millions of tokens of context"
     type: primary_document
+    archive_url: https://web.archive.org/web/20240311012110/https://arxiv.org/abs/2403.05530
 revision:
   created: 2026-03-08
 ---

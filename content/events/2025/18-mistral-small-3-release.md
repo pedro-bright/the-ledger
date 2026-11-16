@@ -16,10 +16,12 @@ sources:
     title: Mistral Small 3
     type: official
     date: '2025-01-30'
+    archive_url: https://web.archive.org/web/20250130143452/https://mistral.ai/news/mistral-small-3/
   - url: https://huggingface.co/mistralai/Mistral-Small-24B-Instruct-2501
     title: Mistral-Small-24B-Instruct-2501 Model Card
     type: primary_document
     date: '2025-01-30'
+    archive_url: https://web.archive.org/web/20250130151122/https://huggingface.co/mistralai/Mistral-Small-24B-Instruct-2501
   - url: https://www.apache.org/licenses/LICENSE-2.0
     title: 'Apache License, Version 2.0 (section 4: Redistribution)'
     type: primary_document

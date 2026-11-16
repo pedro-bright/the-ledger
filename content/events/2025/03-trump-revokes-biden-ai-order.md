@@ -15,6 +15,7 @@ sources:
   - url: https://www.whitehouse.gov/presidential-actions/2025/01/initial-rescissions-of-harmful-executive-orders-and-actions/
     title: "Initial Rescissions of Harmful Executive Orders and Actions"
     type: official
+    archive_url: https://web.archive.org/web/20250120235939/https://www.whitehouse.gov/presidential-actions/2025/01/initial-rescissions-of-harmful-executive-orders-and-actions/
   - url: https://www.reuters.com/technology/artificial-intelligence/trump-revoke-biden-executive-order-ai-safety-2025-01-20/
     title: "Trump revokes Biden executive order on AI safety"
     type: secondary_reporting

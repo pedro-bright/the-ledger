@@ -15,9 +15,11 @@ sources:
   - url: https://blog.google/technology/developers/gemma-open-models/
     title: "Gemma: Introducing new state-of-the-art open models"
     type: primary_document
+    archive_url: https://web.archive.org/web/20240221130902/https://blog.google/technology/developers/gemma-open-models/
   - url: https://deepmind.google/models/gemma/
     title: "Gemma - Google AI for Developers"
     type: primary_document
+    archive_url: https://web.archive.org/web/20250520214334/https://deepmind.google/models/gemma/
 revision:
   created: 2026-03-08
 ---

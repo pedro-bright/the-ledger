@@ -16,6 +16,7 @@ sources:
     title: "Claude Sonnet 4.6"
     type: official
     date: 2026-02-17
+    archive_url: https://web.archive.org/web/20260217175906/https://www.anthropic.com/news/claude-sonnet-4-6
   - url: https://www.cnbc.com/2026/02/17/anthropic-ai-claude-sonnet-4-6-default-free-pro.html
     title: "Anthropic Rolls Out Claude Sonnet 4.6 as Default for Free and Pro Users"
     type: secondary_reporting

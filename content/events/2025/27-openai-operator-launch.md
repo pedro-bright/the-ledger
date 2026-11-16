@@ -23,10 +23,12 @@ sources:
     title: "Introducing Operator"
     type: official
     date: 2025-01-23
+    archive_url: https://web.archive.org/web/20250123183017/https://openai.com/index/introducing-operator/
   - url: https://openai.com/index/computer-using-agent/
     title: "Computer-Using Agent"
     type: primary_document
     date: 2025-01-23
+    archive_url: https://web.archive.org/web/20250123193140/https://openai.com/index/computer-using-agent/
   - url: https://www.technologyreview.com/2025/01/23/1110484/openai-launches-operator-an-agent-that-can-use-a-computer-for-you/
     title: "OpenAI Launches Operator, an Agent That Can Use a Computer for You"
     type: secondary_reporting

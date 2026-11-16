@@ -20,14 +20,17 @@ sources:
     title: "Donating the Model Context Protocol and Establishing the Agentic AI Foundation"
     type: official
     date: 2025-12-09
+    archive_url: https://web.archive.org/web/20251209182540/https://www.anthropic.com/news/donating-the-model-context-protocol-and-establishing-of-the-agentic-ai-foundation
   - url: https://www.linuxfoundation.org/press/linux-foundation-announces-the-formation-of-the-agentic-ai-foundation
     title: "Linux Foundation Announces the Formation of the Agentic AI Foundation"
     type: official
     date: 2025-12-09
+    archive_url: https://web.archive.org/web/20251209201055/https://www.linuxfoundation.org/press/linux-foundation-announces-the-formation-of-the-agentic-ai-foundation
   - url: https://openai.com/index/agentic-ai-foundation/
     title: "OpenAI and the Agentic AI Foundation"
     type: official
     date: 2025-12-09
+    archive_url: https://web.archive.org/web/20251210032254/https://openai.com/index/agentic-ai-foundation/
 revision:
   created: 2026-04-19
 ---

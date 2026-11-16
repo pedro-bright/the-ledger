@@ -17,16 +17,19 @@ sources:
     type: primary_document
     publisher: bioRxiv
     date: 2025-06-25
+    archive_url: https://web.archive.org/web/20250702185640/https://www.biorxiv.org/content/10.1101/2025.06.25.661532v1
   - url: https://www.nature.com/articles/s41586-025-10014-0
     title: "AlphaGenome: Advancing Regulatory Genomics with a Unified DNA Sequence Model"
     type: primary_document
     publisher: Nature
     date: 2025-12-01
+    archive_url: https://web.archive.org/web/20260128232049/https://www.nature.com/articles/s41586-025-10014-0
   - url: https://deepmind.google/blog/alphagenome-ai-for-better-understanding-the-genome/
     title: "AlphaGenome: AI for better understanding the genome"
     type: official
     publisher: Google DeepMind
     date: 2025-06-25
+    archive_url: https://web.archive.org/web/20251107213445/https://deepmind.google/blog/alphagenome-ai-for-better-understanding-the-genome/
 revision:
   created: 2026-04-19
 ---

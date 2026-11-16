@@ -16,6 +16,7 @@ sources:
     title: "A2A: A New Era of Agent Interoperability"
     type: official
     date: 2025-04-09
+    archive_url: https://web.archive.org/web/20250409125950/https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/
   - url: https://platformengineering.com/features/google-cloud-unveils-agent2agent-protocol-a-new-standard-for-ai-agent-interoperability/
     title: "Google Cloud Unveils Agent2Agent Protocol — A New Standard for AI Agent Interoperability"
     type: secondary_reporting

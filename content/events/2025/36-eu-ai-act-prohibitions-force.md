@@ -17,6 +17,7 @@ sources:
   - url: https://artificialintelligenceact.eu/article/5/
     title: "EU AI Act Article 5 — Prohibited AI Practices"
     type: primary_document
+    archive_url: https://web.archive.org/web/20250201065337/https://artificialintelligenceact.eu/article/5/
   - url: https://www.dlapiper.com/en-us/insights/publications/ai-outlook/2025/eu-ai-acts-ban-on-prohibited-practices-takes-effect
     title: "EU AI Act's Ban on Prohibited Practices Takes Effect"
     type: secondary_reporting
