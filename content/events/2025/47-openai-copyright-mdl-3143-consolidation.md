@@ -29,10 +29,12 @@ sources:
     type: primary_document
     publisher: Judicial Panel on Multidistrict Litigation
     date: 2025-04-03
+    archive_url: https://web.archive.org/web/20250406022534/https://www.jpml.uscourts.gov/sites/jpml/files/MDL-3143-Transfer_Order-3-25.pdf
   - url: https://www.courtlistener.com/docket/69879510/in-re-openai-inc-copyright-infringement-litigation/
     title: "In re OpenAI Inc. Copyright Infringement Litigation — CourtListener Docket"
     type: primary_document
     publisher: CourtListener
+    archive_url: https://web.archive.org/web/20250512175152/https://www.courtlistener.com/docket/69879510/in-re-openai-inc-copyright-infringement-litigation/
   - url: https://news.bloomberglaw.com/ip-law/openai-copyright-suit-consolidation-portends-consistency-risk
     title: "OpenAI Copyright Suit Consolidation Portends Consistency Risk"
     type: secondary_reporting

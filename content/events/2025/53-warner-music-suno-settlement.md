@@ -34,6 +34,7 @@ sources:
     type: official
     publisher: Latham & Watkins
     date: 2025-12-01
+    archive_url: https://web.archive.org/web/20251208163600/https://www.lw.com/en/news/2025/12/latham-watkins-advises-suno-groundbreaking-partnership-warner-music-group
 revision:
   created: 2026-04-19
 ---

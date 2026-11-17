@@ -17,6 +17,7 @@ sources:
     type: official
     publisher: Google DeepMind
     date: '2025-07-21'
+    archive_url: https://web.archive.org/web/20251104185042/https://deepmind.google/blog/advanced-version-of-gemini-with-deep-think-officially-achieves-gold-medal-standard-at-the-international-mathematical-olympiad/
 revision:
   created: 2026-04-19
   last_reviewed: 2026-10-26

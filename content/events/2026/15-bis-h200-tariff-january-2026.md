@@ -19,14 +19,17 @@ sources:
     title: "Revision to License Review Policy for Advanced Computing Commodities"
     type: primary_document
     date: 2026-01-15
+    archive_url: https://web.archive.org/web/20260116232242/https://www.federalregister.gov/documents/2026/01/15/2026-00789/revision-to-license-review-policy-for-advanced-computing-commodities
   - url: https://www.whitehouse.gov/fact-sheets/2026/01/fact-sheet-president-donald-j-trump-takes-action-on-certain-advanced-computing-chips-to-protect-americas-economic-and-national-security/
     title: "Fact Sheet: President Donald J. Trump Takes Action on Certain Advanced Computing Chips"
     type: official
     date: 2026-01-14
+    archive_url: https://web.archive.org/web/20260114214149/https://www.whitehouse.gov/fact-sheets/2026/01/fact-sheet-president-donald-j-trump-takes-action-on-certain-advanced-computing-chips-to-protect-americas-economic-and-national-security/
   - url: https://www.bis.gov/press-release/department-commerce-revises-license-review-policy-semiconductors-exported-china
     title: "Department of Commerce Revises License Review Policy for Semiconductors Exported to China"
     type: official
     date: 2026-01-15
+    archive_url: https://web.archive.org/web/20260115010658/https://www.bis.gov/press-release/department-commerce-revises-license-review-policy-semiconductors-exported-china
 revision:
   created: 2026-04-19
 ---

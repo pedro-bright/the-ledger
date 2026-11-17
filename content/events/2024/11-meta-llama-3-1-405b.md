@@ -17,9 +17,11 @@ sources:
   - url: https://ai.meta.com/blog/meta-llama-3-1/
     title: "Introducing Llama 3.1: Our most capable models to date"
     type: primary_document
+    archive_url: https://web.archive.org/web/20240723153909/https://ai.meta.com/blog/meta-llama-3-1/
   - url: https://arxiv.org/abs/2407.21783
     title: "The Llama 3 Herd of Models"
     type: primary_document
+    archive_url: https://web.archive.org/web/20240801020047/https://arxiv.org/abs/2407.21783
 revision:
   created: 2026-03-08
 ---

@@ -18,14 +18,17 @@ sources:
     title: "Introducing GPT-5.3-Codex"
     type: official
     date: 2026-02-05
+    archive_url: https://web.archive.org/web/20260205182847/https://openai.com/index/introducing-gpt-5-3-codex/
   - url: https://cdn.openai.com/pdf/23eca107-a9b1-4d2c-b156-7deb4fbc697c/GPT-5-3-Codex-System-Card-02.pdf
     title: "GPT-5.3-Codex System Card"
     type: primary_document
     date: 2026-02-05
+    archive_url: https://web.archive.org/web/20260205183841/https://cdn.openai.com/pdf/23eca107-a9b1-4d2c-b156-7deb4fbc697c/GPT-5-3-Codex-System-Card-02.pdf
   - url: https://github.blog/changelog/2026-02-09-gpt-5-3-codex-is-now-generally-available-for-github-copilot/
     title: "GPT-5.3-Codex Is Now Generally Available for GitHub Copilot"
     type: official
     date: 2026-02-09
+    archive_url: https://web.archive.org/web/20260209182632/https://github.blog/changelog/2026-02-09-gpt-5-3-codex-is-now-generally-available-for-github-copilot/
 revision:
   created: 2026-04-19
 ---

@@ -24,6 +24,7 @@ sources:
   - url: https://www.gov.uk/government/publications/ai-safety-summit-2023-the-bletchley-declaration/the-bletchley-declaration-by-countries-attending-the-ai-safety-summit-1-2-november-2023
     title: "The Bletchley Declaration"
     type: official
+    archive_url: https://web.archive.org/web/20231101123904/https://www.gov.uk/government/publications/ai-safety-summit-2023-the-bletchley-declaration/the-bletchley-declaration-by-countries-attending-the-ai-safety-summit-1-2-november-2023
   - url: https://www.bbc.com/news/uk-67302048
     title: "AI summit: World leaders agree on Bletchley Declaration"
     type: secondary_reporting

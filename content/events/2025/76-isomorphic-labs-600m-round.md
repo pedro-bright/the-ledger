@@ -18,6 +18,7 @@ sources:
     type: official
     publisher: Isomorphic Labs
     date: 2025-03-31
+    archive_url: https://web.archive.org/web/20250331112226/https://www.isomorphiclabs.com/articles/isomorphic-labs-announces-600m-external-investment-round
   - url: https://techcrunch.com/2025/03/31/alphabets-ai-drug-discovery-platform-isomorphic-labs-raises-600m-from-thrive/
     title: "Alphabet's AI drug-discovery platform Isomorphic Labs raises $600M from Thrive"
     type: secondary_reporting

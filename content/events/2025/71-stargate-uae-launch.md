@@ -32,10 +32,12 @@ sources:
     title: "Introducing Stargate UAE"
     type: official
     date: 2025-05-22
+    archive_url: https://web.archive.org/web/20250522235819/https://openai.com/index/introducing-stargate-uae/
   - url: https://www.g42.ai/resources/news/global-tech-alliance-launches-stargate-uae
     title: "Global Tech Alliance Launches Stargate UAE"
     type: official
     date: 2025-05-22
+    archive_url: https://web.archive.org/web/20250522163814/https://www.g42.ai/resources/news/global-tech-alliance-launches-stargate-uae
   - url: https://group.softbank/en/news/press/20250522
     title: "SoftBank Group Joins Stargate UAE Initiative"
     type: official

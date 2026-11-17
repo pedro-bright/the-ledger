@@ -19,7 +19,6 @@ sources:
     publisher: OpenAI
     date: 2026-09-22
     accessed: 2026-09-26
-    archive_url: https://web.archive.org/web/*/https://x.com/OpenAI/status/2102447425243828347
   - url: https://www.bloomberg.com/news/articles/2026-09-22/openai-to-let-outside-groups-evaluate-ai-models-at-earlier-phase
     title: "OpenAI to Let Outside Groups Evaluate AI Models at Earlier Phase"
     type: secondary_reporting

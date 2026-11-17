@@ -24,6 +24,7 @@ sources:
     title: "Another Historic Investment Secured Under President Trump"
     type: official
     date: 2025-03-03
+    archive_url: https://web.archive.org/web/20250303223808/https://www.whitehouse.gov/articles/2025/03/another-historic-investment-secured-under-president-trump/
   - url: https://pr.tsmc.com/english/news/3210
     title: "TSMC Announces Additional U.S. Investment"
     type: official

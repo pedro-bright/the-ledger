@@ -17,6 +17,7 @@ sources:
   - url: https://www.apple.com/newsroom/2024/06/introducing-apple-intelligence-for-iphone-ipad-and-mac/
     title: "Introducing Apple Intelligence for iPhone, iPad, and Mac"
     type: official
+    archive_url: https://web.archive.org/web/20240610185428/https://www.apple.com/newsroom/2024/06/introducing-apple-intelligence-for-iphone-ipad-and-mac/
   - url: https://www.theverge.com/2024/6/10/24175405/apple-intelligence-wwdc-ai-features-siri-chatgpt
     title: "Apple Intelligence is the company's new generative AI offering"
     type: secondary_reporting

@@ -20,6 +20,7 @@ sources:
     title: "The New York Times Company v. Perplexity AI, Inc. — CourtListener Docket 1:25-cv-10106"
     type: primary_document
     publisher: CourtListener
+    archive_url: https://web.archive.org/web/20251205184142/https://www.courtlistener.com/docket/71997720/the-new-york-times-company-v-perplexity-ai-inc/
   - url: https://dockets.justia.com/docket/new-york/nysdce/1:2025cv10094/654176
     title: "Chicago Tribune v. Perplexity AI, Inc. — Justia Docket 1:25-cv-10094"
     type: primary_document

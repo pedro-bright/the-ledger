@@ -16,10 +16,12 @@ sources:
     title: "Introducing GPT-5.4"
     type: official
     date: 2026-03-05
+    archive_url: https://web.archive.org/web/20260305181141/https://openai.com/index/introducing-gpt-5-4/
   - url: https://help.openai.com/en/articles/11909943-gpt-53-and-gpt-54-in-chatgpt
     title: "GPT-5.3 and GPT-5.4 in ChatGPT"
     type: official
     date: 2026-03-05
+    archive_url: https://web.archive.org/web/20260305220628/https://help.openai.com/en/articles/11909943-gpt-53-and-gpt-54-in-chatgpt
 revision:
   created: 2026-04-19
 ---

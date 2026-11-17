@@ -23,16 +23,19 @@ sources:
     type: primary_document
     publisher: Transformer Circuits Thread
     date: '2025-03-27'
+    archive_url: https://web.archive.org/web/20250327174512/https://transformer-circuits.pub/2025/attribution-graphs/methods.html
   - url: https://transformer-circuits.pub/2025/attribution-graphs/biology.html
     title: On the Biology of a Large Language Model
     type: primary_document
     publisher: Transformer Circuits Thread
     date: '2025-03-27'
+    archive_url: https://web.archive.org/web/20250327170556/https://transformer-circuits.pub/2025/attribution-graphs/biology.html
   - url: https://www.anthropic.com/research/tracing-thoughts-language-model
     title: Tracing the Thoughts of a Large Language Model
     type: official
     publisher: Anthropic
     date: '2025-03-27'
+    archive_url: https://web.archive.org/web/20250327174512/https://www.anthropic.com/research/tracing-thoughts-language-model
   - url: https://www.anthropic.com/research/open-source-circuit-tracing
     title: Open-sourcing circuit tracing tools
     type: primary_document

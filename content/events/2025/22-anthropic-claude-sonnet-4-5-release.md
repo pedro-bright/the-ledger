@@ -16,6 +16,7 @@ sources:
     title: "Claude Sonnet 4.5"
     type: official
     date: 2025-09-29
+    archive_url: https://web.archive.org/web/20250929165916/https://www.anthropic.com/news/claude-sonnet-4-5
   - url: https://fortune.com/2025/09/29/anthropic-releases-claude-sonnet-4-5-a-model-it-says-can-build-software-and-accomplish-business-tasks-autonomously/
     title: "Anthropic Releases Claude Sonnet 4.5, a Model It Says Can Build Software and Accomplish Business Tasks Autonomously"
     type: secondary_reporting

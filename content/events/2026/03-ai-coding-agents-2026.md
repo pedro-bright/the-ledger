@@ -17,6 +17,7 @@ sources:
     title: "Claude Code"
     type: official
     date: 2025-03-01
+    archive_url: https://web.archive.org/web/20250916211711/https://claude.com/product/claude-code
   - url: https://openai.com/index/codex
     title: "OpenAI Codex CLI"
     type: official

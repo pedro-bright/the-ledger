@@ -19,6 +19,7 @@ sources:
   - url: https://authorsguild.org/news/ag-and-authors-file-class-action-suit-against-openai/
     title: "AG and Authors File Class Action Suit Against OpenAI"
     type: primary_document
+    archive_url: https://web.archive.org/web/20240108211102/https://authorsguild.org/news/ag-and-authors-file-class-action-suit-against-openai/
   - url: https://www.reuters.com/legal/litigation/authors-including-john-grisham-sue-openai-over-copyrights-2023-09-20/
     title: "Authors including John Grisham sue OpenAI over copyrights"
     type: secondary_reporting

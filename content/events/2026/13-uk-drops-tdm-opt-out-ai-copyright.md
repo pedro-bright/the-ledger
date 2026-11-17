@@ -18,6 +18,7 @@ sources:
     type: official
     publisher: UK Government (DSIT/DCMS/IPO)
     date: 2026-03-18
+    archive_url: https://web.archive.org/web/20260313192053/https://www.gov.uk/government/publications/copyright-and-artificial-intelligence-progress-report/copyright-and-artificial-intelligence-statement-of-progress-under-section-137-data-use-and-access-act
   - url: https://www.alpsp.org/news-publications/industry-news/in-response-to-the-uk-government-dsit-dcms-ipo-report-on-copyright-and-artificial-intelligence-18-march-2026
     title: "In Response to the UK Government DSIT/DCMS/IPO Report on Copyright and Artificial Intelligence"
     type: secondary_reporting

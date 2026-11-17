@@ -15,9 +15,11 @@ sources:
   - url: https://x.ai/blog/grok-os
     title: "Open Release of Grok-1"
     type: primary_document
+    archive_url: https://web.archive.org/web/20240317194647/https://x.ai/blog/grok-os
   - url: https://github.com/xai-org/grok-1
     title: "Grok-1 GitHub Repository"
     type: primary_document
+    archive_url: https://web.archive.org/web/20240317205046/https://github.com/xai-org/grok-1
 revision:
   created: 2026-03-08
 ---

@@ -17,6 +17,7 @@ sources:
     type: official
     publisher: Anthropic Alignment Science Blog
     date: 2025-12-16
+    archive_url: https://web.archive.org/web/20251217030213/https://alignment.anthropic.com/2025/alignment-faking-mitigations/
   - url: https://www.lesswrong.com/posts/czMaDFGAbjhWYdKmo/towards-training-time-mitigations-for-alignment-faking-in-rl
     title: "Towards Training-Time Mitigations for Alignment Faking in RL"
     type: secondary_reporting

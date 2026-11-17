@@ -17,16 +17,19 @@ sources:
     type: primary_document
     publisher: Google DeepMind
     date: 2025-09-22
+    archive_url: https://web.archive.org/web/20250922134959/https://storage.googleapis.com/deepmind-media/DeepMind.com/Blog/strengthening-our-frontier-safety-framework/frontier-safety-framework_3.pdf
   - url: https://deepmind.google/blog/strengthening-our-frontier-safety-framework/
     title: "Strengthening Our Frontier Safety Framework"
     type: official
     publisher: Google DeepMind
     date: 2025-09-22
+    archive_url: https://web.archive.org/web/20251107005536/https://deepmind.google/blog/strengthening-our-frontier-safety-framework/
   - url: https://storage.googleapis.com/deepmind-media/DeepMind.com/Blog/updating-the-frontier-safety-framework/Frontier%20Safety%20Framework%202.0.pdf
     title: "Frontier Safety Framework 2.0"
     type: primary_document
     publisher: Google DeepMind
     date: 2025-02-01
+    archive_url: https://web.archive.org/web/20250205011727/https://storage.googleapis.com/deepmind-media/DeepMind.com/Blog/updating-the-frontier-safety-framework/Frontier%20Safety%20Framework%202.0.pdf
 revision:
   created: 2026-04-19
 ---

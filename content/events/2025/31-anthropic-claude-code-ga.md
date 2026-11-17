@@ -16,6 +16,7 @@ sources:
     title: Claude 3.7 Sonnet and Claude Code
     type: official
     date: '2025-02-24'
+    archive_url: https://web.archive.org/web/20250224183042/https://www.anthropic.com/news/claude-3-7-sonnet
   - url: https://www.anthropic.com/news/claude-4
     title: Introducing Claude 4
     type: primary_document
@@ -27,6 +28,7 @@ sources:
     title: Claude Code — GitHub Repository
     type: primary_document
     date: '2025-05-22'
+    archive_url: https://web.archive.org/web/20250523004117/https://github.com/anthropics/claude-code
 revision:
   created: 2026-04-19
   last_reviewed: 2026-10-26

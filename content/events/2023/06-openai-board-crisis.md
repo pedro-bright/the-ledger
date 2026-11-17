@@ -20,6 +20,7 @@ sources:
   - url: https://openai.com/blog/openai-announces-leadership-transition
     title: "OpenAI announces leadership transition"
     type: primary_document
+    archive_url: https://web.archive.org/web/20231117203025/https://openai.com/blog/openai-announces-leadership-transition
   - url: https://www.nytimes.com/2023/11/17/technology/openai-sam-altman-fired.html
     title: "OpenAI Fires Its CEO, Sam Altman"
     type: secondary_reporting

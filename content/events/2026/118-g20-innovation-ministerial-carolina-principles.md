@@ -19,14 +19,12 @@ sources:
     publisher: UK Department for Business, Innovation, Science and Trade
     date: 2026-09-04
     accessed: 2026-09-05
-    archive_url: https://web.archive.org/web/*/https://www.gov.uk/government/publications/g20-innovation-ministerial-statement-2-september-2026
   - url: https://assets.publishing.service.gov.uk/media/6a996786f5b35599aec19180/g20-innovation-ministerial-statement.pdf
     title: "G20 Innovation Ministerial Statement (full text, PDF)"
     type: primary_document
     publisher: G20
     date: 2026-09-02
     accessed: 2026-09-05
-    archive_url: https://web.archive.org/web/*/https://assets.publishing.service.gov.uk/media/6a996786f5b35599aec19180/g20-innovation-ministerial-statement.pdf
   - url: https://www.bloomberg.com/news/articles/2026-09-02/us-strikes-light-touch-ai-regulation-accord-with-g20-members
     title: "US Strikes Light-Touch AI Regulation Accord With G20 Members"
     type: secondary_reporting

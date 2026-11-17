@@ -37,6 +37,7 @@ sources:
     title: European Parliament Report A10-0007/2026 — Recommendation on the Framework Convention on AI
     type: primary_document
     publisher: European Parliament
+    archive_url: https://web.archive.org/web/20260301194459/https://www.europarl.europa.eu/doceo/document/A-10-2026-0007_EN.html
 state: published
 contestation:
   status: corrected

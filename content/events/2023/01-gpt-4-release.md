@@ -17,9 +17,11 @@ sources:
   - url: https://openai.com/research/gpt-4
     title: "GPT-4"
     type: primary_document
+    archive_url: https://web.archive.org/web/20230314165432/https://openai.com/research/gpt-4
   - url: https://arxiv.org/abs/2303.08774
     title: "GPT-4 Technical Report"
     type: primary_document
+    archive_url: https://web.archive.org/web/20230316003204/https://arxiv.org/abs/2303.08774
   - url: https://www.nytimes.com/2023/03/14/technology/openai-new-gpt4.html
     title: "OpenAI Plans to Up the Ante in Tech's A.I. Race"
     type: secondary_reporting

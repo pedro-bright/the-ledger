@@ -12,7 +12,6 @@ sources:
     publisher: U.S. Securities and Exchange Commission
     date: 2026-07-06
     accessed: 2026-07-11
-    archive_url: https://web.archive.org/web/*/https://www.sec.gov/Archives/edgar/data/0001083301/000110465926080583/tm2619468d1_ex99-1.htm
   - url: https://www.bloomberg.com/news/articles/2026-07-09/terawulf-eyes-3-5-billion-for-anthropic-leased-data-center
     title: "TeraWulf Targets Leveraged Loan Market With Kentucky AI Data Center Project"
     type: secondary_reporting

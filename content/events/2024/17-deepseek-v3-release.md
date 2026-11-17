@@ -15,9 +15,11 @@ sources:
   - url: https://github.com/deepseek-ai/DeepSeek-V3
     title: DeepSeek-V3 GitHub Repository
     type: primary_document
+    archive_url: https://web.archive.org/web/20241226114731/https://github.com/deepseek-ai/DeepSeek-V3
   - url: https://arxiv.org/abs/2412.19437
     title: DeepSeek-V3 Technical Report
     type: primary_document
+    archive_url: https://web.archive.org/web/20241230045532/https://arxiv.org/abs/2412.19437
   - url: https://github.com/deepseek-ai/DeepSeek-V3/commit/4c2fdb8f55e049553b9f4f1a3241f86d739c8cf8
     title: Release DeepSeek-V3 (release commit, December 26, 2024)
     type: primary_document

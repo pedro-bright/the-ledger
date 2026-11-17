@@ -16,14 +16,17 @@ sources:
     title: "Claude Opus 4.7"
     type: official
     date: 2026-04-16
+    archive_url: https://web.archive.org/web/20260416142724/https://www.anthropic.com/news/claude-opus-4-7
   - url: https://github.blog/changelog/2026-04-16-claude-opus-4-7-is-generally-available/
     title: "Claude Opus 4.7 Is Generally Available"
     type: official
     date: 2026-04-16
+    archive_url: https://web.archive.org/web/20260416151904/https://github.blog/changelog/2026-04-16-claude-opus-4-7-is-generally-available/
   - url: https://platform.claude.com/docs/en/about-claude/models/whats-new-claude-4-7
     title: "What's New — Claude Opus 4.7"
     type: official
     date: 2026-04-16
+    archive_url: https://web.archive.org/web/20260416152548/https://platform.claude.com/docs/en/about-claude/models/whats-new-claude-4-7
 revision:
   created: 2026-04-19
 ---

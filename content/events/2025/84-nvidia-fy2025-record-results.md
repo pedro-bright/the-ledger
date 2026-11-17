@@ -19,6 +19,7 @@ sources:
     type: official
     publisher: Nvidia
     date: 2025-02-26
+    archive_url: https://web.archive.org/web/20250226212927/https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-fourth-quarter-and-fiscal-2025
   - url: https://www.sec.gov/Archives/edgar/data/1045810/000104581025000023/nvda-20250126.htm
     title: "Nvidia 10-K Annual Report FY2025"
     type: primary_document

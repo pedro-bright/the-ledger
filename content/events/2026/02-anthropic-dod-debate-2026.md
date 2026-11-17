@@ -19,6 +19,7 @@ sources:
     title: Anthropic Acceptable Use Policy
     type: official
     date: '2025-09-12'
+    archive_url: https://web.archive.org/web/20250912020029/https://www.anthropic.com/legal/aup
   - url: https://www.theregister.com/2024/11/07/anthropic_palantir_aws_claude/
     title: Flanked by Palantir and AWS, Anthropic's Claude Marches into US Defense Intelligence
     type: secondary_reporting

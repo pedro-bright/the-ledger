@@ -25,6 +25,7 @@ sources:
     title: "Google I/O 2025 Keynote"
     type: primary_recording
     date: 2025-05-20
+    archive_url: https://web.archive.org/web/20260112141033/https://blog.google/innovation-and-ai/technology/ai/io-2025-keynote/
 revision:
   created: 2026-04-19
 ---

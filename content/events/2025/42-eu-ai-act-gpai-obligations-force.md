@@ -24,10 +24,12 @@ sources:
     title: "Guidelines for GPAI Providers"
     type: official
     publisher: European Commission
+    archive_url: https://web.archive.org/web/20250810081227/https://digital-strategy.ec.europa.eu/en/policies/guidelines-gpai-providers
   - url: https://digital-strategy.ec.europa.eu/en/policies/contents-code-gpai
     title: "Code of Practice for General-Purpose AI"
     type: official
     publisher: European Commission
+    archive_url: https://web.archive.org/web/20250801130439/https://digital-strategy.ec.europa.eu/en/policies/contents-code-gpai
   - url: https://www.lw.com/en/insights/eu-ai-act-gpai-model-obligations-in-force-and-final-gpai-code-of-practice-in-place
     title: "EU AI Act: GPAI Model Obligations in Force and Final GPAI Code of Practice in Place"
     type: secondary_reporting

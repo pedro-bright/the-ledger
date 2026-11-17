@@ -27,6 +27,7 @@ sources:
     title: "DeepSeek-V3.2 Model Card"
     type: primary_document
     date: 2025-12-01
+    archive_url: https://web.archive.org/web/20251201123932/https://huggingface.co/deepseek-ai/DeepSeek-V3.2
   - url: https://simonwillison.net/2025/Dec/1/deepseek-v32/
     title: "DeepSeek V3.2 release notes"
     type: secondary_reporting

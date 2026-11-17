@@ -19,10 +19,12 @@ sources:
     title: "President Donald J. Trump Unveils National AI Legislative Framework"
     type: official
     publisher: White House
+    archive_url: https://web.archive.org/web/20260326102235/https://www.whitehouse.gov/releases/2026/03/president-donald-j-trump-unveils-national-ai-legislative-framework/
   - url: https://www.whitehouse.gov/wp-content/uploads/2026/03/03.20.26-National-Policy-Framework-for-Artificial-Intelligence-Legislative-Recommendations.pdf
     title: "National Policy Framework for Artificial Intelligence — Legislative Recommendations"
     type: primary_document
     publisher: White House OSTP
+    archive_url: https://web.archive.org/web/20260320131557/https://www.whitehouse.gov/wp-content/uploads/2026/03/03.20.26-National-Policy-Framework-for-Artificial-Intelligence-Legislative-Recommendations.pdf
   - url: https://www.mayerbrown.com/en/insights/publications/2026/03/trump-administration-issues-legislative-recommendations-for-a-federal-artificial-intelligence-framework
     title: "Trump Administration Issues Legislative Recommendations for a Federal AI Framework"
     type: secondary_reporting

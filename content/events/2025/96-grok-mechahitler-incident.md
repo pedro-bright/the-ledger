@@ -27,10 +27,12 @@ sources:
     type: primary_document
     publisher: Office of Rep. Tom Suozzi
     date: 2025-07-16
+    archive_url: https://web.archive.org/web/20250828160126/https://suozzi.house.gov/media/in-the-news/groks-antisemitic-rants-result-unintended-update-company-says-letter-lawmakers
   - url: https://gottheimer.house.gov/posts/release-gottheimer-bipartisan-colleagues-sound-the-alarm-over-grok-ais-antisemitic-and-violent-posts
     title: "Gottheimer, Bipartisan Colleagues Sound the Alarm Over Grok AI's Antisemitic and Violent Posts"
     type: official
     publisher: Office of Rep. Josh Gottheimer
+    archive_url: https://web.archive.org/web/20250713031627/https://gottheimer.house.gov/posts/release-gottheimer-bipartisan-colleagues-sound-the-alarm-over-grok-ais-antisemitic-and-violent-posts
   - url: https://www.rollingstone.com/culture/culture-news/elon-musk-grok-chatbot-antisemitic-posts-1235381165/
     title: "Elon Musk's Grok Chatbot Is Posting Antisemitic, Racist Content"
     type: secondary_reporting

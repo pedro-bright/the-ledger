@@ -28,6 +28,7 @@ sources:
     type: official
     publisher: OpenAI
     date: 2026-03-31
+    archive_url: https://web.archive.org/web/20260331205253/https://openai.com/index/accelerating-the-next-phase-ai/
   - url: https://www.bloomberg.com/news/articles/2026-03-31/openai-valued-at-852-billion-after-completing-122-billion-round
     title: "OpenAI Valued at $852 Billion After Completing $122 Billion Round"
     type: secondary_reporting

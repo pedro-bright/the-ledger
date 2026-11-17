@@ -26,11 +26,13 @@ sources:
     type: primary_document
     publisher: arXiv
     date: 2025-11-23
+    archive_url: https://web.archive.org/web/20251125040549/https://arxiv.org/abs/2511.18397
   - url: https://www.anthropic.com/research/emergent-misalignment-reward-hacking
     title: "Emergent Misalignment from Reward Hacking"
     type: official
     publisher: Anthropic
     date: 2025-11-23
+    archive_url: https://web.archive.org/web/20251123002738/https://www.anthropic.com/research/emergent-misalignment-reward-hacking
   - url: https://github.com/UKGovernmentBEIS/reward-hacking-misalignment
     title: "UK AISI Independent Reproduction of Reward Hacking Misalignment"
     type: primary_document

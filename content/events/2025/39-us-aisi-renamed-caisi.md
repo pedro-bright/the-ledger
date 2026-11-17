@@ -18,10 +18,12 @@ sources:
     title: "Statement by US Secretary of Commerce Howard Lutnick: Transforming US AI"
     type: official
     publisher: US Department of Commerce
+    archive_url: https://web.archive.org/web/20250603223643/https://www.commerce.gov/news/press-releases/2025/06/statement-us-secretary-commerce-howard-lutnick-transforming-us-ai
   - url: https://www.nist.gov/caisi
     title: "Center for AI Standards and Innovation (CAISI)"
     type: official
     publisher: NIST
+    archive_url: https://web.archive.org/web/20250607224844/https://www.nist.gov/caisi
   - url: https://ssti.org/blog/us-ai-safety-institute-has-been-renamed-center-ai-standards-and-innovation
     title: "US AI Safety Institute Has Been Renamed Center for AI Standards and Innovation"
     type: secondary_reporting

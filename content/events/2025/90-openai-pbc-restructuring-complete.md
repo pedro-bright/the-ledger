@@ -28,6 +28,7 @@ sources:
     type: official
     publisher: OpenAI
     date: 2025-10-28
+    archive_url: https://web.archive.org/web/20251029172207/https://openai.com/our-structure/
   - url: https://www.cnbc.com/2025/10/28/open-ai-for-profit-microsoft.html
     title: "OpenAI Completes For-Profit Restructuring; Microsoft Stake Revealed"
     type: secondary_reporting
@@ -43,6 +44,7 @@ sources:
     type: official
     publisher: Microsoft
     date: 2025-10-28
+    archive_url: https://web.archive.org/web/20251028133811/https://blogs.microsoft.com/blog/2025/10/28/the-next-chapter-of-the-microsoft-openai-partnership/
 revision:
   created: 2026-04-19
 ---

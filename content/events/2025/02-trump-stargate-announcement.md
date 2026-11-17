@@ -21,6 +21,7 @@ sources:
   - url: https://openai.com/index/announcing-the-stargate-project/
     title: "Announcing the Stargate Project"
     type: primary_document
+    archive_url: https://web.archive.org/web/20250121231235/https://openai.com/index/announcing-the-stargate-project/
   - url: https://www.nytimes.com/2025/01/21/technology/trump-ai-private-sector-investment.html
     title: "Trump Announces Up to $500 Billion in A.I. Infrastructure"
     type: secondary_reporting

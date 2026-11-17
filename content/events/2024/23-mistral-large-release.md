@@ -22,6 +22,7 @@ sources:
   - url: https://mistral.ai/news/la-plateforme/
     title: La Plateforme
     type: primary_document
+    archive_url: https://web.archive.org/web/20240226173744/https://mistral.ai/news/la-plateforme/
   - url: https://www.lw.com/en/news/2023/12/latham-advises-general-catalyst-on-mistral-ai-series-a-funding-round
     title: Latham Advises General Catalyst on Mistral AI’s EUR385 Million Series A Funding Round
     type: primary_document

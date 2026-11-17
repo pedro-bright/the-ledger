@@ -12,7 +12,6 @@ sources:
     publisher: U.S. Congress
     date: 2026-09-16
     accessed: 2026-09-20
-    archive_url: https://web.archive.org/web/*/https://www.congress.gov/bill/119th-congress/house-bill/9340/text
   - url: https://energycommerce.house.gov/posts/ratepayer-protection-act-passes-house-with-strong-bipartisan-support
     title: "Ratepayer Protection Act Passes House with Strong Bipartisan Support"
     type: official

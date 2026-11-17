@@ -20,10 +20,12 @@ sources:
     title: "Qwen2.5-VL Technical Report"
     type: primary_document
     date: 2025-02-19
+    archive_url: https://web.archive.org/web/20250220024753/https://arxiv.org/abs/2502.13923
   - url: https://huggingface.co/Qwen/Qwen2.5-VL-72B-Instruct
     title: "Qwen2.5-VL-72B-Instruct Model Card"
     type: primary_document
     date: 2025-01-26
+    archive_url: https://web.archive.org/web/20250127193258/https://huggingface.co/Qwen/Qwen2.5-VL-72B-Instruct
 revision:
   created: 2026-04-19
 ---

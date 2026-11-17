@@ -17,6 +17,7 @@ sources:
   - url: https://darioamodei.com/machines-of-loving-grace
     title: "Machines of Loving Grace"
     type: primary_document
+    archive_url: https://web.archive.org/web/20241024225840/https://darioamodei.com/machines-of-loving-grace
   - url: https://www.nytimes.com/2024/10/10/technology/dario-amodei-anthropic-ai-safety.html
     title: "The Most Powerful Person in A.I. Wants to Save the World"
     type: secondary_reporting

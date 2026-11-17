@@ -15,6 +15,7 @@ sources:
     title: "AI Opportunities Action Plan: One Year On"
     type: official
     date: 2026-01-21
+    archive_url: https://web.archive.org/web/20260129170134/https://www.gov.uk/government/publications/ai-opportunities-action-plan-one-year-on/ai-opportunities-action-plan-one-year-on
   - url: https://delivery.ai.gov.uk/
     title: "AI Opportunities Action Plan Delivery Dashboard"
     type: official

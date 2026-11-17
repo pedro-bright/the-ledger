@@ -23,10 +23,12 @@ sources:
     title: "Introducing OpenAI o3 and o4-mini"
     type: official
     date: 2025-04-16
+    archive_url: https://web.archive.org/web/20250416170840/https://openai.com/index/introducing-o3-and-o4-mini/
   - url: https://cdn.openai.com/pdf/2221c875-02dc-4789-800b-e7758f3722c1/o3-and-o4-mini-system-card.pdf
     title: "OpenAI o3 and o4-mini System Card"
     type: primary_document
     date: 2025-04-16
+    archive_url: https://web.archive.org/web/20250416172507/https://cdn.openai.com/pdf/2221c875-02dc-4789-800b-e7758f3722c1/o3-and-o4-mini-system-card.pdf
   - url: https://techcrunch.com/2025/04/16/openai-launches-a-pair-of-ai-reasoning-models-o3-and-o4-mini/
     title: "OpenAI launches a pair of AI reasoning models, o3 and o4-mini"
     type: secondary_reporting

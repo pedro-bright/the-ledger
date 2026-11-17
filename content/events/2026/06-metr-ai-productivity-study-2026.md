@@ -21,6 +21,7 @@ sources:
     title: "METR Follow-Up: We are Changing our Developer Productivity Experiment Design"
     type: primary_document
     date: 2026-02-24
+    archive_url: https://web.archive.org/web/20260224195219/https://metr.org/blog/2026-02-24-uplift-update/
   - url: https://news.ycombinator.com/item?id=44522772
     title: "HN Discussion: Measuring the impact of AI on experienced open-source developer productivity"
     type: expert_interpretation

@@ -15,6 +15,7 @@ sources:
   - url: https://www.anthropic.com/news/claude-3-5-sonnet
     title: "Introducing Claude 3.5 Sonnet"
     type: primary_document
+    archive_url: https://web.archive.org/web/20240620140357/https://www.anthropic.com/news/claude-3-5-sonnet
   - url: https://www.theverge.com/2024/6/20/24182396/anthropic-claude-3-5-sonnet-ai-model
     title: "Anthropic's new Claude 3.5 Sonnet outperforms GPT-4o and its own flagship model"
     type: secondary_reporting

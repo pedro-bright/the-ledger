@@ -15,9 +15,11 @@ sources:
   - url: https://www.europarl.europa.eu/news/en/press-room/20240308IPR19015/artificial-intelligence-act-meps-adopt-landmark-law
     title: "Artificial Intelligence Act: MEPs adopt landmark law"
     type: official
+    archive_url: https://web.archive.org/web/20240313122029/https://www.europarl.europa.eu/news/en/press-room/20240308IPR19015/artificial-intelligence-act-meps-adopt-landmark-law
   - url: https://artificialintelligenceact.eu/
     title: "EU AI Act Explorer"
     type: primary_document
+    archive_url: https://web.archive.org/web/20240313083828/https://artificialintelligenceact.eu/
   - url: https://www.reuters.com/technology/eu-lawmakers-set-approve-worlds-first-comprehensive-ai-rules-2024-03-13/
     title: "EU lawmakers approve the world's first comprehensive AI rules"
     type: secondary_reporting

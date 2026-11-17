@@ -17,6 +17,7 @@ sources:
   - url: https://www.anthropic.com/news/claude-2
     title: "Claude 2"
     type: primary_document
+    archive_url: https://web.archive.org/web/20240117223805/https://www.anthropic.com/news/claude-2
   - url: https://www.theverge.com/2023/7/11/23790254/anthropic-claude-chatbot-ai-available-beta
     title: "Anthropic's Claude 2 chatbot is now generally available"
     type: secondary_reporting

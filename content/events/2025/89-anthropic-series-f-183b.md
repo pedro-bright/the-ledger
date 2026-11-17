@@ -33,6 +33,7 @@ sources:
     type: official
     publisher: Anthropic
     date: 2025-09-02
+    archive_url: https://web.archive.org/web/20250902160713/https://www.anthropic.com/news/anthropic-raises-series-f-at-usd183b-post-money-valuation
   - url: https://www.cnbc.com/2025/09/02/anthropic-raises-13-billion-at-18-billion-valuation.html
     title: "Anthropic Raises $13 Billion at $183 Billion Valuation"
     type: secondary_reporting

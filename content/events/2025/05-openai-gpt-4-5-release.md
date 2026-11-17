@@ -15,6 +15,7 @@ sources:
   - url: https://openai.com/index/introducing-gpt-4-5/
     title: "Introducing GPT-4.5"
     type: primary_document
+    archive_url: https://web.archive.org/web/20250228042933/https://openai.com/index/introducing-gpt-4-5/
   - url: https://www.theverge.com/news/620021/openai-gpt-4-5-orion-ai-model-release
     title: "OpenAI releases GPT-4.5, its biggest and most expensive model yet"
     type: secondary_reporting

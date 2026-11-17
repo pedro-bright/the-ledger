@@ -17,11 +17,13 @@ sources:
     type: primary_document
     publisher: Nature
     date: 2025-12-03
+    archive_url: https://web.archive.org/web/20251203183357/https://www.nature.com/articles/s41586-025-09746-w
   - url: https://www.nature.com/articles/s41592-025-02975-x
     title: "RFdiffusion2: improved protein structure generation by learning from experimental structures"
     type: primary_document
     publisher: Nature Methods
     date: 2025-12-03
+    archive_url: https://web.archive.org/web/20251203182549/https://www.nature.com/articles/s41592-025-02975-x
   - url: https://www.ipd.uw.edu/2025/12/rfdiffusion2-efficient-enzymes-from-prompts/
     title: "RFdiffusion2: Designing Efficient Enzymes from Prompts"
     type: official

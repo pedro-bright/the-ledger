@@ -16,6 +16,7 @@ sources:
     title: DeepSeek R1 Collection on Hugging Face
     type: primary_document
     date: '2025-01-20'
+    archive_url: https://web.archive.org/web/20250121093536/https://huggingface.co/collections/deepseek-ai/deepseek-r1-678e1e131c0169c0bc89728d
   - url: https://arxiv.org/abs/2501.12948v1
     title: 'DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning (v1)'
     type: primary_document

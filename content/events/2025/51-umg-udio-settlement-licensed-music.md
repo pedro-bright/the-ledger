@@ -18,6 +18,7 @@ sources:
     type: official
     publisher: PR Newswire
     date: 2025-10-29
+    archive_url: https://web.archive.org/web/20251030024618/https://www.prnewswire.com/news-releases/universal-music-group-and-udio-announce-udios-first-strategic-agreements-for-new-licensed-ai-music-creation-platform-302599129.html
   - url: https://musically.com/2025/10/30/umg-settles-udio-lawsuit-companies-plan-new-ai-music-service-together/
     title: "UMG Settles Udio Lawsuit, Companies Plan New AI Music Service Together"
     type: secondary_reporting
@@ -27,6 +28,7 @@ sources:
     title: "UMG Recordings, Inc. v. Suno, Inc. — CourtListener Docket"
     type: primary_document
     publisher: CourtListener
+    archive_url: https://web.archive.org/web/20251010074653/https://www.courtlistener.com/docket/68878608/umg-recordings-inc-v-suno-inc/
 revision:
   created: 2026-04-19
 ---

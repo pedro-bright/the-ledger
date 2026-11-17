@@ -20,6 +20,7 @@ sources:
     title: "Premier Li Qiang Addresses World AI Conference"
     type: official
     publisher: State Council of China
+    archive_url: https://web.archive.org/web/20250727211457/http://english.www.gov.cn/news/202507/26/content_WS6884bea8c6d0868f4e8f4732.html
   - url: https://www.ansi.org/standards-news/all-news/8-1-25-china-announces-action-plan-for-global-ai-governance
     title: "China Announces Action Plan for Global AI Governance"
     type: secondary_reporting

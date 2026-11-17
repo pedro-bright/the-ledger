@@ -14,6 +14,7 @@ sources:
   - url: https://openai.com/index/memory-and-new-controls-for-chatgpt/
     title: "Memory and new controls for ChatGPT"
     type: primary_document
+    archive_url: https://web.archive.org/web/20240502120859/https://openai.com/index/memory-and-new-controls-for-chatgpt
 revision:
   created: 2026-03-08
 ---

@@ -16,6 +16,7 @@ sources:
     title: "Introducing ChatGPT Agent"
     type: official
     date: 2025-07-17
+    archive_url: https://web.archive.org/web/20250717171806/https://openai.com/index/introducing-chatgpt-agent/
   - url: https://techcrunch.com/2025/07/17/openai-launches-a-general-purpose-agent-in-chatgpt/
     title: "OpenAI Launches a General-Purpose Agent in ChatGPT"
     type: secondary_reporting
@@ -24,6 +25,7 @@ sources:
     title: "ChatGPT Agent Release Notes"
     type: primary_document
     date: 2025-07-17
+    archive_url: https://web.archive.org/web/20250721065647/https://help.openai.com/en/articles/11794368-chatgpt-agent-release-notes
 revision:
   created: 2026-04-19
 ---

@@ -17,11 +17,13 @@ sources:
     type: official
     publisher: ECMWF
     date: 2025-02-25
+    archive_url: https://web.archive.org/web/20250225100952/https://www.ecmwf.int/en/about/media-centre/news/2025/ecmwfs-ai-forecasts-become-operational
   - url: https://www.ecmwf.int/en/about/media-centre/news/2025/ecmwfs-ensemble-ai-forecasts-become-operational
     title: "ECMWF's Ensemble AI Forecasts Become Operational"
     type: official
     publisher: ECMWF
     date: 2025-07-01
+    archive_url: https://web.archive.org/web/20250701100929/https://www.ecmwf.int/en/about/media-centre/news/2025/ecmwfs-ensemble-ai-forecasts-become-operational
   - url: https://arxiv.org/abs/2509.18994
     title: "AIFS-CRPS: ensemble forecasting using a score-based diffusion model"
     type: primary_document

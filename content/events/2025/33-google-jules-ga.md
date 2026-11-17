@@ -18,10 +18,12 @@ sources:
     title: "Jules Changelog — August 6, 2025"
     type: official
     date: 2025-08-06
+    archive_url: https://web.archive.org/web/20251224110940/https://jules.google/docs/changelog/2025-08-06
   - url: https://blog.google/technology/google-labs/jules-now-available/
     title: "Jules Is Now Available"
     type: official
     date: 2025-08-06
+    archive_url: https://web.archive.org/web/20250806161715/https://blog.google/technology/google-labs/jules-now-available/
   - url: https://techcrunch.com/2025/08/06/googles-ai-coding-agent-jules-is-now-out-of-beta/
     title: "Google's AI Coding Agent Jules Is Now Out of Beta"
     type: secondary_reporting

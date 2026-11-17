@@ -23,10 +23,12 @@ sources:
     title: "Governor Newsom Signs SB 53 Advancing California's World-Leading Artificial Intelligence Industry"
     type: official
     publisher: Office of the Governor of California
+    archive_url: https://web.archive.org/web/20250929205357/https://www.gov.ca.gov/2025/09/29/governor-newsom-signs-sb-53-advancing-californias-world-leading-artificial-intelligence-industry/
   - url: https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=202520260SB53
     title: "SB 53 — Transparency in Frontier AI Act (Bill Text)"
     type: primary_document
     publisher: California Legislature
+    archive_url: https://web.archive.org/web/20250929220723/https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=202520260SB53
   - url: https://fpf.org/blog/californias-sb-53-the-first-frontier-ai-law-explained/
     title: "California's SB 53: The First Frontier AI Law Explained"
     type: secondary_reporting

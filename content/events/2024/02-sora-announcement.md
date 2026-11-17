@@ -15,9 +15,11 @@ sources:
   - url: https://openai.com/sora
     title: "Sora: Creating video from text"
     type: primary_document
+    archive_url: https://web.archive.org/web/20240215181732/https://openai.com/sora
   - url: https://openai.com/research/video-generation-models-as-world-simulators
     title: "Video generation models as world simulators"
     type: primary_document
+    archive_url: https://web.archive.org/web/20240216004954/https://openai.com/research/video-generation-models-as-world-simulators
   - url: https://www.nytimes.com/2024/02/15/technology/openai-sora-videos.html
     title: "OpenAI Unveils A.I. That Instantly Generates Eye-Popping Videos"
     type: secondary_reporting

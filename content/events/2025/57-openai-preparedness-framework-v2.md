@@ -22,6 +22,7 @@ sources:
     type: official
     publisher: OpenAI
     date: 2025-04-15
+    archive_url: https://web.archive.org/web/20250416173732/https://openai.com/index/updating-our-preparedness-framework/
   - url: https://arxiv.org/abs/2509.24394
     title: "Analysis of OpenAI Preparedness Framework v2"
     type: expert_interpretation

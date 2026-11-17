@@ -40,7 +40,6 @@ sources:
     publisher: Nathan Lambert
     date: 2026-10-26
     accessed: 2026-10-30
-    archive_url: https://web.archive.org/web/*/https://x.com/natolambert/status/2114770812058186077
 actors:
   - id: cohere
     role: author
