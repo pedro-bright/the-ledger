@@ -57,7 +57,7 @@ revision:
 
 ## Summary
 
-On November 16, 2026, Google Threat Intelligence Group (GTIG) and Mandiant reported that in the preceding quarter they had, "for the first time," identified threat actors "using LLM frameworks to fully automate vulnerability discovery and exploitation without a human in the loop."
+On November 16, 2026, Google Threat Intelligence Group (GTIG) and Mandiant published a report in which GTIG said that in the preceding quarter it had, "for the first time," identified threat actors "using LLM frameworks to fully automate vulnerability discovery and exploitation without a human in the loop."
 The report described criminal and suspected Chinese state-linked groups using or testing open-source multi-agent attack frameworks, including ARTEX, CAIRN, CyberStrikeAI and PentAGI, in live intrusions.
 It came three days after the FBI issued a FLASH alert on ARTEX, which said some intrusions using the tool had progressed "from initial targeting to privileged access in under three hours" and that more than 1,600 ARTEX consoles were exposed on the internet.
 
@@ -79,7 +79,7 @@ It said GTIG had observed CAIRN and PentAGI "deployed in the wild" and experimen
 It also reported "evidence that a PRC-nexus group was developing its own automated attack framework for likely use in cyber espionage operations."
 
 The "first time" finding rested on an exposed staging server hosting a multi-agent framework that GTIG called exploit_agent, which "integrates with multiple frontier and local LLMs."
-According to the report, the framework continuously compares popular web application code before and after patch announcements, identifies the fixed vulnerabilities, drafts exploits and "automatically executes them without human intervention"; victim telemetry pointed to French websites in media and entertainment and in education.
+According to the report, the framework continuously compares popular web application code before and after patch announcements, identifies potential vulnerabilities, drafts exploits and "automatically executes them without human intervention"; victim telemetry pointed to French websites in media and entertainment and in education.
 A configuration file on the server carried Russian-language comments describing an "exploit_agent pilot." Google did not attribute the operation to a named group.
 The report also said overall vulnerability disclosures and exploits "nearly doubled between January and August 2026," while zero-day exploits went from a 2025 average of eight a month to 11 a month in 2026 before reaching 22 in August.
 
@@ -89,11 +89,11 @@ Axios covered both reports on November 18 under the headline "The terrifying ris
 
 GTIG's previous quarterly report had described "nascent efforts" by attackers, including "partially automated vulnerability scanning and exploitation attack sequences."
 In this report Google said it had found an attacker's exploitation pipeline running end to end without a person in the loop, 12 days after OpenAI reported that its own models had produced 948 Linux kernel root exploits in an automated pipeline.
-Together with the FBI alert, it moves AI-run intrusion tooling from lab capability evaluations and vendor reports into a federal advisory with named campaigns and victim counts.
+Together, the two reports give named campaigns, victim counts and indicators for AI-run intrusion tooling, from a federal agency and from a threat-intelligence team drawing on incident-response work.
 
 The scope of the claim is narrower than the headline.
-exploit_agent turned already-patched ("n-day") flaws into exploits by comparing code versions; the report does not say it found unknown vulnerabilities, and GTIG argued that LLMs currently make n-day weaponization more efficient than zero-day searching.
-GTIG also said the frameworks "currently trade stealth for velocity," leaving noisy traffic and code traces, while the FBI revised its own ConnectWise figure within four days and ConnectWise said it could not confirm it.
+exploit_agent turned already-patched ("n-day") flaws into exploits by comparing code versions; the report does not say it found unknown vulnerabilities, and GTIG said attackers may find it more efficient to use LLMs on patched flaws than to search for zero-days.
+GTIG also said the frameworks "currently trade stealth for velocity," leaving noisy traffic and code traces, while the FBI revised its ConnectWise description within four days and ConnectWise said it could not confirm the number of affected environments.
 
 The FBI's list of models behind ARTEX puts commercial frontier systems from Anthropic and OpenAI alongside Chinese models that, by the FBI's account, showed no observable guardrails when the request was framed as penetration testing.
 That finding bears on the policy dispute over open-weight releases and on the September 8 joint advisory by the NSA, CISA and FBI on Chinese model distillation.
