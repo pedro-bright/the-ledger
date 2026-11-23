@@ -1,0 +1,6 @@
+id: cert-eu
+name: CERT-EU
+type: government
+website: https://www.cert.europa.eu
+aliases:
+  - Cybersecurity Service for the Union institutions, bodies, offices and agencies
